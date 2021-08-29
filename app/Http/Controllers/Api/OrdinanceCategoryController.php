@@ -18,6 +18,7 @@ class OrdinanceCategoryController extends Controller
     public function index()
     {
         $ordinance_categories = OrdinanceCategory::get();
+        // asd
         return response()->json([
             'success' => true,
             'ordinance_categories' => $ordinance_categories
