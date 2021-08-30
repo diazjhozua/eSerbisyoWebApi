@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\MissingPersonResource;
 use App\Models\MissingPerson;
-
+use App\Rules\ValidReportType;
+use App\Rules\ValidReportStatus;
 
 class MissingPersonController extends Controller
 {
@@ -19,8 +20,17 @@ class MissingPersonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
+        // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+        //     // if admin or staff
+        //     $missing_persons = MissingPerson::with('user')->orderBy('created_at','DESC')->get();
+        // } else {
+        //     // if resident 2- for approved reports
+        //     $missing_persons = MissingPerson::with('user')->where('status', 2)->orderBy('created_at','DESC')->get();
+        // }
+
         $missing_persons = MissingPerson::with('user')->orderBy('created_at','DESC')->get();
 
         return response()->json([
@@ -36,7 +46,12 @@ class MissingPersonController extends Controller
      */
     public function create()
     {
-        //
+        $report_types = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
+
+        return response()->json([
+            'success' => true,
+            'report_types' => $report_types,
+        ]);
     }
 
     /**
@@ -61,7 +76,7 @@ class MissingPersonController extends Controller
             'name' => 'required|string|min:3|max:50',
             'height' => 'required|numeric|between:1,9.99',
             'weight' => 'required|numeric|between:1,120.99',
-            'age' => 'required|integer|between:0,200',
+            'age' => 'integer|between:0,200',
             'eyes' => 'string|min:3|max:50',
             'hair' => 'string|min:3|max:50',
             'unique_sign' => 'required|string|min:3|max:120',
@@ -69,7 +84,7 @@ class MissingPersonController extends Controller
             'last_seen' => 'required|string|min:3|max:60',
             'contact_information' => 'required|string|min:3|max:120',
             'picture' => 'required|mimes:jpeg,png|max:3000',
-            'is_found' => 'required|integer|digits_between: 0,1',
+            'report_type' => ['required', 'integer', new ValidReportType],
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -92,28 +107,31 @@ class MissingPersonController extends Controller
         $missing_person->important_information = $request->important_information;
         $missing_person->last_seen = $request->last_seen;
         $missing_person->contact_information = $request->contact_information;
-        $missing_person->is_found = $request->is_found;
+        $missing_person->report_type = $request->report_type;
 
         // $missing_person->user_id = Auth::user()->id;
         $missing_person->user_id = 2;
 
+        $missing_person->status = 1;
+
+        // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+        //     // if admin or staff the application would be automatic approved (2 - For Approved)
+        //     $missing_person->status = 2;
+        // } else {
+        //     // if resident the application would be for approval (1 - For Approval)
+        //     $missing_person->status = 1;
+        // }
+
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-
         $missing_person->picture_name = $fileName;
         $missing_person->file_path = $filePath;
-
-        $missing_person->is_resolved = 0;
-
-        // make sure when the authentication has implemented
-        // this is_approved will be 1 = true if the user who created belongs to the information staff or admin
-        $missing_person->is_approved = 0;
 
         $missing_person->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'New missing person created succesfully',
+            'message' => 'New missing person report created succesfully',
             'document' => new MissingPersonResource($missing_person->load('user'))
         ]);
 
@@ -132,7 +150,7 @@ class MissingPersonController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Found missing person data',
+                'message' => 'Found missing person report data',
                 'missing_person' => new MissingPersonResource($missing_person)
             ]);
 
@@ -155,25 +173,46 @@ class MissingPersonController extends Controller
         try {
             $missing_person = MissingPerson::with('user')->findOrFail($id);
 
-            //check first if the user who logs in is the creator of that missing report or part of the information staff
-            if ($missing_person->user_id == Auth::user()->id || Auth::user()->user_role_id == 1 ||
-            Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Found missing person data',
-                    'missing_person' => new MissingPersonResource($missing_person)
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You don\'t have the priviledges to edit this data',
-                ]);
-            }
+            $report_types = [ (object)[ "id" => 1, "type" => "Missing"] , (object) ["id" => 2,"type" => "Found"] ];
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Found missing person data',
+                'missing_person' => new MissingPersonResource($missing_person),
+                'report_types' => $report_types,
+            ]);
+
+            // //check first if the user who logs in is the creator of that missing report or part of the information staff
+            // if ($missing_person->user_id == Auth::user()->id || Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+            //     if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+            //         $status_list = [ (object)[ "id" => 1, "type" => "For Approval"] , (object) ["id" => 2,"type" => "Approved"], (object) ["id" => 3,"type" => "Denied"], (object) ["id" => 4,"type" => "Resolved"] ];
+            //         return response()->json([
+            //             'success' => true,
+            //             'message' => 'Found missing person data',
+            //             'missing_person' => new MissingPersonResource($missing_person),
+            //             'report_types' => $report_types,
+            //             'status_list' => $status_list,
+            //         ]);
+            //     } else {
+            //         return response()->json([
+            //             'success' => true,
+            //             'message' => 'Found missing person data',
+            //             'missing_person' => new MissingPersonResource($missing_person),
+            //             'report_types' => $report_types,
+            //         ]);
+            //     }
+
+            // } else {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'You don\'t have the priviledges to edit this data',
+            //     ]);
+            // }
 
         } catch (ModelNotFoundException $ex){
             return response()->json([
                 'success' => false,
-                'message' => 'No missing person found',
+                'message' => 'No missing person report id found',
             ]);
         }
     }
@@ -187,25 +226,25 @@ class MissingPersonController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $missing_person = MissingPerson::with('user')->findOrFail($id);
-        // try {
-        //     $missing_person = MissingPerson::with('user')->findOrFail($id);
+        try {
+            $missing_person = MissingPerson::with('user')->findOrFail($id);
 
-        //     //check first if the user who logs in is the creator of that missing report or part of the information staff
-        //     if ($missing_person->user_id !== Auth::user()->id || Auth::user()->user_role_id !== 1 ||
-        //     Auth::user()->user_role_id !== 2 || Auth::user()->user_role_id !== 4) {
-        //         return response()->json([
-        //             'success' => false,
-        //             'message' => 'You don\'t have the priviledges to edit this data',
-        //         ]);
-        //     }
+            //check first if the user who logs in is the creator of that missing report or part of the information staff
+            // if ($missing_person->user_id !== Auth::user()->id || Auth::user()->user_role_id !== 1 ||
+            // Auth::user()->user_role_id !== 2 || Auth::user()->user_role_id !== 4) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'You don\'t have the priviledges to update this data',
+            //     ]);
+            // }
 
-        // } catch (ModelNotFoundException $ex){
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'No missing person found',
-        //     ]);
-        // }
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No missing person report id found',
+            ]);
+        }
 
         $rules = array(
             'name' => 'required|string|min:3|max:50',
@@ -219,10 +258,11 @@ class MissingPersonController extends Controller
             'last_seen' => 'required|string|min:3|max:60',
             'contact_information' => 'required|string|min:3|max:120',
             'picture' => 'mimes:jpeg,png|max:3000',
-            'is_found' => 'required|integer|digits_between: 0,1',
-            'is_resolved' => 'integer|digits_between: 0,1',
-            'is_approved' => 'integer|digits_between: 0,1',
+            'report_type' => ['required', 'integer', new ValidReportType],
+            'status' => ['integer', new ValidReportStatus],
         );
+
+
 
         $error = Validator::make($request->all(), $rules);
 
@@ -243,6 +283,7 @@ class MissingPersonController extends Controller
         $missing_person->important_information = $request->important_information;
         $missing_person->last_seen = $request->last_seen;
         $missing_person->contact_information = $request->contact_information;
+        $missing_person->report_type = $request->report_type;
 
         //check if they want to update the pdf file
         if($request->hasFile('picture')) {
@@ -255,16 +296,13 @@ class MissingPersonController extends Controller
             $missing_person->file_path = $filePath;
         }
 
-        $missing_person->is_approved = isset($request->is_approved) ? $request->is_approved : $missing_person->is_approved;
-        $missing_person->is_resolved = isset($request->is_resolved) ? $request->is_resolved : $missing_person->is_resolved;
+        $missing_person->status = 1;
 
-        // if (Auth::user()->user_role_id == 1 ||
-        // Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
-        //     $missing_person->is_approved = isset($request->is_approved) ? $request->is_approved : $missing_person->is_approved;
-        //     $missing_person->is_resolved = isset($request->is_resolved) ? $request->is_resolved : $missing_person->is_resolved;
+        // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+        //     $missing_person->status = $request->status;
         // } else {
-        //     // if the user is resident, the missing report if approved already would become false value
-        //     $missing_person->is_approved = 0;
+        //     // if the user is resident, the missing report if approved already would become for approval
+        //     $missing_person->status = 1;
         // }
 
         $missing_person->save();
@@ -288,21 +326,24 @@ class MissingPersonController extends Controller
         try {
             $missing_person = MissingPerson::findOrFail($id);
 
-            if ($missing_person->user_id === Auth::user()->id || Auth::user()->user_role_id === 1 ||
-            Auth::user()->user_role_id === 2 || Auth::user()->user_role_id === 4) {
-                Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
-                $missing_person->delete();
+            Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
+            $missing_person->delete();
 
-                return response()->json([
-                    'success' => true,
-                    'message' =>  'The missing person is successfully deleted',
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You don\'t have the priviledges to edit this data',
-                ]);
-            }
+            // if ($missing_person->user_id === Auth::user()->id || Auth::user()->user_role_id === 1 ||
+            // Auth::user()->user_role_id === 2 || Auth::user()->user_role_id === 4) {
+            //     Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
+            //     $missing_person->delete();
+
+            //     return response()->json([
+            //         'success' => true,
+            //         'message' =>  'The missing person is successfully deleted',
+            //     ]);
+            // } else {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'You don\'t have the priviledges to delete this data',
+            //     ]);
+            // }
 
         } catch (ModelNotFoundException $ex){
             return response()->json([

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\LostAndFoundResource;
 use App\Models\LostAndFound;
+use App\Rules\ValidReportType;
+use App\Rules\ValidReportStatus;
 
 
 class LostAndFoundController extends Controller
@@ -21,6 +23,15 @@ class LostAndFoundController extends Controller
      */
     public function index()
     {
+        // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+        //     // if admin or staff
+        //     $lost_and_founds = LostAndFound::with('user')->orderBy('created_at','DESC')->get();
+
+        // } else {
+        //     // if resident 2- for approved reports
+        //     $lost_and_founds = LostAndFound::with('user')->where('status', 2)->orderBy('created_at','DESC')->get();
+        // }
+
         $lost_and_founds = LostAndFound::with('user')->orderBy('created_at','DESC')->get();
 
         return response()->json([
@@ -36,7 +47,12 @@ class LostAndFoundController extends Controller
      */
     public function create()
     {
-        //
+        $report_types = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
+
+        return response()->json([
+            'success' => true,
+            'report_types' => $report_types,
+        ]);
     }
 
     /**
@@ -62,8 +78,8 @@ class LostAndFoundController extends Controller
             'last_seen' => 'required|string|min:3|max:120',
             'description' => 'required|string|min:3|max:120',
             'contact_information' => 'required|string|min:3|max:120',
-            'is_found' => 'required|integer|digits_between: 0,1',
             'picture' => 'required|mimes:jpeg,png|max:3000',
+            'report_type' => ['required', 'integer', new ValidReportType],
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -80,27 +96,31 @@ class LostAndFoundController extends Controller
         $lost_and_found->last_seen = $request->last_seen;
         $lost_and_found->description = $request->description;
         $lost_and_found->contact_information = $request->contact_information;
-        $lost_and_found->is_found = $request->is_found;
-        $lost_and_found->is_resolved = 0;
-        $lost_and_found->is_approved = 1;
+        $lost_and_found->report_type = $request->report_type;
 
         // $missing_person->user_id = Auth::user()->id;
         $lost_and_found->user_id = 2;
 
+        $lost_and_found->status = 1;
+
+        // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+        //     // if admin or staff the application would be automatic approved (2 - For Approved)
+        //     $lost_and_found->status = 2;
+        // } else {
+        //     // if resident the application would be for approval (1 - For Approval)
+        //     $lost_and_found->status = 1;
+        // }
+
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-
         $lost_and_found->picture_name = $fileName;
         $lost_and_found->file_path = $filePath;
-
-        $lost_and_found->is_resolved = 0;
-        $lost_and_found->is_approved = 0;
 
         $lost_and_found->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'New lost and found item created succesfully',
+            'message' => 'New lost and found report created succesfully',
             'document' => new LostAndFoundResource($lost_and_found->load('user'))
         ]);
     }
@@ -118,7 +138,7 @@ class LostAndFoundController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Found lost and found data',
+                'message' => 'Found lost and found report data',
                 'lost_and_found' => new LostAndFoundResource($lost_and_found)
             ]);
 
@@ -140,27 +160,47 @@ class LostAndFoundController extends Controller
     {
         try {
             $lost_and_found = LostAndFound::with('user')->findOrFail($id);
+            $report_types = [ (object)[ "id" => 1, "type" => "Missing"] , (object) ["id" => 2,"type" => "Found"] ];
 
             return response()->json([
                 'success' => true,
-                'message' => 'Found lost and found data',
-                'missing_person' => new LostAndFoundResource($lost_and_found)
+                'message' => 'Found lost and found report data',
+                'lost_and_found' => new LostAndFoundResource($lost_and_found),
+                'report_types' => $report_types
             ]);
 
             //check first if the user who logs in is the creator of that missing report or part of the information staff
-            if ($lost_and_found->user_id == Auth::user()->id || Auth::user()->user_role_id == 1 ||
-            Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Found lost and found data',
-                    'missing_person' => new LostAndFoundResource($lost_and_found)
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You don\'t have the priviledges to edit this data',
-                ]);
-            }
+            // if ($lost_and_found->user_id == Auth::user()->id || Auth::user()->user_role_id == 1 ||
+            // Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+            //     if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+            //         $status_list = [ (object)[ "id" => 1, "type" => "For Approval"] , (object) ["id" => 2,"type" => "Approved"], (object) ["id" => 3,"type" => "Denied"], (object) ["id" => 4,"type" => "Resolved"] ];
+            //         return response()->json([
+            //             'success' => true,
+            //             'message' => 'Found lost and found report data',
+            //             'lost_and_found' => new LostAndFoundResource($lost_and_found),
+            //             'report_types' => $report_types,
+            //             'status_list' => $status_list,
+            //         ]);
+            //     } else {
+            //         return response()->json([
+            //             'success' => true,
+            //             'message' => 'Found lost and found report data',
+            //             'missing_person' => new LostAndFoundResource($lost_and_found),
+            //             'report_types' => $report_types,
+            //         ]);
+            //     }
+
+            //     return response()->json([
+            //         'success' => true,
+            //         'message' => 'Found lost and found data',
+            //         'missing_person' => new LostAndFoundResource($lost_and_found)
+            //     ]);
+            // } else {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'You don\'t have the priviledges to edit this data',
+            //     ]);
+            // }
 
         } catch (ModelNotFoundException $ex){
             return response()->json([
@@ -179,17 +219,34 @@ class LostAndFoundController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $lost_and_found = LostAndFound::with('user')->findOrFail($id);
+        try {
+            $lost_and_found = LostAndFound::with('user')->findOrFail($id);
+
+            //check first if the user who logs in is the creator of that missing report or part of the information staff
+            // if ($missing_person->user_id !== Auth::user()->id || Auth::user()->user_role_id !== 1 ||
+            // Auth::user()->user_role_id !== 2 || Auth::user()->user_role_id !== 4) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'You don\'t have the priviledges to update this data',
+            //     ]);
+            // }
+
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No lost and found report id found',
+            ]);
+        }
 
         $rules = array(
             'item' => 'required|string|min:3|max:120',
             'last_seen' => 'required|string|min:3|max:120',
             'description' => 'required|string|min:3|max:120',
             'contact_information' => 'required|string|min:3|max:120',
-            'is_found' => 'required|integer|digits_between: 0,1',
-            'is_resolved' => 'integer|digits_between: 0,1',
-            'is_approved' => 'integer|digits_between: 0,1',
             'picture' => 'mimes:jpeg,png|max:3000',
+            'report_type' => ['required', 'integer', new ValidReportType],
+            'status' => ['integer', new ValidReportStatus],
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -205,9 +262,7 @@ class LostAndFoundController extends Controller
         $lost_and_found->last_seen = $request->last_seen;
         $lost_and_found->description = $request->description;
         $lost_and_found->contact_information = $request->contact_information;
-        $lost_and_found->is_found = $request->is_found;
-        $lost_and_found->is_resolved = isset($request->is_resolved) ? $request->is_resolved : $lost_and_found->is_resolved;
-        $lost_and_found->is_approved =  isset($request->is_approved) ? $request->is_approved : $lost_and_found->is_approved;
+        $lost_and_found->report_type = $request->report_type;
 
         if($request->hasFile('picture')) {
             Storage::delete('public/missing-pictures/'. $lost_and_found->picture_name);
@@ -218,6 +273,15 @@ class LostAndFoundController extends Controller
             $lost_and_found->picture_name = $fileName;
             $lost_and_found->file_path = $filePath;
         }
+
+        $lost_and_found->status = 1;
+
+        // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
+        //     $lost_and_found->status = $request->status;
+        // } else {
+        //     // if the user is resident, the missing report if approved already would become for approval
+        //     $lost_and_found->status = 1;
+        // }
 
         $lost_and_found->save();
 
@@ -254,12 +318,12 @@ class LostAndFoundController extends Controller
 
             //     return response()->json([
             //         'success' => true,
-            //         'message' =>  'The missing person is successfully deleted',
+            //         'message' =>  'The lost and found report is successfully deleted',
             //     ]);
             // } else {
             //     return response()->json([
             //         'success' => false,
-            //         'message' => 'You don\'t have the priviledges to edit this data',
+            //         'message' => 'You don\'t have the priviledges to delete this data',
             //     ]);
             // }
 

@@ -18,17 +18,32 @@ class LostAndFoundResource extends JsonResource
     {
         $user = $this->whenLoaded('user');
 
+        switch ($this->status) {
+            case 1:
+                $status = 'For Approval';
+                break;
+            case 2:
+                $status = 'Approved';
+                break;
+            case 3:
+                $status = 'Denied';
+                break;
+            case 4:
+                $status = 'Resolved';
+                break;
+        }
+
         return [
             'id' => $this->id,
+            'report_classification' => $this->report_type == 1 ? 'Missing Report' : 'Found Report',
             'item' => $this->item,
             'picture_name' => $this->picture_name,
             'file_path' => $this->file_path,
             'last_seen' => $this->last_seen,
             'description' => $this->description,
             'contact_information' => $this->contact_information,
-            'is_found' => $this->is_found,
-            'is_resolved' => $this->is_resolved,
-            'is_approved' => $this->is_approved,
+            'status' => $this->status,
+            'status_of_application' => $status,
 
             $this->mergeWhen($this->relationLoaded('user'), [
                 'user_id' => $this->user_id,
