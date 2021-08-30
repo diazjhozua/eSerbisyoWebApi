@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Facades\Auth;
 
-class MissingPersonResource extends JsonResource
+class LostAndFoundResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,25 +17,19 @@ class MissingPersonResource extends JsonResource
     public function toArray($request)
     {
         $user = $this->whenLoaded('user');
+
         return [
             'id' => $this->id,
-            'missing_name' => $this->name,
+            'item' => $this->item,
             'picture_name' => $this->picture_name,
             'file_path' => $this->file_path,
-            'height' => $this->height,
-            'weight' => $this->weight,
-            'age' => $this->age,
-            'eyes' => $this->eyes,
-            'hair' => $this->hair,
-            'unique_sign' => $this->unique_sign,
-            'important_information' => $this->important_information,
             'last_seen' => $this->last_seen,
+            'description' => $this->description,
             'contact_information' => $this->contact_information,
-            //this should be check whether the user is in adminisdrative role
             'is_found' => $this->is_found,
             'is_resolved' => $this->is_resolved,
-            'is_approved' => $this->is_resolved,
-            // end
+            'is_approved' => $this->is_approved,
+
             $this->mergeWhen($this->relationLoaded('user'), [
                 'user_id' => $this->user_id,
                 'submitted_by' => !$user instanceof MissingValue && isset($user) ? $this->user->getFullNameAttribute() : NULL,

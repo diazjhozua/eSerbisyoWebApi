@@ -20,16 +20,17 @@ class CreateMissingPersonsTable extends Migration
             $table->float('height', 5,2);
             $table->float('weight', 5,2);
             $table->integer('age');
-            $table->string('eyes');
-            $table->string('hair');
+            $table->string('eyes')->nullable();
+            $table->string('hair')->nullable();
             $table->string('unique_sign');
             $table->string('important_information');
             $table->string('last_seen');
             $table->string('contact_information');
             $table->string('picture_name')->nullable();
             $table->string('file_path')->nullable();
-            $table->boolean('is_resolved');
-            $table->boolean('is_approved');
+            $table->boolean('is_found')->default(0);
+            $table->boolean('is_resolved')->default(0);
+            $table->boolean('is_approved')->default(0);
 
             $table->timestamps();
 
