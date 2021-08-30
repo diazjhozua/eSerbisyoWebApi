@@ -20,8 +20,8 @@ class CreateMissingPersonsTable extends Migration
             $table->float('height', 5,2);
             $table->float('weight', 5,2);
             $table->integer('age');
-            $table->string('eyes');
-            $table->string('hair');
+            $table->string('eyes')->nullable();
+            $table->string('hair')->nullable();
             $table->string('unique_sign');
             $table->string('important_information');
             $table->string('last_seen');
