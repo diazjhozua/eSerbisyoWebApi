@@ -21,7 +21,7 @@ class MissingPersonController extends Controller
      */
     public function index()
     {
-        $missing_persons = MissingPerson::with('user')->get();
+        $missing_persons = MissingPerson::with('user')->orderBy('created_at','DESC')->get();
 
         return response()->json([
             'success' => true,
@@ -68,7 +68,8 @@ class MissingPersonController extends Controller
             'important_information' => 'required|string|min:3|max:120',
             'last_seen' => 'required|string|min:3|max:60',
             'contact_information' => 'required|string|min:3|max:120',
-            'picture' => 'required|mimes:jpeg,png|max:3000'
+            'picture' => 'required|mimes:jpeg,png|max:3000',
+            'is_found' => 'required|integer|digits_between: 0,1',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -91,10 +92,10 @@ class MissingPersonController extends Controller
         $missing_person->important_information = $request->important_information;
         $missing_person->last_seen = $request->last_seen;
         $missing_person->contact_information = $request->contact_information;
+        $missing_person->is_found = $request->is_found;
 
         // $missing_person->user_id = Auth::user()->id;
         $missing_person->user_id = 2;
-
 
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
@@ -218,6 +219,7 @@ class MissingPersonController extends Controller
             'last_seen' => 'required|string|min:3|max:60',
             'contact_information' => 'required|string|min:3|max:120',
             'picture' => 'mimes:jpeg,png|max:3000',
+            'is_found' => 'required|integer|digits_between: 0,1',
             'is_resolved' => 'integer|digits_between: 0,1',
             'is_approved' => 'integer|digits_between: 0,1',
         );
@@ -241,9 +243,6 @@ class MissingPersonController extends Controller
         $missing_person->important_information = $request->important_information;
         $missing_person->last_seen = $request->last_seen;
         $missing_person->contact_information = $request->contact_information;
-
-        // $missing_person->user_id = Auth::user()->id;
-        $missing_person->user_id = 2;
 
         //check if they want to update the pdf file
         if($request->hasFile('picture')) {
@@ -272,7 +271,7 @@ class MissingPersonController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'The employee is successfully updated',
+            'message' => 'The missing person report is successfully updated',
             'missing_person' => new MissingPersonResource($missing_person)
         ]);
 
@@ -291,7 +290,7 @@ class MissingPersonController extends Controller
 
             if ($missing_person->user_id === Auth::user()->id || Auth::user()->user_role_id === 1 ||
             Auth::user()->user_role_id === 2 || Auth::user()->user_role_id === 4) {
-                Storage::delete('public/missing_persons/'. $missing_person->picture_name);
+                Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
                 $missing_person->delete();
 
                 return response()->json([

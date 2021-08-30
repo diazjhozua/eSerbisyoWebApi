@@ -28,8 +28,9 @@ class CreateMissingPersonsTable extends Migration
             $table->string('contact_information');
             $table->string('picture_name')->nullable();
             $table->string('file_path')->nullable();
-            $table->boolean('is_resolved');
-            $table->boolean('is_approved');
+            $table->boolean('is_found')->default(0);
+            $table->boolean('is_resolved')->default(0);
+            $table->boolean('is_approved')->default(0);
 
             $table->timestamps();
 
