@@ -72,6 +72,7 @@ class FeedbackController extends Controller
         }
 
         $feedback = new Feedback;
+        // $feedback->user_id = Auth::user()->id;
         $feedback->user_id = 2;
         $feedback->is_anonymous = $request->is_anonymous;
         $feedback->feedback_type_id = $request->feedback_type_id;

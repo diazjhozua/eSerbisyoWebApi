@@ -13,6 +13,9 @@ use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\MissingPersonController;
 
 
+use App\Http\Controllers\Api\LostAndFoundController;
+use App\Models\LostAndFound;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,6 +41,7 @@ Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
 Route::resource('missing-persons', MissingPersonController::class);
+Route::resource('lost-and-found', LostAndFoundController::class);
 
 
 
