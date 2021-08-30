@@ -296,16 +296,14 @@ class MissingPersonController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'The missing person is successfully deleted',
+                    'message' =>  'The missing person is successfully deleted',
                 ]);
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'The missing person is successfully deleted',
+                    'message' => 'You don\'t have the priviledges to edit this data',
                 ]);
             }
-
-
 
         } catch (ModelNotFoundException $ex){
             return response()->json([
