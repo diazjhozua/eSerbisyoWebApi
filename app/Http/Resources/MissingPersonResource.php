@@ -17,8 +17,28 @@ class MissingPersonResource extends JsonResource
     public function toArray($request)
     {
         $user = $this->whenLoaded('user');
+        // application status
+        // 1 - for approval
+        // 2 - approved
+        // 3 - denied
+        // 4 - resolved
+        switch ($this->status) {
+            case 1:
+                $status = 'For Approval';
+                break;
+            case 2:
+                $status = 'Approved';
+                break;
+            case 3:
+                $status = 'Denied';
+                break;
+            case 4:
+                $status = 'Resolved';
+                break;
+        }
         return [
             'id' => $this->id,
+            'report_classification' => $this->report_type == 1 ? 'Missing Report' : 'Found Report',
             'missing_name' => $this->name,
             'picture_name' => $this->picture_name,
             'file_path' => $this->file_path,
@@ -31,10 +51,10 @@ class MissingPersonResource extends JsonResource
             'important_information' => $this->important_information,
             'last_seen' => $this->last_seen,
             'contact_information' => $this->contact_information,
-            //this should be check whether the user is in adminisdrative role
-            'is_found' => $this->is_found,
-            'is_resolved' => $this->is_resolved,
-            'is_approved' => $this->is_resolved,
+            'report_type' => $this->report_type,
+            'status' => $this->status,
+            'status_of_application' => $status,
+
             // end
             $this->mergeWhen($this->relationLoaded('user'), [
                 'user_id' => $this->user_id,

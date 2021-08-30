@@ -22,9 +22,8 @@ class CreateLostAndFoundsTable extends Migration
             $table->string('contact_information');
             $table->string('picture_name')->nullable();
             $table->string('file_path')->nullable();
-            $table->boolean('is_found')->default(0);
-            $table->boolean('is_resolved')->default(0);
-            $table->boolean('is_approved')->default(0);
+            $table->integer('status');
+            $table->integer('report_type');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')

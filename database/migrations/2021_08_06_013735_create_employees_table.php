@@ -22,17 +22,6 @@ class CreateEmployeesTable extends Migration
             $table->string('picture_name')->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();
-
-            // $table->unsignedBigInteger('term_id')->nullable();
-            // $table->unsignedBigInteger('position_id')->nullable();
-
-            // $table->unsignedBigInteger('term_id')->nullable();
-            // $table->unsignedBigInteger('position_id')->nullable();
-            // $table->foreign('term_id')->references('id')
-            //     ->on('terms')->onDelete('set null');
-
-            // $table->foreign('position_id')->references('id')
-            //     ->on('positions')->onDelete('set null');
         });
     }
 
