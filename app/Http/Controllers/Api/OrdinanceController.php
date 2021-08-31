@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ordinance;
 use App\Models\OrdinanceCategory;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\OrdinanceResource;
 use App\Http\Resources\OrdinanceCategoryResource;
 use Illuminate\Support\Facades\Validator;
@@ -73,16 +74,16 @@ class OrdinanceController extends Controller
             $ordinance->title = $request->title;
             $ordinance->date_approved = $request->date_approved;
             $ordinance->ordinance_category_id = $request->ordinance_category_id;
-           
-    
+
+
             $fileName = time().'_'.$request->pdf->getClientOriginalName();
             $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
-    
+
             $ordinance->pdf_name = $fileName;
             $ordinance->file_path = $filePath;
-    
+
             $ordinance->save();
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'New ordinance created succesfully',
