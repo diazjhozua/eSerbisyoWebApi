@@ -18,12 +18,12 @@ class CreateOrdinancesTable extends Migration
             $table->string('ordinance_no')->unique();
             $table->longText('title');
             $table->date('date_approved');
-            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('ordinance_category_id')->nullable();
             $table->string('pdf_name');
             $table->string('file_path');
             $table->timestamps();
 
-            $table->foreign('category_id')->references('id')
+            $table->foreign('ordinance_category_id')->references('id')
                 ->on('ordinance_categories')->onDelete('set null');
         });
     }

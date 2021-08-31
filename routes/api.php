@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\DocumentTypeController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\APi\OrdinanceCategoryController;
+use App\Http\Controllers\APi\OrdinanceController;
 use App\Http\Controllers\Api\TermController;
 use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\EmployeeController;
@@ -35,7 +36,8 @@ Route::resource('feedbacks', FeedbackController::class)->only(['index', 'store']
 Route::resource('document-types', DocumentTypeController::class)->except(['create']);
 Route::resource('documents', DocumentController::class)->except(['show']);
 
-Route::resource('ordinance-categories', OrdinanceCategoryController::class);
+Route::resource('ordinance-categories', OrdinanceCategoryController::class)->except(['create']);
+Route::resource('ordinances', OrdinanceController::class)->except(['show']);
 
 Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
