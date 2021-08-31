@@ -81,7 +81,7 @@ class OrdinanceCategoryController extends Controller
     public function show($id)
     {
         try {
-            $ordinance_category = OrdinanceCategory::withCount('ordinances')->findOrFail($id);
+            $ordinance_category = OrdinanceCategory::with('ordinances')->withCount('ordinances')->findOrFail($id);
 
             return response()->json([
                 'success' => true,

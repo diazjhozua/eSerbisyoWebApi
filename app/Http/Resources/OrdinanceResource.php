@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\MissingValue;
 
 class OrdinanceResource extends JsonResource
 {
@@ -23,9 +24,10 @@ class OrdinanceResource extends JsonResource
             'date_approved' => $this->date_approved,
 
             $this->mergeWhen($this->relationLoaded('ordinance_category'), [
-                'ordinance_category_id'  => isset($ordinance_category) ? $this->ordinance_category->id : null,
-                'ordinance_category'  => isset($ordinance_category) ? $this->ordinance_category->category : null,
+                'ordinance_category_id' => !$ordinance_category instanceof MissingValue && isset($ordinance_category) ? $ordinance_category->id : NULL,
+                'ordinance_category' => !$ordinance_category instanceof MissingValue && isset($ordinance_category) ? $ordinance_category->category : NULL,
             ]),
+
             'pdf_name' => $this->pdf_name,
             'file_path' => $this->file_path,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
