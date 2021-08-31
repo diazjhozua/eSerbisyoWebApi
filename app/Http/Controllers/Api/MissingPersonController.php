@@ -21,6 +21,65 @@ class MissingPersonController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function approved($id) {
+        try {
+            $missing_person = MissingPerson::with('user')->findOrFail($id);
+            $missing_person->status = 2;
+            $missing_person->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Missing person report is approved successfully',
+                'missing_person' => new MissingPersonResource($missing_person)
+            ]);
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No missing person report id found',
+            ]);
+        }
+    }
+
+    public function denied($id) {
+        try {
+            $missing_person = MissingPerson::with('user')->findOrFail($id);
+            $missing_person->status = 3;
+            $missing_person->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Missing person report is denied successfully',
+                'missing_person' => new MissingPersonResource($missing_person)
+            ]);
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No missing person report id found',
+            ]);
+        }
+    }
+
+    public function resolved($id) {
+        try {
+            $missing_person = MissingPerson::with('user')->findOrFail($id);
+            $missing_person->status = 4;
+            $missing_person->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Missing person report is resolved successfully',
+                'missing_person' => new MissingPersonResource($missing_person)
+            ]);
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No missing person report id found',
+            ]);
+        }
+    }
+
     public function index()
     {
         // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
