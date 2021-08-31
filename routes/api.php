@@ -40,7 +40,15 @@ Route::resource('ordinance-categories', OrdinanceCategoryController::class);
 Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
+
+Route::post('missing-persons/approved/{id}', [MissingPersonController::class, 'approved']);
+Route::post('missing-persons/denied/{id}', [MissingPersonController::class, 'denied']);
+Route::post('missing-persons/resolved/{id}', [MissingPersonController::class, 'resolved']);
 Route::resource('missing-persons', MissingPersonController::class);
+
+Route::post('lost-and-found/approved/{id}', [LostAndFoundController::class, 'approved']);
+Route::post('lost-and-found/denied/{id}', [LostAndFoundController::class, 'denied']);
+Route::post('lost-and-found/resolved/{id}', [LostAndFoundController::class, 'resolved']);
 Route::resource('lost-and-found', LostAndFoundController::class);
 
 

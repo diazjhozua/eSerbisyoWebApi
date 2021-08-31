@@ -21,6 +21,67 @@ class LostAndFoundController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function approved($id) {
+        try {
+            $lost_and_found = LostAndFound::with('user')->findOrFail($id);
+            $lost_and_found->status = 2;
+            $lost_and_found->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lost and found report is approved successfully',
+                'lost_and_found' => new LostAndFoundResource($lost_and_found)
+            ]);
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No lost and found report id found',
+            ]);
+        }
+    }
+
+    public function denied($id) {
+        try {
+            $lost_and_found = LostAndFound::with('user')->findOrFail($id);
+            $lost_and_found->status = 3;
+            $lost_and_found->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lost and found report is denied successfully',
+                'lost_and_found' => new LostAndFoundResource($lost_and_found)
+            ]);
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No lost and found report id found',
+            ]);
+        }
+    }
+
+    public function resolved($id) {
+
+        try {
+            $lost_and_found = LostAndFound::with('user')->findOrFail($id);
+            $lost_and_found->status = 4;
+            $lost_and_found->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lost and found report is resolved successfully',
+                'lost_and_found' => new LostAndFoundResource($lost_and_found)
+            ]);
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No lost and found report id found',
+            ]);
+        }
+    }
+
     public function index()
     {
         // if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 4) {
@@ -98,7 +159,7 @@ class LostAndFoundController extends Controller
         $lost_and_found->contact_information = $request->contact_information;
         $lost_and_found->report_type = $request->report_type;
 
-        // $missing_person->user_id = Auth::user()->id;
+        // $lost_and_found->user_id = Auth::user()->id;
         $lost_and_found->user_id = 2;
 
         $lost_and_found->status = 1;
@@ -185,7 +246,7 @@ class LostAndFoundController extends Controller
             //         return response()->json([
             //             'success' => true,
             //             'message' => 'Found lost and found report data',
-            //             'missing_person' => new LostAndFoundResource($lost_and_found),
+            //             'lost_and_found' => new LostAndFoundResource($lost_and_found),
             //             'report_types' => $report_types,
             //         ]);
             //     }
@@ -193,7 +254,7 @@ class LostAndFoundController extends Controller
             //     return response()->json([
             //         'success' => true,
             //         'message' => 'Found lost and found data',
-            //         'missing_person' => new LostAndFoundResource($lost_and_found)
+            //         'lost_and_found' => new LostAndFoundResource($lost_and_found)
             //     ]);
             // } else {
             //     return response()->json([
@@ -223,7 +284,7 @@ class LostAndFoundController extends Controller
             $lost_and_found = LostAndFound::with('user')->findOrFail($id);
 
             //check first if the user who logs in is the creator of that missing report or part of the information staff
-            // if ($missing_person->user_id !== Auth::user()->id || Auth::user()->user_role_id !== 1 ||
+            // if ($lost_and_found->user_id !== Auth::user()->id || Auth::user()->user_role_id !== 1 ||
             // Auth::user()->user_role_id !== 2 || Auth::user()->user_role_id !== 4) {
             //     return response()->json([
             //         'success' => false,
