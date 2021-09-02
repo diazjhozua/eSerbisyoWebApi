@@ -15,15 +15,13 @@ class CreateComplaintsTable extends Migration
     {
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('complaint_type_id')->nullable()->constrained('complaint_types')->onDelete('set null');
+            $table->string('custom_type')->nullable();
             $table->longText('reason');
             $table->longText('action');
-            $table->date('filed_at');
-            $table->boolean('is_approved');
+            $table->boolean('status');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade');
         });
     }
 

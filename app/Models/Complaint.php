@@ -13,11 +13,17 @@ class Complaint extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function complaint_type(){
+        return $this->belongsTo(ComplaintType::class)->withDefault();
+    }
+
     public function complainant_lists(){
-        return $this->hasMany(ComplaintList::class);
+        return $this->hasMany(ComplainantList::class);
     }
 
     public function defendant_lists(){
         return $this->hasMany(DefendantList::class);
     }
+
+
 }

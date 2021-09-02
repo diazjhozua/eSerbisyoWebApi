@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComplainantListsTable extends Migration
+class CreateComplaintTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateComplainantListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('complainant_lists', function (Blueprint $table) {
+        Schema::create('complaint_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('complaint_id')->nullable()->constrained('complaints')->onDelete('cascade');
-            $table->string('name');
-            $table->string('signature_picture');
-            $table->string('file_path');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ class CreateComplainantListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('complainant_lists');
+        Schema::dropIfExists('complaint_types');
     }
 }

@@ -15,12 +15,9 @@ class CreateDefendantListsTable extends Migration
     {
         Schema::create('defendant_lists', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('complaint_id');
+            $table->foreignId('complaint_id')->nullable()->constrained('complaints')->onDelete('cascade');
             $table->string('name');
             $table->timestamps();
-
-            $table->foreign('complaint_id')->references('id')
-                ->on('complaints')->onDelete('cascade');
         });
     }
 

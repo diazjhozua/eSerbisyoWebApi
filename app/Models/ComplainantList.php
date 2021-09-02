@@ -10,6 +10,6 @@ class ComplainantList extends Model
     use HasFactory;
 
     public function complaint(){
-        return $this->belongsTo(Complaint::class);
+        return $this->belongsTo(Complaint::class)->withDefault();
     }
 }

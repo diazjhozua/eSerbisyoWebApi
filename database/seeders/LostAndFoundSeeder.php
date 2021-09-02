@@ -20,6 +20,7 @@ class LostAndFoundSeeder extends Seeder
         foreach (range(1,20) as $index) {
             $status = $faker->numberBetween(1, 4);
             $type = $faker->numberBetween(1, 2);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             DB::table('lost_and_founds')->insert([
                 'user_id' => $faker->numberBetween(1, 19),
                 'item' => $faker->sentence($nbWords = 3, $variableNbWords = true),
@@ -28,7 +29,8 @@ class LostAndFoundSeeder extends Seeder
                 'contact_information' => $faker->tollFreePhoneNumber(),
                 'status' => $status,
                 'report_type' => $type,
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+                'created_at' => $date,
+                'updated_at' => $date,
             ]);
         }
     }

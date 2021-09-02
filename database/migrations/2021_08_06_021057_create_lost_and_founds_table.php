@@ -15,7 +15,7 @@ class CreateLostAndFoundsTable extends Migration
     {
         Schema::create('lost_and_founds', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->string('item');
             $table->string('last_seen');
             $table->string('description');
@@ -26,8 +26,6 @@ class CreateLostAndFoundsTable extends Migration
             $table->integer('report_type');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade');
         });
     }
 

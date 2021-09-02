@@ -4,27 +4,30 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\DocumentType;
-use App\Http\Resources\DocumentTypeResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Resources\ComplaintTypeResource;
+use App\Models\ComplainantList;
+use App\Models\ComplaintType;
+use App\Models\DefendantList;
 
-class DocumentTypeController extends Controller
+class ComplaintTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     public function index()
     {
-        $document_types = DocumentType::withCount('documents')->orderBy('created_at','DESC')->get();
+        $complaint_types = ComplaintType::withCount('complaints')->orderBy('complaints_count', 'DESC')->get();
+
         return response()->json([
             'success' => true,
-            'document_types' => DocumentTypeResource::collection($document_types)
+            'complaint_types' => ComplaintTypeResource::collection($complaint_types)
         ]);
-
     }
 
     /**
@@ -34,7 +37,7 @@ class DocumentTypeController extends Controller
      */
     public function create()
     {
-
+        //
     }
 
     /**
@@ -46,7 +49,7 @@ class DocumentTypeController extends Controller
     public function store(Request $request)
     {
         $rules = array(
-            'type' => 'required|unique:document_types|string|min:1|max:120',
+            'type' => 'required|unique:document_types|string|min:4|max:120',
         );
 
         $error = Validator::make($request->all(), $rules);
@@ -58,15 +61,15 @@ class DocumentTypeController extends Controller
             ]);
         }
 
-        $document_type = new DocumentType();
-        $document_type->type = $request->type;
-        $document_type->save();
-        $document_type->documents_count = 0;
+        $complaint_type = new ComplaintType();
+        $complaint_type->type = $request->type;
+        $complaint_type->save();
+        $complaint_type->complaints_count = 0;
 
         return response()->json([
             'success' => true,
-            'message' => 'New document type created succesfully',
-            'document_type' => new DocumentTypeResource($document_type)
+            'message' => 'New complaint type created succesfully',
+            'complaint_type' => new ComplaintTypeResource($complaint_type)
         ]);
     }
 
@@ -79,18 +82,22 @@ class DocumentTypeController extends Controller
     public function show($id)
     {
         try {
-            $document_type = DocumentType::with('documents')->withCount('documents')->findOrFail($id);
+            $complaint_type = ComplaintType::with(['complaints' => function($query){
+                $query->orderBy('created_at', 'DESC');
+                $query->withCount('complainant_lists');
+                $query->withCount('defendant_lists');
+            }])->withCount('complaints')->findOrFail($id);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Found document type data',
-                'document_type' => new DocumentTypeResource($document_type)
+                'message' => 'Found complaint type data',
+                'complaint_type' => new ComplaintTypeResource($complaint_type)
             ]);
 
         } catch (ModelNotFoundException $ex){
             return response()->json([
                 'success' => false,
-                'message' => 'No document type found',
+                'message' => 'No complaint type id found',
             ]);
         }
     }
@@ -104,12 +111,12 @@ class DocumentTypeController extends Controller
     public function edit($id)
     {
         try {
-            $document_type = DocumentType::findOrFail($id);
+            $complaint_type = ComplaintType::findOrFail($id);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Found document type data',
-                'document_type' => new DocumentTypeResource($document_type)
+                'complaint_type' => new ComplaintTypeResource($complaint_type)
             ]);
 
         } catch (ModelNotFoundException $ex){
@@ -143,20 +150,20 @@ class DocumentTypeController extends Controller
         }
 
         try {
-            $document_type = DocumentType::withCount('documents')->findOrFail($id);
-            $document_type->type = $request->type;
-            $document_type->save();
+            $complaint_type = ComplaintType::withCount('complaints')->findOrFail($id);
+            $complaint_type->type = $request->type;
+            $complaint_type->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'The document type is successfully updated',
-                'document_type' => new DocumentTypeResource($document_type)
+                'message' => 'The complaint type is successfully updated',
+                'complaint_type' => new ComplaintTypeResource($complaint_type)
             ]);
 
         } catch (ModelNotFoundException $ex){
             return response()->json([
                 'success' => false,
-                'message' => 'No document type id found',
+                'message' => 'No complaint type id found',
             ]);
         }
     }
@@ -170,16 +177,16 @@ class DocumentTypeController extends Controller
     public function destroy($id)
     {
         try {
-            $type = DocumentType::findOrFail($id);
-            $type->delete();
+            $complaint_type = ComplaintType::findOrFail($id);
+            $complaint_type->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'The document type is successfully deleted',
+                'message' => 'The complaint type is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
             return response()->json([
                 'success' => false,
-                'message' => 'No document type id found',
+                'message' => 'No complaint type id found',
             ]);
         }
     }

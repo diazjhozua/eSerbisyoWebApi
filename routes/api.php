@@ -12,10 +12,10 @@ use App\Http\Controllers\Api\TermController;
 use App\Http\Controllers\Api\PositionController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\MissingPersonController;
-
-
 use App\Http\Controllers\Api\LostAndFoundController;
-use App\Models\LostAndFound;
+use App\Http\Controllers\Api\ComplaintTypeController;
+use App\Http\Controllers\Api\ComplaintController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +52,9 @@ Route::post('lost-and-found/approved/{id}', [LostAndFoundController::class, 'app
 Route::post('lost-and-found/denied/{id}', [LostAndFoundController::class, 'denied']);
 Route::post('lost-and-found/resolved/{id}', [LostAndFoundController::class, 'resolved']);
 Route::resource('lost-and-found', LostAndFoundController::class);
+
+Route::resource('complaint-types', ComplaintTypeController::class);
+Route::resource('complaints', ComplaintController::class);
 
 
 
