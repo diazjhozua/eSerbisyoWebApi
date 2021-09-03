@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\FeedbackRequest;
 use App\Models\Feedback;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\FeedbackResource;
 
 class FeedbackController extends Controller
@@ -44,30 +43,13 @@ class FeedbackController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FeedbackRequest $request)
     {
-        // check if the user already created a feedback within this day
-        // $feedback = Feedback::where('user_id', 2)->orderBy('created_at', 'desc')->first();
-
-        // if (date('Y-m-d') == date('Y-m-d', strtotime($feedback->created_at))) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'You already submitted a feedback in this day, please comeback tomorrow',
-        //     ]);
-        // }
-
-        $rules = array(
-            'is_anonymous' => 'required|integer|digits_between: 0,1',
-            'feedback_type_id' => 'required|exists:feedback_types,id',
-            'message' => 'required|string|min:5|max:255',
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
+        $feedback = Feedback::where('user_id', 2)->orderBy('created_at', 'desc')->first();
+        if (date('Y-m-d') == date('Y-m-d', strtotime($feedback->created_at))) {
             return response()->json([
                 'success' => false,
-                'message' => $error->errors(),
+                'message' => 'You already submitted a feedback in this day, please comeback tomorrow',
             ]);
         }
 
@@ -116,7 +98,7 @@ class FeedbackController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FeedbackRequest $request, $id)
     {
         //
     }

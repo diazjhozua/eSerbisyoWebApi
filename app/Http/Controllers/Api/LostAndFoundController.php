@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\LostAndFoundRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\LostAndFoundResource;
 use App\Models\LostAndFound;
-use App\Rules\ValidReportType;
-use App\Rules\ValidReportStatus;
+
 
 
 class LostAndFoundController extends Controller
@@ -34,10 +33,7 @@ class LostAndFoundController extends Controller
                 'lost_and_found' => new LostAndFoundResource($lost_and_found)
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
     }
 
@@ -54,10 +50,7 @@ class LostAndFoundController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
     }
 
@@ -75,10 +68,7 @@ class LostAndFoundController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
     }
 
@@ -122,9 +112,9 @@ class LostAndFoundController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LostAndFoundRequest $request)
     {
-        // check if the user already created a feedback within this day
+        // check if the user already created a lost and found report within this day
         // $lost_and_found = LostAndFound::where('user_id', 2)->orderBy('created_at', 'desc')->first();
 
         // if (date('Y-m-d') == date('Y-m-d', strtotime($lost_and_found->created_at))) {
@@ -133,24 +123,6 @@ class LostAndFoundController extends Controller
         //         'message' => 'You already submitted a missing-report in this day, please comeback tomorrow',
         //     ]);
         // }
-
-        $rules = array(
-            'item' => 'required|string|min:3|max:120',
-            'last_seen' => 'required|string|min:3|max:120',
-            'description' => 'required|string|min:3|max:120',
-            'contact_information' => 'required|string|min:3|max:120',
-            'picture' => 'required|mimes:jpeg,png|max:3000',
-            'report_type' => ['required', 'integer', new ValidReportType],
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
 
         $lost_and_found = new LostAndFound();
         $lost_and_found->item = $request->item;
@@ -204,10 +176,7 @@ class LostAndFoundController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
     }
 
@@ -264,10 +233,7 @@ class LostAndFoundController extends Controller
             // }
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
     }
 
@@ -278,7 +244,7 @@ class LostAndFoundController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(LostAndFoundRequest $request, $id)
     {
         try {
             $lost_and_found = LostAndFound::with('user')->findOrFail($id);
@@ -292,31 +258,8 @@ class LostAndFoundController extends Controller
             //     ]);
             // }
 
-
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found report id found',
-            ]);
-        }
-
-        $rules = array(
-            'item' => 'required|string|min:3|max:120',
-            'last_seen' => 'required|string|min:3|max:120',
-            'description' => 'required|string|min:3|max:120',
-            'contact_information' => 'required|string|min:3|max:120',
-            'picture' => 'mimes:jpeg,png|max:3000',
-            'report_type' => ['required', 'integer', new ValidReportType],
-            'status' => ['integer', new ValidReportStatus],
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
 
         $lost_and_found->item = $request->item;
@@ -389,10 +332,7 @@ class LostAndFoundController extends Controller
             // }
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No lost and found id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('lost and found report'));
         }
     }
 }

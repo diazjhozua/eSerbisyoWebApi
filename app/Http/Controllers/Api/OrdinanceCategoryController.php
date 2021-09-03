@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\OrdinanceCategoryRequest;
 use App\Models\OrdinanceCategory;
-use App\Models\Ordinance;
-
 use App\Http\Resources\OrdinanceCategoryResource;
-use App\Http\Resources\OrdinanceResource;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class OrdinanceCategoryController extends Controller
 {
     /**
@@ -45,21 +43,8 @@ class OrdinanceCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrdinanceCategoryRequest $request)
     {
-        $rules = array(
-            'category' => 'required|unique:ordinance_categories|string|min:1|max:120',
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $ordinance_category = new OrdinanceCategory();
         $ordinance_category->category = $request->category;
         $ordinance_category->save();
@@ -90,10 +75,7 @@ class OrdinanceCategoryController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance type found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance category'));
         }
     }
 
@@ -115,10 +97,7 @@ class OrdinanceCategoryController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance category'));
         }
     }
 
@@ -129,21 +108,8 @@ class OrdinanceCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OrdinanceCategoryRequest $request, $id)
     {
-        $rules = array(
-            'category' => 'required|unique:ordinance_categories|string|min:1|max:120'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $ordinance_category = OrdinanceCategory::withCount('ordinances')->findOrFail($id);
             $ordinance_category->category = $request->category;
@@ -156,10 +122,7 @@ class OrdinanceCategoryController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance category id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance category'));
         }
     }
 
@@ -179,10 +142,7 @@ class OrdinanceCategoryController extends Controller
                 'message' => 'The ordinance category is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance category id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance category'));
         }
     }
 }

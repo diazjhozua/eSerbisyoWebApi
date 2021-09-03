@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MissingPersonRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -33,10 +35,7 @@ class MissingPersonController extends Controller
                 'missing_person' => new MissingPersonResource($missing_person)
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No missing person report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
     }
 
@@ -53,10 +52,7 @@ class MissingPersonController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No missing person report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
     }
 
@@ -73,10 +69,7 @@ class MissingPersonController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No missing person report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
     }
 
@@ -119,7 +112,7 @@ class MissingPersonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MissingPersonRequest $request)
     {
         // check if the user already created a feedback within this day
         // $missing_person = MissingPerson::where('user_id', 2)->orderBy('created_at', 'desc')->first();
@@ -130,30 +123,6 @@ class MissingPersonController extends Controller
         //         'message' => 'You already submitted a missing-report in this day, please comeback tomorrow',
         //     ]);
         // }
-
-        $rules = array(
-            'name' => 'required|string|min:3|max:50',
-            'height' => 'required|numeric|between:1,9.99',
-            'weight' => 'required|numeric|between:1,120.99',
-            'age' => 'integer|between:0,200',
-            'eyes' => 'string|min:3|max:50',
-            'hair' => 'string|min:3|max:50',
-            'unique_sign' => 'required|string|min:3|max:120',
-            'important_information' => 'required|string|min:3|max:120',
-            'last_seen' => 'required|string|min:3|max:60',
-            'contact_information' => 'required|string|min:3|max:120',
-            'picture' => 'required|mimes:jpeg,png|max:3000',
-            'report_type' => ['required', 'integer', new ValidReportType],
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
 
         $missing_person = new MissingPerson();
         $missing_person->name = $request->name;
@@ -214,10 +183,7 @@ class MissingPersonController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No missing person found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
     }
 
@@ -269,10 +235,7 @@ class MissingPersonController extends Controller
             // }
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No missing person report id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
     }
 
@@ -283,7 +246,7 @@ class MissingPersonController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MissingPersonRequest $request, $id)
     {
         try {
             $missing_person = MissingPerson::with('user')->findOrFail($id);
@@ -299,37 +262,7 @@ class MissingPersonController extends Controller
 
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No missing person report id found',
-            ]);
-        }
-
-        $rules = array(
-            'name' => 'required|string|min:3|max:50',
-            'height' => 'required|numeric|between:1,9.99',
-            'weight' => 'required|numeric|between:1,120.99',
-            'age' => 'required|integer|between:0,200',
-            'eyes' => 'string|min:3|max:50',
-            'hair' => 'string|min:3|max:50',
-            'unique_sign' => 'required|string|min:3|max:120',
-            'important_information' => 'required|string|min:3|max:120',
-            'last_seen' => 'required|string|min:3|max:60',
-            'contact_information' => 'required|string|min:3|max:120',
-            'picture' => 'mimes:jpeg,png|max:3000',
-            'report_type' => ['required', 'integer', new ValidReportType],
-            'status' => ['integer', new ValidReportStatus],
-        );
-
-
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
 
         $missing_person->name = $request->name;
@@ -405,10 +338,7 @@ class MissingPersonController extends Controller
             // }
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'You don\'t have the priviledges to edit this data',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('missing person report'));
         }
     }
 }

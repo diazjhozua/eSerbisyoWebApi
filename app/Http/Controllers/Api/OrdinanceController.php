@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrdinanceRequest;
 use Illuminate\Http\Request;
 use App\Models\Ordinance;
 use App\Models\OrdinanceCategory;
@@ -50,45 +52,28 @@ class OrdinanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OrdinanceRequest $request)
     {
-        $rules = array(
-
-            'ordinance_no'=> 'required|integer',
-            'title'=> 'required|string|min:1|max:60',
-            'date_approved' => 'required',
-            'ordinance_category_id' => 'required|integer|exists:ordinance_categories,id',
-            'pdf' => 'required|mimes:pdf|max:10000'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-            $ordinance = new Ordinance();
-            $ordinance->ordinance_no = $request->ordinance_no;
-            $ordinance->title = $request->title;
-            $ordinance->date_approved = $request->date_approved;
-            $ordinance->ordinance_category_id = $request->ordinance_category_id;
+        $ordinance = new Ordinance();
+        $ordinance->ordinance_no = $request->ordinance_no;
+        $ordinance->title = $request->title;
+        $ordinance->date_approved = $request->date_approved;
+        $ordinance->ordinance_category_id = $request->ordinance_category_id;
 
 
-            $fileName = time().'_'.$request->pdf->getClientOriginalName();
-            $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
+        $fileName = time().'_'.$request->pdf->getClientOriginalName();
+        $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
 
-            $ordinance->pdf_name = $fileName;
-            $ordinance->file_path = $filePath;
+        $ordinance->pdf_name = $fileName;
+        $ordinance->file_path = $filePath;
 
-            $ordinance->save();
+        $ordinance->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'New ordinance created succesfully',
-                'ordinance' => new OrdinanceResource($ordinance->load('ordinance_category'))
-            ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'New ordinance created succesfully',
+            'ordinance' => new OrdinanceResource($ordinance->load('ordinance_category'))
+        ]);
 
     }
 
@@ -125,10 +110,7 @@ class OrdinanceController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance'));
         }
     }
 
@@ -139,25 +121,8 @@ class OrdinanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OrdinanceRequest $request, $id)
     {
-        $rules = array(
-            'ordinance_no'=> 'required|integer',
-            'title'=> 'required|string|min:1|max:60',
-            'date_approved' => 'required',
-            'ordinance_category_id' => 'required|integer|exists:ordinance_categories,id',
-            'pdf' => 'required|mimes:pdf|max:10000'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $ordinance = Ordinance::with('ordinance_category')->findOrFail($id);
             $ordinance->ordinance_no = $request->ordinance_no;
@@ -167,7 +132,6 @@ class OrdinanceController extends Controller
             //check if they want to update the pdf file
             if($request->hasFile('pdf')) {
                 Storage::delete('public/ordinances/'. $ordinance->pdf_name);
-
                 $fileName = time().'_'.$request->pdf->getClientOriginalName();
                 $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
 
@@ -184,10 +148,7 @@ class OrdinanceController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance'));
         }
     }
 
@@ -208,10 +169,7 @@ class OrdinanceController extends Controller
                 'message' => 'The ordinance is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No ordinance id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('ordinance'));
         }
     }
 }

@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\ComplaintTypeResource;
-use App\Models\ComplainantList;
 use App\Models\ComplaintType;
-use App\Models\DefendantList;
+use App\Helper\Helper;
 
 class ComplaintTypeController extends Controller
 {
@@ -20,6 +18,14 @@ class ComplaintTypeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function noItemFound()
+    {
+        return response()->json([
+            'success' => false,
+            'message' => 'No complaint type id found',
+        ]);
+    }
     public function index()
     {
         $complaint_types = ComplaintType::withCount('complaints')->orderBy('complaints_count', 'DESC')->get();
@@ -95,10 +101,7 @@ class ComplaintTypeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No complaint type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('complaint type'));
         }
     }
 
@@ -120,10 +123,7 @@ class ComplaintTypeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('complaint type'));
         }
     }
 
@@ -161,10 +161,7 @@ class ComplaintTypeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No complaint type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('complaint type'));
         }
     }
 
@@ -184,10 +181,7 @@ class ComplaintTypeController extends Controller
                 'message' => 'The complaint type is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No complaint type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('complaint type'));
         }
     }
 }
