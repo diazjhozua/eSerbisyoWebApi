@@ -21,6 +21,8 @@ class LostAndFoundSeeder extends Seeder
             $status = $faker->numberBetween(1, 4);
             $type = $faker->numberBetween(1, 2);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppMissingPersons', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
+            $file_path = 'storage/missing-pictures/'.$picture_name;
             DB::table('lost_and_founds')->insert([
                 'user_id' => $faker->numberBetween(1, 19),
                 'item' => $faker->sentence($nbWords = 3, $variableNbWords = true),
@@ -29,6 +31,8 @@ class LostAndFoundSeeder extends Seeder
                 'contact_information' => $faker->tollFreePhoneNumber(),
                 'status' => $status,
                 'report_type' => $type,
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);

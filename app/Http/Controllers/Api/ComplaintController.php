@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ComplaintRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\ComplaintResource;
 use App\Http\Resources\ComplaintTypeResource;
 use App\Models\Complaint;
+use App\Models\ComplainantList;
+use App\Models\DefendantList;
 use App\Models\ComplaintType;
 use App\Rules\ValidReportStatus;
 use Illuminate\Support\Facades\DB;
@@ -54,40 +58,61 @@ class ComplaintController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ComplaintRequest $request)
     {
-        $rules = array(
-            'complaint_type_id' => 'integer|exists:complaint_types,id',
-            'custom_type' => 'string|min:1|max:60',
-            'reason' => 'required:string|min:4|max:500',
-            'action' => 'required:string|min:4|max:500',
-            'status' => ['integer', new ValidReportStatus],
-            'complainant_list' => 'required|array|min:3',
-            'complainant_list.complaint_id' => 'required|integer|exists:complaints,id',
-            'complainant_list.name' => 'required|string|min:1|max:60',
-            'complainant_list.signature' => 'required|mimes:jpeg,png|max:3000',
-            'defendant_list' => 'required|array|min:2',
-            'defendant_list.complaint_id' => 'required|integer|exists:complaints,id',
-            'defendant_list.name' => 'required|string|min:1|max:60',
-        );
 
-        try {
-            DB::transaction();
-            // DB::insert(...);
-            // DB::insert(...);
-            // DB::insert(...);
+        DB::transaction(function($request) {
             $complaint = new Complaint();
             $complaint->complaint_type_id = $request->complaint_type_id;
             $complaint->custom_type = $request->custom_type;
             $complaint->reason = $request->reason;
             $complaint->action = $request->action;
+            $complaint->status = 2;
+            $complaint->save();
+
+            $complainant_lists_count = 0;
+            foreach ($request->complainant_list as $complainant) {
+                $complainant_lists_count ++;
+                $complainant = new ComplainantList();
+                $complainant->complaint_id = $complaint->id;
+                $complainant->name = $complainant->name;
+
+                $fileName = time().'_'.$complainant->signature->getClientOriginalName();
+                $filePath = $complainant->file('signature')->storeAs('signatures', $fileName, 'private');
+
+                $complainant->signature_picture = $fileName;
+                $complainant->file_path = $filePath;
+
+                $complainant->save();
+            }
+
+            $defendant_lists_count = 0;
+            foreach ($request->defendant_list as $defendant) {
+                $defendant_lists_count ++;
+                $defendant = new DefendantList();
+                $defendant->complaint_id = $complaint->id;
+                $defendant->name = $complainant->name;
+
+                $defendant->save();
+            }
+
+            $complaint->complainant_lists_count = $complainant_lists_count;
+            $complaint->defendant_lists_count = $defendant_lists_count;
 
             DB::commit();
-            // all good
-        } catch (\Exception $e) {
-            DB::rollback();
-            // something went wrong
-        }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'New complaint created succesfully',
+                'complaint' => new ComplaintResource($complaint->load('complaint_type', 'complainant_lists', 'defendant_lists'))
+            ]);
+      });
+
+      return response()->json([
+        'success' => false,
+        'message' => 'Failed',
+    ]);
+
 
     }
 
@@ -99,7 +124,17 @@ class ComplaintController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $complaint = Complaint::with('complaint_type', 'complainant_lists', 'defendant_lists')->withCount('complainant_lists', 'defendant_lists')->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Found complaint data',
+                'complaint' => new ComplaintResource($complaint)
+            ]);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(Helper::instance()->noItemFound('complaint'));
+        }
     }
 
     /**

@@ -60,7 +60,6 @@ class OrdinanceController extends Controller
         $ordinance->date_approved = $request->date_approved;
         $ordinance->ordinance_category_id = $request->ordinance_category_id;
 
-
         $fileName = time().'_'.$request->pdf->getClientOriginalName();
         $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
 

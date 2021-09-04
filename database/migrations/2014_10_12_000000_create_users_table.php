@@ -24,7 +24,8 @@ class CreateUsersTable extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('barangay_id')->unique()->nullable();
-            $table->string('picture')->nullable();
+            $table->string('picture_name');
+            $table->string('file_path');
             $table->unsignedBigInteger('purok_id')->nullable();
             $table->string('address');
 

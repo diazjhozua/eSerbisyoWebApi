@@ -15,16 +15,13 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->longText('description');
             $table->string('location_address');
             $table->string('landmark');
             $table->string('picture');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')
-                ->on('users')->onDelete('cascade');
         });
     }
 

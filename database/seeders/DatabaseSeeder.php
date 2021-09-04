@@ -14,10 +14,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-        // Get all files in a directory
-        $files =   Storage::allFiles('private/signatures/');
+        // Delete all files
+        $files = Storage::allFiles('private/signatures/');
         Storage::delete($files);
+        $files = Storage::allFiles('public/documents/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/employees/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/missing-pictures/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/ordinances/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/users/');
+        Storage::delete($files);
+
         $this->call([
             PurokSeeder::class,
             UserRoleSeeder::class,

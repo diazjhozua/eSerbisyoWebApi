@@ -16,62 +16,96 @@ class EmployeeSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        DB::table('employees')->insert([
-            'name' => $faker->name,
-            'term_id' => 1,
-            'position_id' => 1,
-            'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-        ]);
+        foreach(range(1,2) as $term) {
+            $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
-        foreach (range(1,7) as $index) {
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+            $file_path = 'storage/employees/'.$picture_name;
+
             DB::table('employees')->insert([
                 'name' => $faker->name,
-                'term_id' => 1,
-                'position_id' => 2,
+                'term_id' => $term,
+                'position_id' => 1,
                 'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-                'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
             ]);
-        }
 
-        DB::table('employees')->insert([
-            'name' => $faker->name,
-            'term_id' => 1,
-            'position_id' => 3,
-            'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-        ]);
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+            $file_path = 'storage/employees/'.$picture_name;
 
-        DB::table('employees')->insert([
-            'name' => $faker->name,
-            'term_id' => 1,
-            'position_id' => 4,
-            'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-        ]);
+            foreach (range(1,7) as $index) {
+                DB::table('employees')->insert([
+                    'name' => $faker->name,
+                    'term_id' => $term,
+                    'position_id' => 2,
+                    'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
+                    'picture_name' => $picture_name,
+                    'file_path' => $file_path,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                ]);
+            }
 
-        DB::table('employees')->insert([
-            'name' => $faker->name,
-            'term_id' => 1,
-            'position_id' => 5,
-            'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-        ]);
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+            $file_path = 'storage/employees/'.$picture_name;
 
-        foreach (range(1,7) as $index) {
             DB::table('employees')->insert([
                 'name' => $faker->name,
-                'term_id' => 1,
-                'position_id' => 6,
+                'term_id' => $term,
+                'position_id' => 3,
                 'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-                'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-             ]);
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
+
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+            $file_path = 'storage/employees/'.$picture_name;
+
+            DB::table('employees')->insert([
+                'name' => $faker->name,
+                'term_id' => $term,
+                'position_id' => 4,
+                'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
+
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+            $file_path = 'storage/employees/'.$picture_name;
+
+            DB::table('employees')->insert([
+                'name' => $faker->name,
+                'term_id' => $term,
+                'position_id' => 5,
+                'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
+
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+            $file_path = 'storage/employees/'.$picture_name;
+
+            foreach (range(1,7) as $index) {
+                DB::table('employees')->insert([
+                    'name' => $faker->name,
+                    'term_id' => $term,
+                    'position_id' => 6,
+                    'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
+                    'picture_name' => $picture_name,
+                    'file_path' => $file_path,
+                    'created_at' => $timestamp,
+                    'updated_at' => $timestamp,
+                 ]);
+            }
         }
     }
 }

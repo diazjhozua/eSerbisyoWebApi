@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PositionRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -42,22 +44,8 @@ class PositionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PositionRequest $request)
     {
-        $rules = array(
-            'id' => 'required|integer|unique:positions',
-            'position' => 'required|string||unique:positions|min:5|max:60',
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $position = new Position();
         $position->id = $request->id;
         $position->position = $request->position;
@@ -91,10 +79,7 @@ class PositionController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No position id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('position'));
         }
     }
 
@@ -116,10 +101,7 @@ class PositionController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No position id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('position'));
         }
     }
 
@@ -130,22 +112,8 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PositionRequest $request, $id)
     {
-        $rules = array(
-            'id' => 'required|integer|exists:positions,id',
-            'position' => 'required|string||unique:positions|min:5|max:60',
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $position = Position::withCount('employees')->findOrFail($request->id);
             $position->id = $request->id;
@@ -159,10 +127,7 @@ class PositionController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No position id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('position'));
         }
     }
 
@@ -183,10 +148,7 @@ class PositionController extends Controller
                 'message' => 'The position is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No position id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('position'));
         }
     }
 }

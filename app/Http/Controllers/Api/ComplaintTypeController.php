@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\ComplaintTypeResource;
 use App\Models\ComplaintType;
 use App\Helper\Helper;
+use App\Http\Requests\ComplaintTypeRequest;
 
 class ComplaintTypeController extends Controller
 {
@@ -52,21 +53,8 @@ class ComplaintTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ComplaintTypeRequest $request)
     {
-        $rules = array(
-            'type' => 'required|unique:document_types|string|min:4|max:120',
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $complaint_type = new ComplaintType();
         $complaint_type->type = $request->type;
         $complaint_type->save();
@@ -134,21 +122,8 @@ class ComplaintTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ComplaintTypeRequest $request, $id)
     {
-        $rules = array(
-            'type' => 'required|unique:document_types|string|min:4|max:120'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $complaint_type = ComplaintType::withCount('complaints')->findOrFail($id);
             $complaint_type->type = $request->type;

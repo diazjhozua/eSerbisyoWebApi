@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
+use App\Http\Resources\ComplainantResource;
+use App\Http\Resources\DefendantResource;
 
 class ComplaintResource extends JsonResource
 {
@@ -16,6 +18,8 @@ class ComplaintResource extends JsonResource
     public function toArray($request)
     {
         $user = $this->whenloaded('user');
+        $complainant_lists = $this->whenloaded('complainant_lists');
+        $defendant_lists = $this->whenloaded('defendant_lists');
         $complaint_type = $this->whenLoaded('complaint_type');
         switch ($this->status) {
             case 1:
@@ -48,16 +52,23 @@ class ComplaintResource extends JsonResource
             $this->mergeWhen(isset($this->complainant_lists_count), [
                 'complainant_lists_count' => $this->complainant_lists_count,
             ]),
+
+            $this->mergeWhen($this->relationLoaded('complainant_lists'), [
+                'complainant_lists' => ComplainantResource::collection($complainant_lists),
+            ]),
+
             $this->mergeWhen(isset($this->defendant_lists_count), [
                 'defendant_lists_count' => $this->defendant_lists_count,
+            ]),
+
+            $this->mergeWhen($this->relationLoaded('defendant_lists'), [
+                'defendant_lists' => DefendantResource::collection($defendant_lists),
             ]),
 
             'status' => $this->status,
             'status_of_application' => $status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
-
-
 
         ];
     }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
 
-class OrdinanceRequest extends FormRequest
+class PositionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +24,15 @@ class OrdinanceRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'ordinance_no'=> 'required|string|min:4|max:60',
-            'title'=> 'required|string|min:4|max:60',
-            'date_approved' => 'required|date|date_format:Y-m-d',
-            'ordinance_category_id' => 'required|integer|exists:ordinance_categories,id',
+            'position' => 'required|string|unique:positions|min:5|max:60',
         ];
 
         if ($this->isMethod('POST')) {
-            $rules['pdf'] = 'required|mimes:pdf|max:10000';
+            $rules['id'] = 'required|integer|unique:positions';
         }
 
         if ($this->isMethod('PUT')) {
-            $rules['pdf'] = 'mimes:pdf|max:10000';
+            $rules['id'] = 'required|integer|exists:positions,id';
         }
 
         return $rules;

@@ -15,15 +15,12 @@ class CreateDocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('document_type_id')->nullable();
+            $table->foreignId('document_type_id')->nullable()->constrained('document_types')->onDelete('set null');
             $table->longText('description')->nullable();
             $table->year('year');
             $table->string('pdf_name');
             $table->string('file_path');
             $table->timestamps();
-
-            $table->foreign('document_type_id')->references('id')
-                ->on('document_types')->onDelete('set null');
         });
     }
 

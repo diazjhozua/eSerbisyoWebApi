@@ -18,9 +18,9 @@ class CreateEmployeesTable extends Migration
             $table->string('name');
             $table->foreignId('term_id')->nullable()->constrained('terms')->onDelete('set null');
             $table->foreignId('position_id')->nullable()->constrained('positions')->onDelete('set null');
-            $table->longText('description')->nullable();
-            $table->string('picture_name')->nullable();
-            $table->string('file_path')->nullable();
+            $table->longText('description');
+            $table->string('picture_name');
+            $table->string('file_path');
             $table->timestamps();
         });
     }
