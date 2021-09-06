@@ -41,7 +41,7 @@ class ComplaintSeeder extends Seeder
             foreach (range(1, $complainantCount) as $index) {
                 $picture = $faker->file($sourceDir = 'C:\Project Assets\AppSignatures', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\signatures', false);
                 $file_path = 'public/signatures/'.$picture;
-                DB::table('complainant_lists')->insert([
+                DB::table('complainants')->insert([
                     'complaint_id' => $complaint_id,
                     'name' => $faker->name(),
                     'signature_picture' => $picture,
@@ -52,7 +52,7 @@ class ComplaintSeeder extends Seeder
             }
 
             foreach (range(1, $defendantCount) as $index) {
-                DB::table('defendant_lists')->insert([
+                DB::table('defendants')->insert([
                     'complaint_id' => $complaint_id,
                     'name' => $faker->name(),
                     'created_at' => $date,

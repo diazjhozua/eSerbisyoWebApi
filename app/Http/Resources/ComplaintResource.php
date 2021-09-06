@@ -19,8 +19,8 @@ class ComplaintResource extends JsonResource
     {
 
         $user = $this->whenloaded('user');
-        $complainant_lists = $this->whenloaded('complainant_lists');
-        $defendant_lists = $this->whenloaded('defendant_lists');
+        $complainants = $this->whenloaded('complainants');
+        $defendants = $this->whenloaded('defendants');
         $complaint_type = $this->whenLoaded('complaint_type');
         switch ($this->status) {
             case 1:
@@ -51,20 +51,20 @@ class ComplaintResource extends JsonResource
             'reason' => $this->reason,
             'action' => $this->action,
 
-            $this->mergeWhen(isset($this->complainant_lists_count), [
-                'complainant_lists_count' => $this->complainant_lists_count,
+            $this->mergeWhen(isset($this->complainants_count), [
+                'complainants_count' => $this->complainants_count,
             ]),
 
-            $this->mergeWhen($this->relationLoaded('complainant_lists'), [
-                'complainant_lists' => ComplainantResource::collection($complainant_lists),
+            $this->mergeWhen($this->relationLoaded('complainants'), [
+                'complainants' => ComplainantResource::collection($complainants),
             ]),
 
-            $this->mergeWhen(isset($this->defendant_lists_count), [
-                'defendant_lists_count' => $this->defendant_lists_count,
+            $this->mergeWhen(isset($this->defendants_count), [
+                'defendants_count' => $this->defendants_count,
             ]),
 
-            $this->mergeWhen($this->relationLoaded('defendant_lists'), [
-                'defendant_lists' => DefendantResource::collection($defendant_lists),
+            $this->mergeWhen($this->relationLoaded('defendants'), [
+                'defendants' => DefendantResource::collection($defendants),
             ]),
 
             'status' => $this->status,

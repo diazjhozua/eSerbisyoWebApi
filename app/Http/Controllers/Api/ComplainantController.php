@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
-use App\Models\ComplainantList;
+use App\Models\Complainant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
-class ComplainantListController extends Controller
+class ComplainantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -38,7 +38,7 @@ class ComplainantListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -61,7 +61,7 @@ class ComplainantListController extends Controller
     public function edit($id)
     {
         try {
-            $complainant = ComplainantList::findOrFail($id);
+            $complainant = Complainant::findOrFail($id);
 
             return response()->json([
                 'success' => true,

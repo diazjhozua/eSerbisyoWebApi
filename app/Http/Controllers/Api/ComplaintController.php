@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\ComplaintResource;
 use App\Http\Resources\ComplaintTypeResource;
+use App\Models\Complainant;
 use App\Models\Complaint;
-use App\Models\ComplainantList;
-use App\Models\DefendantList;
 use App\Models\ComplaintType;
+use App\Models\Defendant;
 use Illuminate\Support\Facades\DB;
 
 class ComplaintController extends Controller
@@ -27,7 +27,7 @@ class ComplaintController extends Controller
 
     public function changeStatus(ChangeStatusRequest $request, $id) {
         try {
-            $complaint = Complaint::with('complaint_type', 'complainant_lists', 'defendant_lists')->withCount('complainant_lists', 'defendant_lists')->findOrFail($id);
+            $complaint = Complaint::with('complaint_type', 'complainants', 'defendants')->withCount('complainants', 'defendants')->findOrFail($id);
 
             if ($request->status == $complaint->status) {
                 return response()->json(Helper::instance()->sameStatusMessage($request->status, 'Complaint'));
@@ -51,7 +51,7 @@ class ComplaintController extends Controller
 
     public function index()
     {
-        $complaints = Complaint::with('complaint_type')->withCount('complainant_lists', 'defendant_lists')->orderBy('created_at', 'DESC')->get();
+        $complaints = Complaint::with('complaint_type')->withCount('complainants', 'defendants')->orderBy('created_at', 'DESC')->get();
 
         return response()->json([
             'success' => true,
@@ -98,7 +98,7 @@ class ComplaintController extends Controller
             foreach ($request->complainant_list as $key => $value) {
 
                 $complainant_lists_count ++;
-                $complainant = new ComplainantList();
+                $complainant = new Complainant();
                 $complainant->complaint_id = $complaint->id;
                 $complainant->name = $value['name'];
 
@@ -116,7 +116,7 @@ class ComplaintController extends Controller
 
             foreach ($request->defendant_list as $key => $value) {
                 $defendant_lists_count ++;
-                $defendant = new DefendantList();
+                $defendant = new Defendant();
                 $defendant->complaint_id = $complaint->id;
                 $defendant->name = $value['name'];
 
@@ -131,7 +131,7 @@ class ComplaintController extends Controller
             return [
                 'success' => true,
                 'message' => 'New complaint created succesfully',
-                'complaint' => new ComplaintResource($complaint->load('complaint_type', 'complainant_lists', 'defendant_lists'))
+                'complaint' => new ComplaintResource($complaint->load('complaint_type', 'complainants', 'defendants'))
             ];
         });
 
@@ -147,7 +147,7 @@ class ComplaintController extends Controller
     public function show($id)
     {
         try {
-            $complaint = Complaint::with('complaint_type', 'complainant_lists', 'defendant_lists')->withCount('complainant_lists', 'defendant_lists')->findOrFail($id);
+            $complaint = Complaint::with('complaint_type', 'complainants', 'defendants')->withCount('complainants', 'defendants')->findOrFail($id);
 
             return response()->json([
                 'success' => true,
@@ -169,7 +169,7 @@ class ComplaintController extends Controller
     public function edit($id)
     {
         try {
-            $complaint = Complaint::with('complaint_type', 'complainant_lists', 'defendant_lists')->withCount('complainant_lists', 'defendant_lists')->findOrFail($id);
+            $complaint = Complaint::with('complaint_type', 'complainants', 'defendants')->withCount('complainants', 'defendants')->findOrFail($id);
             $complaint_types = ComplaintType::get();
             $complaint_statuses = [
                 (object)["id" => 1, "status" => "For Approval"],
@@ -199,7 +199,7 @@ class ComplaintController extends Controller
     public function update(ComplaintRequest $request, $id)
     {
         try {
-            $complaint = Complaint::with('complaint_type', 'complainant_lists', 'defendant_lists')->withCount('complainant_lists', 'defendant_lists')->findOrFail($id);
+            $complaint = Complaint::with('complaint_type', 'complainants', 'defendants')->withCount('complainants', 'defendants')->findOrFail($id);
             $complaint->complaint_type_id = $request->complaint_type_id;
             $complaint->custom_type = $request->custom_type;
             $complaint->reason = $request->reason;
@@ -236,14 +236,14 @@ class ComplaintController extends Controller
     {
         try {
             $result = DB::transaction(function() use ($id) {
-                $complaint =  Complaint::with('complaint_type', 'complainant_lists', 'defendant_lists')->findOrFail($id);
+                $complaint =  Complaint::with('complaint_type', 'complainants', 'defendants')->findOrFail($id);
 
-                foreach ($complaint->complainant_lists as $complainant) {
+                foreach ($complaint->complainants as $complainant) {
                     Storage::delete('public/signatures/'. $complainant->signature_picture);
                 }
 
-                ComplainantList::where('complaint_id', $complaint->id)->delete();
-                DefendantList::where('complaint_id', $complaint->id)->delete();
+                Complainant::where('complaint_id', $complaint->id)->delete();
+                Defendant::where('complaint_id', $complaint->id)->delete();
 
                 $complaint->delete();
 
