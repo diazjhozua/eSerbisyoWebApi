@@ -17,6 +17,7 @@ class ComplaintResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $user = $this->whenloaded('user');
         $complainant_lists = $this->whenloaded('complainant_lists');
         $defendant_lists = $this->whenloaded('defendant_lists');
@@ -43,9 +44,10 @@ class ComplaintResource extends JsonResource
             ]),
 
             $this->mergeWhen($this->relationLoaded('complaint_type'), [
-                'complaint_type_id'  => !$complaint_type instanceof MissingValue && isset($complaint_type) ? $this->complaint_type->id : NULL,
-                'complaint_type'  => !$complaint_type instanceof MissingValue && isset($complaint_type) ? $this->complaint_type->type : 'Others-'.$this->custom_complaint,
+                'complaint_type_id'  => !$complaint_type instanceof MissingValue && isset($this->complaint_type->id) ? $this->complaint_type->id : NULL,
+                'complaint_type'  => !$complaint_type instanceof MissingValue && isset($this->complaint_type->type) ? $this->complaint_type->type : 'Others-'.$this->custom_type,
             ]),
+
             'reason' => $this->reason,
             'action' => $this->action,
 

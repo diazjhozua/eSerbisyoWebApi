@@ -20,7 +20,7 @@ class CreateComplaintsTable extends Migration
             $table->string('custom_type')->nullable();
             $table->longText('reason');
             $table->longText('action');
-            $table->boolean('status');
+            $table->integer('status');
             $table->timestamps();
         });
     }

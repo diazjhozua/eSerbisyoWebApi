@@ -25,23 +25,29 @@ class LostAndFoundRequest extends FormRequest
      */
     public function rules()
     {
-        $rule = [
-            'item' => 'required|string|min:3|max:120',
-            'last_seen' => 'required|string|min:3|max:120',
-            'description' => 'required|string|min:3|max:120',
-            'contact_information' => 'required|string|min:3|max:120',
-            'report_type' => 'required','integer', new ValidReportType,
-            'status' => 'integer', new ValidReportStatus,
-        ];
-
         if ($this->isMethod('POST')) {
-            $rules['picture'] = 'required|mimes:jpeg,png|max:3000';
+            return [
+                'item' => 'required|string|min:3|max:120',
+                'last_seen' => 'required|string|min:3|max:120',
+                'description' => 'required|string|min:3|max:120',
+                'contact_information' => 'required|string|min:3|max:120',
+                'report_type' => 'required','integer', new ValidReportType,
+                'picture' => 'required|mimes:jpeg,png|max:3000',
+            ];
+
+
         }
 
         if ($this->isMethod('PUT')) {
-            $rules['picture'] = 'mimes:jpeg,png|max:3000';
+            return [
+                'item' => 'required|string|min:3|max:120',
+                'last_seen' => 'required|string|min:3|max:120',
+                'description' => 'required|string|min:3|max:120',
+                'contact_information' => 'required|string|min:3|max:120',
+                'report_type' => 'required','integer', new ValidReportType,
+                'picture' => 'required|mimes:jpeg,png|max:3000',
+                'status' => 'required', 'integer', new ValidReportStatus,
+            ];
         }
-
-        return $rule;
     }
 }

@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Delete all files
-        $files = Storage::allFiles('private/signatures/');
+        $files = Storage::allFiles('public/signatures/');
         Storage::delete($files);
         $files = Storage::allFiles('public/documents/');
         Storage::delete($files);

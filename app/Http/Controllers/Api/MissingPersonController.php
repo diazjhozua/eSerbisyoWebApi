@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\MissingPersonRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -23,31 +24,22 @@ class MissingPersonController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function approved($id) {
+    public function changeStatus(ChangeStatusRequest $request, $id) {
         try {
             $missing_person = MissingPerson::with('user')->findOrFail($id);
-            $missing_person->status = 2;
+
+            if ($request->status == $missing_person->status) {
+                return response()->json(Helper::instance()->sameStatusMessage($request->status, 'Missing person report'));
+            }
+
+            $oldStatus = $missing_person->status;
+            $missing_person->status = $request->status;
+
             $missing_person->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Missing person report is approved successfully',
-                'missing_person' => new MissingPersonResource($missing_person)
-            ]);
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('missing person report'));
-        }
-    }
-
-    public function denied($id) {
-        try {
-            $missing_person = MissingPerson::with('user')->findOrFail($id);
-            $missing_person->status = 3;
-            $missing_person->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Missing person report is denied successfully',
+                'message' => Helper::instance()->statusMessage($oldStatus, $request->status, 'Missing person report'),
                 'missing_person' => new MissingPersonResource($missing_person)
             ]);
 
@@ -56,22 +48,6 @@ class MissingPersonController extends Controller
         }
     }
 
-    public function resolved($id) {
-        try {
-            $missing_person = MissingPerson::with('user')->findOrFail($id);
-            $missing_person->status = 4;
-            $missing_person->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Missing person report is resolved successfully',
-                'missing_person' => new MissingPersonResource($missing_person)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('missing person report'));
-        }
-    }
 
     public function index()
     {

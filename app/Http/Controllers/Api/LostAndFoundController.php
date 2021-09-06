@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\LostAndFoundRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\LostAndFoundResource;
 use App\Models\LostAndFound;
-
 
 
 class LostAndFoundController extends Controller
@@ -21,49 +21,22 @@ class LostAndFoundController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function approved($id) {
+    public function changeStatus(ChangeStatusRequest $request, $id) {
         try {
             $lost_and_found = LostAndFound::with('user')->findOrFail($id);
-            $lost_and_found->status = 2;
+
+            if ($request->status == $lost_and_found->status) {
+                return response()->json(Helper::instance()->sameStatusMessage($lost_and_found->status, 'Lost and found report'));
+            }
+
+            $oldStatus = $lost_and_found->status;
+
+            $lost_and_found->status = $request->status;
             $lost_and_found->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Lost and found report is approved successfully',
-                'lost_and_found' => new LostAndFoundResource($lost_and_found)
-            ]);
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('lost and found report'));
-        }
-    }
-
-    public function denied($id) {
-        try {
-            $lost_and_found = LostAndFound::with('user')->findOrFail($id);
-            $lost_and_found->status = 3;
-            $lost_and_found->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Lost and found report is denied successfully',
-                'lost_and_found' => new LostAndFoundResource($lost_and_found)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('lost and found report'));
-        }
-    }
-
-    public function resolved($id) {
-
-        try {
-            $lost_and_found = LostAndFound::with('user')->findOrFail($id);
-            $lost_and_found->status = 4;
-            $lost_and_found->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Lost and found report is resolved successfully',
+                'message' => Helper::instance()->statusMessage($oldStatus, $request->status, 'Lost and found report'),
                 'lost_and_found' => new LostAndFoundResource($lost_and_found)
             ]);
 
@@ -196,7 +169,7 @@ class LostAndFoundController extends Controller
                 'success' => true,
                 'message' => 'Found lost and found report data',
                 'lost_and_found' => new LostAndFoundResource($lost_and_found),
-                'report_types' => $report_types
+                'report_types' => $report_types,
             ]);
 
             //check first if the user who logs in is the creator of that missing report or part of the information staff
