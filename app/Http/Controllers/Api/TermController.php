@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TermRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -41,23 +43,8 @@ class TermController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TermRequest $request)
     {
-        $rules = array(
-            'term' => 'required|unique:terms|string|min:4|max:60',
-            'year_start' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
-            'year_end' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $term = new Term();
         $term->term = $request->term;
         $term->year_start = $request->year_start;
@@ -92,10 +79,7 @@ class TermController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No term id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('term'));
         }
     }
 
@@ -117,10 +101,7 @@ class TermController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No term id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('term'));
         }
     }
 
@@ -131,23 +112,8 @@ class TermController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TermRequest $request, $id)
     {
-        $rules = array(
-            'term' => 'required|unique:terms|string|min:4|max:60',
-            'year_start' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
-            'year_end' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $term = Term::withCount('employees')->findOrFail($id);
             $term->term = $request->term;
@@ -162,10 +128,7 @@ class TermController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No term id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('term'));
         }
     }
 
@@ -186,10 +149,7 @@ class TermController extends Controller
                 'message' => 'The term is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No term id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('term'));
         }
     }
 }

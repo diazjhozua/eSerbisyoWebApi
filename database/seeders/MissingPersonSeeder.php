@@ -19,6 +19,9 @@ class MissingPersonSeeder extends Seeder
         foreach (range(1,30) as $index) {
             $status = $faker->numberBetween(1, 4);
             $type = $faker->numberBetween(1, 2);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppLostAndFounds', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
+            $file_path = 'storage/missing-pictures/'.$picture_name;
             DB::table('missing_persons')->insert([
                 'user_id' => $faker->numberBetween(1, 19),
                 'name' => $faker->name(),
@@ -33,7 +36,10 @@ class MissingPersonSeeder extends Seeder
                 'contact_information' => $faker->tollFreePhoneNumber(),
                 'status' => $status,
                 'report_type' => $type,
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
+                'created_at' => $date,
+                'updated_at' => $date,
             ]);
         }
     }

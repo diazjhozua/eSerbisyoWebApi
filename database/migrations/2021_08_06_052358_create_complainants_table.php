@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDefendantListsTable extends Migration
+class CreateComplainantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateDefendantListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('defendant_lists', function (Blueprint $table) {
+        Schema::create('complainants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('complaint_id');
+            $table->foreignId('complaint_id')->nullable()->constrained('complaints')->onDelete('cascade');
             $table->string('name');
+            $table->string('signature_picture');
+            $table->string('file_path');
             $table->timestamps();
-
-            $table->foreign('complaint_id')->references('id')
-                ->on('complaints')->onDelete('cascade');
         });
     }
 
@@ -31,6 +30,6 @@ class CreateDefendantListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('defendant_lists');
+        Schema::dropIfExists('complainants');
     }
 }

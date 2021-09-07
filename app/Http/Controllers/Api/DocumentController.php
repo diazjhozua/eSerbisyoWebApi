@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\DocumentRequest;
 use App\Models\Document;
 use App\Models\DocumentType;
 use App\Http\Resources\DocumentResource;
 use App\Http\Resources\DocumentTypeResource;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,24 +51,8 @@ class DocumentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DocumentRequest $request)
     {
-        $rules = array(
-            'document_type_id' => 'required|integer|exists:document_types,id',
-            'description' => 'required|string|min:1|max:60',
-            'year' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
-            'pdf' => 'required|mimes:pdf|max:10000'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $document = new Document();
         $document->document_type_id = $request->document_type_id;
         $document->description = $request->description;
@@ -122,10 +106,7 @@ class DocumentController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('document'));
         }
     }
 
@@ -136,24 +117,8 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DocumentRequest $request, $id)
     {
-        $rules = array(
-            'document_type_id' => 'required|integer|exists:document_types,id',
-            'description' => 'required|string|min:1|max:60',
-            'year' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
-            'pdf' => 'mimes:pdf|max:10000'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $document = Document::with('document_type')->findOrFail($id);
             $document->document_type_id = $request->document_type_id;
@@ -180,10 +145,7 @@ class DocumentController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('document'));
         }
     }
 
@@ -204,10 +166,7 @@ class DocumentController extends Controller
                 'message' => 'The document is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('document'));
         }
     }
 }

@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Storage;
 class DatabaseSeeder extends Seeder
 {
+
     /**
      * Seed the application's database.
      *
@@ -13,7 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Delete all files
+        $files = Storage::allFiles('public/signatures/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/documents/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/employees/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/missing-pictures/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/ordinances/');
+        Storage::delete($files);
+        $files = Storage::allFiles('public/users/');
+        Storage::delete($files);
 
         $this->call([
             PurokSeeder::class,
@@ -31,6 +44,8 @@ class DatabaseSeeder extends Seeder
             EmployeeSeeder::class,
             MissingPersonSeeder::class,
             LostAndFoundSeeder::class,
+            ComplaintTypeSeeder::class,
+            ComplaintSeeder::class,
             AnnouncementTypeSeeder::class,
             AnnouncementSeeder::class,
         ]);

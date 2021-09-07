@@ -26,8 +26,8 @@ class CreateMissingPersonsTable extends Migration
             $table->string('important_information');
             $table->string('last_seen');
             $table->string('contact_information');
-            $table->string('picture_name')->nullable();
-            $table->string('file_path')->nullable();
+            $table->string('picture_name');
+            $table->string('file_path');
             $table->integer('status');
             $table->integer('report_type');
             $table->timestamps();

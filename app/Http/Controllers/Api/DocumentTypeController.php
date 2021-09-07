@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DocumentTypeRequest;
 use Illuminate\Http\Request;
 use App\Models\DocumentType;
 use App\Http\Resources\DocumentTypeResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use PHPUnit\TextUI\Help;
 
 class DocumentTypeController extends Controller
 {
@@ -43,21 +46,8 @@ class DocumentTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DocumentTypeRequest $request)
     {
-        $rules = array(
-            'type' => 'required|unique:document_types|string|min:1|max:120',
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $document_type = new DocumentType();
         $document_type->type = $request->type;
         $document_type->save();
@@ -88,10 +78,7 @@ class DocumentTypeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document type found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('document type'));
         }
     }
 
@@ -127,21 +114,8 @@ class DocumentTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DocumentTypeRequest $request, $id)
     {
-        $rules = array(
-            'type' => 'required|unique:document_types|string|min:1|max:120'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $document_type = DocumentType::withCount('documents')->findOrFail($id);
             $document_type->type = $request->type;
@@ -154,10 +128,7 @@ class DocumentTypeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('document type'));
         }
     }
 
@@ -177,10 +148,7 @@ class DocumentTypeController extends Controller
                 'message' => 'The document type is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No document type id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('document type'));
         }
     }
 }

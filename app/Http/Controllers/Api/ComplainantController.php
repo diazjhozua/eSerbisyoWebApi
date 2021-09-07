@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ComplainantRequest;
+use App\Models\Complainant;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
-class GongobController extends Controller
+class ComplainantController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,9 +37,9 @@ class GongobController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ComplainantRequest $request)
     {
-        //
+
     }
 
     /**
@@ -57,7 +61,16 @@ class GongobController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            $complainant = Complainant::findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'complainant' => $complainant
+            ]);
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(Helper::instance()->noItemFound('complainant'));
+        }
     }
 
     /**

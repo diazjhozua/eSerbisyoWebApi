@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmployeeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -56,25 +58,8 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
-        $rules = array(
-            'name' => 'required|string|min:1|max:60',
-            'term_id' => 'required|integer|exists:terms,id',
-            'position_id' => 'required|integer|exists:terms,id',
-            'description' => 'required|string|min:4|max:250',
-            'picture' => 'required|mimes:jpeg,png|max:3000'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         $employee = new Employee();
         $employee->name = $request->name;
         $employee->term_id = $request->term_id;
@@ -114,10 +99,7 @@ class EmployeeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('employee'));
         }
     }
 
@@ -143,10 +125,7 @@ class EmployeeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('employee'));
         }
     }
 
@@ -157,25 +136,8 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeRequest $request, $id)
     {
-        $rules = array(
-            'name' => 'required|string|min:1|max:60',
-            'term_id' => 'required|integer|exists:terms,id',
-            'position_id' => 'required|integer|exists:terms,id',
-            'description' => 'required|string|min:4|max:250',
-            'picture' => 'mimes:jpeg,png|max:3000'
-        );
-
-        $error = Validator::make($request->all(), $rules);
-
-        if($error->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $error->errors(),
-            ]);
-        }
-
         try {
             $employee = Employee::with('term', 'position')->findOrFail($id);
             $employee->name = $request->name;
@@ -203,10 +165,7 @@ class EmployeeController extends Controller
             ]);
 
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('employee'));
         }
     }
 
@@ -227,10 +186,7 @@ class EmployeeController extends Controller
                 'message' => 'The employee is successfully deleted',
             ]);
         } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No employee id found',
-            ]);
+            return response()->json(Helper::instance()->noItemFound('employee'));
         }
     }
 }
