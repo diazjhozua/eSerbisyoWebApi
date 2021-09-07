@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Api\FormRequest;
 
 class ComplainantRequest extends FormRequest
 {
@@ -13,7 +13,7 @@ class ComplainantRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,8 +24,8 @@ class ComplainantRequest extends FormRequest
     public function rules()
     {
         return [
-            'complaint_id' => 'required|integer|exist:complaints,id',
-            'name' => 'required|string|min:5|max:150|unique:complaints,complaint_id'
+            'complaint_id' => 'required|integer|exists:complaints,id',
+            'name' => 'required|string|min:5|max:150|unique:complainants,name'.$this->complainant_id
         ];
     }
 }

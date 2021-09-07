@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\MissingPersonController;
 use App\Http\Controllers\Api\LostAndFoundController;
 use App\Http\Controllers\Api\ComplaintTypeController;
 use App\Http\Controllers\Api\ComplaintController;
-use App\Http\Controllers\Api\ComplainantListController;
+use App\Http\Controllers\Api\ComplainantController;
 
 
 /*
@@ -55,8 +55,8 @@ Route::resource('complaint-types', ComplaintTypeController::class);
 Route::put('complaints/change-status/{id}', [ComplaintController::class, 'changeStatus']);
 Route::resource('complaints', ComplaintController::class);
 
-Route::resource('complainant-lists', ComplainantListController::class);
-Route::resource('defendant-lists', DefendantListController::class);
+Route::resource('complainant-lists', ComplainantController::class);
+Route::resource('defendant-lists', DefendantController::class);
 
 
 
