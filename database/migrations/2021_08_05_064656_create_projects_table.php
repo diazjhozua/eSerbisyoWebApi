@@ -21,8 +21,8 @@ class CreateProjectsTable extends Migration
             $table->date('project_start');
             $table->date('project_end');
             $table->string('location');
-            $table->string('pdf_name')->nullable();
-            $table->string('file_path')->nullable();
+            $table->string('pdf_name');
+            $table->string('file_path');
             $table->boolean('is_starting');
             $table->timestamps();
         });
