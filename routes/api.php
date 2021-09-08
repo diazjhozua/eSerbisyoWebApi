@@ -56,6 +56,7 @@ Route::put('complaints/change-status/{id}', [ComplaintController::class, 'change
 Route::resource('complaints', ComplaintController::class);
 
 Route::resource('complainant-lists', ComplainantController::class);
+
 Route::resource('defendant-lists', DefendantController::class);
 
 
