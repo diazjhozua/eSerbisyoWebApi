@@ -17,6 +17,8 @@ class MissingPersonSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         foreach (range(1,30) as $index) {
+            $status = $faker->numberBetween(1, 4);
+            $type = $faker->numberBetween(1, 2);
             DB::table('missing_persons')->insert([
                 'user_id' => $faker->numberBetween(1, 19),
                 'name' => $faker->name(),
@@ -29,8 +31,8 @@ class MissingPersonSeeder extends Seeder
                 'important_information' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
                 'contact_information' => $faker->tollFreePhoneNumber(),
-                'is_resolved' => $faker->numberBetween(0, 1),
-                'is_approved' => $faker->numberBetween(0, 1),
+                'status' => $status,
+                'report_type' => $type,
                 'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             ]);
         }

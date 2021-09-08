@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class LostAndFoundSeeder extends Seeder
 {
@@ -17,14 +18,16 @@ class LostAndFoundSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         foreach (range(1,20) as $index) {
-            \DB::table('lost_and_founds')->insert([
+            $status = $faker->numberBetween(1, 4);
+            $type = $faker->numberBetween(1, 2);
+            DB::table('lost_and_founds')->insert([
                 'user_id' => $faker->numberBetween(1, 19),
                 'item' => $faker->sentence($nbWords = 3, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
                 'description' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'contact_information' => $faker->tollFreePhoneNumber(),
-                'is_resolved' => $faker->numberBetween(0, 1),
-                'is_approved' => $faker->numberBetween(0, 1),
+                'status' => $status,
+                'report_type' => $type,
                 'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             ]);
         }

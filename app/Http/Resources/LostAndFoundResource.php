@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Support\Facades\Auth;
 
-class MissingPersonResource extends JsonResource
+class LostAndFoundResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,7 @@ class MissingPersonResource extends JsonResource
     public function toArray($request)
     {
         $user = $this->whenLoaded('user');
-        // application status
-        // 1 - for approval
-        // 2 - approved
-        // 3 - denied
-        // 4 - resolved
+
         switch ($this->status) {
             case 1:
                 $status = 'For Approval';
@@ -36,26 +32,19 @@ class MissingPersonResource extends JsonResource
                 $status = 'Resolved';
                 break;
         }
+
         return [
             'id' => $this->id,
             'report_classification' => $this->report_type == 1 ? 'Missing Report' : 'Found Report',
-            'missing_name' => $this->name,
+            'item' => $this->item,
             'picture_name' => $this->picture_name,
             'file_path' => $this->file_path,
-            'height' => $this->height,
-            'weight' => $this->weight,
-            'age' => $this->age,
-            'eyes' => $this->eyes,
-            'hair' => $this->hair,
-            'unique_sign' => $this->unique_sign,
-            'important_information' => $this->important_information,
             'last_seen' => $this->last_seen,
+            'description' => $this->description,
             'contact_information' => $this->contact_information,
-            'report_type' => $this->report_type,
             'status' => $this->status,
             'status_of_application' => $status,
 
-            // end
             $this->mergeWhen($this->relationLoaded('user'), [
                 'user_id' => $this->user_id,
                 'submitted_by' => !$user instanceof MissingValue && isset($user) ? $this->user->getFullNameAttribute() : NULL,
