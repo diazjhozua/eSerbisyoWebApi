@@ -39,10 +39,12 @@ class ComplainantRequest extends FormRequest
         if ($this->isMethod('PUT')) {
             $complaint_id = $this->get('complaint_id');
             $id = $this->get('id');
-            dd($id);
             return [
-                'id' => 'required|integer|exists:complainants,id',
-                'signature' => 'sometimes|mimes:jpeg,png|max:3000',
+                'complaint_id' => 'required|integer|exists:complaints,id',
+                'name' => ['required', 'string', 'min:5', 'max:150', Rule::unique('complainants', 'name')->where(function ($query) use ($complaint_id) {
+                    return $query->where('complaint_id', $complaint_id);
+                })->ignore($id)],
+                'signature' => 'mimes:jpeg,png|max:3000',
             ];
         }
     }

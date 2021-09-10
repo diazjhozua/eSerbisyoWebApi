@@ -55,9 +55,10 @@ Route::resource('complaint-types', ComplaintTypeController::class);
 Route::put('complaints/change-status/{id}', [ComplaintController::class, 'changeStatus']);
 Route::resource('complaints', ComplaintController::class);
 
-Route::resource('complainant-lists', ComplainantController::class);
+Route::put('complainants', [ComplainantController::class, 'update']);
+Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show', 'update']);
 
-Route::resource('defendant-lists', DefendantController::class);
+Route::resource('defendants', DefendantController::class);
 
 
 
