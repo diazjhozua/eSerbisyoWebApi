@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         Storage::delete($files);
         $files = Storage::allFiles('public/users/');
         Storage::delete($files);
+        $files = Storage::allFiles('public/reports/');
+        Storage::delete($files);
 
         $this->call([
             PurokSeeder::class,
@@ -38,7 +40,7 @@ class DatabaseSeeder extends Seeder
             DocumentSeeder::class,
             OrdinanceCategorySeeder::class,
             OrdinanceSeeder::class,
-            ProjectSeeder::class,
+            // ProjectSeeder::class,
             TermSeeder::class,
             PositionSeeder::class,
             EmployeeSeeder::class,
@@ -46,6 +48,8 @@ class DatabaseSeeder extends Seeder
             LostAndFoundSeeder::class,
             ComplaintTypeSeeder::class,
             ComplaintSeeder::class,
+            // ReportTypeSeeder::class,
+            // ReportSeeder::class,
             AnnouncementTypeSeeder::class,
             AnnouncementSeeder::class,
         ]);

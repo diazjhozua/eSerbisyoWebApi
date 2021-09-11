@@ -9,6 +9,7 @@ use App\Http\Resources\ComplainantResource;
 use App\Models\Complainant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ComplainantController extends Controller
 {
@@ -85,7 +86,7 @@ class ComplainantController extends Controller
 
             return response()->json([
                 'success' => true,
-                'complainant' => $complainant
+                'complainant' => new ComplainantResource($complainant)
             ]);
         } catch (ModelNotFoundException $ex) {
             return response()->json(Helper::instance()->noItemFound('complainant'));
@@ -99,9 +100,38 @@ class ComplainantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ComplainantRequest $request, $id)
+    public function update(ComplainantRequest $request)
     {
-        dd($request->complaint_id);
+        try {
+            $complainant = Complainant::where('complaint_id',$request->complaint_id)->findOrFail($request->id);
+
+            $complainant->name = $request->name;
+
+            //check if they want to update the signature file
+            if($request->hasFile('signature')) {
+                Storage::delete('public/signatures/'. $complainant->signature_picture);
+
+                $fileName = time().'_'.$request->signature->getClientOriginalName();
+                $filePath = $request->file('signature')->storeAs('signatures', $fileName, 'public');
+
+                $complainant->signature_picture = $fileName;
+                $complainant->file_path = $filePath;
+            }
+
+            $complainant->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'New complainant updated succesfully in the complaint_id: '.$complainant->complaint_id,
+                'complainant' => new ComplainantResource($complainant)
+            ]);
+
+        } catch (ModelNotFoundException $ex) {
+            return response()->json( [
+                'success' => false,
+                'message' => "Complainant not found on a specific complaint id report",
+            ]);
+        }
     }
 
     /**
@@ -112,6 +142,18 @@ class ComplainantController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $complainant = Complainant::findOrFail($id);
+            $complaint_id = $complainant->complaint_id;
+            Storage::delete('public/signatures/'. $complainant->signature_picture);
+
+            $complainant->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'The complainant is successfully deleted in the complaint_id: '.$complaint_id,
+            ]);
+        } catch (ModelNotFoundException $ex){
+            return response()->json(Helper::instance()->noItemFound('complainant'));
+        }
     }
 }

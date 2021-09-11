@@ -15,12 +15,17 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->string('title');
-            $table->longText('description');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('report_type_id')->nullable()->constrained('report_types')->onDelete('set null');
+            $table->string('custom_type')->nullable();
             $table->string('location_address');
             $table->string('landmark');
-            $table->string('picture');
+            $table->longText('description');
+            $table->boolean('is_anonymous');
+            $table->string('admin_message');
+            $table->integer('status');
+            $table->string('picture_name')->nullable();
+            $table->string('file_path')->nullable();
             $table->timestamps();
         });
     }
