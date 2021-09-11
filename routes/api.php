@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\LostAndFoundController;
 use App\Http\Controllers\Api\ComplaintTypeController;
 use App\Http\Controllers\Api\ComplaintController;
 use App\Http\Controllers\Api\ComplainantController;
+use App\Http\Controllers\Api\DefendantController;
 
 
 /*
@@ -58,7 +59,8 @@ Route::resource('complaints', ComplaintController::class);
 Route::put('complainants', [ComplainantController::class, 'update']);
 Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show', 'update']);
 
-Route::resource('defendants', DefendantController::class);
+Route::put('defendants', [DefendantController::class, 'update']);
+Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show', 'update']);
 
 
 

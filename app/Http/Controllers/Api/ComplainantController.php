@@ -86,7 +86,7 @@ class ComplainantController extends Controller
 
             return response()->json([
                 'success' => true,
-                'complainant' => $complainant
+                'complainant' => new ComplainantResource($complainant)
             ]);
         } catch (ModelNotFoundException $ex) {
             return response()->json(Helper::instance()->noItemFound('complainant'));
