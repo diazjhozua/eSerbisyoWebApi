@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
-use App\Models\Feedback;
+use App\Rules\BooleanRule;
+use Illuminate\Validation\Rule;
 
 class FeedbackRequest extends FormRequest
 {
@@ -25,8 +26,11 @@ class FeedbackRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_anonymous' => 'required|integer|digits_between: 0,1',
-            'feedback_type_id' => 'required|exists:feedback_types,id',
+            'is_anonymous' => ['required', 'integer', new BooleanRule],
+            'type_id' => ['required', Rule::exists('types', 'id')->where(function ($query){
+                return $query->where('model_type', 'Feedback');
+            })],
+            'polarity' => ['required', Rule::in(['Positive', 'Neutral', 'Negative'])],
             'message' => 'required|string|min:5|max:255',
         ];
     }

@@ -16,20 +16,24 @@ class ComplaintSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        foreach (range(1,30) as $complaint_id) {
+        foreach (range(1,100) as $complaint_id) {
             $status = $faker->numberBetween(1, 4);
-            $type = $faker->numberBetween(0, 5);
+            $type = $faker->numberBetween(21, 25);
             $custom_type = NULL;
-            if ($type === 0) {
+
+            $isNull = $faker->numberBetween(0,1);
+
+            if ($isNull === 0) {
                 $type = NULL;
                 $custom_type = $faker->realText($maxNbChars = 10, $indexSize = 1);
             }
+
             $complainantCount = $faker->numberBetween(1, 2);
             $defendantCount = $faker->numberBetween(1, 5);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             DB::table('complaints')->insert([
                 'user_id' => $faker->numberBetween(1, 19),
-                'complaint_type_id' => $type,
+                'type_id' => $type,
                 'custom_type' => $custom_type,
                 'reason' => $faker->realText($maxNbChars = 500, $indexSize = 3),
                 'action' => $faker->realText($maxNbChars = 500, $indexSize = 3),

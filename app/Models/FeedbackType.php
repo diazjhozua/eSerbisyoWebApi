@@ -13,8 +13,6 @@ class FeedbackType extends Model
         return $this->hasMany(Feedback::class);
     }
 
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
+
 
 }

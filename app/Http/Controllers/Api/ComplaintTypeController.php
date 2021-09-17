@@ -11,6 +11,7 @@ use App\Http\Resources\ComplaintTypeResource;
 use App\Models\ComplaintType;
 use App\Helper\Helper;
 use App\Http\Requests\ComplaintTypeRequest;
+use App\Models\Complaint;
 
 class ComplaintTypeController extends Controller
 {
@@ -20,16 +21,19 @@ class ComplaintTypeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function noItemFound()
-    {
-        return response()->json([
-            'success' => false,
-            'message' => 'No complaint type id found',
-        ]);
-    }
     public function index()
     {
         $complaint_types = ComplaintType::withCount('complaints')->orderBy('complaints_count', 'DESC')->get();
+
+        $others = new ComplaintType([
+            'id' => 0,
+            'type' => 'Others',
+            'created_at' => now(),
+            'updated_at' => now(),
+            'complaints_count' => Complaint::where('complaint_type_id', '=', NULL)->count(),
+        ]);
+
+        $complaint_types->add($others);
 
         return response()->json([
             'success' => true,
@@ -76,11 +80,24 @@ class ComplaintTypeController extends Controller
     public function show($id)
     {
         try {
-            $complaint_type = ComplaintType::with(['complaints' => function($query){
-                $query->orderBy('created_at', 'DESC');
-                $query->withCount('complainant_lists');
-                $query->withCount('defendant_lists');
-            }])->withCount('complaints')->findOrFail($id);
+            if ($id == 0) {
+                $complaint_type = new ComplaintType([
+                    'id' => 0,
+                    'type' => 'Others',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'complaints_count' => Complaint::where('complaint_type_id', '=', NULL)->count(),
+                    'others' => Complaint::orderBy('created_at', 'DESC')->withCount('defendants', 'complainants')
+                    ->where('complaint_type_id', '=', NULL)->get()
+                ]);
+
+            } else {
+                $complaint_type = ComplaintType::with(['complaints' => function($query){
+                    $query->orderBy('created_at', 'DESC');
+                    $query->withCount('complainants');
+                    $query->withCount('defendants');
+                }])->withCount('complaints')->findOrFail($id);
+            }
 
             return response()->json([
                 'success' => true,
@@ -102,11 +119,15 @@ class ComplaintTypeController extends Controller
     public function edit($id)
     {
         try {
+            if ($id == 0) {
+                return response()->json(Helper::instance()->noEditAccess());
+            }
+
             $complaint_type = ComplaintType::findOrFail($id);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Found document type data',
+                'message' => 'Found complaint type data',
                 'complaint_type' => new ComplaintTypeResource($complaint_type)
             ]);
 
@@ -125,6 +146,10 @@ class ComplaintTypeController extends Controller
     public function update(ComplaintTypeRequest $request, $id)
     {
         try {
+            if ($id == 0) {
+                return response()->json(Helper::instance()->noUpdateAccess());
+            }
+
             $complaint_type = ComplaintType::withCount('complaints')->findOrFail($id);
             $complaint_type->type = $request->type;
             $complaint_type->save();
@@ -148,6 +173,10 @@ class ComplaintTypeController extends Controller
      */
     public function destroy($id)
     {
+        if ($id == 0) {
+            return response()->json(Helper::instance()->noDeleteAccess());
+        }
+
         try {
             $complaint_type = ComplaintType::findOrFail($id);
             $complaint_type->delete();

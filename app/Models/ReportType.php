@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ReportType extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
 }

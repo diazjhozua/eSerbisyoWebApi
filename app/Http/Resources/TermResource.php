@@ -17,9 +17,9 @@ class TermResource extends JsonResource
     {
         $employees = $this->whenLoaded('employees');
 
-        return [
+        $data =  [
             'id' => $this->id,
-            'term' => $this->term,
+            'name' => $this->name,
             $this->mergeWhen(isset($this->employees_count), [
                 'employees_count' => $this->employees_count,
             ]),
@@ -29,5 +29,12 @@ class TermResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'employees' => EmployeeResource::collection($employees),
         ];
+
+        if (isset($this->others)) {
+            $data['employees'] = EmployeeResource::collection($this->others);
+        }
+
+        return $data;
+
     }
 }

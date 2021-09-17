@@ -46,7 +46,7 @@ class ComplaintRequest extends FormRequest
                 'custom_type' => 'required_without:complaint_type_id|string|min:1|max:60',
                 'reason' => 'required:string|min:4|max:500',
                 'action' => 'required:string|min:4|max:500',
-                'status' => 'required', 'integer', new ValidReportStatus,
+                'status' => ['required', 'integer', new ValidReportStatus],
             ];
         }
     }

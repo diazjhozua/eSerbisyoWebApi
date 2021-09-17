@@ -12,7 +12,7 @@ class Position extends Model
     public $incrementing = false;
 
     public function employees(){
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(Employee::class)->orderBy('created_at', 'DESC');;
     }
 
 }

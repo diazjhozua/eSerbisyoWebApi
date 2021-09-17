@@ -9,7 +9,13 @@ class Document extends Model
 {
     use HasFactory;
 
-    public function document_type(){
-        return $this->belongsTo(DocumentType::class);
+    protected $guarded = [];
+
+    public function type(){
+        return $this->belongsTo(Type::class);
     }
+
+    // public function document_type(){
+    //     return $this->belongsTo(DocumentType::class);
+    // }
 }

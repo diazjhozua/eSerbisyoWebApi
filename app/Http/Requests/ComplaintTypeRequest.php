@@ -24,7 +24,7 @@ class ComplaintTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required|unique:document_types|string|min:4|max:120'
+            'type' => 'required|unique:complaint_types|string|min:4|max:120'
         ];
     }
 }

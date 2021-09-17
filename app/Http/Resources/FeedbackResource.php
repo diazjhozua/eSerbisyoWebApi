@@ -17,20 +17,19 @@ class FeedbackResource extends JsonResource
     {
         //return parent::toArray($request);
         $user = $this->whenloaded('user');
-        $feedback_type = $this->whenloaded('feedback_type');
+        $type = $this->whenloaded('type');
 
         return [
             'id' => $this->id,
-            $this->mergeWhen($this->relationLoaded('user'), [
-                'submitted_by' => !$user instanceof MissingValue && isset($user) ?
-                ($this->is_anonymous ? 'Anonymous User' :  $this->user->getFullNameAttribute()) :
-                NULL,
+            'submitted_by' => !$user instanceof MissingValue && isset($user) ? ($this->is_anonymous ? 'Anonymous User' :  $this->user->getFullNameAttribute()) : NULL,
+            $this->mergeWhen($this->relationLoaded('type'), [
+                'type_id' => !$type instanceof MissingValue && isset($type) ? $this->type->id : NULL,
+                'type' => !$type instanceof MissingValue && isset($type) ? $this->type->name : NULL,
             ]),
-            $this->mergeWhen($this->relationLoaded('feedback_type'), [
-                'feedback_type' => !$feedback_type instanceof MissingValue && isset($feedback_type) ? $this->feedback_type->type :  NULL,
-            ]),
-
+            'custom_type' => $this->custom_type,
+            'polarity' => $this->polarity,
             'message' => $this->message,
+            'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];;

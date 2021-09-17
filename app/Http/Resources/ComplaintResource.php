@@ -17,7 +17,6 @@ class ComplaintResource extends JsonResource
      */
     public function toArray($request)
     {
-
         $user = $this->whenloaded('user');
         $complainants = $this->whenloaded('complainants');
         $defendants = $this->whenloaded('defendants');
@@ -69,6 +68,7 @@ class ComplaintResource extends JsonResource
 
             'status' => $this->status,
             'status_of_application' => $status,
+
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
 

@@ -30,9 +30,8 @@ class DocumentTypeResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('documents'), [
                 'documents' => DocumentResource::collection($documents),
             ]),
-
-
-
         ];
+
+
     }
 }

@@ -15,10 +15,13 @@ class ReportTypeSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create();
+
+        // 26-30
         foreach (range(1,5) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            DB::table('report_types')->insert([
-                'type' => $faker->realText($maxNbChars = 30, $indexSize = 3),
+            DB::table('types')->insert([
+                'name' => $faker->realText($maxNbChars = 30, $indexSize = 3),
+                'model_type' => 'Report',
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);

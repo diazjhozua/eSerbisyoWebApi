@@ -15,68 +15,71 @@ class DocumentTypeSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create();
+        $dateTime = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
-        //1
-        DB::table('document_types')->insert([
-            'type' => "Priority For Development Projects (20% Component of IRA Utilizaton)",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        //id 4-12
+        DB::table('types')->insert([
+            'name' => "Priority For Development Projects (20% Component of IRA Utilizaton)",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //2
-        DB::table('document_types')->insert([
-            'type' => "Annual Procurement Plan",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+
+        DB::table('types')->insert([
+            'name' => "Annual Procurement Plan",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //3
-        DB::table('document_types')->insert([
-            'type' => "List of Notice of Awards - (1st Quarter January-March)",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "List of Notice of Awards - (1st Quarter January-March)",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //4
-        DB::table('document_types')->insert([
-            'type' => "List of Notice of Awards - (2nd Quarter April-June)",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "List of Notice of Awards - (2nd Quarter April-June)",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //5
-        DB::table('document_types')->insert([
-            'type' => "List of Notice of Awards - (3rd Quarter July-September)",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "List of Notice of Awards - (3rd Quarter July-September)",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //6
-        DB::table('document_types')->insert([
-            'type' => "List of Notice of Awards - (4th Quarter October-December)",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "List of Notice of Awards - (4th Quarter October-December)",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //7
-        DB::table('document_types')->insert([
-            'type' => "Detailed Statements of Financial Performance",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "Detailed Statements of Financial Performance",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //8
-        DB::table('document_types')->insert([
-            'type' => "Annual Barangay Budget",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "Annual Barangay Budget",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
-        //9
-        DB::table('document_types')->insert([
-            'type' => "Itemized Monthly Collection and Disbursement",
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+        DB::table('types')->insert([
+            'name' => "Itemized Monthly Collection and Disbursement",
+            'model_type' => 'Document',
+            'created_at' => $dateTime,
+            'updated_at' => $dateTime,
         ]);
 
     }

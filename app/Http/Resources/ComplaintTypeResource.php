@@ -15,9 +15,10 @@ class ComplaintTypeResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $complaints = $this->whenLoaded('complaints');
 
-        return [
+        $data = [
             'id' => $this->id,
             'type' => $this->type,
             $this->mergeWhen(isset($this->complaints_count), [
@@ -28,6 +29,14 @@ class ComplaintTypeResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('complaints'), [
                 'complaints' => ComplaintResource::collection($complaints),
             ]),
+
+
         ];
+
+        if (isset($this->others)) {
+            $data['complaints'] = ComplaintResource::collection($this->others);
+        }
+
+        return $data;
     }
 }

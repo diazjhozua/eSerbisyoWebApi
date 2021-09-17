@@ -5,151 +5,58 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TermRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\TermResource;
+use App\Models\Employee;
 use App\Models\Term;
 
 class TermController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $terms = Term::withCount('employees')->orderBy('year_end','DESC')->get();
-        return response()->json([
-            'success' => true,
-            'terms' => TermResource::collection($terms)
-        ]);
+        $terms->add(new Term([ 'id' => 0, 'name' => 'Others (No term ID)', 'year_start' => NULL, 'year_end' => NULL, 'created_at' => now(), 'updated_at' => now(),
+            'employees_count' => Employee::where('term_id', NULL)->count() ]));
+        return TermResource::collection($terms)->additional(['success' => true]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(TermRequest $request)
     {
-        $term = new Term();
-        $term->term = $request->term;
-        $term->year_start = $request->year_start;
-        $term->year_end = $request->year_end;
-        $term->save();
+        $term = Term::create($request->validated());
         $term->employees_count = 0;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'New term created succesfully',
-            'term' => new TermResource($term)
-        ]);
+        return (new TermResource($term))->additional(Helper::instance()->storeSuccess('term'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //show all employees on specific term id
-
-        try {
-            $term = Term::with('employees.position')->withCount('employees')->findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found term type data',
-                'term' => new TermResource($term)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('term'));
-        }
+        if ($id == 0) {
+            $employees = Employee::with('position')->where('term_id', NULL)->orderBy('created_at', 'DESC')->get();
+            $term = new Term([ 'id' => 0, 'name' => 'Others (No term ID)', 'year_start' => NULL, 'year_end' => NULL, 'created_at' => now(), 'updated_at' => now(),
+            'employees_count' => $employees->count(), 'others' => $employees]);
+        } else {  $term = Term::with('employees.position')->withCount('employees')->findOrFail($id); }
+        return (new TermResource($term))->additional(Helper::instance()->itemFound('term'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        try {
-            $term = Term::findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found term data',
-                'term' => new TermResource($term)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('term'));
-        }
+        if ($id == 0) { return response()->json(Helper::instance()->noEditAccess()); }
+        $term = Term::findOrFail($id);
+        return (new TermResource($term))->additional(Helper::instance()->itemFound('term'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(TermRequest $request, $id)
     {
-        try {
-            $term = Term::withCount('employees')->findOrFail($id);
-            $term->term = $request->term;
-            $term->year_start = $request->year_start;
-            $term->year_end = $request->year_end;
-            $term->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'The term is successfully updated',
-                'document_type' => new TermResource($term)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('term'));
-        }
+        if ($id == 0) { return response()->json(Helper::instance()->noUpdateAccess()); }
+        $term = Term::withCount('employees')->findOrFail($id);
+        $term->fill($request->validated())->save();
+        return (new TermResource($term))->additional(Helper::instance()->updateSuccess('term'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        try {
-            $term = Term::findOrFail($id);
-            $term->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'The term is successfully deleted',
-            ]);
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('term'));
-        }
+        if ($id == 0) { return response()->json(Helper::instance()->noDeleteAccess()); }
+        $term = Term::findOrFail($id);
+        Employee::where('term_id', $term->id)->update(['term_id' => NULL, 'custom_term' => 'deleted type: '.$term->name]);
+        $term->delete();
+        return response()->json(Helper::instance()->destroySuccess('term'));
     }
 }

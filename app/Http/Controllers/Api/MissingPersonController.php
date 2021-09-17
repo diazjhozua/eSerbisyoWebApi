@@ -6,15 +6,12 @@ use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\MissingPersonRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\MissingPersonResource;
 use App\Models\MissingPerson;
-use App\Rules\ValidReportType;
-use App\Rules\ValidReportStatus;
+
 
 class MissingPersonController extends Controller
 {
