@@ -21,14 +21,13 @@ class EmployeeResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             $this->mergeWhen($this->relationLoaded('term'), [
-                'term_id' => !$term instanceof MissingValue && isset($term) ? $term->id : NULL,
-                'term' => !$term instanceof MissingValue && isset($term) ? $term->term.' ('.$term->year_start.'-'.$term->year_end.')' : $this->custom_term,
+                'term_id' => !$term instanceof MissingValue && isset($term) ? $term->id : 0,
+                'term' => !$term instanceof MissingValue && isset($term) ? $term->name.' ('.$term->year_start.'-'.$term->year_end.')' : NULL,
             ]),
             'custom_term' => $this->custom_term,
-
             $this->mergeWhen($this->relationLoaded('position'), [
-                'position_id' => !$position instanceof MissingValue && isset($position) ? $position->id : NULL,
-                'position' => !$position instanceof MissingValue && isset($position) ? $position->position : NULL,
+                'position_id' => !$position instanceof MissingValue && isset($position) ? $position->id : 0,
+                'position' => !$position instanceof MissingValue && isset($position) ? $position->name : NULL,
             ]),
             'custom_position' => $this->custom_position,
             'description' => $this->description,

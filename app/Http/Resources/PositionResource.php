@@ -7,19 +7,13 @@ use App\Http\Resources\EmployeeResource;
 
 class PositionResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function toArray($request)
     {
         $employees = $this->whenLoaded('employees');
 
-        return [
+        $data = [
             'id' => $this->id,
-            'position' => $this->position,
+            'name' => $this->name,
             $this->mergeWhen(isset($this->employees_count), [
                 'employees_count' => $this->employees_count,
             ]),
@@ -27,5 +21,11 @@ class PositionResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
             'employees' => EmployeeResource::collection($employees),
         ];
+
+        if (isset($this->others)) {
+            $data['employees'] = EmployeeResource::collection($this->others);
+        }
+
+        return $data;
     }
 }

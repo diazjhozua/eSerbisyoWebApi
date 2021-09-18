@@ -15,6 +15,7 @@ class TypeResource extends JsonResource
     public function toArray($request)
     {
         $documents = $this->whenLoaded('documents');
+        $ordinances = $this->whenLoaded('ordinances');
 
         $data =  [
             'id' => $this->id,
@@ -22,16 +23,20 @@ class TypeResource extends JsonResource
             $this->mergeWhen(isset($this->documents_count), [
                 'documents_count' => $this->documents_count,
             ]),
+            $this->mergeWhen(isset($this->ordinances_count), [
+                'ordinances_count' => $this->ordinances_count,
+            ]),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            $this->mergeWhen($this->relationLoaded('documents'), [
-                'documents' => DocumentResource::collection($documents),
-            ]),
+            'documents' => DocumentResource::collection($documents),
+            'ordinances' => OrdinanceResource::collection($ordinances),
         ];
 
         if (isset($this->others)) {
-            $data['documents'] = DocumentResource::collection($this->others);
+            if ($this->model_type === "Document") { $data['documents'] = DocumentResource::collection($this->others); }
+            elseif($this->model_type === "Ordinance") { $data['ordinances'] = OrdinanceResource::collection($this->others);}
         }
+
 
         $data['created_at'] = $this->created_at->format('Y-m-d H:i:s');
         $data['updated_at'] = $this->updated_at->format('Y-m-d H:i:s');

@@ -26,7 +26,7 @@ class EmployeeRequest extends FormRequest
         $rules = [
             'name' => 'required|string|min:1|max:60',
             'term_id' => 'required|integer|exists:terms,id',
-            'position_id' => 'required|integer|exists:terms,id',
+            'position_id' => 'required|integer|exists:positions,id',
             'description' => 'required|string|min:4|max:250'
         ];
 
@@ -38,5 +38,10 @@ class EmployeeRequest extends FormRequest
             $rules['picture'] = 'mimes:jpeg,png|max:3000';
         }
         return $rules;
+    }
+
+    public function getData() {
+        $data = $this->only(['name', 'term_id', 'position_id', 'description']);
+        return $data;
     }
 }

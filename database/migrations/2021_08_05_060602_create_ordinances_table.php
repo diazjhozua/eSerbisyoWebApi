@@ -16,22 +16,13 @@ class CreateOrdinancesTable extends Migration
         Schema::create('ordinances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('type_id')->nullable()->constrained('types')->onDelete('set null');
+            $table->string('custom_type')->nullable();
             $table->string('ordinance_no');
             $table->longText('title');
             $table->date('date_approved');
             $table->string('pdf_name');
             $table->string('file_path');
             $table->timestamps();
-
-            // $table->id();
-            // $table->string('ordinance_no');
-            // $table->longText('title');
-            // $table->date('date_approved');
-            // $table->foreignId('type_id')->nullable()->constrained('types')->onDelete('set null');
-            // $table->string('pdf_name');
-            // $table->string('file_path');
-            // $table->timestamps();
-
         });
     }
 

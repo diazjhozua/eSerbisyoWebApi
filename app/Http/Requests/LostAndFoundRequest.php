@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Api\FormRequest;
 use App\Rules\ValidReportType;
 use App\Rules\ValidReportStatus;
+use Illuminate\Validation\Rule;
 
 class LostAndFoundRequest extends FormRequest
 {
@@ -31,7 +32,7 @@ class LostAndFoundRequest extends FormRequest
                 'last_seen' => 'required|string|min:3|max:120',
                 'description' => 'required|string|min:3|max:120',
                 'contact_information' => 'required|string|min:3|max:120',
-                'report_type' => 'required','integer', new ValidReportType,
+                'report_type' => ['required', Rule::in(['Missing', 'Found'])],
                 'picture' => 'required|mimes:jpeg,png|max:3000',
             ];
 
@@ -44,10 +45,15 @@ class LostAndFoundRequest extends FormRequest
                 'last_seen' => 'required|string|min:3|max:120',
                 'description' => 'required|string|min:3|max:120',
                 'contact_information' => 'required|string|min:3|max:120',
-                'report_type' => 'required','integer', new ValidReportType,
-                'picture' => 'required|mimes:jpeg,png|max:3000',
-                'status' => 'required', 'integer', new ValidReportStatus,
+                'report_type' => ['required', Rule::in(['Missing', 'Found'])],
+                'picture' => 'mimes:jpeg,png|max:3000',
             ];
         }
     }
+
+    public function getData() {
+        $data = $this->only(['item', 'last_seen', 'description', 'weight', 'contact_information', 'report_type']);
+        return $data;
+    }
+
 }

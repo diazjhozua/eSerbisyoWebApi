@@ -16,13 +16,13 @@ class FeedbackSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
+        $polarity = ['Positive', 'Neutral', 'Negative'];
+        $status = ['Pending', 'Ignored', 'Noted'];
+
         foreach (range(1,30) as $index)
         {
             $userRandomID = $faker->numberBetween(1, 19);
             $typeID = $faker->numberBetween(0, 3);
-            $polarity = ['Positive', 'Neutral', 'Negative'];
-            $status = ['Pending', 'Ignored', 'Noted'];
-
             $customType = null;
 
             if ($typeID === 0) {

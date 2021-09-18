@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class DocumentRequest extends FormRequest
@@ -41,5 +42,10 @@ class DocumentRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    public function getData() {
+        $data = $this->only(['type_id', 'description', 'year']);
+        return $data;
     }
 }

@@ -24,7 +24,7 @@ class PositionRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'position' => 'required|string|unique:positions|min:5|max:60',
+            'name' => 'required|string|unique:positions|min:5|max:60',
         ];
 
         if ($this->isMethod('POST')) {

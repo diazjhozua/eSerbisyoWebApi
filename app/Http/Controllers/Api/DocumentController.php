@@ -9,7 +9,6 @@ use App\Http\Resources\DocumentResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Document;
 use App\Models\Type;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -30,7 +29,7 @@ class DocumentController extends Controller
     {
         $fileName = time().'_'.$request->pdf->getClientOriginalName();
         $filePath = $request->file('pdf')->storeAs('documents', $fileName, 'public');
-        $document = Document::create(array_merge($request->except(['pdf']), ['pdf_name' => $fileName,'file_path' => $filePath]));
+        $document = Document::create(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]));
         return (new DocumentResource($document->load('type')))->additional(Helper::instance()->storeSuccess('document'));
     }
 
@@ -51,16 +50,15 @@ class DocumentController extends Controller
             Storage::delete('public/documents/'. $document->pdf_name);
             $fileName = time().'_'.$request->pdf->getClientOriginalName();
             $filePath = $request->file('pdf')->storeAs('documents', $fileName, 'public');
-            $document->fill(array_merge($request->except(['pdf']), ['pdf_name' => $fileName,'file_path' => $filePath]))->save();
-        }
-        $document->fill($request->except(['pdf']))->save();
+            $document->fill(array_merge($request->getData(), ['custom_type' => NULL,'pdf_name' => $fileName,'file_path' => $filePath]))->save();
+        } else { $document->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save(); }
         return (new DocumentResource($document->load('type')))->additional(Helper::instance()->updateSuccess('document'));
     }
 
     public function destroy(Document $document)
     {
         Storage::delete('public/documents/'. $document->pdf_name);
-        Document::destroy($document->id);
+        $document->delete();
         return response()->json(Helper::instance()->destroySuccess('document'));
     }
 }

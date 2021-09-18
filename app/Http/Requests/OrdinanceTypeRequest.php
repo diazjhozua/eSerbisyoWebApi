@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
+use Illuminate\Validation\Rule;
 
-class OrdinanceCategoryRequest extends FormRequest
+class OrdinanceTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,9 @@ class OrdinanceCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'required|unique:ordinance_categories|string|min:4|max:120',
+            'name' => ['required', 'string', 'min:4', 'max:60', Rule::unique('types')->where(function ($query) {
+                return $query->where('model_type', 'Ordinance');
+            })],
         ];
     }
 }

@@ -9,11 +9,11 @@ use App\Http\Controllers\Api\ {
     FeedbackController,
     DocumentTypeController,
     DocumentController,
-    OrdinanceCategoryController,
-    OrdinanceController,
     TermController,
     PositionController,
     EmployeeController,
+    OrdinanceTypeController,
+    OrdinanceController,
     MissingPersonController,
     LostAndFoundController,
     ComplaintTypeController,
@@ -47,20 +47,14 @@ Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update
 Route::resource('document-types', DocumentTypeController::class)->except(['create']);
 Route::resource('documents', DocumentController::class);
 Route::resource('terms', TermController::class)->except(['create']);
-
-
-// Route::resource('ordinance-categories', OrdinanceCategoryController::class)->except(['create']);
-// Route::resource('ordinances', OrdinanceController::class)->except(['show']);
-
-// Route::resource('terms', TermController::class)->except(['create']);
-// Route::resource('positions', PositionController::class)->except(['create']);
-// Route::resource('employees', EmployeeController::class);
-
-// Route::put('missing-persons/change-status/{id}', [MissingPersonController::class, 'changeStatus']);
-// Route::resource('missing-persons', MissingPersonController::class);
-
-// Route::put('lost-and-found/change-status/{id}', [LostAndFoundController::class, 'changeStatus']);
-// Route::resource('lost-and-found', LostAndFoundController::class);
+Route::resource('positions', PositionController::class)->except(['create']);
+Route::resource('employees', EmployeeController::class);
+Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
+Route::resource('ordinances', OrdinanceController::class);
+Route::put('missing-persons/change-status/{missing_person}', [MissingPersonController::class, 'changeStatus']);
+Route::resource('missing-persons', MissingPersonController::class);
+Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
+Route::resource('lost-and-found', LostAndFoundController::class);
 
 // Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
 

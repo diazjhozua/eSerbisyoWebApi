@@ -20,7 +20,7 @@ class DocumentResource extends JsonResource
         return [
             'id' => $this->id,
             $this->mergeWhen($this->relationLoaded('type'), [
-                'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : NULL,
+                'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : 0,
                 'document_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
             'custom_type' => $this->custom_type,

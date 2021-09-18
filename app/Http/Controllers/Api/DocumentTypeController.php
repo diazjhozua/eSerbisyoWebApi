@@ -54,7 +54,7 @@ class DocumentTypeController extends Controller
     public function destroy($id)
     {
         if ($id == 0) { return response()->json(Helper::instance()->noDeleteAccess()); }
-        $type = Type::where('model_type', 'document')->findOrFail($id);
+        $type = Type::where('model_type', 'Document')->findOrFail($id);
         Document::where('type_id', $type->id)->update(['type_id' => NULL, 'custom_type' => 'deleted type: '.$type->name]);
         $type->delete();
         return response()->json(Helper::instance()->destroySuccess('document_type'));

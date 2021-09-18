@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ValidReportStatus;
+
 use App\Http\Requests\Api\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ChangeStatusRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class ChangeStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => ['required', 'integer', new ValidReportStatus],
+            'status' => ['required', Rule::in(['Pending', 'Denied', 'Approved', 'Resolved'])],
         ];
     }
 }
