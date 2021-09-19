@@ -9,7 +9,7 @@ class OrdinanceCategory extends Model
 {
     use HasFactory;
 
-    public function ordinances(){
-        return $this->hasMany(Ordinance::class);
+    public function projects(){
+        return $this->hasMany(Project::class);
     }
 }

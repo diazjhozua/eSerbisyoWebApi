@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\LostAndFoundController;
 use App\Http\Controllers\Api\ComplaintTypeController;
 use App\Http\Controllers\Api\ComplaintController;
 use App\Http\Controllers\Api\ComplainantController;
+use App\Http\Controllers\Api\ProjectController;
 
 
 /*
@@ -43,6 +44,7 @@ Route::resource('ordinances', OrdinanceController::class)->except(['show']);
 Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
+Route::resource('projects', ProjectController::class);
 
 Route::put('missing-persons/change-status/{id}', [MissingPersonController::class, 'changeStatus']);
 Route::resource('missing-persons', MissingPersonController::class);

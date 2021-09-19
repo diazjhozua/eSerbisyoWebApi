@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         Storage::delete($files);
         $files = Storage::allFiles('public/users/');
         Storage::delete($files);
+        $files = Storage::allFiles('public/projects/');
+        Storage::delete($files);
 
         $this->call([
             PurokSeeder::class,

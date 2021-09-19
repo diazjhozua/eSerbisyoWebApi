@@ -16,30 +16,27 @@ class ProjectSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        foreach(range(1,10) as $index) {
-            DB::table('projects')->insert([
-                'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-                'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
-                'cost' => $faker->numberBetween($min = 40000, $max = 10000000),
-                'project_start' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'project_end' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'location' => $faker->streetAddress(),
-                'is_starting' => true,
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-	        ]);
-        }
+        foreach(range(1,30) as $index) {
+            $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null); 
+            $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppProjects', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\projects', false);
+            $file_path = 'storage/projects/'.$pdf_name;
+            
 
-        foreach(range(1,10) as $index) {
+            
             DB::table('projects')->insert([
-                'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+                'name' => $faker->name($nbWords = 6, $variableNbWords = true),
                 'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
-                'cost' => $faker->numberBetween($min = 40000, $max = 10000000),
+                'cost' => $faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 5000),
                 'project_start' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'project_end' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'location' => $faker->streetAddress(),
-                'is_starting' => false,
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+                'project_end' => $faker->date($format = 'Y-m-d', $max = 'now'),           
+                'location' => $faker->sentence($nbSentences = 3, $variableNbSentences = true),
+                'is_starting' => $faker = true,
+                'pdf_name' => $pdf_name,
+                'file_path'=> $file_path,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
 	        ]);
         }
+        
     }
 }
