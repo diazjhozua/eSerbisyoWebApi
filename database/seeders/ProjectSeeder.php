@@ -15,7 +15,7 @@ class ProjectSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create();
-
+        $boolean = [true, false];
         foreach(range(1,30) as $index) {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null); 
             $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppProjects', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\projects', false);
@@ -30,7 +30,7 @@ class ProjectSeeder extends Seeder
                 'project_start' => $faker->date($format = 'Y-m-d', $max = 'now'),
                 'project_end' => $faker->date($format = 'Y-m-d', $max = 'now'),           
                 'location' => $faker->sentence($nbSentences = 3, $variableNbSentences = true),
-                'is_starting' => $faker = true,
+                'is_starting' => $boolean[array_rand($boolean)],
                 'pdf_name' => $pdf_name,
                 'file_path'=> $file_path,
                 'created_at' => $timestamp,

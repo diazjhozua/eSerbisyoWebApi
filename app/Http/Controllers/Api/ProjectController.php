@@ -108,7 +108,21 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            $projects = Project::findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Found project data',
+                'projects' => new ProjectResource($projects)
+            ]);
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json([
+                'success' => false,
+                'message' => 'No project id found',
+            ]);
+        }
     }
 
     /**
@@ -120,7 +134,35 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $projects = Project::findOrFail($id);
+            $projects->name = $request->name;
+            $projects->description = $request->description;
+            $projects->cost = $request->cost;
+            $projects->project_start = $request->project_start;
+            $projects->project_end = $request->project_end;
+            $projects->location = $request->location;
+            //check if they want to update the pdf file
+            if($request->hasFile('pdf')) {
+                Storage::delete('public/projects/'. $projects->pdf_name);
+                $fileName = time().'_'.$request->pdf->getClientOriginalName();
+                $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
+
+                $projects->pdf_name = $fileName;
+                $projects->file_path = $filePath;
+            }
+
+            $projects->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'The project is successfully updated',
+                'projects' => new ProjectResource($projects)
+            ]);
+
+        } catch (ModelNotFoundException $ex){
+            return response()->json(Helper::instance()->noItemFound('project'));
+        }
     }
 
     /**
