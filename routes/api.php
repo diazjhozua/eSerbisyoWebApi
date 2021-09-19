@@ -55,11 +55,12 @@ Route::put('missing-persons/change-status/{missing_person}', [MissingPersonContr
 Route::resource('missing-persons', MissingPersonController::class);
 Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);
+Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
+Route::resource('complaints', ComplaintController::class);
 
-// Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
 
 // Route::put('complaints/change-status/{id}', [ComplaintController::class, 'changeStatus']);
-// Route::resource('complaints', ComplaintController::class);
+
 
 // Route::put('complainants', [ComplainantController::class, 'update']);
 // Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show', 'update']);

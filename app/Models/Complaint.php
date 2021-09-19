@@ -9,12 +9,16 @@ class Complaint extends Model
 {
     use HasFactory;
 
+    protected $with = ['user'];
+
+    protected $guarded = [];
+
     public function user(){
         return $this->belongsTo(User::class);
     }
 
-    public function complaint_type(){
-        return $this->belongsTo(ComplaintType::class)->withDefault();
+    public function type(){
+        return $this->belongsTo(Type::class);
     }
 
     public function complainants(){

@@ -23,6 +23,10 @@ class Type extends Model
         return $this->hasMany(Ordinance::class)->orderBy('created_at', 'DESC');
     }
 
+    public function complaints() {
+        return $this->hasMany(Complaint::class)->orderBy('created_at', 'DESC');
+    }
+
     public function reports() {
         return $this->hasMany(Report::class)->orderBy('created_at', 'DESC');
     }

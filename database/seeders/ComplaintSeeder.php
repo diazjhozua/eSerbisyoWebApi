@@ -16,8 +16,9 @@ class ComplaintSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
+        $status = ['Pending', 'Denied', 'Approved', 'Resolved'];
+
         foreach (range(1,100) as $complaint_id) {
-            $status = $faker->numberBetween(1, 4);
             $type = $faker->numberBetween(21, 25);
             $custom_type = NULL;
 
@@ -37,7 +38,7 @@ class ComplaintSeeder extends Seeder
                 'custom_type' => $custom_type,
                 'reason' => $faker->realText($maxNbChars = 500, $indexSize = 3),
                 'action' => $faker->realText($maxNbChars = 500, $indexSize = 3),
-                'status' => $status,
+                'status' => $status[array_rand($status)],
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
