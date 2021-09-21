@@ -9,11 +9,9 @@ class MissingPerson extends Model
 {
     use HasFactory;
     protected $table = 'missing_persons';
+    protected $with = ['user'];
 
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s',
-        'updated_at' => 'datetime:Y-m-d H:i:s',
-    ];
+    protected $guarded = [];
 
     public function user(){
         return $this->belongsTo(User::class);

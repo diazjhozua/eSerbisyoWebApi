@@ -11,8 +11,10 @@ class Position extends Model
 
     public $incrementing = false;
 
+    protected $guarded = [];
+
     public function employees(){
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(Employee::class)->orderBy('created_at', 'DESC');;
     }
 
 }

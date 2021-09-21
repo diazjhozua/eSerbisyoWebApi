@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnnouncementTypesTable extends Migration
+class CreateCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateAnnouncementTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('announcement_types', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('body');
+            $table->morphs('commentable');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateAnnouncementTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcement_types');
+        Schema::dropIfExists('comments');
     }
 }

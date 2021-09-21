@@ -9,7 +9,9 @@ class Ordinance extends Model
 {
     use HasFactory;
 
-    public function ordinance_category(){
-        return $this->belongsTo(OrdinanceCategory::class);
+    protected $guarded = [];
+
+    public function type(){
+        return $this->belongsTo(Type::class);
     }
 }

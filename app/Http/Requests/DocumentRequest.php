@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DocumentRequest extends FormRequest
 {
@@ -24,7 +26,9 @@ class DocumentRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'document_type_id' => 'required|integer|exists:document_types,id',
+            'type_id' => ['required', Rule::exists('types', 'id')->where(function ($query) {
+                return $query->where('model_type', 'Complaint');
+            })],
             'description' => 'required|string|min:4|max:250',
             'year' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
         ];
@@ -38,5 +42,10 @@ class DocumentRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    public function getData() {
+        $data = $this->only(['type_id', 'description', 'year']);
+        return $data;
     }
 }

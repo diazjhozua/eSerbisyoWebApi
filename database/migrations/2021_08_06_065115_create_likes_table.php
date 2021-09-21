@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFeedbackTypesTable extends Migration
+class CreateLikesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateFeedbackTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('feedback_types', function (Blueprint $table) {
+        Schema::create('likes', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('announcement_id')->nullable()->constrained('announcements')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateFeedbackTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('feedback_types');
+        Schema::dropIfExists('likes');
     }
 }

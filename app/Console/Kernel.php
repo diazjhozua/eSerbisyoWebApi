@@ -25,6 +25,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $filePath = 'C:\sc\ra.txt';
+        $schedule->command('reports:ignore_urgent')->hourly();
+        $schedule->command('reports:ignore_nonurgent')->everySixHours();
+        $schedule->command('delete:old_pictures')->twiceMonthly(1, 16, '24:00')->appendOutputTo($filePath);
+        // $schedule->command('delete:old_pictures')->everyMinute()->appendOutputTo($filePath);
+
     }
 
     /**

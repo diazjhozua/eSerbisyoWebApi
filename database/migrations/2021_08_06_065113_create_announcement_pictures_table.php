@@ -15,13 +15,10 @@ class CreateAnnouncementPicturesTable extends Migration
     {
         Schema::create('announcement_pictures', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('announcement_id');
-            $table->string('picture');
+            $table->foreignId('announcement_id')->nullable()->constrained('announcements')->onDelete('cascade');
+            $table->string('picture_name');
+            $table->string('file_path');
             $table->timestamps();
-
-            $table->foreign('announcement_id')->references('id')
-                ->on('announcements')->onDelete('cascade');
-
         });
     }
 

@@ -5,94 +5,41 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ComplainantRequest;
+use App\Http\Resources\ComplainantResource;
 use App\Models\Complainant;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ComplainantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(ComplainantRequest $request)
     {
-
+        $fileName = time().'_'.$request->signature->getClientOriginalName();
+        $filePath = $request->file('signature')->storeAs('signatures', $fileName, 'public');
+        $complainant = Complainant::create(array_merge($request->getData(), ['signature_picture' => $fileName,'file_path' => $filePath]));
+        return (new ComplainantResource($complainant->load('complaint')))->additional(Helper::instance()->storeSuccess('complainant'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit(Complainant $complainant)
     {
-        //
+        return (new ComplainantResource($complainant))->additional(array_merge(Helper::instance()->itemFound('complainant')));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function update(ComplainantRequest $request, Complainant $complainant)
     {
-        try {
-            $complainant = Complainant::findOrFail($id);
+        if($request->hasFile('signature')) {
+            Storage::delete('public/signatures/'. $complainant->signature_picture);
+            $fileName = time().'_'.$request->signature->getClientOriginalName();
+            $filePath = $request->file('signature')->storeAs('signatures', $fileName, 'public');
+            $complainant->fill(array_merge($request->getData(), ['signature_picture' => $fileName,'file_path' => $filePath]))->save();
+        } else { $complainant->fill($request->getData())->save(); }
 
-            return response()->json([
-                'success' => true,
-                'complainant' => $complainant
-            ]);
-        } catch (ModelNotFoundException $ex) {
-            return response()->json(Helper::instance()->noItemFound('complainant'));
-        }
+        return (new ComplainantResource($complainant))->additional(Helper::instance()->updateSuccess('complainant'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function destroy(Complainant $complainant)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        Storage::delete('public/signatures/'. $complainant->signature_picture);
+        $complainant->delete();
+        return response()->json(Helper::instance()->destroySuccess('complainant'));
     }
 }

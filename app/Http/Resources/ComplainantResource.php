@@ -18,6 +18,7 @@ class ComplainantResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'complaint_id' => $this->complaint_id,
             'signature_picture' => $this->signature_picture,
             'file_path' => $this->file_path,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),

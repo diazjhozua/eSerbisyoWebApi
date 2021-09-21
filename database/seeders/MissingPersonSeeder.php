@@ -16,9 +16,13 @@ class MissingPersonSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
+        $height_scale = ['feet(ft)', 'centimeter(cm)'];
+        $weight_scale = ['kilogram(kg)', 'pound(lbs)'];
+
+        $status = ['Pending', 'Denied', 'Approved', 'Resolved'];
+        $report_type = ['Missing', 'Found'];
+
         foreach (range(1,30) as $index) {
-            $status = $faker->numberBetween(1, 4);
-            $type = $faker->numberBetween(1, 2);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppLostAndFounds', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
             $file_path = 'storage/missing-pictures/'.$picture_name;
@@ -26,7 +30,9 @@ class MissingPersonSeeder extends Seeder
                 'user_id' => $faker->numberBetween(1, 19),
                 'name' => $faker->name(),
                 'height' => $faker->randomFloat($nbMaxDecimals = 2, $min = 1.6, $max = 8),
+                'height_unit' => $height_scale[array_rand($height_scale)],
                 'weight' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
+                'weight_unit' => $weight_scale[array_rand($weight_scale)],
                 'age' => $faker->numberBetween(1,120),
                 'eyes' => $faker->colorName(),
                 'hair' => $faker->colorName(),
@@ -34,8 +40,8 @@ class MissingPersonSeeder extends Seeder
                 'important_information' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
                 'contact_information' => $faker->tollFreePhoneNumber(),
-                'status' => $status,
-                'report_type' => $type,
+                'status' => $status[array_rand($status)],
+                'report_type' => $report_type[array_rand($report_type)],
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'created_at' => $date,

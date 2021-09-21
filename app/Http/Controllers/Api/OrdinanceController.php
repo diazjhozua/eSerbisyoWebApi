@@ -5,170 +5,60 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrdinanceRequest;
-use Illuminate\Http\Request;
-use App\Models\Ordinance;
-use App\Models\OrdinanceCategory;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\OrdinanceResource;
-use App\Http\Resources\OrdinanceCategoryResource;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Resources\TypeResource;
+use App\Models\Ordinance;
+use App\Models\Type;
+use Illuminate\Support\Facades\Storage;
 
 class OrdinanceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $ordinances = Ordinance::with('ordinance_category')->orderBy('created_at','DESC')->get();
-
-        return response()->json([
-            'success' => true,
-            'ordinances' => OrdinanceResource::collection($ordinances)
-        ]);
+        $ordinances = Ordinance::with('type')->orderBy('created_at','DESC')->get();
+        return OrdinanceResource::collection($ordinances)->additional(['success' => true]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $ordinance_categories = OrdinanceCategory::get();
-
-        return response()->json([
-            'success' => true,
-            'ordinance_category' => OrdinanceCategoryResource::collection($ordinance_categories)
-        ]);
+        $types = Type::where('model_type', 'Ordinance')->get();
+        return ['types' => TypeResource::collection($types), 'success' => true];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(OrdinanceRequest $request)
     {
-        $ordinance = new Ordinance();
-        $ordinance->ordinance_no = $request->ordinance_no;
-        $ordinance->title = $request->title;
-        $ordinance->date_approved = $request->date_approved;
-        $ordinance->ordinance_category_id = $request->ordinance_category_id;
-
         $fileName = time().'_'.$request->pdf->getClientOriginalName();
         $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
-
-        $ordinance->pdf_name = $fileName;
-        $ordinance->file_path = $filePath;
-
-        $ordinance->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'New ordinance created succesfully',
-            'ordinance' => new OrdinanceResource($ordinance->load('ordinance_category'))
-        ]);
-
+        $ordinance = Ordinance::create(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]));
+        return (new OrdinanceResource($ordinance->load('type')))->additional(Helper::instance()->storeSuccess('ordinance'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Ordinance $ordinance)
     {
-        //
+        return (new OrdinanceResource($ordinance->load('type')))->additional(Helper::instance()->itemFound('ordinance'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Ordinance $ordinance)
     {
-        try {
-            $ordinance = Ordinance::with('ordinance_category')->findOrFail($id);
-
-            // load all ordinance_category to select the user
-            $ordinance_categories = OrdinanceCategory::get();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found ordinance data',
-                'ordinance' => new OrdinanceResource($ordinance),
-                'ordinance_categories' => OrdinanceCategoryResource::collection($ordinance_categories)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('ordinance'));
-        }
+        $types = Type::where('model_type', 'Ordinance')->get();
+        return (new OrdinanceResource($ordinance->load('type')))->additional(array_merge(['types' => TypeResource::collection($types)],Helper::instance()->itemFound('ordinance')));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(OrdinanceRequest $request, $id)
+    public function update(OrdinanceRequest $request, Ordinance $ordinance)
     {
-        try {
-            $ordinance = Ordinance::with('ordinance_category')->findOrFail($id);
-            $ordinance->ordinance_no = $request->ordinance_no;
-            $ordinance->title = $request->title;
-            $ordinance->date_approved = $request->date_approved;
-            $ordinance->ordinance_category_id = $request->ordinance_category_id;
-            //check if they want to update the pdf file
-            if($request->hasFile('pdf')) {
-                Storage::delete('public/ordinances/'. $ordinance->pdf_name);
-                $fileName = time().'_'.$request->pdf->getClientOriginalName();
-                $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
-
-                $ordinance->pdf_name = $fileName;
-                $ordinance->file_path = $filePath;
-            }
-
-            $ordinance->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'The ordinance is successfully updated',
-                'ordinance' => new OrdinanceResource($ordinance)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('ordinance'));
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        try {
-            $ordinance = Ordinance::findOrFail($id);
+        if($request->hasFile('pdf')) {
             Storage::delete('public/ordinances/'. $ordinance->pdf_name);
-            $ordinance->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'The ordinance is successfully deleted',
-            ]);
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('ordinance'));
-        }
+            $fileName = time().'_'.$request->pdf->getClientOriginalName();
+            $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
+            $ordinance->fill(array_merge($request->getData(), ['custom_type' => NULL,'pdf_name' => $fileName,'file_path' => $filePath]))->save();
+        } else { $ordinance->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save(); }
+        return (new OrdinanceResource($ordinance->load('type')))->additional(Helper::instance()->updateSuccess('ordinance'));
+    }
+
+    public function destroy(Ordinance $ordinance)
+    {
+        Storage::delete('public/ordinances/'. $ordinance->pdf_name);
+        $ordinance->delete();
+        return response()->json(Helper::instance()->destroySuccess('ordinance'));
     }
 }

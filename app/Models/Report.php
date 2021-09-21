@@ -9,8 +9,16 @@ class Report extends Model
 {
     use HasFactory;
 
+    protected $with = ['user'];
+
+    protected $guarded = [];
+
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function type(){
+        return $this->belongsTo(Type::class)->withDefault();
     }
 
 }

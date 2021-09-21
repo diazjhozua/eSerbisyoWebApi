@@ -15,17 +15,16 @@ class CreateLostAndFoundsTable extends Migration
     {
         Schema::create('lost_and_founds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('item');
             $table->string('last_seen');
             $table->string('description');
             $table->string('contact_information');
             $table->string('picture_name');
             $table->string('file_path');
-            $table->integer('status');
-            $table->integer('report_type');
+            $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
+            $table->enum('report_type', ['Missing', 'Found']);
             $table->timestamps();
-
         });
     }
 

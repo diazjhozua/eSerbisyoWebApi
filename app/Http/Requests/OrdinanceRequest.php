@@ -25,9 +25,9 @@ class OrdinanceRequest extends FormRequest
     {
         $rules = [
             'ordinance_no'=> 'required|string|min:4|max:60',
-            'title'=> 'required|string|min:4|max:60',
+            'title'=> 'required|string|min:4|max:250',
             'date_approved' => 'required|date|date_format:Y-m-d',
-            'ordinance_category_id' => 'required|integer|exists:ordinance_categories,id',
+            'type_id' => 'required|integer|exists:types,id',
         ];
 
         if ($this->isMethod('POST')) {
@@ -39,5 +39,10 @@ class OrdinanceRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    public function getData() {
+        $data = $this->only(['ordinance_no', 'title', 'date_approved', 'type_id']);
+        return $data;
     }
 }

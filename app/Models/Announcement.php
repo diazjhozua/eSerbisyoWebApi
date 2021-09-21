@@ -9,11 +9,15 @@ class Announcement extends Model
 {
     use HasFactory;
 
-    public function announcement_type(){
-        return $this->belongsTo(AnnouncementType::class);
+    public function type(){
+        return $this->belongsTo(Type::class);
     }
 
     public function announcement_pictures(){
         return $this->hasMany(AnnouncementPicture::class);
+    }
+
+    public function comments() {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }

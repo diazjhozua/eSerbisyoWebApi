@@ -18,42 +18,42 @@ class PositionSeeder extends Seeder
 
         DB::table('positions')->insert([
             'id' => '1',
-            'position' => 'Barangay Captain',
+            'name' => 'Barangay Captain',
             'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         ]);
 
         DB::table('positions')->insert([
             'id' => '2',
-            'position' => 'Barangay Kagawad',
+            'name' => 'Barangay Kagawad',
             'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         ]);
 
         DB::table('positions')->insert([
             'id' => '3',
-            'position' => 'Barangay Secretary',
+            'name' => 'Barangay Secretary',
             'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         ]);
 
         DB::table('positions')->insert([
             'id' => '4',
-            'position' => 'Barangay Treasurer',
+            'name' => 'Barangay Treasurer',
             'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         ]);
 
         DB::table('positions')->insert([
             'id' => '5',
-            'position' => 'SK Chairman',
+            'name' => 'SK Chairman',
             'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         ]);
 
         DB::table('positions')->insert([
             'id' => '6',
-            'position' => 'SK Kagawad',
+            'name' => 'SK Kagawad',
             'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
             'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         ]);

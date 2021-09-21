@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DocumentType extends Model
+class Comment extends Model
 {
     use HasFactory;
 
-    public function documents(){
-        return $this->hasMany(Document::class);
+    public function commentable() {
+        return $this->morphTo();
     }
 }
