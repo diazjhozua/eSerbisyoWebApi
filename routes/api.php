@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 use App\Http\Controllers\Api\ {
     FeedbackTypeController,
     FeedbackController,
@@ -24,6 +23,7 @@ use App\Http\Controllers\Api\ {
     ReportController,
     AnnouncementTypeController,
     AnnouncementController,
+    ProjectController,
 };
 
 /*
@@ -49,12 +49,15 @@ Route::resource('documents', DocumentController::class);
 Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
+Route::resource('projects', ProjectController::class);
+
 Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
 Route::resource('ordinances', OrdinanceController::class);
 Route::put('missing-persons/change-status/{missing_person}', [MissingPersonController::class, 'changeStatus']);
 Route::resource('missing-persons', MissingPersonController::class);
 Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);
+
 Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
 Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 'changeStatus']);
 Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
