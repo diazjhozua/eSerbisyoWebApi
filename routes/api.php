@@ -51,13 +51,13 @@ Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
 Route::resource('projects', ProjectController::class);
 
-Route::put('missing-persons/change-status/{id}', [MissingPersonController::class, 'changeStatus']);
 Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
 Route::resource('ordinances', OrdinanceController::class);
 Route::put('missing-persons/change-status/{missing_person}', [MissingPersonController::class, 'changeStatus']);
 Route::resource('missing-persons', MissingPersonController::class);
 Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);
+
 Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
 Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 'changeStatus']);
 Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
