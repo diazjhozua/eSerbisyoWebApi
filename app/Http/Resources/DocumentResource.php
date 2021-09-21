@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\MissingValue;
 
 class DocumentResource extends JsonResource
 {
@@ -14,14 +15,15 @@ class DocumentResource extends JsonResource
      */
     public function toArray($request)
     {
-        $document_type = $this->whenLoaded('document_type');
+        $type = $this->whenLoaded('type');
 
         return [
             'id' => $this->id,
-            $this->mergeWhen($this->relationLoaded('document_type'), [
-                'document_type_id'  => isset($document_type) ? $this->document_type->id : null,
-                'document_type'  => isset($document_type) ? $this->document_type->type : null,
+            $this->mergeWhen($this->relationLoaded('type'), [
+                'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : 0,
+                'document_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
+            'custom_type' => $this->custom_type,
             'description' => $this->description,
             'year' => $this->year,
             'pdf_name' => $this->pdf_name,

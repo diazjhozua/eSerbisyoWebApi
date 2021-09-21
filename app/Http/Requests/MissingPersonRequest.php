@@ -3,8 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
-use App\Rules\ValidReportType;
 use App\Rules\ValidReportStatus;
+use Illuminate\Validation\Rule;
 
 class MissingPersonRequest extends FormRequest
 {
@@ -28,8 +28,10 @@ class MissingPersonRequest extends FormRequest
         if ($this->isMethod('POST')) {
             return [
                 'name' => 'required|string|min:3|max:50',
-                'height' => 'required|numeric|between:1,9.99',
-                'weight' => 'required|numeric|between:1,120.99',
+                'height' => 'required|numeric|between:1,1000.99',
+                'height_unit' => ['required', Rule::in(['feet(ft)', 'centimeter(cm)'])],
+                'weight' => 'required|numeric|between:1,1000.99',
+                'weight_unit' => ['required', Rule::in(['kilogram(kg)', 'pound(lbs)'])],
                 'age' => 'integer|between:0,200',
                 'eyes' => 'string|min:3|max:50',
                 'hair' => 'string|min:3|max:50',
@@ -38,7 +40,7 @@ class MissingPersonRequest extends FormRequest
                 'last_seen' => 'required|string|min:3|max:60',
                 'contact_information' => 'required|string|min:3|max:120',
                 'picture' =>  'required|mimes:jpeg,png|max:3000',
-                'report_type' => ['required', 'integer', new ValidReportType],
+                'report_type' => ['required', Rule::in(['Missing', 'Found'])],
             ];
         }
 
@@ -46,7 +48,9 @@ class MissingPersonRequest extends FormRequest
             return [
                 'name' => 'required|string|min:3|max:50',
                 'height' => 'required|numeric|between:1,9.99',
+                'height_unit' => ['required', Rule::in(['feet(ft)', 'centimeter(cm)'])],
                 'weight' => 'required|numeric|between:1,120.99',
+                'weight_unit' => ['required', Rule::in(['kilogram(kg)', 'pound(lbs)'])],
                 'age' => 'integer|between:0,200',
                 'eyes' => 'string|min:3|max:50',
                 'hair' => 'string|min:3|max:50',
@@ -54,12 +58,16 @@ class MissingPersonRequest extends FormRequest
                 'important_information' => 'required|string|min:3|max:120',
                 'last_seen' => 'required|string|min:3|max:60',
                 'contact_information' => 'required|string|min:3|max:120',
-                'picture' =>  'required|mimes:jpeg,png|max:3000',
-                'report_type' => ['required', 'integer', new ValidReportType],
-                'status' => 'required', 'integer', new ValidReportStatus,
+                'picture' =>  'mimes:jpeg,png|max:3000',
+                'report_type' => ['required', Rule::in(['Missing', 'Found'])],
             ];
         }
-
-
     }
+
+    public function getData() {
+        $data = $this->only(['name', 'height', 'height_unit', 'weight', 'weight_unit', 'age', 'eyes', 'hair', 'unique_sign',
+            'important_information', 'last_seen', 'contact_information', 'report_type']);
+        return $data;
+    }
+
 }

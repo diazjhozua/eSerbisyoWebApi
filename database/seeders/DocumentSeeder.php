@@ -16,7 +16,7 @@ class DocumentSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        foreach (range(1,3) as $index) {
+        foreach (range(4,12) as $index) {
 
             $year = 2019;
             foreach (range(1,9) as $index) {
@@ -24,7 +24,8 @@ class DocumentSeeder extends Seeder
                 $file_path = 'storage/documents/'.$pdf_name;
                 $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
                 DB::table('documents')->insert([
-                    'document_type_id' => $index,
+                    'type_id' => $index,
+                    'description' => $faker->realText($maxNbChars = 200, $indexSize = 2),
                     'year' => $year,
                     'pdf_name'=> $pdf_name,
                     'file_path'=> $file_path,

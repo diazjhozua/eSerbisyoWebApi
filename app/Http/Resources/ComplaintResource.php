@@ -17,37 +17,20 @@ class ComplaintResource extends JsonResource
      */
     public function toArray($request)
     {
-
-        $user = $this->whenloaded('user');
         $complainants = $this->whenloaded('complainants');
         $defendants = $this->whenloaded('defendants');
-        $complaint_type = $this->whenLoaded('complaint_type');
-        switch ($this->status) {
-            case 1:
-                $status = 'For Approval';
-                break;
-            case 2:
-                $status = 'Approved';
-                break;
-            case 3:
-                $status = 'Denied';
-                break;
-            case 4:
-                $status = 'Resolved';
-                break;
-        }
+        $type = $this->whenLoaded('type');
 
         return [
             'id' => $this->id,
-            $this->mergeWhen($this->relationLoaded('user'), [
-                'submitted_by' => !$user instanceof MissingValue && isset($user) ? $this->getFullNameAttribute() : NULL,
+            'submitted_by' => $this->user->getFullNameAttribute(),
+
+            $this->mergeWhen($this->relationLoaded('type'), [
+                'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : 0,
+                'type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
 
-            $this->mergeWhen($this->relationLoaded('complaint_type'), [
-                'complaint_type_id'  => !$complaint_type instanceof MissingValue && isset($this->complaint_type->id) ? $this->complaint_type->id : NULL,
-                'complaint_type'  => !$complaint_type instanceof MissingValue && isset($this->complaint_type->type) ? $this->complaint_type->type : 'Others-'.$this->custom_type,
-            ]),
-
+            'custom_type' => $this->custom_type,
             'reason' => $this->reason,
             'action' => $this->action,
 
@@ -68,7 +51,7 @@ class ComplaintResource extends JsonResource
             ]),
 
             'status' => $this->status,
-            'status_of_application' => $status,
+
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
 

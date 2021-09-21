@@ -11,13 +11,12 @@ class Feedback extends Model
 
     protected $table = 'feedbacks';
 
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s',
-        'updated_at' => 'datetime:Y-m-d H:i:s',
-    ];
+    protected $with = ['user'];
 
-    public function feedback_type(){
-        return $this->belongsTo(FeedbackType::class);
+    protected $guarded = [];
+
+    public function type() {
+        return $this->belongsTo(Type::class);
     }
 
     public function user(){

@@ -17,9 +17,10 @@ class LostAndFoundSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
+        $status = ['Pending', 'Denied', 'Approved', 'Resolved'];
+        $report_type = ['Missing', 'Found'];
+
         foreach (range(1,20) as $index) {
-            $status = $faker->numberBetween(1, 4);
-            $type = $faker->numberBetween(1, 2);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppMissingPersons', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
             $file_path = 'storage/missing-pictures/'.$picture_name;
@@ -29,8 +30,8 @@ class LostAndFoundSeeder extends Seeder
                 'last_seen' => $faker->streetName(),
                 'description' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'contact_information' => $faker->tollFreePhoneNumber(),
-                'status' => $status,
-                'report_type' => $type,
+                'status' => $status[array_rand($status)],
+                'report_type' => $report_type[array_rand($report_type)],
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'created_at' => $date,

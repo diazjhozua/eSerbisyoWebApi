@@ -24,7 +24,7 @@ class TermRequest extends FormRequest
     public function rules()
     {
         return [
-            'term' => 'required|string|min:4|max:60',
+            'name' => 'required|string|min:4|max:60',
             'year_start' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
             'year_end' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),
         ];

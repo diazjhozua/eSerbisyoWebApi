@@ -16,7 +16,7 @@ class OrdinanceSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        foreach (range(1,8) as $ordinanceCat) {
+        foreach (range(13,20) as $typeID) {
             $ordinanceCount = $faker->numberBetween(5,10);
 
             foreach (range(1,$ordinanceCount) as $index) {
@@ -26,9 +26,9 @@ class OrdinanceSeeder extends Seeder
 
                 DB::table('ordinances')->insert([
                     'ordinance_no' => $faker->numberBetween(07, 21).'-'.$faker->numberBetween(400, 20000),
+                    'type_id'=> $typeID,
                     'title' => strtoupper($faker->realText($maxNbChars = 200, $indexSize = 2)),
                     'date_approved' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                    'ordinance_category_id'=> $ordinanceCat,
                     'pdf_name' => $pdf_name,
                     'file_path'=> $file_path,
                     'created_at' => $timestamp,

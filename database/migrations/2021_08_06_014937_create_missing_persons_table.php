@@ -15,10 +15,12 @@ class CreateMissingPersonsTable extends Migration
     {
         Schema::create('missing_persons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->float('height', 5,2);
+            $table->enum('height_unit', ['feet(ft)', 'centimeter(cm)']);
             $table->float('weight', 5,2);
+            $table->enum('weight_unit', ['kilogram(kg)', 'pound(lbs)']);
             $table->integer('age')->nullable();
             $table->string('eyes')->nullable();
             $table->string('hair')->nullable();
@@ -28,19 +30,9 @@ class CreateMissingPersonsTable extends Migration
             $table->string('contact_information');
             $table->string('picture_name');
             $table->string('file_path');
-            $table->integer('status');
-            $table->integer('report_type');
+            $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
+            $table->enum('report_type', ['Missing', 'Found']);
             $table->timestamps();
-
-            // application status
-            // 1 - for approval
-            // 2 - approved
-            // 3 - denied
-            // 4 - resolved
-
-            // missing report type
-            // 1 - Missing
-            // 2 - Found
         });
     }
 

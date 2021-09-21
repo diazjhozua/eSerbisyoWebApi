@@ -3,8 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\OrdinanceResource;
-class OrdinanceCategoryResource extends JsonResource
+
+class AnnouncementTypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,22 +14,18 @@ class OrdinanceCategoryResource extends JsonResource
      */
     public function toArray($request)
     {
-        $ordinances = $this->whenLoaded('ordinances');
+        $announcements = $this->whenLoaded('announcements');
 
         return [
             'id' => $this->id,
-            'category' => $this->category,
-            $this->mergeWhen(isset($this->ordinances_count), [
-                'ordinances_count' => $this->ordinances_count,
+            'type' => $this->type,
+            $this->mergeWhen(isset($this->announcements_count), [
+                'announcements_count' => $this->announcements_count,
             ]),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-            $this->mergeWhen($this->relationLoaded('ordinances'), [
-                'ordinances' => OrdinanceResource::collection($ordinances),
-            ]),
-
-
-
+            'announcements' => AnnouncementResource::collection($announcements),
         ];
+
     }
 }

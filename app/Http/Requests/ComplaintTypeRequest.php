@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ComplaintTypeRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class ComplaintTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required|unique:document_types|string|min:4|max:120'
+            'name' => ['required', 'string', 'min:6', 'max:200', Rule::unique('types')->where(function ($query) {
+                return $query->where('model_type', 'Complaint');
+            })],
         ];
     }
 }

@@ -9,6 +9,8 @@ class Employee extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function position(){
         return $this->belongsTo(Position::class);
     }

@@ -15,9 +15,12 @@ class CreateFeedbackTable extends Migration
     {
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('feedback_type_id')->nullable()->constrained('feedback_types')->onDelete('set null');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('type_id')->nullable()->constrained('types')->onDelete('set null');
+            $table->string('custom_type')->nullable();
+            $table->enum('polarity', ['Positive', 'Neutral', 'Negative']);
             $table->longText('message');
+            $table->enum('status', ['Pending', 'Ignored', 'Noted'])->default('Pending');
             $table->boolean('is_anonymous');
             $table->timestamps();
         });

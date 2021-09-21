@@ -15,14 +15,17 @@ class CreateAnnouncementsTable extends Migration
     {
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('announcement_type_id')->nullable();
+            $table->foreignId('type_id')->nullable()->constrained('types')->onDelete('set null');
+            $table->string('custom_type')->nullable();
             $table->string('title');
             $table->longText('description');
-            $table->string('pdf')->nullable();
             $table->timestamps();
 
-            $table->foreign('announcement_type_id')->references('id')
-                ->on('announcement_types')->onDelete('set null');
+            // $table->id();
+            // $table->foreignId('announcement_type_id')->nullable()->constrained('announcement_types')->onDelete('set null');
+            // $table->string('title');
+            // $table->longText('description');
+            // $table->timestamps();
         });
     }
 

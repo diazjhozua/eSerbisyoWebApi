@@ -3,21 +3,28 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\FeedbackController;
-use App\Http\Controllers\Api\DocumentTypeController;
-use App\Http\Controllers\Api\DocumentController;
-use App\Http\Controllers\APi\OrdinanceCategoryController;
-use App\Http\Controllers\APi\OrdinanceController;
-use App\Http\Controllers\Api\TermController;
-use App\Http\Controllers\Api\PositionController;
-use App\Http\Controllers\Api\EmployeeController;
-use App\Http\Controllers\Api\MissingPersonController;
-use App\Http\Controllers\Api\LostAndFoundController;
-use App\Http\Controllers\Api\ComplaintTypeController;
-use App\Http\Controllers\Api\ComplaintController;
-use App\Http\Controllers\Api\ComplainantController;
-use App\Http\Controllers\Api\DefendantController;
 
+use App\Http\Controllers\Api\ {
+    FeedbackTypeController,
+    FeedbackController,
+    DocumentTypeController,
+    DocumentController,
+    TermController,
+    PositionController,
+    EmployeeController,
+    OrdinanceTypeController,
+    OrdinanceController,
+    MissingPersonController,
+    LostAndFoundController,
+    ComplaintTypeController,
+    ComplaintController,
+    ComplainantController,
+    DefendantController,
+    ReportTypeController,
+    ReportController,
+    AnnouncementTypeController,
+    AnnouncementController,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -34,33 +41,29 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('feedbacks', FeedbackController::class)->only(['index', 'store']);
+Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
+Route::put('feedbacks/{feedback}/noted', [FeedbackController::class, 'noted']);
+Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update', 'delete']);
 Route::resource('document-types', DocumentTypeController::class)->except(['create']);
-Route::resource('documents', DocumentController::class)->except(['show']);
-
-Route::resource('ordinance-categories', OrdinanceCategoryController::class)->except(['create']);
-Route::resource('ordinances', OrdinanceController::class)->except(['show']);
-
+Route::resource('documents', DocumentController::class);
 Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
-
-Route::put('missing-persons/change-status/{id}', [MissingPersonController::class, 'changeStatus']);
+Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
+Route::resource('ordinances', OrdinanceController::class);
+Route::put('missing-persons/change-status/{missing_person}', [MissingPersonController::class, 'changeStatus']);
 Route::resource('missing-persons', MissingPersonController::class);
-
-Route::put('lost-and-found/change-status/{id}', [LostAndFoundController::class, 'changeStatus']);
+Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);
+Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
+Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 'changeStatus']);
+Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
+Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
+Route::resource('report-types', ReportTypeController::class)->except(['create']);
+Route::resource('reports', ReportController::class);
+Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 
-Route::resource('complaint-types', ComplaintTypeController::class);
-
-Route::put('complaints/change-status/{id}', [ComplaintController::class, 'changeStatus']);
-Route::resource('complaints', ComplaintController::class);
-
-Route::put('complainants', [ComplainantController::class, 'update']);
-Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show', 'update']);
-
-Route::put('defendants', [DefendantController::class, 'update']);
-Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show', 'update']);
+// Route::resource('announcements', AnnouncementController::class);
 
 
 
