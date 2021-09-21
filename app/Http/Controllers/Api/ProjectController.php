@@ -19,7 +19,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-       
+
         $projects = Project::orderBy('created_at','DESC')->get();
 
         return response()->json([
@@ -38,7 +38,7 @@ class ProjectController extends Controller
         $projects = Project::get();
 
 
-        return response()->json([ 
+        return response()->json([
             'success' => true,
             'projects' => $projects,
         ]);
@@ -52,7 +52,7 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-      
+
         $projects = new Project();
         $projects->id = $request->id;
         $projects->name = $request->name;
@@ -68,7 +68,7 @@ class ProjectController extends Controller
         $projects->file_path = $filePath;
 
         $projects->is_starting = $request->is_starting;
-       
+
 
         return response()->json([
             'success' => true,
@@ -91,14 +91,14 @@ class ProjectController extends Controller
                 'success' => true,
                 'message' => 'Found project data',
                 'projects' => new ProjectResource($projects)
-                
+
             ]);
 
         } catch (ModelNotFoundException $ex){
             return response()->json(Helper::instance()->noItemFound('projects'));
         }
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.
