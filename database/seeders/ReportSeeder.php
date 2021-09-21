@@ -16,6 +16,9 @@ class ReportSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
+        $status = ['Pending', 'Ignored', 'Invalid', 'Noted'];
+        $urgency_classification = ['Nonurgent', 'Urgent'];
+
         foreach (range(1,100) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $type = $faker->numberBetween(26, 30);
@@ -25,12 +28,6 @@ class ReportSeeder extends Seeder
             if ($isNull === 0) {
                 $type = NULL;
                 $custom_type = $faker->realText($maxNbChars = 10, $indexSize = 1);
-            }
-
-            $status =  $faker->numberBetween(1, 4);
-            $admin_message = NULL;
-            if ($status == 2 && $status == 3) {
-                $admin_message = $faker->realText($maxNbChars = 500, $indexSize = 3);
             }
 
             $picture_availability =  $faker->numberBetween(0, 1);
@@ -50,9 +47,8 @@ class ReportSeeder extends Seeder
                 'landmark' => $faker->streetName(),
                 'description' => $faker->realText($maxNbChars = 500, $indexSize = 3),
                 'is_anonymous' => $faker->numberBetween(0, 1),
-                'is_urgent' => $faker->numberBetween(0, 1),
-                'admin_message' => $admin_message,
-                'status' => $status,
+                'urgency_classification' => $urgency_classification[array_rand($urgency_classification)],
+                'status' => $status[array_rand($status)],
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'created_at' => $date,

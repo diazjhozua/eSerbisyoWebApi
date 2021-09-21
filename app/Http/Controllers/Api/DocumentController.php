@@ -22,7 +22,7 @@ class DocumentController extends Controller
     public function create()
     {
         $types = Type::where('model_type', 'Document')->get();
-        return ['types' => TypeResource::collection($types), 'success' => true] ;
+        return ['types' => TypeResource::collection($types), 'success' => true];
     }
 
     public function store(DocumentRequest $request)

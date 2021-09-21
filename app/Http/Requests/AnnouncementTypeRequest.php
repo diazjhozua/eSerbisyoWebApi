@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AnnouncementTypeRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class AnnouncementTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required|unique:announcement_types|string|min:4|max:60',
+            'name' => ['required', 'string', 'min:6', 'max:200', Rule::unique('types')->where(function ($query) {
+                return $query->where('model_type', 'Announcement');
+            })],
         ];
     }
 }

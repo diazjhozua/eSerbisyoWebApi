@@ -16,6 +16,7 @@ class CreateAnnouncementsTable extends Migration
         Schema::create('announcements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('type_id')->nullable()->constrained('types')->onDelete('set null');
+            $table->string('custom_type')->nullable();
             $table->string('title');
             $table->longText('description');
             $table->timestamps();

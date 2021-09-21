@@ -16,15 +16,17 @@ class AnnouncementResource extends JsonResource
      */
     public function toArray($request)
     {
-        $announcement_type = $this->whenLoaded('announcement_type');
+        $type = $this->whenLoaded('type');
         $announcement_pictures = $this->whenLoaded('announcement_pictures');
         $comments = $this->whenLoaded('comments');
+
         return [
             'id' => $this->id,
-            $this->mergeWhen($this->relationLoaded('announcement_type'), [
-                'announcement_type_id'  => !$announcement_type instanceof MissingValue && isset($this->announcement_type->id) ? $this->announcement_type->id : NULL,
-                'announcement_type'  => !$announcement_type instanceof MissingValue && isset($this->announcement_type->type) ? $this->announcement_type->type : NULL,
+            $this->mergeWhen($this->relationLoaded('type'), [
+                'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : 0,
+                'announcement_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
+            'custom_type' => $this->custom_type,
             'title' => $this->title,
             'description' => $this->description,
             'announcement_pictures' => AnnouncementPictureResource::collection($announcement_pictures),

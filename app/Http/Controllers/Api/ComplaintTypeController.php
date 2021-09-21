@@ -7,9 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ComplaintTypeRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Complaint;
-use App\Models\Ordinance;
 use App\Models\Type;
-use Illuminate\Http\Request;
 
 class ComplaintTypeController extends Controller
 {

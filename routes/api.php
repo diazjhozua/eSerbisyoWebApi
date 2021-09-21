@@ -56,24 +56,13 @@ Route::resource('missing-persons', MissingPersonController::class);
 Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);
 Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
-Route::resource('complaints', ComplaintController::class);
+Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 'changeStatus']);
+Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
+Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
+Route::resource('report-types', ReportTypeController::class)->except(['create']);
+Route::resource('reports', ReportController::class);
+Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 
-
-// Route::put('complaints/change-status/{id}', [ComplaintController::class, 'changeStatus']);
-
-
-// Route::put('complainants', [ComplainantController::class, 'update']);
-// Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show', 'update']);
-
-// Route::put('defendants', [DefendantController::class, 'update']);
-// Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show', 'update']);
-
-// Route::resource('report-types', ReportTypeController::class)->except(['create']);
-
-// Route::put('reports/respond', [ReportController::class, 'respond']);
-// Route::resource('reports', ReportController::class);
-
-// Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 // Route::resource('announcements', AnnouncementController::class);
 
 

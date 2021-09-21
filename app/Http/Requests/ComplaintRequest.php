@@ -45,17 +45,17 @@ class ComplaintRequest extends FormRequest
 
         if ($this->isMethod('PUT')) {
             return [
-                'type_id' => ['required', Rule::exists('types', 'id')->where(function ($query) {
+                'type_id' => ['required_without:custom_type', new OneOf($this, ["type_id", "custom_type"]), Rule::exists('types', 'id')->where(function ($query) {
                     return $query->where('model_type', 'Complaint');
                 })],
-                'custom_type' => 'required_without:complaint_type_id|string|<min:3></min:3>|max:60',
+                'custom_type' => ['required_without:type_id', new OneOf($this, ["type_id", "custom_type"]), 'string', 'min:4', 'max:60'],
                 'reason' => 'required:string|min:4|max:500',
                 'action' => 'required:string|min:4|max:500',
             ];
         }
     }
 
-    public function getComplaint() {
+    public function getData() {
         $data = $this->only(['type_id', 'custom_type', 'reason', 'action']);
         return $data;
     }

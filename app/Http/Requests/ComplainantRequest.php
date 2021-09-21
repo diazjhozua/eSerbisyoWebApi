@@ -48,4 +48,8 @@ class ComplainantRequest extends FormRequest
             ];
         }
     }
+    public function getData() {
+        $data = $this->only(['complaint_id', 'name']);
+        return $data;
+    }
 }

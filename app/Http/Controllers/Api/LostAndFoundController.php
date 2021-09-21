@@ -8,7 +8,6 @@ use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\LostAndFoundRequest;
 use App\Http\Resources\LostAndFoundResource;
 use App\Models\LostAndFound;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class LostAndFoundController extends Controller

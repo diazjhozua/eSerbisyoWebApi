@@ -5,105 +5,59 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnnouncementTypeRequest;
-use App\Http\Resources\AnnouncementTypeResource;
+use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
-use App\Models\AnnouncementType;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
+use App\Models\Type;
 
 class AnnouncementTypeController extends Controller
 {
 
     public function index()
     {
-        $announcement_types = AnnouncementType::withCount('announcements')->orderBy('created_at','DESC')->get();
-        return response()->json([
-            'success' => true,
-            'announcement_types' => AnnouncementTypeResource::collection($announcement_types)
-        ]);
-    }
-
-    public function create()
-    {
-        //
+        $types = Type::withCount('announcements')->where('model_type', 'Announcement')->orderBy('created_at','DESC')->get();
+        $types->add(new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Report', 'created_at' => now(), 'updated_at' => now(),
+            'announcements_count' => Announcement::where('type_id', NULL)->count() ]));
+        return TypeResource::collection($types)->additional(['success' => true]);
     }
 
     public function store(AnnouncementTypeRequest $request)
     {
-        $announcement_type = new AnnouncementType();
-        $announcement_type->type = $request->type;
-        $announcement_type->save();
-        $announcement_type->announcement_type = 0;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'New announcement type created succesfully',
-            'announcement_type' => new AnnouncementTypeResource($announcement_type)
-        ]);
+        $type = Type::create(array_merge($request->validated(), ['model_type' => 'Announcement']));
+        $type->announcements_count = 0;
+        return (new TypeResource($type))->additional(Helper::instance()->storeSuccess('announcement_type'));
     }
 
     public function show($id)
     {
-        try {
-            $announcement_type = AnnouncementType::with('announcements')->withCount('announcements')->findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found announcement type data',
-                'announcement_type' => new AnnouncementTypeResource($announcement_type)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('announcement type'));
-        }
+        if ($id == 0) {
+            $announcements = Announcement::where('type_id', NULL)->orderBy('created_at', 'DESC')->get();
+            $type = (new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
+            'announcements_count' => $announcements->count(), 'others' => $announcements ]));
+        } else {  $type = Type::with('announcements')->where('model_type', 'Announcement')->withCount('announcements')->findOrFail($id); }
+        return (new TypeResource($type))->additional(Helper::instance()->itemFound('announcement_type'));
     }
 
     public function edit($id)
     {
-        try {
-            $announcement_type = AnnouncementType::findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found announcement type data',
-                'announcement_type' => new AnnouncementTypeResource($announcement_type)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('announcement type'));
-        }
+        if ($id == 0) { return response()->json(Helper::instance()->noEditAccess()); }
+        $type = Type::where('model_type', 'Announcement')->findOrFail($id);
+        return (new TypeResource($type))->additional(Helper::instance()->itemFound('announcement_type'));
     }
 
     public function update(AnnouncementTypeRequest $request, $id)
     {
-        try {
-            $announcement_type = AnnouncementType::withCount('announcements')->orderBy('created_at','DESC')->findOrFail($id);
-            $announcement_type->type = $request->type;
-            $announcement_type->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'The announcement type is successfully updated',
-                'announcement_type' => new AnnouncementTypeResource($announcement_type)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('announcement type'));
-        }
+        if ($id == 0) { return response()->json(Helper::instance()->noUpdateAccess()); }
+        $type = Type::withCount('announcements')->where('model_type', 'Announcement')->findOrFail($id);
+        $type->fill($request->validated())->save();
+        return (new TypeResource($type))->additional(Helper::instance()->updateSuccess('announcement_type'));
     }
-
 
     public function destroy($id)
     {
-        try {
-            $announcement_type = AnnouncementType::findOrFail($id);
-            $announcement_type->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'The announcement type type is successfully deleted',
-            ]);
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('announcement type type'));
-        }
+        if ($id == 0) { return response()->json(Helper::instance()->noDeleteAccess()); }
+        $type = Type::where('model_type', 'Announcement')->findOrFail($id);
+        Announcement::where('type_id', $type->id)->update(['type_id' => NULL, 'custom_type' => 'deleted type: '.$type->name]);
+        $type->delete();
+        return response()->json(Helper::instance()->destroySuccess('announcement_type'));
     }
 }
