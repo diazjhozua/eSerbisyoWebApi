@@ -7,7 +7,9 @@ use App\Http\Requests\ProjectRequest;
 use App\Helper\Helper;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TypeResource;
 use App\Models\Project;
+use App\Models\Type;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 class ProjectController extends Controller
@@ -20,12 +22,8 @@ class ProjectController extends Controller
     public function index()
     {
 
-        $projects = Project::orderBy('created_at','DESC')->get();
-
-        return response()->json([
-            'success' => true,
-            'projects' => ProjectResource::collection($projects)
-        ]);
+        $projects = Project::with('type')->orderBy('created_at','DESC')->get();
+        return ProjectResource::collection($projects)->additional(['success' => true]);
     }
 
     /**
@@ -35,13 +33,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        $projects = Project::get();
-
-
-        return response()->json([
-            'success' => true,
-            'projects' => $projects,
-        ]);
+        $types = Type::where('model_type', 'Project')->get();
+        return ['types' => TypeResource::collection($types), 'success' => true];
     }
 
     /**
@@ -53,27 +46,10 @@ class ProjectController extends Controller
     public function store(ProjectRequest $request)
     {
 
-        $projects = new Project();
-        $projects->id = $request->id;
-        $projects->name = $request->name;
-        $projects->description = $request->description;
-        $projects->cost = $request->cost;
-        $projects->project_start = $request->project_start;
-        $projects->project_end = $request->project_end;
-        $projects->location = $request->location;
         $fileName = time().'_'.$request->pdf->getClientOriginalName();
         $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
-
-        $projects->pdf_name = $fileName;
-        $projects->file_path = $filePath;
-
-        $projects->is_starting = $request->is_starting;
-
-
-        return response()->json([
-            'success' => true,
-            'message' => 'New project created succesfully',
-        ]);
+        $project = Project::create(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]));
+        return (new ProjectResource($project->load('type')))->additional(Helper::instance()->storeSuccess('project'));
     }
 
     /**
@@ -82,21 +58,9 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Project $project)
     {
-        try {
-            $projects = Project::findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found project data',
-                'projects' => new ProjectResource($projects)
-
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('projects'));
-        }
+        return (new ProjectResource($project->load('type')))->additional(Helper::instance()->itemFound('project'));
     }
 
 
@@ -106,23 +70,10 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        try {
-            $projects = Project::findOrFail($id);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Found project data',
-                'projects' => new ProjectResource($projects)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json([
-                'success' => false,
-                'message' => 'No project id found',
-            ]);
-        }
+        $types = Type::where('model_type', 'Project')->get();
+        return (new ProjectResource($project->load('type')))->additional(array_merge(['types' => TypeResource::collection($types)],Helper::instance()->itemFound('project')));
     }
 
     /**
@@ -132,37 +83,15 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProjectRequest $request, Project $project)
     {
-        try {
-            $projects = Project::findOrFail($id);
-            $projects->name = $request->name;
-            $projects->description = $request->description;
-            $projects->cost = $request->cost;
-            $projects->project_start = $request->project_start;
-            $projects->project_end = $request->project_end;
-            $projects->location = $request->location;
-            //check if they want to update the pdf file
-            if($request->hasFile('pdf')) {
-                Storage::delete('public/projects/'. $projects->pdf_name);
-                $fileName = time().'_'.$request->pdf->getClientOriginalName();
-                $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
-
-                $projects->pdf_name = $fileName;
-                $projects->file_path = $filePath;
-            }
-
-            $projects->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'The project is successfully updated',
-                'projects' => new ProjectResource($projects)
-            ]);
-
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('project'));
-        }
+        if($request->hasFile('pdf')) {
+            Storage::delete('public/projects/'. $project->pdf_name);
+            $fileName = time().'_'.$request->pdf->getClientOriginalName();
+            $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
+            $project->fill(array_merge($request->getData(), ['custom_type' => NULL,'pdf_name' => $fileName,'file_path' => $filePath]))->save();
+        } else { $project->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save(); }
+        return (new ProjectResource($project->load('type')))->additional(Helper::instance()->updateSuccess('project'));
     }
 
     /**
@@ -171,18 +100,10 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        try {
-            $projects = Project::findOrFail($id);
-            Storage::delete('public/projects/'. $projects->pdf_name);
-            $projects->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'The project is successfully deleted',
-            ]);
-        } catch (ModelNotFoundException $ex){
-            return response()->json(Helper::instance()->noItemFound('projects'));
-        }
+        Storage::delete('public/projects/'. $project->pdf_name);
+        $project->delete();
+        return response()->json(Helper::instance()->destroySuccess('project'));
     }
 }

@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\ {
     AnnouncementTypeController,
     AnnouncementController,
     ProjectController,
+    ProjectTypeController,
 };
 
 /*
@@ -50,6 +51,7 @@ Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
 Route::resource('employees', EmployeeController::class);
 Route::resource('projects', ProjectController::class);
+Route::resource('project-types', ProjectTypeController::class)->except(['create']);
 
 Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
 Route::resource('ordinances', OrdinanceController::class);

@@ -34,4 +34,8 @@ class Type extends Model
     public function announcements() {
         return $this->hasMany(Announcement::class)->orderBy('created_at', 'DESC');
     }
+    
+    public function projects() {
+        return $this->hasMany(Project::class)->orderBy('created_at', 'DESC');
+    }
 }

@@ -46,11 +46,12 @@ class DatabaseSeeder extends Seeder
             ComplaintTypeSeeder::class,
             ReportTypeSeeder::class,
             AnnouncementTypeSeeder::class,
+            ProjectTypeSeeder::class,
 
             FeedbackSeeder::class,
             DocumentSeeder::class,
             OrdinanceSeeder::class,
-            // ProjectSeeder::class,
+            ProjectSeeder::class,
             TermSeeder::class,
             PositionSeeder::class,
             EmployeeSeeder::class,

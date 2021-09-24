@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
-use App\Rules\BooleanRule;  
+use App\Rules\BooleanRule;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;  
 class ProjectRequest extends FormRequest
 {
     /**
@@ -23,48 +25,30 @@ class ProjectRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->isMethod('POST')) {
-            return [
+        $rules = [
+            'type_id' => ['required', Rule::exists('types', 'id')->where(function ($query) {
+                return $query->where('model_type', 'Project');
+            })],
             'name'=> 'required|string|min:4|max:60',
             'description'=> 'required|string|min:4|max:60',
             'cost'=> 'required',
             'project_start' => 'required|date|date_format:Y-m-d',
             'project_end' => 'required|date|date_format:Y-m-d',
             'location'=> 'required|string|min:4|max:60',
-            'pdf' => 'required|mimes:pdf|max:10000',
-            ];
+            
+        ];
+
+        if ($this->isMethod('POST')) {
+            $rules['pdf'] = 'required|mimes:pdf|max:10000';
         }
 
         if ($this->isMethod('PUT')) {
-            return [
-                'name'=> 'required|string|min:4|max:60',
-                'description'=> 'required|string|min:4|max:60',
-                'cost'=> 'required',
-                'project_start' => 'required|date|date_format:Y-m-d',
-                'project_end' => 'required|date|date_format:Y-m-d',
-                'location'=> 'required|string|min:4|max:60',
-                'pdf' => 'required|mimes:pdf|max:10000',
-                ];
+            $rules['pdf'] = 'mimes:pdf|max:10000';
         }
+
+        return $rules;
     }
+       
+
+    
 }
-    // $rules = [
-        //     'name'=> 'required|string|min:4|max:60',
-        //     'description'=> 'required|string|min:4|max:60',
-        //     'cost'=> 'required|float',
-        //     'project_start' => 'required|date|date_format:Y-m-d',
-        //     'project_end' => 'required|date|date_format:Y-m-d',
-        //     'location'=> 'required|string|min:4|max:60',
-        // ];
-
-//         if ($this->isMethod('POST')) {
-//             $rules['pdf'] = 'required|mimes:pdf|max:10000';
-//         }
-
-//         if ($this->isMethod('PUT')) {
-//             $rules['pdf'] = 'mimes:pdf|max:10000';
-//         }
-
-//         return $rules;
-//     }
-// }

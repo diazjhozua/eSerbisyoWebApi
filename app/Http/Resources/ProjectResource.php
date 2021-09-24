@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\MissingValue;
+
 
 class ProjectResource extends JsonResource
 {
@@ -14,9 +16,14 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
-       
+        $type = $this->whenLoaded('type');
+
         return [
             'id' => $this->id,
+            $this->mergeWhen($this->relationLoaded('type'), [
+                'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : 0,
+                'project_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
+            ]),
             'name' => $this->name,
             'description' => $this->description,
             'cost' => $this->cost,

@@ -19,6 +19,7 @@ class TypeResource extends JsonResource
         $complaints = $this->whenLoaded('complaints');
         $reports = $this->whenLoaded('reports');
         $announcements = $this->whenLoaded('announcements');
+        $projects = $this->whenLoaded('projects');
 
         $data =  [
             'id' => $this->id,
@@ -38,6 +39,10 @@ class TypeResource extends JsonResource
             $this->mergeWhen(isset($this->announcements_count), [
                 'announcements_count' => $this->announcements_count,
             ]),
+            $this->mergeWhen(isset($this->projects_count), [
+                'projects_count' => $this->projects_count,
+            ]),
+
 
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
@@ -46,6 +51,7 @@ class TypeResource extends JsonResource
             'complaints' => ComplaintResource::collection($complaints),
             'reports' => ReportResource::collection($reports),
             'announcements' => AnnouncementResource::collection($announcements),
+            'projects' => ProjectResource::collection($projects),
         ];
 
         if (isset($this->others)) {
@@ -54,6 +60,7 @@ class TypeResource extends JsonResource
             elseif($this->model_type === "Complaint") { $data['complaints'] = ComplaintResource::collection($this->others);}
             elseif($this->model_type === "Report") { $data['reports'] = ReportResource::collection($this->others);}
             elseif($this->model_type === "Announcement") { $data['announcements'] = AnnouncementResource::collection($this->others);}
+            elseif($this->model_type === "Project") { $data['projects'] = ProjectResource::collection($this->others);}
         }
 
         $data['created_at'] = $this->created_at->format('Y-m-d H:i:s');

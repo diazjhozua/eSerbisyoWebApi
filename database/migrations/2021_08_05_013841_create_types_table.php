@@ -16,7 +16,7 @@ class CreateTypesTable extends Migration
         Schema::create('types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('model_type', ['Feedback', 'Document', 'Ordinance', 'Report', 'Complaint', 'Announcement']);
+            $table->enum('model_type', ['Feedback', 'Document', 'Ordinance', 'Report', 'Complaint', 'Announcement','Project']);
             $table->timestamps();
         });
     }
