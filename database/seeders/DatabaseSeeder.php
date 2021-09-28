@@ -59,6 +59,8 @@ class DatabaseSeeder extends Seeder
             ComplaintSeeder::class,
             ReportSeeder::class,
             AnnouncementSeeder::class,
+            CertificateSeeder::class,
+            RequestSeeder::class,
         ]);
     }
 }

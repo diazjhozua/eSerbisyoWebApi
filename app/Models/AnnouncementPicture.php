@@ -9,6 +9,8 @@ class AnnouncementPicture extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function announcement(){
         return $this->belongsTo(Announcement::class);
     }

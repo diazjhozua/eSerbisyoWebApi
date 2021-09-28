@@ -23,19 +23,13 @@ use App\Http\Controllers\Api\ {
     ReportController,
     AnnouncementTypeController,
     AnnouncementController,
+    AnnouncementPictureController,
     ProjectController,
+    CommentController,
+    CertificateController,
+    RequirementController,
 };
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -53,8 +47,11 @@ Route::resource('projects', ProjectController::class);
 
 Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
 Route::resource('ordinances', OrdinanceController::class);
+
+Route::post('missing-persons/{missing_person}/comment',  [MissingPersonController::class, 'comment']);
 Route::put('missing-persons/change-status/{missing_person}', [MissingPersonController::class, 'changeStatus']);
 Route::resource('missing-persons', MissingPersonController::class);
+Route::post('lost-and-found/{lost_and_found}/comment',  [LostAndFoundController::class, 'comment']);
 Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);
 
@@ -63,10 +60,27 @@ Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 
 Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
 Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
 Route::resource('report-types', ReportTypeController::class)->except(['create']);
+
+Route::put('reports/{report}/respond',  [ReportController::class, 'respond']);
 Route::resource('reports', ReportController::class);
 Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 
-// Route::resource('announcements', AnnouncementController::class);
+Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
+Route::post('announcements/{announcement}/comment',  [AnnouncementController::class, 'comment']);
+Route::resource('announcements', AnnouncementController::class);
+Route::resource('announcement-pictures', AnnouncementPictureController::class)->only(['store', 'destroy']);
+Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
+
+Route::get('certificates/{certificate}/add-requirement',  [CertificateController::class, 'addRequirement']);
+Route::post('certificates/store-requirements',  [CertificateController::class, 'storeRequirement']);
+Route::delete('certificates/{certificate}/{requirement}',  [CertificateController::class, 'destroyRequirement']);
+
+
+Route::resource('certificates', CertificateController::class)->except(['create', 'store', 'destroy']);
+Route::resource('requirements', RequirementController::class)->except(['create']);
+
+
+
 
 
 

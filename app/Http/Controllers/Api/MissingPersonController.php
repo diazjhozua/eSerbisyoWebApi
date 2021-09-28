@@ -5,17 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeStatusRequest;
+use App\Http\Requests\CommentRequest;
 use App\Http\Requests\MissingPersonRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\MissingPersonResource;
 use App\Models\MissingPerson;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class MissingPersonController extends Controller
 {
     public function index()
     {
-        $missing_persons = MissingPerson::orderBy('created_at','DESC')->get();
+        $missing_persons = MissingPerson::withCount('comments')->orderBy('created_at','DESC')->get();
         return MissingPersonResource::collection($missing_persons)->additional(['success' => true]);
     }
 
@@ -32,6 +33,7 @@ class MissingPersonController extends Controller
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
         $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => 2,'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
+        $missing_person->comments_count = 0;
         return (new MissingPersonResource($missing_person))->additional(Helper::instance()->storeSuccess('missing-person report'));
     }
 
@@ -39,7 +41,7 @@ class MissingPersonController extends Controller
     {
         $statuses = [ (object)[ "id" => 1, "name" => "Pending"], (object) ["id" => 2,"type" => "Denied"] ,
             (object) ["id" => 3,"type" => "Approved"], (object) ["id" => 4,"type" => "Resolved"] ];
-        return (new MissingPersonResource($missing_person))->additional(array_merge(['statuses' => $statuses],Helper::instance()->itemFound('missing-person report')));
+        return (new MissingPersonResource($missing_person->load('comments')->loadCount('comments')))->additional(array_merge(['statuses' => $statuses],Helper::instance()->itemFound('missing-person report')));
     }
 
     public function edit(MissingPerson $missing_person)
@@ -58,7 +60,7 @@ class MissingPersonController extends Controller
             $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
             $missing_person->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
         } else {   $missing_person->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
-        return (new MissingPersonResource($missing_person))->additional(Helper::instance()->updateSuccess('missing-person report'));
+        return (new MissingPersonResource($missing_person->load('comments')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-person report'));
     }
 
     public function destroy(MissingPerson $missing_person)
@@ -77,4 +79,8 @@ class MissingPersonController extends Controller
         return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
     }
 
+    public function comment(CommentRequest $request, MissingPerson $missing_person) {
+        $comment = $missing_person->comments()->create(array_merge($request->validated(), ['user_id' => 2]));
+        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
+    }
 }

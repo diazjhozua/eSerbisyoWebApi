@@ -8,6 +8,15 @@ class Helper
         return new Helper();
     }
 
+    function likeStatus($model, $isLike) {
+        $message = $isLike ? 'liked': 'unliked';
+        return [
+            'success' => true,
+            'message' => $model. ' is '. $message .' successfully',
+            'state' => $isLike ? 'liked': 'unliked',
+        ];
+    }
+
     function storeSuccess($model) {
         return [
             'success' => true,
@@ -85,46 +94,6 @@ class Helper
             'message' => $modelName.' successfully changed its status from '.$oldStatus.' to '.$newStatus,
         ];
     }
-
-    public function respondMessage($oldStatus, $newStatus, $modelName) {
-
-        $initialStatus = '';
-        switch($oldStatus) {
-            case 1:
-                $initialStatus = '"Pending"';
-                break;
-            case 2:
-                $initialStatus = '"Ignored"';
-                break;
-            case 3:
-                $initialStatus = '"Invalid"';
-                break;
-            case 4:
-                $initialStatus = '"Noted"';
-                break;
-        }
-
-        $message = $modelName.' is successfully changed its status from '.$initialStatus;
-        switch($newStatus) {
-            case 1:
-                $message =   $message.' to "Pending"';
-                break;
-            case 2:
-                $message = $message.' to "Ignored"';
-                break;
-            case 3:
-                $message = $message.' to "Invalid"';
-                break;
-            case 4:
-                $message = $message.' to "Noted"';
-                break;
-        }
-
-        return $message;
-    }
-
-
-
 
 
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
-use App\Rules\BooleanRule;  
+use App\Rules\BooleanRule;
 class ProjectRequest extends FormRequest
 {
     /**
@@ -44,27 +44,7 @@ class ProjectRequest extends FormRequest
                 'project_end' => 'required|date|date_format:Y-m-d',
                 'location'=> 'required|string|min:4|max:60',
                 'pdf' => 'required|mimes:pdf|max:10000',
-                ];
+            ];
         }
     }
 }
-    // $rules = [
-        //     'name'=> 'required|string|min:4|max:60',
-        //     'description'=> 'required|string|min:4|max:60',
-        //     'cost'=> 'required|float',
-        //     'project_start' => 'required|date|date_format:Y-m-d',
-        //     'project_end' => 'required|date|date_format:Y-m-d',
-        //     'location'=> 'required|string|min:4|max:60',
-        // ];
-
-//         if ($this->isMethod('POST')) {
-//             $rules['pdf'] = 'required|mimes:pdf|max:10000';
-//         }
-
-//         if ($this->isMethod('PUT')) {
-//             $rules['pdf'] = 'mimes:pdf|max:10000';
-//         }
-
-//         return $rules;
-//     }
-// }

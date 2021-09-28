@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class CertificateRequirement extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    protected $table = 'certificate_requirement';
 }
