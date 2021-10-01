@@ -17,20 +17,23 @@ class ProjectSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
         $boolean = [true, false];
-        foreach (range(26, 34) as $index) {
+        foreach (range(36, 43) as $typeID) {
+        $projectCount = $faker->numberBetween(26,33);
+
            
 
-            foreach (range(1,9) as $index) {
+            foreach (range(1,$projectCount) as $index) {
                 // $projectTypeId = $faker->numberBetween(36, 43);
                 // $project = new Project();
                 // $project->type_id = $projectTypeId;
+                
                 $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
                 $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppProjects', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\projects', false);
                 $file_path = 'storage/projects/'.$pdf_name;
           
             
                 DB::table('projects')->insert([
-                'type_id' => $index,
+                'type_id'=> $typeID,
                 'name' => $faker->name($nbWords = 6, $variableNbWords = true),
                 'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
                 'cost' => $faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 5000),
