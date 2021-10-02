@@ -15,4 +15,8 @@ class Certificate extends Model
     {
         return $this->belongsToMany(Requirement::class);
     }
+
+    public function requests() {
+        return $this->hasMany(Request::class);
+    }
 }

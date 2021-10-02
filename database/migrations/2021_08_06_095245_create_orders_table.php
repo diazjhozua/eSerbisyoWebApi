@@ -17,16 +17,17 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->foreignId('ordered_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('delivered_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->float('total_price', 4,2);
+            $table->float('total_price', 100,2);
             $table->enum('pick_up_type', ['Pickup', 'Delivery'])->default('Pickup');
             $table->float('delivery_fee', 4,2);
             $table->date('pickup_date');
             $table->enum('application_status', ['Pending', 'Cancelled', 'Approved', 'Denied'])->default('Pending');
-            $table->enum('order_status', ['Waiting', 'Received', 'DNR'])->default('Waiting');
-            $table->boolean('is_received');
+            $table->enum('order_status', ['Waiting', 'Received', 'DNR'])->default('Waiting')->nullable();
             $table->string('location_address');
-            $table->float('location_long', 10, 10);
-            $table->float('location_lat', 10, 10);
+            $table->float('user_long', 100, 10)->nullable();
+            $table->float('user_lat', 100, 10)->nullable();
+            $table->float('rider_long', 100, 10)->nullable();
+            $table->float('rider_lat', 100, 10)->nullable();
             $table->timestamps();
         });
     }

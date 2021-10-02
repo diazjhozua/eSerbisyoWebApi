@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\ {
     CommentController,
     CertificateController,
     RequirementController,
+    RequestController,
 };
 
 
@@ -79,6 +80,7 @@ Route::delete('certificates/{certificate}/{requirement}',  [CertificateControlle
 Route::resource('certificates', CertificateController::class)->except(['create', 'store', 'destroy']);
 Route::resource('requirements', RequirementController::class)->except(['create']);
 
+Route::resource('requirements', RequirementController::class)->except(['create']);
 
 
 

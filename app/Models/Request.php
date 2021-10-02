@@ -15,4 +15,12 @@ class Request extends Model
     {
         return $this->belongsToMany(Requirement::class);
     }
+
+    public function orders() {
+        return $this->belongsToMany(Order::class);
+    }
+
+    public function certificate() {
+        return $this->belongsTo(Certificate::class);
+    }
 }

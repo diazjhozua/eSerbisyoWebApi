@@ -32,7 +32,7 @@ class RequestSeeder extends Seeder
                     Request::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
-                        'name' => $faker->name() ,
+                        'name' => $faker->name(),
                         'address' => $faker->streetAddress(),
                         'purpose' => $faker->realText(150, 2),
                         'signature_picture' => $picture,
@@ -64,7 +64,7 @@ class RequestSeeder extends Seeder
                     Request::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
-                        'name' => $faker->name() ,
+                        'name' => $faker->name(),
                         'address' => $faker->streetAddress(),
                         'purpose' => $faker->realText(150, 2),
                         'signature_picture' => $picture,

@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Order;
+use App\Models\OrderRequest;
+use App\Models\Request;
+use App\Models\RequestRequirement;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -15,117 +18,65 @@ class OrderSeeder extends Seeder
      */
     public function run()
     {
-        //loop all the user and random the number of order they commit
+
         $faker = \Faker\Factory::create();
 
-        $civil_status = ['Single', 'Married', 'Divorced', 'Widowed'];
-        $users = collect(User::all()->modelKeys());
+        $users = User::all();
+        $pick_up_type = ['Pickup', 'Delivery'];
+        $application_status = ['Approved', 'Denied'];
 
         foreach ($users as $user) {
-            $userOrderCount = rand(1, 2); //random number of orders
-            $orderDate = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $userRequests = Request::with('certificate')->where('user_id', $user->id)->get();
 
-            for ($i = 0; $i < $userOrderCount; $i++) {
-                // request count
-                $userRequestCount = rand(1,2);
-                $requests = [];
+            if (isset($userRequests)) {
+                $totalPrice = 0;
+                $deliveryPrice = 0;
+                $delivered_by = rand(1,37);
 
-                for ($j = 0; $j < $userRequestCount; $j++) {
-                    $certificateID = $faker->unique()->numberBetween(1, 5);
-                    $picture = $faker->file($sourceDir = 'C:\Project Assets\AppSignatures', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\signatures', false);
-                    $file_path = 'public/signatures/'.$picture;
-                    $requestDate = $faker->dateTimeBetween($startDate = '-1 years', $orderDate, $timezone = null);
 
-                    switch ($certificateID) {
-                        case 1: //brgyIndigency
-                            $requests[] = [
-                                'user_id' => $user,
-                                'certificate_id' => $certificateID,
-                                'name' => $faker->name($gender = null|'male'|'female'),
-                                'address' => $faker->streetAddress(),
-                                'purpose' => $faker->realText(150, 2),
-                                'signature_picture' => $picture,
-                                'file_path' => $file_path,
-                                'created_at' => $requestDate,
-                                'updated_at' => $requestDate,
-                            ];
-
-                            break;
-                        case 2: //brgyCedula
-                            $requests[] = [
-                                'user_id' => $user,
-                                'certificate_id' => $certificateID,
-                                'name' => $faker->name($gender = null|'male'|'female'),
-                                'address' => $faker->streetAddress(),
-                                'birthday' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                                'birthplace' => $faker->city(),
-                                'citizenship' => $faker->word(),
-                                'civil_status' => $civil_status[array_rand($civil_status)],
-                                'signature_picture' => $picture,
-                                'file_path' => $file_path,
-                                'created_at' => $requestDate,
-                                'updated_at' => $requestDate,
-                            ];
-
-                            break;
-                        case 3: //brgyClearance
-                            $requests[] = [
-                                'user_id' => $user,
-                                'certificate_id' => $certificateID,
-                                'name' => $faker->name($gender = null|'male'|'female'),
-                                'address' => $faker->streetAddress(),
-                                'purpose' => $faker->realText(150, 2),
-                                'signature_picture' => $picture,
-                                'file_path' => $file_path,
-                                'created_at' => $requestDate,
-                                'updated_at' => $requestDate,
-                            ];
-
-                            break;
-                        case 4: //brgyID
-                            $requests[] = [
-                                'user_id' => $user,
-                                'certificate_id' => $certificateID,
-                                'name' => $faker->name($gender = null|'male'|'female'),
-                                'address' => $faker->streetAddress(),
-                                'contact_no' => $faker->phoneNumber(),
-                                'contact_person' => $faker->name($gender = null|'male'|'female'),
-                                'contact_person_no' => $faker->name($gender = null|'male'|'female'),
-                                'contact_person_relation' => $faker->word(),
-                                'signature_picture' => $picture,
-                                'file_path' => $file_path,
-                                'created_at' => $requestDate,
-                                'updated_at' => $requestDate,
-                            ];
-                            break;
-                        case 5: //businessPermit
-                            $requests[] = [
-                                'user_id' => $user,
-                                'certificate_id' => $certificateID,
-                                'name' => $faker->name($gender = null|'male'|'female'),
-                                'address' => $faker->streetAddress(),
-                                'business_name' => $faker->realText(20, 1),
-                                'signature_picture' => $picture,
-                                'file_path' => $file_path,
-                                'created_at' => $requestDate,
-                                'updated_at' => $requestDate,
-                            ];
-                            break;
-
-                    }
-                    //end of switch case
+                foreach ($userRequests as $userRequest) {
+                    $totalPrice = $totalPrice + $userRequest->certificate->price;
+                    $deliveryFee = $userRequest->certificate->delivery_fee;
+                    $deliveryPrice = $deliveryFee > $deliveryPrice && $deliveryFee;
                 }
 
-                $faker->unique($reset = true);
+                $pickup = $pick_up_type[array_rand($pick_up_type)];
+                $application = $application_status[array_rand($application_status)];
+                $long = $faker->longitude();
+                $lat = $faker->latitude();
 
+                $order = Order::create([
+                    'ordered_by' => $user->id,
+                    'delivered_by' => $pickup === 'Delivery' ? $delivered_by : NULL,
+                    'total_price' => $totalPrice,
+                    'pick_up_type' => $pickup,
+                    'delivery_fee' => $pickup === 'Delivery' ? $deliveryPrice : 0,
+                    'pickup_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                    'application_status' => $application,
+                    'order_status' => $application === 'Approved' ? 'Received' : NULL,
+                    'location_address' => $faker->address(),
+                    'user_long' => $pickup === 'Delivery' ? $long : NULL,
+                    'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                    'rider_long' => $pickup === 'Delivery' ? $long : NULL,
+                    'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                    'created_at' => $date,
+                    'updated_at' => $date,
+                ]);
 
+                if ($application === 'Denied') {
+                    Request::where('user_id', $user->id)
+                        ->update(['status' => 'Denied']);
+                }
 
-                // $order = Order::create([
-                //     'ordered_by' => $user,
-                //     'delivered_by' => $users->random(),
-                //     'total_price' =>
-                // ]);
-
+                foreach ($userRequests as $userRequest) {
+                    OrderRequest::create([
+                        'order_id' => $order->id,
+                        'request_id' => $userRequest->id,
+                        'created_at' => $date,
+                        'updated_at' => $date,
+                    ]);
+                }
             }
         }
     }

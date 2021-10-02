@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class OrderRequest extends Model
 {
     use HasFactory;
 
-    public function requests()
-    {
-        return $this->belongsToMany(Request::class);
-    }
+    protected $guarded = [];
+
+    protected $table = 'order_request';
 }
