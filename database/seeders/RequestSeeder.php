@@ -18,116 +18,97 @@ class RequestSeeder extends Seeder
     {
 
         $faker = \Faker\Factory::create();
-        $requests = [];
         $certificates = collect(Certificate::all()->modelKeys());
-        $users = collect(User::all()->modelKeys());
         $civil_status = ['Single', 'Married', 'Divorced', 'Widowed'];
 
-
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $certificateID = $certificates->random();
             $picture = $faker->file($sourceDir = 'C:\Project Assets\AppSignatures', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\signatures', false);
             $file_path = 'public/signatures/'.$picture;
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
             switch ($certificateID) {
-
                 case 1: //brgyIndigency
-                    $requests[] = [
-                        'user_id' => $users->random(),
+                    Request::create([
+                        'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
-                        'name' => $faker->name($gender = null|'male'|'female'),
+                        'name' => $faker->name() ,
                         'address' => $faker->streetAddress(),
                         'purpose' => $faker->realText(150, 2),
                         'signature_picture' => $picture,
                         'file_path' => $file_path,
+                        'status' => 'Pending',
                         'created_at' => $date,
                         'updated_at' => $date,
-                    ];
-
+                    ]);
                     break;
                 case 2: //brgyCedula
-                    $requests[] = [
-                        'user_id' => $users->random(),
+                    Request::create([
+                        'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
-                        'name' => $faker->name($gender = null|'male'|'female'),
+                        'name' => $faker->name() ,
                         'address' => $faker->streetAddress(),
                         'birthday' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                        'birthplace' => $faker->date(''),
+                        'birthplace' => $faker->city(),
                         'citizenship' => $faker->word(),
                         'civil_status' => $civil_status[array_rand($civil_status)],
                         'signature_picture' => $picture,
                         'file_path' => $file_path,
+                        'status' => 'Pending',
                         'created_at' => $date,
                         'updated_at' => $date,
-                    ];
+                    ]);
 
                     break;
                 case 3: //brgyClearance
-                    $requests[] = [
-                        'user_id' => $users->random(),
+                    Request::create([
+                        'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
-                        'name' => $faker->name($gender = null|'male'|'female'),
+                        'name' => $faker->name() ,
                         'address' => $faker->streetAddress(),
                         'purpose' => $faker->realText(150, 2),
                         'signature_picture' => $picture,
                         'file_path' => $file_path,
+                        'status' => 'Pending',
                         'created_at' => $date,
                         'updated_at' => $date,
-                    ];
+                    ]);
 
                     break;
                 case 4: //brgyID
-                    $requests[] = [
-                        'user_id' => $users->random(),
+                    Request::create([
+                        'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
-                        'name' => $faker->name($gender = null|'male'|'female'),
+                        'name' => $faker->name() ,
                         'address' => $faker->streetAddress(),
-                        'purpose' => $faker->realText(150, 2),
+                        'contact_no' => $faker->phoneNumber(),
+                        'contact_person' => $faker->name(),
+                        'contact_person_no' => '012312',
+                        'contact_person_relation' => $faker->word(),
                         'signature_picture' => $picture,
                         'file_path' => $file_path,
+                        'status' => 'Pending',
                         'created_at' => $date,
                         'updated_at' => $date,
-                    ];
+                    ]);
 
                     break;
-                case 5:
-                    echo "Your favorite color is green!";
+                case 5: //businessPermit
+                    Request::create([
+                        'user_id' => rand(1,37),
+                        'certificate_id' => $certificateID,
+                        'name' => $faker->name(),
+                        'address' => $faker->streetAddress(),
+                        'business_name' => $faker->realText(20, 1),
+                        'signature_picture' => $picture,
+                        'file_path' => $file_path,
+                        'status' => 'Pending',
+                        'created_at' => $date,
+                        'updated_at' => $date,
+                    ]);
+
                     break;
-              }
+            }
         }
-
-
-        // $table->id();
-        // $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-        // $table->foreignId('certificate_id')->constrained('certificates')->onDelete('cascade');
-        // $table->string('name');
-        // $table->string('address');
-        // $table->date('birthday')->nullable();
-        // $table->string('birthplace')->nullable();
-        // $table->string('contact_no')->nullable();
-        // $table->string('contact_person')->nullable();
-        // $table->string('contact_person_no')->nullable();
-        // $table->string('contact_person_relation')->nullable();
-        // $table->string('citizenship')->nullable();
-        // $table->string('purpose')->nullable();
-        // $table->date('date_requested')->nullable();
-        // $table->date('date_released')->nullable();
-        // $table->date('date_expiry')->nullable();
-        // $table->string('precint_no')->nullable();
-        // $table->enum('civil_status', ['Single', 'Married', 'Divorced', 'Widowed'])->default('Single');
-        // $table->string('received_by')->nullable();
-        // $table->string('signature_picture');
-        // $table->string('file_path');
-        // $table->enum('status', ['Pending', 'Denied', 'Approved'])->default('Pending');
-
-        // foreach(range(1,40) as $index) {
-        //     $certificateID = $faker->numberBetween(1,10);
-        //     $request = Request::create([
-        //         'user_id' => $faker->numberBetween(1,37),
-        //         'certificate' => $certificateID,
-        //         'name' =>
-        //     ]);
-        // }
     }
 }

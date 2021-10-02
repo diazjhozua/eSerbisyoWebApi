@@ -13,7 +13,7 @@ class CreateRequestRequirementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_requirements', function (Blueprint $table) {
+        Schema::create('request_requirement', function (Blueprint $table) {
             $table->foreignId('request_id')->constrained('requests')->onDelete('cascade');
             $table->foreignId('requirement_id')->constrained('requirements')->onDelete('cascade');
             $table->string('file_name');
@@ -29,6 +29,6 @@ class CreateRequestRequirementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_requirements');
+        Schema::dropIfExists('request_requirement');
     }
 }

@@ -19,6 +19,7 @@ class CreateRequestsTable extends Migration
             $table->foreignId('certificate_id')->constrained('certificates')->onDelete('cascade');
             $table->string('name');
             $table->string('address');
+            $table->string('business_name')->nullable();
             $table->date('birthday')->nullable();
             $table->string('birthplace')->nullable();
             $table->string('contact_no')->nullable();

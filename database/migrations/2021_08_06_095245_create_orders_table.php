@@ -15,22 +15,19 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ordered_by_user_id');
-            $table->unsignedBigInteger('delivered_by_user_id')->nullable();
-            $table->float('total_certificate_price', 4,2);
-            $table->boolean('is_pickup');
+            $table->foreignId('ordered_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('delivered_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->float('total_price', 4,2);
+            $table->enum('pick_up_type', ['Pickup', 'Delivery'])->default('Pickup');
             $table->float('delivery_fee', 4,2);
             $table->date('pickup_date');
-            $table->date('delivery_date');
-            $table->string('status');
-            $table->boolean('is_approved');
+            $table->enum('application_status', ['Pending', 'Cancelled', 'Approved', 'Denied'])->default('Pending');
+            $table->enum('order_status', ['Waiting', 'Received', 'DNR'])->default('Waiting');
+            $table->boolean('is_received');
+            $table->string('location_address');
+            $table->float('location_long', 10, 10);
+            $table->float('location_lat', 10, 10);
             $table->timestamps();
-
-            $table->foreign('ordered_by_user_id')->references('id')
-                ->on('users')->onDelete('cascade');
-
-            $table->foreign('delivered_by_user_id')->references('id')
-                ->on('users')->onDelete('cascade');
         });
     }
 

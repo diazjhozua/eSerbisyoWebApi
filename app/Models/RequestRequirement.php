@@ -9,5 +9,7 @@ class RequestRequirement extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $table = 'request_requirement';
 }
