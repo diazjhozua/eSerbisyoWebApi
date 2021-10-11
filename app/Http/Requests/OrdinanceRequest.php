@@ -42,7 +42,7 @@ class OrdinanceRequest extends FormRequest
     }
 
     public function getData() {
-        $data = $this->only(['ordinance_no', 'title', 'date_approved', 'type_id']);
+        $data = $this->only(['ordinance_no', 'date_approved', 'type_id']);
         return $data;
     }
 }

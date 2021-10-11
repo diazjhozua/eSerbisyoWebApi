@@ -41,16 +41,16 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             // // Type Seeder
-            // FeedbackTypeSeeder::class,
-            // DocumentTypeSeeder::class,
-            // OrdinanceTypeSeeder::class,
+            FeedbackTypeSeeder::class,
+            DocumentTypeSeeder::class,
+            OrdinanceTypeSeeder::class,
             // ComplaintTypeSeeder::class,
             // ReportTypeSeeder::class,
             // AnnouncementTypeSeeder::class,
 
-            // FeedbackSeeder::class,
-            // DocumentSeeder::class,
-            // OrdinanceSeeder::class,
+            FeedbackSeeder::class,
+            DocumentSeeder::class,
+            OrdinanceSeeder::class,
             // // ProjectSeeder::class,
             // TermSeeder::class,
             // PositionSeeder::class,
@@ -61,8 +61,8 @@ class DatabaseSeeder extends Seeder
             // ReportSeeder::class,
             // AnnouncementSeeder::class,
             CertificateSeeder::class,
-            RequestSeeder::class,
-            RequestRequirementSeeder::class,
+            CertificateFormSeeder::class,
+            CertificateFormRequirementSeeder::class,
             OrderSeeder::class,
         ]);
     }

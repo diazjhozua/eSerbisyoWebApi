@@ -26,7 +26,7 @@ class FeedbackController extends Controller
 
     public function store(FeedbackRequest $request)
     {
-        $feedback = Feedback::create(array_merge($request->safe()->validated(), ['status' => 'Pending','user_id' => 2]));
+        $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => 2]));
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->storeSuccess('feedback'));
     }
 

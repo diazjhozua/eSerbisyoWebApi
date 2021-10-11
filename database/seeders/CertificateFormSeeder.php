@@ -3,17 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Certificate;
+use App\Models\CertificateForm;
 use App\Models\Request;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class RequestSeeder extends Seeder
+class CertificateFormSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
 
@@ -29,7 +24,7 @@ class RequestSeeder extends Seeder
 
             switch ($certificateID) {
                 case 1: //brgyIndigency
-                    Request::create([
+                    CertificateForm::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
                         'name' => $faker->name(),
@@ -43,7 +38,7 @@ class RequestSeeder extends Seeder
                     ]);
                     break;
                 case 2: //brgyCedula
-                    Request::create([
+                    CertificateForm::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
                         'name' => $faker->name() ,
@@ -61,7 +56,7 @@ class RequestSeeder extends Seeder
 
                     break;
                 case 3: //brgyClearance
-                    Request::create([
+                    CertificateForm::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
                         'name' => $faker->name(),
@@ -76,7 +71,7 @@ class RequestSeeder extends Seeder
 
                     break;
                 case 4: //brgyID
-                    Request::create([
+                    CertificateForm::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
                         'name' => $faker->name() ,
@@ -94,7 +89,7 @@ class RequestSeeder extends Seeder
 
                     break;
                 case 5: //businessPermit
-                    Request::create([
+                    CertificateForm::create([
                         'user_id' => rand(1,37),
                         'certificate_id' => $certificateID,
                         'name' => $faker->name(),

@@ -9,8 +9,8 @@ class Order extends Model
 {
     use HasFactory;
 
-    public function requests()
+    public function certificateForms()
     {
-        return $this->belongsToMany(Request::class);
+        return $this->belongsToMany(CertificateForm::class);
     }
 }

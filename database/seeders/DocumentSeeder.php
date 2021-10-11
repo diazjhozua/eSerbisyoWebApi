@@ -18,8 +18,8 @@ class DocumentSeeder extends Seeder
 
         foreach (range(4,12) as $id) {
 
-            $year = 2019;
-            foreach (range(1,9) as $index) {
+            $year = 2017;
+            foreach (range(1,5) as $index) {
                 $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppDocuments', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\documents', false);
                 $file_path = 'storage/documents/'.$pdf_name;
                 $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
@@ -32,9 +32,11 @@ class DocumentSeeder extends Seeder
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                 ]);
+                $year ++;
             }
-            $year ++;
+
         }
+
         // DB::table('documents')->insert([
         //     'document_type_id' => 1,
         //     'year' => 2021,

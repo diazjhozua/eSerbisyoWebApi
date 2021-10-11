@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\CertificateForm;
+use App\Models\CertificateFormOrder;
 use App\Models\Order;
 use App\Models\OrderRequest;
 use App\Models\Request;
@@ -11,11 +13,7 @@ use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
 
@@ -27,17 +25,16 @@ class OrderSeeder extends Seeder
 
         foreach ($users as $user) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            $userRequests = Request::with('certificate')->where('user_id', $user->id)->get();
+            $userForms = CertificateForm::with('certificate')->where('user_id', $user->id)->get();
 
-            if (isset($userRequests)) {
+            if (isset($userForms)) {
                 $totalPrice = 0;
                 $deliveryPrice = 0;
                 $delivered_by = rand(1,37);
 
-
-                foreach ($userRequests as $userRequest) {
-                    $totalPrice = $totalPrice + $userRequest->certificate->price;
-                    $deliveryFee = $userRequest->certificate->delivery_fee;
+                foreach ($userForms as $userForm) {
+                    $totalPrice = $totalPrice + $userForm->certificate->price;
+                    $deliveryFee = $userForm->certificate->delivery_fee;
                     $deliveryPrice = $deliveryFee > $deliveryPrice && $deliveryFee;
                 }
 
@@ -65,14 +62,14 @@ class OrderSeeder extends Seeder
                 ]);
 
                 if ($application === 'Denied') {
-                    Request::where('user_id', $user->id)
+                    CertificateForm::where('user_id', $user->id)
                         ->update(['status' => 'Denied']);
                 }
 
-                foreach ($userRequests as $userRequest) {
-                    OrderRequest::create([
+                foreach ($userForms as $userForm) {
+                    CertificateFormOrder::create([
                         'order_id' => $order->id,
-                        'request_id' => $userRequest->id,
+                        'certificate_form_id' => $userForm->id,
                         'created_at' => $date,
                         'updated_at' => $date,
                     ]);

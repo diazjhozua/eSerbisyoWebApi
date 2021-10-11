@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RequestRequirement extends Model
+class CertificateFormRequirement extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
-    protected $table = 'request_requirement';
+    protected $table = 'certificate_form_requirement';
 }

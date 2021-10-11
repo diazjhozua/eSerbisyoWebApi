@@ -17,7 +17,7 @@ class DocumentRequest extends FormRequest
     {
         $rules = [
             'type_id' => ['required', Rule::exists('types', 'id')->where(function ($query) {
-                return $query->where('model_type', 'Complaint');
+                return $query->where('model_type', 'Document');
             })],
             'description' => 'required|string|min:4|max:250',
             'year' => 'required|integer|digits:4|min:1900|max:'.(date('Y')+1),

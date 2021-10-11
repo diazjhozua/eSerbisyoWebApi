@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Request as formRequest;
 use Illuminate\Http\Request;
 
-class RequestController extends Controller
+class ProjectTypeController extends Controller
 {
     public function index()
     {
@@ -23,22 +22,22 @@ class RequestController extends Controller
         //
     }
 
-    public function show(formRequest $formRequest)
+    public function show($id)
     {
         //
     }
 
-    public function edit(formRequest $request)
+    public function edit($id)
     {
         //
     }
 
-    public function update(Request $request, formRequest $formRequest)
+    public function update(Request $request, $id)
     {
         //
     }
 
-    public function destroy(formRequest $formRequest)
+    public function destroy($id)
     {
         //
     }

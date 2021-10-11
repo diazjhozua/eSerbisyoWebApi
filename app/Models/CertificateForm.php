@@ -5,11 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Request extends Model
+class CertificateForm extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $with = ['user'];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
     public function requirements()
     {
@@ -23,4 +29,5 @@ class Request extends Model
     public function certificate() {
         return $this->belongsTo(Certificate::class);
     }
+
 }

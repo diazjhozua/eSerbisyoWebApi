@@ -14,7 +14,7 @@ class OrdinanceTypeController extends Controller
     public function index()
     {
         $types = Type::withCount('ordinances')->where('model_type', 'Ordinance')->orderBy('created_at','DESC')->get();
-        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Ordinance w/o ID)', 'model_type' => 'Ordinance', 'created_at' => now(), 'updated_at' => now(),
+        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Ordinance w/o ordinance type)', 'model_type' => 'Ordinance', 'created_at' => now(), 'updated_at' => now(),
             'ordinances_count' => Ordinance::where('type_id', NULL)->count() ]));
         return TypeResource::collection($types)->additional(['success' => true]);
     }

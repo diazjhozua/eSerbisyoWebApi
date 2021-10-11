@@ -25,7 +25,7 @@ class OrdinanceTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'min:4', 'max:60', Rule::unique('types')->where(function ($query) {
+            'name' => ['required', 'string', 'min:6', 'max:200', Rule::unique('types')->where(function ($query) {
                 return $query->where('model_type', 'Ordinance');
             })],
         ];

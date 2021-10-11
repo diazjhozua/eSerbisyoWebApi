@@ -26,20 +26,52 @@ class CertificateSeeder extends Seeder
             ]);
         }
 
-        foreach (range(1,5) as $certID) {
-            $certificate = Certificate::create([
-                'name' => $faker->realText($maxNbChars = 150, $indexSize = 1),
-                'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
-                'status' => $status[array_rand($status)],
-                'is_open_delivery' => $faker->numberBetween(0, 1),
-                'delivery_fee' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
-            ]);
+        Certificate::create([
+            'name' => 'Barangay Indigency',
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+            'status' => $status[array_rand($status)],
+            'is_open_delivery' => $faker->numberBetween(0, 1),
+            'delivery_fee' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        ]);
 
+        Certificate::create([
+            'name' => 'Barangay Cedula',
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+            'status' => $status[array_rand($status)],
+            'is_open_delivery' => $faker->numberBetween(0, 1),
+            'delivery_fee' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        ]);
+
+        Certificate::create([
+            'name' => 'Barangay Clearance',
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+            'status' => $status[array_rand($status)],
+            'is_open_delivery' => $faker->numberBetween(0, 1),
+            'delivery_fee' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        ]);
+
+        Certificate::create([
+            'name' => 'Barangay ID',
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+            'status' => $status[array_rand($status)],
+            'is_open_delivery' => $faker->numberBetween(0, 1),
+            'delivery_fee' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        ]);
+
+        Certificate::create([
+            'name' => 'Barangay Business Permit',
+            'price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+            'status' => $status[array_rand($status)],
+            'is_open_delivery' => $faker->numberBetween(0, 1),
+            'delivery_fee' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        ]);
+
+        foreach (range(1,5) as $certID) {
             // certificate_requirements
             $requirementsCount = $faker->numberBetween(1,4);
             foreach (range(1,$requirementsCount) as $reqCertID) {
                 $certificateRequirement = CertificateRequirement::create([
-                    'certificate_id' => $certificate->id,
+                    'certificate_id' => $certID,
                     'requirement_id' => $faker->unique()->numberBetween(1, 10),
                 ]);
             }

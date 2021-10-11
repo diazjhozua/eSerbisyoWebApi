@@ -11,6 +11,11 @@ class Type extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d',
+    ];
+
     public function feedbacks() {
         return $this->hasMany(Feedback::class)->orderBy('created_at', 'DESC');
     }

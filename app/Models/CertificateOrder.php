@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class CertificateOrder extends Model
 {
     use HasFactory;
+
+    protected $table = 'certificate_form_order';
 }

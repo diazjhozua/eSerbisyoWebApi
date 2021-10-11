@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestRequirementsTable extends Migration
+class CreateCertificateFormRequirementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateRequestRequirementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_requirement', function (Blueprint $table) {
-            $table->foreignId('request_id')->constrained('requests')->onDelete('cascade');
+        Schema::create('certificate_form_requirement', function (Blueprint $table) {
+            $table->foreignId('certificate_form_id')->constrained('certificate_forms')->onDelete('cascade');
             $table->foreignId('requirement_id')->constrained('requirements')->onDelete('cascade');
             $table->string('file_name');
             $table->string('file_path');
@@ -29,6 +29,6 @@ class CreateRequestRequirementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_requirement');
+        Schema::dropIfExists('certificate_form_requirement');
     }
 }

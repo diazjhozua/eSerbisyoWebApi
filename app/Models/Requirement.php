@@ -15,7 +15,7 @@ class Requirement extends Model
         return $this->belongsToMany(Certificate::class);
     }
 
-    public function requests() {
-        return $this->belongsToMany(Request::class);
+    public function certificateForms() {
+        return $this->belongsToMany(CertificateForm::class);
     }
 }
