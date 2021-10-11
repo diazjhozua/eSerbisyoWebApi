@@ -8,7 +8,6 @@ use App\Http\Requests\OrdinanceTypeRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Ordinance;
 use App\Models\Type;
-use Illuminate\Http\Request;
 
 class OrdinanceTypeController extends Controller
 {

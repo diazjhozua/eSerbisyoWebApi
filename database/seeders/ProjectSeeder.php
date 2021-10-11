@@ -7,11 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
         $faker = \Faker\Factory::create();
@@ -21,12 +17,16 @@ class ProjectSeeder extends Seeder
             $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppProjects', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\projects', false);
             $file_path = 'storage/projects/'.$pdf_name;
 
+            $startDate = $faker->dateTimeBetween($startDate = '-2 years', $endDate = 'now', $timezone = null);
+            $endDate = $faker->dateTimeBetween($startDate, $endDate = '+2 years');
+
             DB::table('projects')->insert([
+                'type_id' => rand(21,25),
                 'name' => $faker->name($nbWords = 6, $variableNbWords = true),
                 'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
                 'cost' => $faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 5000),
-                'project_start' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                'project_end' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                'project_start' => $startDate->format('y/m/d'),
+                'project_end' => $endDate->format('y/m/d'),
                 'location' => $faker->sentence($nbSentences = 3, $variableNbSentences = true),
                 'is_starting' => $boolean[array_rand($boolean)],
                 'pdf_name' => $pdf_name,
@@ -35,6 +35,5 @@ class ProjectSeeder extends Seeder
                 'updated_at' => $timestamp,
 	        ]);
         }
-
     }
 }
