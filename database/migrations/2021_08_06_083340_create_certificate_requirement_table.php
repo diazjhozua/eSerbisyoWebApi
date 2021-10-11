@@ -14,16 +14,9 @@ class CreateCertificateRequirementTable extends Migration
     public function up()
     {
         Schema::create('certificate_requirement', function (Blueprint $table) {
-            $table->unsignedBigInteger('certificate_id');
-            $table->unsignedBigInteger('requirement_id');
+            $table->foreignId('certificate_id')->constrained('certificates')->onDelete('cascade');
+            $table->foreignId('requirement_id')->constrained('requirements')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('certificate_id')->references('id')
-                ->on('certificates')->onDelete('cascade');
-
-            $table->foreign('requirement_id')->references('id')
-                ->on('requirements')->onDelete('cascade');
-
         });
     }
 

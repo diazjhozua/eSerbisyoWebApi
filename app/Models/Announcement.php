@@ -9,6 +9,8 @@ class Announcement extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function type(){
         return $this->belongsTo(Type::class);
     }
@@ -19,5 +21,9 @@ class Announcement extends Model
 
     public function comments() {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function likes() {
+        return $this->morphMany(Like::class, 'likeable');
     }
 }

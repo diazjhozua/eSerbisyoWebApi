@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\LostAndFound;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +25,8 @@ class LostAndFoundSeeder extends Seeder
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppMissingPersons', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
             $file_path = 'storage/missing-pictures/'.$picture_name;
-            DB::table('lost_and_founds')->insert([
+
+            $lostAndFound = LostAndFound::create([
                 'user_id' => $faker->numberBetween(1, 19),
                 'item' => $faker->sentence($nbWords = 3, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
@@ -37,6 +39,16 @@ class LostAndFoundSeeder extends Seeder
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
+
+            $commentCount = $faker->numberBetween(1,20);
+
+            foreach (range(1, $commentCount) as $index) {
+                $lostAndFound->comments()->create([
+                    'user_id' => $faker->numberBetween(1,37),
+                    'body' => $faker->realText($maxNbChars = 100, $indexSize = 3)
+                ]);
+            }
+
         }
     }
 }

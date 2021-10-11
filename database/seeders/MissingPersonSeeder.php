@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MissingPerson;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +27,8 @@ class MissingPersonSeeder extends Seeder
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppLostAndFounds', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
             $file_path = 'storage/missing-pictures/'.$picture_name;
-            DB::table('missing_persons')->insert([
+
+            $missingPerson = MissingPerson::create([
                 'user_id' => $faker->numberBetween(1, 19),
                 'name' => $faker->name(),
                 'height' => $faker->randomFloat($nbMaxDecimals = 2, $min = 1.6, $max = 8),
@@ -47,6 +49,16 @@ class MissingPersonSeeder extends Seeder
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
+
+            $commentCount = $faker->numberBetween(1,20);
+
+            foreach (range(1, $commentCount) as $index) {
+                $missingPerson->comments()->create([
+                    'user_id' => $faker->numberBetween(1,37),
+                    'body' => $faker->realText($maxNbChars = 100, $indexSize = 3)
+                ]);
+            }
+
         }
     }
 }

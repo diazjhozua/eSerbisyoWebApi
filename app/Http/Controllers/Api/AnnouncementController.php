@@ -2,51 +2,91 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AnnouncementRequest;
+use App\Http\Requests\CommentRequest;
 use App\Http\Resources\AnnouncementResource;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
-use Illuminate\Http\Request;
+use App\Models\AnnouncementPicture;
+use App\Models\Type;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AnnouncementController extends Controller
 {
-
     public function index()
     {
-        $announcements = Announcement::withCount('comments')->with('announcement_pictures', 'comments')->orderBy('created_at', 'DESC')->get();
-
-        return response()->json([
-            'success' => true,
-            'announcements' => AnnouncementResource::collection($announcements)
-        ]);
+        $announcements = Announcement::with('type','announcement_pictures')->withCount('comments', 'likes')->orderBy('created_at', 'DESC')->get();
+        return AnnouncementResource::collection($announcements)->additional(['success' => true]);
     }
 
     public function create()
     {
-        //
+        $types = Type::where('model_type', 'Announcement')->get();
+        return ['types' => TypeResource::collection($types), 'success' => true];
     }
 
-    public function store(Request $request)
+    public function store(AnnouncementRequest $request)
     {
-        //
+        $announcement = Announcement::create($request->getData());
+        $announcement->comments_count = 0;
+        $announcement->likes_count = 0;
+        if (isset($request->picture_list)) {
+            foreach ($request->picture_list as $key => $value) {
+                $fileName = time().'_'.$value['picture']->getClientOriginalName();
+                $filePath =   $value['picture']->storeAs('announcements', $fileName, 'public');
+                AnnouncementPicture::create(['announcement_id' => $announcement->id, 'picture_name' => $fileName,'file_path' => $filePath]);
+            }
+        }
+        return (new AnnouncementResource($announcement->load('type','announcement_pictures')))->additional(Helper::instance()->storeSuccess('announcement'));
     }
 
-    public function show($id)
+    public function show(Announcement $announcement)
     {
-        //
+        return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
     }
 
-    public function edit($id)
+    public function edit(Announcement $announcement)
     {
-        //
+        $types = Type::where('model_type', 'Announcement')->get();
+        return (new AnnouncementResource($announcement->load('type')))->additional(array_merge(['types' => TypeResource::collection($types)],Helper::instance()->itemFound('announcement')));
     }
 
-    public function update(Request $request, $id)
+    public function update(AnnouncementRequest $request, Announcement $announcement)
     {
-        //
+        $announcement->fill($request->getData())->save();
+        return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->updateSuccess('announcement'));
     }
 
-    public function destroy($id)
+    public function destroy(Announcement $announcement)
     {
-        //
+        return DB::transaction(function() use ($announcement) {
+            $announcement->load('announcement_pictures');
+            foreach ($announcement->announcement_pictures as $picture) { Storage::delete('public/announcements/'. $picture->picture_name); }
+            AnnouncementPicture::where('announcement_id', $announcement->id)->delete();
+            $announcement->comments()->delete();
+            $announcement->delete();
+            return response()->json(Helper::instance()->destroySuccess('announcement'));
+        });
+    }
+
+    public function comment(CommentRequest $request, Announcement $announcement) {
+        $comment = $announcement->comments()->create(array_merge($request->validated(), ['user_id' => 2]));
+        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
+    }
+
+    public function like(Announcement $announcement) {
+        $like = $announcement->likes()->where('user_id', 2)->get();
+        if (count($like)>0) {
+            $like->each->delete();
+            $isLike = false;
+        } else {
+            $like = $announcement->likes()->create(['user_id' => 2]);
+            $isLike = true;
+        }
+        return Helper::instance()->likeStatus('announcement', $isLike);
     }
 }

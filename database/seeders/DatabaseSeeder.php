@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\RequestRequirement;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 class DatabaseSeeder extends Seeder
@@ -39,26 +40,30 @@ class DatabaseSeeder extends Seeder
             UserRoleSeeder::class,
             UserSeeder::class,
 
-            // Type Seeder
+            // // Type Seeder
             FeedbackTypeSeeder::class,
             DocumentTypeSeeder::class,
             OrdinanceTypeSeeder::class,
-            ComplaintTypeSeeder::class,
-            ReportTypeSeeder::class,
-            AnnouncementTypeSeeder::class,
+            // ComplaintTypeSeeder::class,
+            // ReportTypeSeeder::class,
+            // AnnouncementTypeSeeder::class,
 
             FeedbackSeeder::class,
             DocumentSeeder::class,
             OrdinanceSeeder::class,
-            // ProjectSeeder::class,
-            TermSeeder::class,
-            PositionSeeder::class,
-            EmployeeSeeder::class,
-            MissingPersonSeeder::class,
-            LostAndFoundSeeder::class,
-            ComplaintSeeder::class,
-            ReportSeeder::class,
-            AnnouncementSeeder::class,
+            // // ProjectSeeder::class,
+            // TermSeeder::class,
+            // PositionSeeder::class,
+            // EmployeeSeeder::class,
+            // MissingPersonSeeder::class,
+            // LostAndFoundSeeder::class,
+            // ComplaintSeeder::class,
+            // ReportSeeder::class,
+            // AnnouncementSeeder::class,
+            CertificateSeeder::class,
+            CertificateFormSeeder::class,
+            CertificateFormRequirementSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

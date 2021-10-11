@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeStatusRequest;
+use App\Http\Requests\CommentRequest;
 use App\Http\Requests\LostAndFoundRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\LostAndFoundResource;
 use App\Models\LostAndFound;
+use App\Models\MissingPerson;
 use Illuminate\Support\Facades\Storage;
 
 class LostAndFoundController extends Controller
@@ -15,7 +18,7 @@ class LostAndFoundController extends Controller
 
     public function index()
     {
-        $lost_and_founds = LostAndFound::orderBy('created_at','DESC')->get();
+        $lost_and_founds = LostAndFound::withCount('comments')->orderBy('created_at','DESC')->get();
         return LostAndFoundResource::collection($lost_and_founds)->additional(['success' => true]);
     }
 
@@ -30,6 +33,7 @@ class LostAndFoundController extends Controller
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
         $lost_and_found = LostAndFound::create(array_merge($request->getData(), ['user_id' => 2, 'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
+        $lost_and_found->comments_count = 0;
         return (new LostAndFoundResource($lost_and_found))->additional(Helper::instance()->storeSuccess('lost-and-found report'));
     }
 
@@ -37,7 +41,7 @@ class LostAndFoundController extends Controller
     {
         $statuses = [ (object)[ "id" => 1, "name" => "Pending"], (object) ["id" => 2,"type" => "Denied"] ,
         (object) ["id" => 3,"type" => "Approved"], (object) ["id" => 4,"type" => "Resolved"] ];
-        return (new LostAndFoundResource($lost_and_found))->additional(array_merge(['statuses' => $statuses],Helper::instance()->itemFound('lost-and-found report')));
+        return (new LostAndFoundResource($lost_and_found->load('comments')->loadCount('comments')))->additional(array_merge(['statuses' => $statuses],Helper::instance()->itemFound('lost-and-found report')));
     }
 
     public function edit(LostAndFound $lost_and_found)
@@ -54,12 +58,13 @@ class LostAndFoundController extends Controller
             $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
             $lost_and_found->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
         } else {   $lost_and_found->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
-        return (new LostAndFoundResource($lost_and_found))->additional(Helper::instance()->updateSuccess('lost-and-found report'));
+        return (new LostAndFoundResource($lost_and_found->load('comments')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('lost-and-found report'));
     }
 
     public function destroy(LostAndFound $lost_and_found)
     {
         Storage::delete('public/missing-pictures/'. $lost_and_found->picture_name);
+        $lost_and_found->comments()->delete();
         $lost_and_found->delete();
         return response()->json(Helper::instance()->destroySuccess('lost-and-found report'));
     }
@@ -70,6 +75,11 @@ class LostAndFoundController extends Controller
         }
         $oldStatus = $lost_and_found->status;
         $lost_and_found->fill($request->validated())->save();
-        return (new LostAndFoundResource($lost_and_found))->additional(Helper::instance()->statusMessage($oldStatus, $lost_and_found->status, 'lost-and-found report'));
+        return (new LostAndFoundResource($lost_and_found->load('comments')->loadCount('comments')))->additional(Helper::instance()->statusMessage($oldStatus, $lost_and_found->status, 'lost-and-found report'));
+    }
+
+    public function comment(CommentRequest $request, LostAndFound $lost_and_found) {
+        $comment = $lost_and_found->comments()->create(array_merge($request->validated(), ['user_id' => 2]));
+        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 }

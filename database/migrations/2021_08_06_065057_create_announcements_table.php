@@ -20,12 +20,6 @@ class CreateAnnouncementsTable extends Migration
             $table->string('title');
             $table->longText('description');
             $table->timestamps();
-
-            // $table->id();
-            // $table->foreignId('announcement_type_id')->nullable()->constrained('announcement_types')->onDelete('set null');
-            // $table->string('title');
-            // $table->longText('description');
-            // $table->timestamps();
         });
     }
 

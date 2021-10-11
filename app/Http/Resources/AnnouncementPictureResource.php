@@ -14,6 +14,13 @@ class AnnouncementPictureResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'announcement_id' => $this->announcement_id,
+            'picture_name' => $this->picture_name,
+            'file_path' => $this->file_path,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
+        ];
     }
 }

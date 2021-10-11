@@ -9,6 +9,9 @@
     <script src="{{ asset('admin/js/demo/chart-pie-demo.js')}}"></script>
 @endsection
 
+{{-- Title Page --}}
+@section('title', 'Barangay Cupang - Dashboards')
+
 
 @section('content')
 <!-- Begin Page Content -->
@@ -23,7 +26,6 @@
 
     <!-- Content Row -->
     <div class="row">
-
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">

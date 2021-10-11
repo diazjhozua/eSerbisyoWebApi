@@ -33,7 +33,10 @@ class AnnouncementTypeController extends Controller
             $announcements = Announcement::where('type_id', NULL)->orderBy('created_at', 'DESC')->get();
             $type = (new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
             'announcements_count' => $announcements->count(), 'others' => $announcements ]));
-        } else {  $type = Type::with('announcements')->where('model_type', 'Announcement')->withCount('announcements')->findOrFail($id); }
+        } else {
+            $type = Type::with(['announcements' => function($query) {
+                $query->with('announcement_pictures')->withCount('comments');
+            }])->where('model_type', 'Announcement')->withCount('announcements')->findOrFail($id); }
         return (new TypeResource($type))->additional(Helper::instance()->itemFound('announcement_type'));
     }
 

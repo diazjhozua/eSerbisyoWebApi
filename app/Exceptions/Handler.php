@@ -53,7 +53,22 @@ class Handler extends ExceptionHandler
                         'message' => 'Resource not found'
                     ], 404);
                 }
-             }
+            } else if ('/*') {
+                if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                    $model = strtolower(class_basename($exception->getModel()));
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => $model.' not found (It must be deleted by administrator. Please refresh the page)'
+                    ]);
+                }
+                if ($exception instanceof NotFoundHttpException) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Resource not found'
+                    ]);
+                }
+            }
         });
     }
 

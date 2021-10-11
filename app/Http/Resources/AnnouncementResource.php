@@ -19,7 +19,7 @@ class AnnouncementResource extends JsonResource
         $type = $this->whenLoaded('type');
         $announcement_pictures = $this->whenLoaded('announcement_pictures');
         $comments = $this->whenLoaded('comments');
-
+        $likes = $this->whenLoaded('likes');
         return [
             'id' => $this->id,
             $this->mergeWhen($this->relationLoaded('type'), [
@@ -30,11 +30,16 @@ class AnnouncementResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'announcement_pictures' => AnnouncementPictureResource::collection($announcement_pictures),
-            'comments' => CommentResource::collection($comments),
-            'comments_count' => $this->comments_count,
-
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
+            $this->mergeWhen(isset($this->comments_count), [
+                'comments_count' => $this->comments_count,
+            ]),
+            $this->mergeWhen(isset($this->likes_count), [
+                'likes_count' => $this->likes_count,
+            ]),
+            'comments' => CommentResource::collection($comments),
+            'likes' => LikeResource::collection($likes),
         ];
     }
 }

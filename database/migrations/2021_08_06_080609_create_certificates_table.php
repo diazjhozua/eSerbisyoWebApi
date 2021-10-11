@@ -17,7 +17,9 @@ class CreateCertificatesTable extends Migration
             $table->id();
             $table->string('name');
             $table->float('price', 5,2);
-            $table->boolean('is_available');
+            $table->enum('status', ['Available', 'Unavailable'])->default('Available');
+            $table->boolean('is_open_delivery');
+            $table->float('delivery_fee', 5,2);
             $table->timestamps();
         });
     }

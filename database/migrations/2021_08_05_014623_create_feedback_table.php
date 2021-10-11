@@ -20,6 +20,7 @@ class CreateFeedbackTable extends Migration
             $table->string('custom_type')->nullable();
             $table->enum('polarity', ['Positive', 'Neutral', 'Negative']);
             $table->longText('message');
+            $table->string('admin_respond')->nullable();
             $table->enum('status', ['Pending', 'Ignored', 'Noted'])->default('Pending');
             $table->boolean('is_anonymous');
             $table->timestamps();

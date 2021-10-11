@@ -16,6 +16,8 @@ class LostAndFoundResource extends JsonResource
      */
     public function toArray($request)
     {
+        $comments = $this->whenLoaded('comments');
+
         return [
             'id' => $this->id,
             'submitted_by' => $this->user->getFullNameAttribute(),
@@ -29,6 +31,10 @@ class LostAndFoundResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
+            $this->mergeWhen(isset($this->comments_count), [
+                'comments_count' => $this->comments_count,
+            ]),
+            'comments' => CommentResource::collection($comments),
         ];
     }
 }

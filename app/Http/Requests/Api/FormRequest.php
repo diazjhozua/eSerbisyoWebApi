@@ -39,7 +39,7 @@ abstract class FormRequest extends LaravelFormRequest
         throw new HttpResponseException(
             response()->json([
                 'success' => false,
-                'errors' => $errors
+                'errors' => $errors,
             ])
         );
     }

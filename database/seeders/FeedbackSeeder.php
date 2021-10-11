@@ -19,7 +19,8 @@ class FeedbackSeeder extends Seeder
         $polarity = ['Positive', 'Neutral', 'Negative'];
         $status = ['Pending', 'Ignored', 'Noted'];
 
-        foreach (range(1,30) as $index)
+
+        foreach (range(1,100) as $index)
         {
             $userRandomID = $faker->numberBetween(1, 19);
             $typeID = $faker->numberBetween(0, 3);
@@ -31,13 +32,22 @@ class FeedbackSeeder extends Seeder
             }
 
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+
+            $admin_message = NULL;
+            $status_name =  $status[array_rand($status)];
+            if ($status_name === 'Noted' ) {
+                $admin_message = $faker->paragraph($nbSentences = 2, $variableNbSentences = true);
+            }
+
+
 	        DB::table('feedbacks')->insert([
                 'user_id' =>  $userRandomID,
                 'type_id' => $typeID,
                 'custom_type' => $customType,
                 'polarity' => $polarity[array_rand($polarity)],
-                'message' =>  $faker->paragraph($nbSentences = 4, $variableNbSentences = true),
-                'status' => $status[array_rand($status)],
+                'message' =>  $faker->paragraph($nbSentences = 2, $variableNbSentences = true),
+                'status' => $status_name,
+                'admin_respond' => $admin_message,
                 'is_anonymous' => $faker->numberBetween(0, 1),
                 'created_at' => $date,
                 'updated_at' => $date,
