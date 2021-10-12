@@ -3,7 +3,6 @@ function createOrdinance() {
 
     doAjax(url, 'GET').then( (response) =>
         {
-            console.log(response)
             if (response.success) {
                     const types = response.types;
                     $('.custom-file-label').html(''); //empty the html in the file input
@@ -75,7 +74,7 @@ function editOrdinance(id) {
 function deleteOrdinance(id) {
     $('#confirmationDeleteModal').modal('show')
     $('#modalDeleteForm').attr('action', '/admin/ordinances/'+id)
-    $('#confirmationMessage').text('Do you really want to delete this Ordinance? This process cannot be undone.')
+    $('#confirmationMessage').text('Do you really want to delete this ordinance? This process cannot be undone.')
 }
 
 $(document).ready(function() {
@@ -200,7 +199,6 @@ $(document).ready(function() {
                         //refresh the page
                         table.page(currentPage).draw(false)
 
-                        $("#thisDayCount").text(parseInt($("#thisDayCount").text()) + 1);
                         $("#ordinancesCount").text(parseInt($("#ordinancesCount").text()) + 1);
 
                     } else {

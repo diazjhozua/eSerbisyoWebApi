@@ -28,6 +28,10 @@ class Type extends Model
         return $this->hasMany(Ordinance::class)->orderBy('created_at', 'DESC');
     }
 
+    public function projects() {
+        return $this->hasMany(Project::class)->orderBy('created_at', 'DESC');
+    }
+
     public function complaints() {
         return $this->hasMany(Complaint::class)->orderBy('created_at', 'DESC');
     }

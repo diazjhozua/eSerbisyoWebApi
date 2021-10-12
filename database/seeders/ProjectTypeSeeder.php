@@ -5,13 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ComplaintTypeSeeder extends Seeder
+class ProjectTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
+
     public function run()
     {
         $faker = \Faker\Factory::create();
@@ -21,7 +17,7 @@ class ComplaintTypeSeeder extends Seeder
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             DB::table('types')->insert([
                 'name' => $faker->realText($maxNbChars = 30, $indexSize = 3),
-                'model_type' => 'Complaint',
+                'model_type' => 'Project',
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);

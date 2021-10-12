@@ -8,7 +8,6 @@ use App\Http\Requests\DocumentTypeRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Document;
 use App\Models\Type;
-use Illuminate\Support\Facades\Storage;
 
 class DocumentTypeController extends Controller
 {
