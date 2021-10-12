@@ -69,7 +69,7 @@ function editDocument(id) {
 function deleteDocument(id) {
     $('#confirmationDeleteModal').modal('show')
     $('#modalDeleteForm').attr('action', '/admin/documents/'+id)
-    $('#confirmationMessage').text('Do you really want to delete this Document? This process cannot be undone.')
+    $('#confirmationMessage').text('Do you really want to delete this document? This process cannot be undone.')
 }
 
 $(document).ready(function() {

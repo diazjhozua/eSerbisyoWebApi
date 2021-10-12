@@ -37,11 +37,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('feedbacks/respond/{feedback}', [AdminFeedback::class, 'respondReport']);
     Route::get('feedbacks', [AdminFeedback::class, 'index'])->name('feedbacks.index');;
     Route::resource('document-types', AdminDocumentType::class)->except(['create']);
-    Route::resource('documents', AdminDocument::class);
+    Route::resource('documents', AdminDocument::class)->except(['show']);
     Route::resource('ordinance-types', AdminOrdinanceType::class)->except(['create']);
-    Route::resource('ordinances', AdminOrdinance::class);
+    Route::resource('ordinances', AdminOrdinance::class)->except(['show']);
     Route::resource('project-types', AdminProjectType::class)->except(['create']);
-    Route::resource('projects', AdminProject::class);
+    Route::resource('projects', AdminProject::class)->except(['show']);
 
     Route::get('files/{folderName}/{fileName}', function ($folderName, $fileName) {
         $url = Storage::disk('public')->path($folderName.'/'.$fileName);

@@ -14,7 +14,7 @@ class ProjectTypeController extends Controller
     public function index()
     {
         $types = Type::withCount('projects')->where('model_type', 'Project')->orderBy('created_at','DESC')->get();
-        $types->add(new Type([ 'id' => 0, 'name' => 'Project without assigned project type', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
+        $types->add(new Type([ 'id' => 0, 'name' => '(Others) - Project without assigned project type', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
             'projects_count' => Project::where('type_id', NULL)->count() ]));
 
         return view('admin.project-types.index')->with('types', $types);
@@ -31,7 +31,7 @@ class ProjectTypeController extends Controller
     {
         if ($id == 0) {
             $projects = Project::where('type_id', NULL)->orderBy('created_at', 'DESC')->get();
-            $type = (new Type([ 'id' => 0, 'name' => 'Project w/o project type', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
+            $type = (new Type([ 'id' => 0, 'name' => '(Others) - Project w/o project type', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
             'projects_count' => $projects->count(), 'projects' => $projects ]));
         } else {  $type = Type::with('projects')->where('model_type', 'Project')->withCount('projects')->findOrFail($id); }
 

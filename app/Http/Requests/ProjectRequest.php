@@ -20,32 +20,24 @@ class ProjectRequest extends FormRequest
             })],
             'name' => ['required', 'string', 'min:6', 'max:150'],
             'description' => ['required', 'string', 'min:6', 'max:250'],
-            'cost' => ['required'],
-
-
+            'cost' => ['required', 'min:1', 'max:999999999999'],
+            'project_start' => ['required', 'date', 'date_format:Y-m-d', 'before_or_equal:project_end'],
+            'project_end' => ['required', 'date', 'date_format:Y-m-d', 'after_or_equal:project_start'],
+            'location' => ['required', 'string', 'min:4', 'max:250'],
         ];
-        // if ($this->isMethod('POST')) {
-        //     return [
-        //     'name'=> 'required|string|min:4|max:250',
-        //     'description'=> 'required|string|min:4|max:60',
-        //     'cost'=> 'required',
-        //     'project_start' => 'required|date|date_format:Y-m-d',
-        //     'project_end' => 'required|date|date_format:Y-m-d',
-        //     'location'=> 'required|string|min:4|max:60',
-        //     'pdf' => 'required|mimes:pdf|max:10000',
-        //     ];
-        // }
 
-        // if ($this->isMethod('PUT')) {
-        //     return [
-        //         'name'=> 'required|string|min:4|max:60',
-        //         'description'=> 'required|string|min:4|max:60',
-        //         'cost'=> 'required',
-        //         'project_start' => 'required|date|date_format:Y-m-d',
-        //         'project_end' => 'required|date|date_format:Y-m-d',
-        //         'location'=> 'required|string|min:4|max:60',
-        //         'pdf' => 'required|mimes:pdf|max:10000',
-        //     ];
-        // }
+        if ($this->isMethod('POST')) {
+            $rules['pdf'] = 'required|mimes:pdf|max:10000';
+        }
+
+        if ($this->isMethod('PUT')) {
+            $rules['pdf'] = 'mimes:pdf|max:10000';
+        }
+
+        return $rules;
+    }
+
+    public function getData() {
+        return $this->only(['type_id', 'name', 'description', 'cost', 'project_start', 'project_end', 'location']);
     }
 }

@@ -45,10 +45,12 @@
     <p class="font-weight-light">Created at: {{ $type->created_at }} -- Updated at: {{ $type->updated_at }}</p>
     <p class="font-weight-light"></p>
 
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" onclick="createOrdinance()">
-        Create
-    </button>
+    @if ($type->id != 0)
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" onclick="createProject()">
+            Create
+        </button>
+    @endif
 
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">

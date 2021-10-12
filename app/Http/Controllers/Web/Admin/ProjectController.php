@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Project;
 use App\Models\Type;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -38,26 +40,33 @@ class ProjectController extends Controller
 
     public function store(ProjectRequest $request)
     {
-        //
-    }
-
-    public function show(Project $project)
-    {
-        //
+        $fileName = time().'_'.$request->pdf->getClientOriginalName();
+        $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
+        $project = Project::create(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]));
+        return (new ProjectResource($project->load('type')))->additional(Helper::instance()->storeSuccess('project'));
     }
 
     public function edit(Project $project)
     {
-        //
+        $types = Type::where('model_type', 'Project')->get();
+        return (new ProjectResource($project->load('type')))->additional(array_merge(['types' => TypeResource::collection($types)],Helper::instance()->itemFound('project')));
     }
 
     public function update(ProjectRequest $request, Project $project)
     {
-        //
+        if($request->hasFile('pdf')) {
+            Storage::delete('public/projects/'. $project->pdf_name);
+            $fileName = time().'_'.$request->pdf->getClientOriginalName();
+            $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
+            $project->fill(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]))->save();
+        } else { $project->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save(); }
+        return (new ProjectResource($project->load('type')))->additional(Helper::instance()->updateSuccess('project'));
     }
 
     public function destroy(Project $project)
     {
-        //
+        Storage::delete('public/projects/'. $project->pdf_name);
+        $project->delete();
+        return response()->json(Helper::instance()->destroySuccess('project'));
     }
 }

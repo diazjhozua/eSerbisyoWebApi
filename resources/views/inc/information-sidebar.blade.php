@@ -136,7 +136,7 @@
 
     <!-- Project Nav Item - Tables -->
     <li id="project" class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ route('admin.projects.index') }}">
             <img src="{{ asset('assets/img/project.png') }}" alt="Projects">
             <span>Projects</span></a>
     </li>
