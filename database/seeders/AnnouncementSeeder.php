@@ -35,7 +35,7 @@ class AnnouncementSeeder extends Seeder
             $announcements[] = [
                 'type_id' => $types->random(),
                 'title' => $faker->words($nb = 5, $asText = true),
-                'description' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+                'description' => $faker->paragraph($nbSentences = 40, $variableNbSentences = true),
                 'created_at' => $date,
                 'updated_at' => $date,
             ];
@@ -43,7 +43,7 @@ class AnnouncementSeeder extends Seeder
             // //announcement_pictures
             for ($i = 0; $i <= $faker->numberBetween(1, 5); $i++) {
                 $picture = $faker->file($sourceDir = 'C:\Project Assets\AppAnnouncements', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\announcements', false);
-                $file_path = 'public/announcements/'.$picture;
+                $file_path = 'announcements/'.$picture;
 
                 $pictures[] = [
                     'announcement_id' => $id,

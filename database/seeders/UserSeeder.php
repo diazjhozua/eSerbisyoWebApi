@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
         foreach (range(1,9) as $positionNum) {
             foreach(range(1,2) as $index) {
                 $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
-                $file_path = 'storage/users/'.$picture_name;
+                $file_path = 'users/'.$picture_name;
                 $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
                 DB::table('users')->insert([
                     'first_name' =>  $faker->firstName,
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
                     'purok_id' => $faker->numberBetween(1,5),
                     'address' => $faker->address,
                     'is_verified' => true,
-                    'status' => 'enable',
+                    'status' => 'Enable',
                     'user_role_id' => $positionNum,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
         foreach (range(1,5) as $index)
         {
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
-            $file_path = 'storage/users/'.$picture_name;
+            $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $randomNum = $faker->unique()->numberBetween(0, 4);
 	        DB::table('users')->insert([
@@ -81,7 +81,7 @@ class UserSeeder extends Seeder
                 'purok_id' => $faker->numberBetween(1,5),
                 'address' => $faker->address,
                 'is_verified' => true,
-                'status' => 'enable',
+                'status' => 'Enable',
                 'user_role_id' => 8,
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
@@ -91,7 +91,7 @@ class UserSeeder extends Seeder
         foreach (range(6,19) as $index)
         {
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
-            $file_path = 'storage/users/'.$picture_name;
+            $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $randomNum = $faker->unique()->numberBetween(5, 18);
 	        DB::table('users')->insert([
@@ -105,8 +105,47 @@ class UserSeeder extends Seeder
                 'purok_id' => $faker->numberBetween(1,5),
                 'address' => $faker->address,
                 'is_verified' => true,
-                'status' => 'enable',
+                'status' => 'Enable',
                 'user_role_id' => 9,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+	        ]);
+        }
+
+        foreach (range(20,30) as $index)
+        {
+            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
+            $file_path = 'users/'.$picture_name;
+            $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+
+	        DB::table('users')->insert([
+                'first_name' =>  $firstName[$randomNum],
+                'middle_name' => $faker->lastName,
+                'last_name' => $lastName[$randomNum],
+                'email' => strtolower($faker->lastName.rand(1,100)).'@gmail.com',
+                'password' => Hash::make('12341234'),
+                'picture_name' => $picture_name,
+                'file_path' => $file_path,
+                'purok_id' => $faker->numberBetween(1,5),
+                'address' => $faker->address,
+                'is_verified' => false,
+                'status' => 'Enable',
+                'user_role_id' => 9,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+	        ]);
+        }
+
+        foreach (range(20,30) as $userID)
+        {
+            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\credentials', false);
+            $credentials_file_path = 'credentials/'.$credentials_name;
+            $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+
+	        DB::table('verification_requests')->insert([
+                'user_id' =>  $userID,
+                'credential_name' => $credentials_name,
+                'credential_file_path' => $credentials_file_path,
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
 	        ]);

@@ -1,36 +1,34 @@
 function createProject() {
     const url = 'projects/create'
-    doAjax(url, 'GET').then( (response) =>
-        {
-            if (response.success) {
-                    const types = response.types;
-                    $('.custom-file-label').html(''); //empty the html in the file input
-                    $('#projectForm').trigger("reset") //reset all the input values
-                    $('#projectTypeDropDwn').empty() //reset dropdown button
-                    $("#formMethod").empty(); //empty form method div
-                    $('#projectTypeDropDwn').append($("<option selected/>").val("").text('Choose...'))
-                    $.each(types, function() {
-                        // Populate Drop Dowm
-                        $('#projectTypeDropDwn').append($("<option />").val(this.id).text(this.name))
-                    })
-                    let actionURL = '/admin/projects/'
-                    let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
+    doAjax(url, 'GET').then((response) => {
+        if (response.success) {
+            const types = response.types;
+            $('.custom-file-label').html(''); //empty the html in the file input
+            $('#projectForm').trigger("reset") //reset all the input values
+            $('#projectTypeDropDwn').empty() //reset dropdown button
+            $("#formMethod").empty(); //empty form method div
+            $('#projectTypeDropDwn').append($("<option selected/>").val("").text('Choose...'))
+            $.each(types, function () {
+                // Populate Drop Dowm
+                $('#projectTypeDropDwn').append($("<option />").val(this.id).text(this.name))
+            })
+            let actionURL = '/admin/projects/'
+            let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
-                    $("#formMethod").append(inputMethod) // append formMethod div
-                    $('#projectForm').attr('action', actionURL) //set the method of the form
-                    $('#projectModal').modal('show')
-                    $('#projectModalHeader').text('Publish Project')
-                    $('.btnTxt').text('Store') //set the text of the submit btn
-            }
+            $("#formMethod").append(inputMethod) // append formMethod div
+            $('#projectForm').attr('action', actionURL) //set the method of the form
+            $('#projectModal').modal('show')
+            $('#projectModalHeader').text('Publish Project')
+            $('.btnTxt').text('Store') //set the text of the submit btn
         }
+    }
     )
 }
 
 function editProject(id) {
 
-    url = 'projects/'+id+'/edit'
-    doAjax(url, 'GET').then( (response) =>
-    {
+    url = 'projects/' + id + '/edit'
+    doAjax(url, 'GET').then((response) => {
         if (response.success) {
             const data = response.data
             const types = response.types
@@ -43,7 +41,7 @@ function editProject(id) {
             //Set form input values
 
             $('#projectTypeDropDwn').append($("<option selected/>").val(data.type_id).text(data.type_id == 0 ? data.custom_type : data.project_type)) //set current type_id
-            $.each(types, function() {
+            $.each(types, function () {
                 // Populate Drop Dowm
                 if (this.id != data.type_id) {
                     $('#projectTypeDropDwn').append($("<option />").val(this.id).text(this.name))
@@ -58,7 +56,7 @@ function editProject(id) {
             $('#location').val(data.location)
             $('.custom-file-label').html(data.pdf_name)
 
-            let actionURL = '/admin/projects/'+data.id
+            let actionURL = '/admin/projects/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -72,20 +70,20 @@ function editProject(id) {
 
 function deleteProject(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/projects/'+id)
+    $('#modalDeleteForm').attr('action', '/admin/projects/' + id)
     $('#confirmationMessage').text('Do you really want to delete this project? This process cannot be undone.')
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('#project').addClass('active')
 
-    $('input[type="file"]').change(function(e){
+    $('input[type="file"]').change(function (e) {
         var fileName = e.target.files[0].name;
         $('.custom-file-label').html(fileName);
     });
 
     // Set class row selected when any button was click in the selected
-    $('#dataTable').on( 'click', 'tr', function () {
+    $('#dataTable').on('click', 'tr', function () {
         if (!$(this).hasClass('selected')) {
             $('#dataTable').DataTable().$('tr.selected').removeClass('selected')
             $(this).addClass('selected')
@@ -93,7 +91,7 @@ $(document).ready(function() {
     })
 
     // Initialize Year picker in form
-    $(".datepicker").datepicker( {
+    $(".datepicker").datepicker({
         format: "yyyy-mm-dd", // Notice the Extra space at the beginning
     });
 
@@ -135,7 +133,9 @@ $(document).ready(function() {
                 maxlength: 250,
             },
             pdf: {
-                required: $('#method').val() == 'POST' ? true: false,
+                required: function () {
+                    return $('#method').val() == 'POST'
+                },
                 extension: "pdf",
                 filesize: 10485760, //10mb in bytes
             },
@@ -151,29 +151,31 @@ $(document).ready(function() {
                 extension: "Invalid file type! project must be in .pdf format",
                 filesize: "Selected file must be less than 10mb"
             },
+            project_end: {
+                greaterThan: "Project end must be greater than selected project start"
+            },
         },
 
-        submitHandler: function(form, event) {
+        submitHandler: function (form, event) {
             event.preventDefault()
 
             let formAction = $("#projectForm").attr('action')
             let formMethod = $('#method').val()
-            let formData =  new FormData(form)
+            let formData = new FormData(form)
 
             $('#btnFormSubmit').attr("disabled", true); //disabled login
             $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
             $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
 
-            doAjax(formAction, 'POST', formData).then( (response) =>
-            {
+            doAjax(formAction, 'POST', formData).then((response) => {
                 if (response.success) {
                     $('#projectModal').modal('hide') //hide the modal
 
                     const data = response.data
 
-                    col1 = '<td>'+data.name+'</td>'
-                    col2 = '<td><a href="'+window.location.origin+'/admin/project-types/'+data.type_id+'">'+data.project_type+'</a></td>'
-                    col3 = '<td>'+data.description+'</td>'
+                    col1 = '<td>' + data.name + '</td>'
+                    col2 = '<td><a href="' + window.location.origin + '/admin/project-types/' + data.type_id + '">' + data.project_type + '</a></td>'
+                    col3 = '<td>' + data.description + '</td>'
                     var formatter = new Intl.NumberFormat('en-US', {
                         style: 'currency',
                         currency: 'PHP',
@@ -183,45 +185,45 @@ $(document).ready(function() {
                         //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
                     });
 
-                    col4 = '<td>'+formatter.format(data.cost)+'</td>'
-                    col5 = '<td>'+data.project_start+'</td>'
-                    col6 = '<td>'+data.project_end+'</td>'
-                    col7 = '<td>'+data.location+'</td>'
-                    col8 = '<td><a href="'+window.location.origin+'/files/projects/'+data.pdf_name+'">'+data.pdf_name+'</a></td>'
-                    col9 = '<td>'+data.updated_at+'</td>'
+                    col4 = '<td>' + formatter.format(data.cost) + '</td>'
+                    col5 = '<td>' + data.project_start + '</td>'
+                    col6 = '<td>' + data.project_end + '</td>'
+                    col7 = '<td>' + data.location + '</td>'
+                    col8 = '<td><a href="' + window.location.origin + '/files/projects/' + data.pdf_name + '">' + data.pdf_name + '</a></td>'
+                    col9 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<button class="btn btn-primary btn-sm" onclick="editProject('+data.id+')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
-                                '<i class="fas fa-edit"></i>' +
-                            '</button>' +
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-primary btn-sm" onclick="editProject(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
+                        '<i class="fas fa-edit"></i>' +
+                        '</button>' +
                         '</li>'
                     deleteBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<button class="btn btn-danger btn-sm" onclick="deleteProject('+data.id+')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
-                                '<i class="fas fa-trash-alt"></i>' +
-                            '</button>' +
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-danger btn-sm" onclick="deleteProject(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+                        '<i class="fas fa-trash-alt"></i>' +
+                        '</button>' +
                         '</li>'
 
-                    col10 = '<td><ul class="list-inline m-0">'+editBtn+deleteBtn+'</td></ul>'
+                    col10 = '<td><ul class="list-inline m-0">' + editBtn + deleteBtn + '</td></ul>'
 
                     // Get table reference - note: dataTable() not DataTable()
                     var table = $('#dataTable').DataTable();
 
-                    if(formMethod == 'POST') {
+                    if (formMethod == 'POST') {
                         var currentPage = table.page();
-                        table.row.add([col1,col2,col3,col4,col5,col6,col7,col8,col9,col10]).draw()
+                        table.row.add([col1, col2, col3, col4, col5, col6, col7, col8, col9, col10]).draw()
 
                         selectedRow = 0
                         var index = table.row(selectedRow).index(),
-                        rowCount = table.data().length-1,
-                        insertedRow = table.row(rowCount).data(),
-                        tempRow
+                            rowCount = table.data().length - 1,
+                            insertedRow = table.row(rowCount).data(),
+                            tempRow
 
-                        for (var i=rowCount; i > index; i--) {
-                            tempRow = table.row(i-1).data()
+                        for (var i = rowCount; i > index; i--) {
+                            tempRow = table.row(i - 1).data()
                             table.row(i).data(tempRow)
-                            table.row(i-1).data(insertedRow)
+                            table.row(i - 1).data(insertedRow)
                         }
 
                         //refresh the page
@@ -231,7 +233,7 @@ $(document).ready(function() {
                         $("#projectsCount").text(parseInt($("#projectsCount").text()) + 1);
 
                     } else {
-                        table.row('.selected').data([col1,col2,col3,col4,col5,col6,col7,col8,col9,col10]).draw(false);
+                        table.row('.selected').data([col1, col2, col3, col4, col5, col6, col7, col8, col9, col10]).draw(false);
                     }
                 }
 
@@ -243,11 +245,10 @@ $(document).ready(function() {
     });
 
     // Delete Modal Form
-    $("#modalDeleteForm").submit(function(e) {
+    $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
         let formAction = $("#modalDeleteForm").attr('action')
-        doAjax(formAction, 'DELETE').then( (response) =>
-        {
+        doAjax(formAction, 'DELETE').then((response) => {
             if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {

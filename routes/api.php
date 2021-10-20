@@ -43,10 +43,10 @@ Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update
 Route::resource('document-types', DocumentTypeController::class)->except(['create']);
 Route::resource('documents', DocumentController::class);
 
-// Route::resource('terms', TermController::class)->except(['create']);
-// Route::resource('positions', PositionController::class)->except(['create']);
-// Route::resource('employees', EmployeeController::class);
-// Route::resource('projects', ProjectController::class);
+Route::resource('terms', TermController::class)->except(['create']);
+Route::resource('positions', PositionController::class)->except(['create']);
+Route::resource('employees', EmployeeController::class);
+Route::resource('projects', ProjectController::class);
 
 Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
 Route::resource('ordinances', OrdinanceController::class);
@@ -68,9 +68,9 @@ Route::resource('ordinances', OrdinanceController::class);
 // Route::resource('reports', ReportController::class);
 // Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 
-// Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
+Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
 // Route::post('announcements/{announcement}/comment',  [AnnouncementController::class, 'comment']);
-// Route::resource('announcements', AnnouncementController::class);
+Route::resource('announcements', AnnouncementController::class);
 // Route::resource('announcement-pictures', AnnouncementPictureController::class)->only(['store', 'destroy']);
 // Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
 

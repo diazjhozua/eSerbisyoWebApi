@@ -16,7 +16,7 @@ class AnnouncementTypeSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        //31-35
+        //26-30
         foreach (range(1,5) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             DB::table('types')->insert([

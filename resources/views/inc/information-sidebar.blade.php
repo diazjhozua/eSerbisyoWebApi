@@ -73,23 +73,27 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Types:</h6>
                 <a class="collapse-item" href="buttons.html">Registered User</a>
-                <a class="collapse-item" href="cards.html">Pending Registration</a>
+                <a class="collapse-item" href="cards.html">Verified User</a>
+                <a class="collapse-item" href="cards.html">Verification Request</a>
+                <a class="collapse-item" href="cards.html">Blocked User</a>
             </div>
         </div>
     </li>
 
     <!-- Barangay Official Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
+    <li id="OfficialNavCollapse" class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOfficial"
             aria-expanded="true" aria-controls="collapseTwo">
             <img src="{{ asset('assets/img/organization-chart.png') }}" alt="Official Chart">
             <span>Barangay Officials</span>
         </a>
-        <div id="collapseFour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+
+        <div id="collapseOfficial" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Types:</h6>
-                <a class="collapse-item" href="buttons.html">Term</a>
-                <a class="collapse-item" href="cards.html">Official</a>
+                <a id="term" class="collapse-item" href="{{ route('admin.terms.index') }}">Terms</a>
+                <a id="position" class="collapse-item" href="{{ route('admin.positions.index') }}">Positions</a>
+                <a id="employee" class="collapse-item" href="{{ route('admin.employees.index') }}">Employees</a>
             </div>
         </div>
     </li>
@@ -108,7 +112,7 @@
                 <a id="documentType" class="collapse-item" href="{{ route('admin.document-types.index') }}">Document</a>
                 <a id="ordinanceType" class="collapse-item" href="{{ route('admin.ordinance-types.index') }}">Ordinance</a>
                 <a id="projectType" class="collapse-item" href="{{ route('admin.project-types.index') }}">Project</a>
-                <a class="collapse-item" href="">Announcement</a>
+                <a id="announcementType" class="collapse-item" href="{{ route('admin.announcement-types.index') }}">Announcement</a>
             </div>
         </div>
     </li>
@@ -143,7 +147,7 @@
 
     <!-- Announcement Nav Item - Tables -->
     <li id="announcement" class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ route('admin.announcements.index') }}">
             <img src="{{ asset('assets/img/announcement.png') }}" alt="Announcement">
             <span>Announcements</span></a>
     </li>

@@ -15,7 +15,9 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
+            $table->integer('ranking');
             $table->string('name');
+            $table->longText('job_description');
             $table->timestamps();
         });
     }

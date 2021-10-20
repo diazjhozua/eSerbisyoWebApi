@@ -96,7 +96,7 @@
 			</div>
             <form id="modalDeleteForm" action="">
                 <div class="modal-body" >
-                    <p id="confirmationMessage"></p>
+                    <p class="text-justify" id="confirmationMessage"></p>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

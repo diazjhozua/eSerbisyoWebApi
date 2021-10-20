@@ -20,7 +20,7 @@ class EmployeeSeeder extends Seeder
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'storage/employees/'.$picture_name;
+            $file_path = 'employees/'.$picture_name;
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -33,10 +33,12 @@ class EmployeeSeeder extends Seeder
                 'updated_at' => $timestamp,
             ]);
 
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'storage/employees/'.$picture_name;
 
             foreach (range(1,7) as $index) {
+
+                $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
+                $file_path = 'employees/'.$picture_name;
+
                 DB::table('employees')->insert([
                     'name' => $faker->name,
                     'term_id' => $term,
@@ -50,7 +52,7 @@ class EmployeeSeeder extends Seeder
             }
 
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'storage/employees/'.$picture_name;
+            $file_path = 'employees/'.$picture_name;
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -64,7 +66,7 @@ class EmployeeSeeder extends Seeder
             ]);
 
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'storage/employees/'.$picture_name;
+            $file_path = 'employees/'.$picture_name;
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -78,7 +80,7 @@ class EmployeeSeeder extends Seeder
             ]);
 
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'storage/employees/'.$picture_name;
+            $file_path = 'employees/'.$picture_name;
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -92,7 +94,7 @@ class EmployeeSeeder extends Seeder
             ]);
 
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'storage/employees/'.$picture_name;
+            $file_path = 'employees/'.$picture_name;
 
             foreach (range(1,7) as $index) {
                 DB::table('employees')->insert([

@@ -22,7 +22,7 @@ class OrdinanceSeeder extends Seeder
             foreach (range(1,$ordinanceCount) as $index) {
                 $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
                 $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppOrdinances', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\ordinances', false);
-                $file_path = 'storage/ordinances/'.$pdf_name;
+                $file_path = 'ordinances/'.$pdf_name;
 
                 DB::table('ordinances')->insert([
                     'ordinance_no' => $faker->numberBetween(07, 21).'-'.$faker->numberBetween(400, 20000),
@@ -44,7 +44,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2017-05-23',
         //     'ordinance_category_id'=> 1,
         //     'pdf_name' => 'no.-17-087.pdf',
-        //     'file_path'=> 'storage/ordinances/no.-17-087.pdf',
+        //     'file_path'=> 'ordinances/no.-17-087.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -55,7 +55,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2015-11-03',
         //     'ordinance_category_id'=> 1,
         //     'pdf_name' => 'no.-15-143.pdf',
-        //     'file_path'=> 'storage/ordinances/no.-15-143.pdf',
+        //     'file_path'=> 'ordinances/no.-15-143.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -66,7 +66,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2013-09-23',
         //     'ordinance_category_id'=> 1,
         //     'pdf_name' => 'no.-13-009-river-rehabilitation-and-protection-council',
-        //     'file_path'=> 'storage/ordinances/no.-13-009-river-rehabilitation-and-protection-council',
+        //     'file_path'=> 'ordinances/no.-13-009-river-rehabilitation-and-protection-council',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -77,7 +77,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2010-01-18',
         //     'ordinance_category_id'=> 1,
         //     'pdf_name' => 'blg-10-109.pdf',
-        //     'file_path'=> 'storage/ordinances/blg-10-109.pdf',
+        //     'file_path'=> 'ordinances/blg-10-109.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -88,7 +88,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2009-04-13',
         //     'ordinance_category_id'=> 1,
         //     'pdf_name' => 'blg-09-087.pdf',
-        //     'file_path'=> 'storage/ordinances/blg-09-087.pdf',
+        //     'file_path'=> 'ordinances/blg-09-087.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -101,7 +101,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2019-06-03',
         //     'ordinance_category_id'=> 2,
         //     'pdf_name' => 'no.-19-251.pdf',
-        //     'file_path' => 'storage/ordinances/no.-19-251.pdf',
+        //     'file_path' => 'ordinances/no.-19-251.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -112,7 +112,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2019-04-22',
         //     'ordinance_category_id'=> 2,
         //     'pdf_name' => 'no.-19-248.pdf',
-        //     'file_path' => 'storage/ordinances/no.-19-248.pdf',
+        //     'file_path' => 'ordinances/no.-19-248.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -123,7 +123,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2019-03-13',
         //     'ordinance_category_id'=> 2,
         //     'pdf_name' => 'no.-19-246.pdf',
-        //     'file_path' => 'storage/ordinances/no.-19-246.pdf',
+        //     'file_path' => 'ordinances/no.-19-246.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -134,7 +134,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2019-03-13',
         //     'ordinance_category_id'=> 2,
         //     'pdf_name' => 'no.-19-244.pdf',
-        //     'file_path' => 'storage/ordinances/no.-19-244.pdf',
+        //     'file_path' => 'ordinances/no.-19-244.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);
@@ -145,7 +145,7 @@ class OrdinanceSeeder extends Seeder
         //     'date_approved' => '2019-03-13',
         //     'ordinance_category_id'=> 2,
         //     'pdf_name' => 'no.-19-243.pdf',
-        //     'file_path' => 'storage/ordinances/no.-19-243.pdf',
+        //     'file_path' => 'ordinances/no.-19-243.pdf',
         //     'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         //     'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
         // ]);

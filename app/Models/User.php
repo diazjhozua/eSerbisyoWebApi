@@ -54,6 +54,10 @@ class User extends Authenticatable
         return $this->belongsTo(UserRole::class);
     }
 
+    public function verification_requests(){
+        return $this->hasMany(VerificationRequest::class);
+    }
+
     public function feedbacks(){
         return $this->hasMany(Feedback::class);
     }

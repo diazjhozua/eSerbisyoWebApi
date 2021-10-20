@@ -13,7 +13,9 @@ class PositionResource extends JsonResource
 
         $data = [
             'id' => $this->id,
+            'ranking' => $this->ranking,
             'name' => $this->name,
+            'job_description' => $this->job_description,
             $this->mergeWhen(isset($this->employees_count), [
                 'employees_count' => $this->employees_count,
             ]),

@@ -14,7 +14,6 @@
     <script src="{{ asset('admin/js/demo/datatables-demo.js')}}"></script>
 
     {{-- Custom Scripts for this blade --}}
-
     <script src="{{ asset('js/admin/document-types/index.js')}}"></script>
 @endsection
 
@@ -51,9 +50,6 @@
     <button type="button" class="btn btn-primary" onclick="createType()">
         Create
     </button>
-
-
-
 
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
@@ -109,7 +105,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <p>No feedback types created</p>
+                            <p>No document types created</p>
                         @endforelse
                     </tbody>
                 </table>

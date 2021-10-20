@@ -32,7 +32,7 @@ class EmployeeController extends Controller
 
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
-        $employee = Employee::create(array_merge($request->getData()), ['picture_name' => $fileName,'file_path' => $filePath]);
+        $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $fileName,'file_path' => $filePath]));
 
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->storeSuccess('employee'));
     }

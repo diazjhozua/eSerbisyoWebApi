@@ -18,10 +18,10 @@ class AnnouncementRequest extends FormRequest
             'type_id' => ['required', Rule::exists('types', 'id')->where(function ($query) {
                 return $query->where('model_type', 'Announcement');
             })],
-            'title' => 'required|string|min:4|max:120',
-            'description' => 'required|string|min:10|max:63,206',
+            'title' => 'required|string|min:4|max:250',
+            'description' => 'required|string|min:10|max:63206',
             'picture_list' => 'array',
-            'picture_list.*.picture' => 'required|distinct|mimes:jpeg,png|max:3000',
+            'picture_list.*' => 'required|distinct|mimes:jpeg,png|max:3000',
         ];
     }
 

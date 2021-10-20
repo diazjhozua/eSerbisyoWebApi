@@ -24,7 +24,7 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => 'required|string|min:1|max:60',
+            'name' => 'required|string|min:4|max:150',
             'term_id' => 'required|integer|exists:terms,id',
             'position_id' => 'required|integer|exists:positions,id',
             'description' => 'required|string|min:4|max:250'

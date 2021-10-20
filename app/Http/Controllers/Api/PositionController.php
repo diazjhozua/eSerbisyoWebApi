@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PositionRequest;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\PositionResource;
 use App\Models\Employee;
 use App\Models\Position;
@@ -32,7 +31,7 @@ class PositionController extends Controller
         if ($id == 0) {
             $employees = Employee::with('term')->where('position_id', NULL)->orderBy('created_at', 'DESC')->get();
             $position = new Position([ 'id' => 0, 'name' => 'Others (No position ID)', 'created_at' => now(), 'updated_at' => now(),
-            'employees_count' => $employees->count(), 'others' => $employees]);
+            'employees_count' => $employees->count(), 'employees' => $employees]);
         } else {  $position = Position::with('employees.term')->withCount('employees')->findOrFail($id); }
         return (new PositionResource($position))->additional(Helper::instance()->itemFound('position'));
     }

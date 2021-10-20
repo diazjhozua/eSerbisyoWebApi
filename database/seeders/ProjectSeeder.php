@@ -15,7 +15,7 @@ class ProjectSeeder extends Seeder
         foreach(range(1,100) as $index) {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppProjects', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\projects', false);
-            $file_path = 'storage/projects/'.$pdf_name;
+            $file_path = 'projects/'.$pdf_name;
 
             $startDate = $faker->dateTimeBetween($startDate = '-2 years', $endDate = 'now', $timezone = null);
             $endDate = $faker->dateTimeBetween($startDate, $endDate = '+2 years');

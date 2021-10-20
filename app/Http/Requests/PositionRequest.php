@@ -24,16 +24,10 @@ class PositionRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => 'required|string|unique:positions|min:5|max:60',
+            'name' => 'required|string|min:6|max:200',
+            'ranking' => 'required|numeric|min:0|not_in:0',
+            'job_description' => 'required|string|min:6|max:250'
         ];
-
-        if ($this->isMethod('POST')) {
-            $rules['id'] = 'required|integer|unique:positions';
-        }
-
-        if ($this->isMethod('PUT')) {
-            $rules['id'] = 'required|integer|exists:positions,id';
-        }
 
         return $rules;
     }

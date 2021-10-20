@@ -46,7 +46,7 @@
 
     @if ($type->id != 0)
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" onclick="createProject()">
+        <button type="button" class="btn btn-primary" onclick="createDocument()">
             Create
         </button>
     @endif

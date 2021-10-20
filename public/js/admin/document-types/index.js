@@ -12,43 +12,41 @@ function createType() {
 }
 
 function editType(id) {
-    url = 'document-types/'+id+'/edit'
-    doAjax(url, 'GET').then( (response) =>
-        {
-            if (response.success) {
-                    const data = response.data;
-                    const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-                    const actionURL = '/admin/document-types/' + data.id
-                    $('#typeFormModal').modal('show') //show the modal
-                    $('#typeFormModalHeader').text('Edit Document Type') //set the header of the
-                    $('#nameLabel').text('Document Type Name') //set the text of type name in the form
-                    $('#typeForm').trigger("reset"); //reset all the values
-                    $('#typeName').val(data.name) // set the text of the input
-                    $('.btnTxt').text('Update') //set the text of the submit btn
-                    $("#formMethod").empty();
-                    $("#formMethod").append(inputMethod) // append formMethod
-                    $('#typeForm').attr('action', actionURL) //set action
-            }
+    url = 'document-types/' + id + '/edit'
+    doAjax(url, 'GET').then((response) => {
+        if (response.success) {
+            const data = response.data;
+            const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
+            const actionURL = '/admin/document-types/' + data.id
+            $('#typeFormModal').modal('show') //show the modal
+            $('#typeFormModalHeader').text('Edit Document Type') //set the header of the
+            $('#nameLabel').text('Document Type Name') //set the text of type name in the form
+            $('#typeForm').trigger("reset"); //reset all the values
+            $('#typeName').val(data.name) // set the text of the input
+            $('.btnTxt').text('Update') //set the text of the submit btn
+            $("#formMethod").empty();
+            $("#formMethod").append(inputMethod) // append formMethod
+            $('#typeForm').attr('action', actionURL) //set action
         }
+    }
     )
 }
 
 function deleteType(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/document-types/'+id)
+    $('#modalDeleteForm').attr('action', '/admin/document-types/' + id)
     $('#confirmationMessage').text('Do you really want to delete this document-type? This process cannot be undone. All of the documents related to this type would be transfer to "Others"')
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
 
-        // Set class row selected when any button was click in the selected
-	$('#dataTable').on( 'click', 'tr', function () {
-		if (!$(this).hasClass('selected')) {
+    // Set class row selected when any button was click in the selected
+    $('#dataTable').on('click', 'tr', function () {
+        if (!$(this).hasClass('selected')) {
             $('#dataTable').DataTable().$('tr.selected').removeClass('selected')
-			$(this).addClass('selected')
-		}
-	})
-
+            $(this).addClass('selected')
+        }
+    })
 
     $('#TypeNavCollapse').addClass('active')
     $('#collapseType').collapse()
@@ -65,63 +63,63 @@ $(document).ready(function() {
             },
         },
 
-        submitHandler: function(form, event) {
+        submitHandler: function (form, event) {
             event.preventDefault()
             let formAction = $("#typeForm").attr('action')
             let formMethod = $('#method').val()
-            let formData =  new FormData(form)
+            let formData = new FormData(form)
 
             $('#btnFormSubmit').attr("disabled", true); //disabled login
             $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
             $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
 
-            doAjax(formAction, 'POST', formData).then( (response) =>
-            {
+            doAjax(formAction, 'POST', formData).then((response) => {
                 if (response.success) {
                     $('#typeFormModal').modal('hide') //hide the modal
 
                     const data = response.data
 
-                    col1 = '<td>'+data.name+'</td>'
-                    col2 = '<td>'+data.documents_count+'</td>'
-                    col3 = '<td>'+data.updated_at+'</td>'
+
+                    col1 = '<td>' + data.name + '</td>'
+                    col2 = '<td>' + data.documents_count + '</td>'
+                    col3 = '<td>' + data.updated_at + '</td>'
 
                     viewBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="'+window.location.origin+'/admin/document-types/'+data.id+'"><i class="fas fa-eye"></i>'+
+                        '<li class="list-inline-item mb-1">' +
+                        '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="' + window.location.origin + '/admin/document-types/' + data.id + '"><i class="fas fa-eye"></i>' +
                         '</a></li>'
                     editBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<button class="btn btn-primary btn-sm" onclick="editType('+data.id+')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
-                                '<i class="fas fa-edit"></i>' +
-                            '</button>' +
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-primary btn-sm" onclick="editType(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
+                        '<i class="fas fa-edit"></i>' +
+                        '</button>' +
                         '</li>'
                     deleteBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<button class="btn btn-danger btn-sm" onclick="deleteType('+data.id+')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
-                                '<i class="fas fa-trash-alt"></i>' +
-                            '</button>' +
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-danger btn-sm" onclick="deleteType(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+                        '<i class="fas fa-trash-alt"></i>' +
+                        '</button>' +
                         '</li>'
 
-                    col4 = '<td><ul class="list-inline m-0">'+viewBtn+editBtn+deleteBtn+'</td></ul>'
+                    col4 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
 
                     // Get table reference - note: dataTable() not DataTable()
                     var table = $('#dataTable').DataTable();
 
-                    if(formMethod == 'POST') {
+                    if (formMethod == 'POST') {
                         var currentPage = table.page();
-                        table.row.add([col1,col2,col3,col4]).draw()
+                        table.row.add([col1, col2, col3, col4]).draw()
 
                         selectedRow = 0
                         var index = table.row(selectedRow).index(),
-                        rowCount = table.data().length-1,
-                        insertedRow = table.row(rowCount).data(),
-                        tempRow
+                            rowCount = table.data().length - 1,
+                            insertedRow = table.row(rowCount).data(),
+                            tempRow
 
-                        for (var i=rowCount; i > index; i--) {
-                            tempRow = table.row(i-1).data()
+                        for (var i = rowCount; i > index; i--) {
+                            tempRow = table.row(i - 1).data()
                             table.row(i).data(tempRow)
-                            table.row(i-1).data(insertedRow)
+                            table.row(i - 1).data(insertedRow)
                         }
 
                         //refresh the page
@@ -132,7 +130,7 @@ $(document).ready(function() {
 
 
                     } else {
-                        table.row('.selected').data([col1,col2,col3,col4]).draw(false);
+                        table.row('.selected').data([col1, col2, col3, col4]).draw(false);
                     }
                 }
 
@@ -145,11 +143,10 @@ $(document).ready(function() {
 
 
     // Delete Modal Form
-    $("#modalDeleteForm").submit(function(e) {
+    $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
         let formAction = $("#modalDeleteForm").attr('action')
-        doAjax(formAction, 'DELETE').then( (response) =>
-        {
+        doAjax(formAction, 'DELETE').then((response) => {
             if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {

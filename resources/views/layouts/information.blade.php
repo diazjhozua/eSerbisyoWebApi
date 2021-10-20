@@ -46,9 +46,6 @@
                 @include('inc.header')
 
                 <div class="container-fluid">
-                    {{-- Success or Error Message --}}
-                    @include('inc.message')
-
                     <!-- Begin Page Content -->
                     @yield('content')
                     <!-- /.container-fluid -->
@@ -117,7 +114,6 @@
     <script src="{{ asset('js/helper.js')}}"></script>
 
     @yield('page-js')
-
 </body>
 
 </html>

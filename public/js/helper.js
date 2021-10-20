@@ -14,15 +14,14 @@ toastr.options = {
     "hideEasing": "linear",
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
-  }
+}
 
 
 
-const doAjax = async function(url, method, body) {
+const doAjax = async function (url, method, body) {
     let result;
 
     try {
-
         result = await $.ajax({
             url: url,
             headers: {
@@ -31,18 +30,18 @@ const doAjax = async function(url, method, body) {
             type: method,
             data: body,
             cache: false,
-            processData:false,
+            processData: false,
             contentType: false,
         });
 
-        if (result.success){
+        if (result.success) {
             toastr.success(result.message)
         } else {
             if (result.message != null) {
                 toastr.error(result.message)
 
             } else {
-                $.each( result.errors, function(key, value) {
+                $.each(result.errors, function (key, value) {
                     toastr.error(value)
                 });
             }
@@ -70,15 +69,15 @@ jQuery.validator.addMethod('filesize', function (value, element, param) {
 }, 'File size must be less than {0}');
 
 jQuery.validator.addMethod("greaterThan",
-function(value, element, params) {
+    function (value, element, params) {
 
-    if (!/Invalid|NaN/.test(new Date(value))) {
-        return new Date(value) > new Date($(params).val());
-    }
+        if (!/Invalid|NaN/.test(new Date(value))) {
+            return new Date(value) > new Date($(params).val());
+        }
 
-    return isNaN(value) && isNaN($(params).val())
-        || (Number(value) > Number($(params).val()));
-},'Must be greater than {0}.');
+        return isNaN(value) && isNaN($(params).val())
+            || (Number(value) > Number($(params).val()));
+    }, 'Must be greater than {0}.');
 
 
 

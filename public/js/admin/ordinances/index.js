@@ -1,37 +1,35 @@
 function createOrdinance() {
     const url = 'ordinances/create'
-    doAjax(url, 'GET').then( (response) =>
-        {
-            if (response.success) {
-                    const types = response.types;
-                    $('.custom-file-label').html(''); //empty the html in the file input
-                    $('#ordinanceForm').trigger("reset") //reset all the input values
-                    $('#ordinanceTypeDropDwn').empty() //reset dropdown button
-                    $("#formMethod").empty(); //empty form method div
-                    $('#ordinanceTypeDropDwn').append($("<option selected/>").val("").text('Choose...'))
-                    $.each(types, function() {
-                        // Populate Drop Dowm
-                        $('#ordinanceTypeDropDwn').append($("<option />").val(this.id).text(this.name))
-                    })
-                    let actionURL = '/admin/ordinances/'
-                    let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
+    doAjax(url, 'GET').then((response) => {
+        if (response.success) {
+            const types = response.types;
+            $('.custom-file-label').html(''); //empty the html in the file input
+            $('#ordinanceForm').trigger("reset") //reset all the input values
+            $('#ordinanceTypeDropDwn').empty() //reset dropdown button
+            $("#formMethod").empty(); //empty form method div
+            $('#ordinanceTypeDropDwn').append($("<option selected/>").val("").text('Choose...'))
+            $.each(types, function () {
+                // Populate Drop Dowm
+                $('#ordinanceTypeDropDwn').append($("<option />").val(this.id).text(this.name))
+            })
+            let actionURL = '/admin/ordinances/'
+            let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
-                    $("#formMethod").append(inputMethod) // append formMethod div
-                    $('#ordinanceForm').attr('action', actionURL) //set the method of the form
-                    $('#ordinanceModal').modal('show')
-                    $('#ordinanceModalHeader').text('Publish Ordinance')
-                    $('.btnTxt').text('Store') //set the text of the submit btn
-            }
+            $("#formMethod").append(inputMethod) // append formMethod div
+            $('#ordinanceForm').attr('action', actionURL) //set the method of the form
+            $('#ordinanceModal').modal('show')
+            $('#ordinanceModalHeader').text('Publish Ordinance')
+            $('.btnTxt').text('Store') //set the text of the submit btn
         }
+    }
     )
 }
 
 
 function editOrdinance(id) {
 
-    url = 'ordinances/'+id+'/edit'
-    doAjax(url, 'GET').then( (response) =>
-    {
+    url = 'ordinances/' + id + '/edit'
+    doAjax(url, 'GET').then((response) => {
         if (response.success) {
             const data = response.data
             const types = response.types
@@ -44,7 +42,7 @@ function editOrdinance(id) {
             //Set form input values
 
             $('#ordinanceTypeDropDwn').append($("<option selected/>").val(data.type_id).text(data.type_id == 0 ? data.custom_type : data.ordinance_type)) //set current type_id
-            $.each(types, function() {
+            $.each(types, function () {
                 // Populate Drop Dowm
                 if (this.id != data.type_id) {
                     $('#ordinanceTypeDropDwn').append($("<option />").val(this.id).text(this.name))
@@ -56,7 +54,7 @@ function editOrdinance(id) {
             $('#date_approved').val(data.date_approved)
             $('.custom-file-label').html(data.pdf_name)
 
-            let actionURL = '/admin/ordinances/'+data.id
+            let actionURL = '/admin/ordinances/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -71,26 +69,26 @@ function editOrdinance(id) {
 
 function deleteOrdinance(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/ordinances/'+id)
+    $('#modalDeleteForm').attr('action', '/admin/ordinances/' + id)
     $('#confirmationMessage').text('Do you really want to delete this ordinance? This process cannot be undone.')
 }
 
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     $('#ordinance').addClass('active')
 
-    $('input[type="file"]').change(function(e){
+    $('input[type="file"]').change(function (e) {
         var fileName = e.target.files[0].name;
         $('.custom-file-label').html(fileName);
     });
     // Initialize Year picker in form
-    $("#date_approved").datepicker( {
+    $("#date_approved").datepicker({
         format: "yyyy-mm-dd", // Notice the Extra space at the beginning
     });
 
     // Set class row selected when any button was click in the selected
-    $('#dataTable').on( 'click', 'tr', function () {
+    $('#dataTable').on('click', 'tr', function () {
         if (!$(this).hasClass('selected')) {
             $('#dataTable').DataTable().$('tr.selected').removeClass('selected')
             $(this).addClass('selected')
@@ -120,7 +118,9 @@ $(document).ready(function() {
                 required: true,
             },
             pdf: {
-                required: $('#method').val() == 'POST' ? true: false,
+                required: function () {
+                    return $('#method').val() == 'POST'
+                },
                 extension: "pdf",
                 filesize: 10485760, //10mb in bytes
             },
@@ -137,63 +137,62 @@ $(document).ready(function() {
             },
         },
 
-        submitHandler: function(form, event) {
+        submitHandler: function (form, event) {
             event.preventDefault()
 
             let formAction = $("#ordinanceForm").attr('action')
             let formMethod = $('#method').val()
-            let formData =  new FormData(form)
+            let formData = new FormData(form)
 
             $('#btnFormSubmit').attr("disabled", true); //disabled login
             $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
             $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
 
-            doAjax(formAction, 'POST', formData).then( (response) =>
-            {
+            doAjax(formAction, 'POST', formData).then((response) => {
                 if (response.success) {
                     $('#ordinanceModal').modal('hide') //hide the modal
 
                     const data = response.data
 
-                    col1 = '<td>'+data.ordinance_no+'</td>'
-                    col2 = '<td>'+data.title+'</td>'
-                    col3 = '<td><a href="'+window.location.origin+'/admin/ordinance-types/'+data.type_id+'">'+data.ordinance_type+'</a></td>'
-                    col4 = '<td>'+data.date_approved+'</td>'
-                    col5 = '<td><a href="'+window.location.origin+'/files/ordinances/'+data.pdf_name+'">'+data.pdf_name+'</a></td>'
-                    col6 = '<td>'+data.updated_at+'</td>'
+                    col1 = '<td>' + data.ordinance_no + '</td>'
+                    col2 = '<td>' + data.title + '</td>'
+                    col3 = '<td><a href="' + window.location.origin + '/admin/ordinance-types/' + data.type_id + '">' + data.ordinance_type + '</a></td>'
+                    col4 = '<td>' + data.date_approved + '</td>'
+                    col5 = '<td><a href="' + window.location.origin + '/files/ordinances/' + data.pdf_name + '">' + data.pdf_name + '</a></td>'
+                    col6 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<button class="btn btn-primary btn-sm" onclick="editOrdinance('+data.id+')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
-                                '<i class="fas fa-edit"></i>' +
-                            '</button>' +
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-primary btn-sm" onclick="editOrdinance(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
+                        '<i class="fas fa-edit"></i>' +
+                        '</button>' +
                         '</li>'
                     deleteBtn =
-                        '<li class="list-inline-item mb-1">'+
-                            '<button class="btn btn-danger btn-sm" onclick="deleteOrdinance('+data.id+')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
-                                '<i class="fas fa-trash-alt"></i>' +
-                            '</button>' +
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-danger btn-sm" onclick="deleteOrdinance(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+                        '<i class="fas fa-trash-alt"></i>' +
+                        '</button>' +
                         '</li>'
 
-                    col7 = '<td><ul class="list-inline m-0">'+editBtn+deleteBtn+'</td></ul>'
+                    col7 = '<td><ul class="list-inline m-0">' + editBtn + deleteBtn + '</td></ul>'
 
                     // Get table reference - note: dataTable() not DataTable()
                     var table = $('#dataTable').DataTable();
 
-                    if(formMethod == 'POST') {
+                    if (formMethod == 'POST') {
                         var currentPage = table.page();
-                        table.row.add([col1,col2,col3,col4,col5,col6, col7]).draw()
+                        table.row.add([col1, col2, col3, col4, col5, col6, col7]).draw()
 
                         selectedRow = 0
                         var index = table.row(selectedRow).index(),
-                        rowCount = table.data().length-1,
-                        insertedRow = table.row(rowCount).data(),
-                        tempRow
+                            rowCount = table.data().length - 1,
+                            insertedRow = table.row(rowCount).data(),
+                            tempRow
 
-                        for (var i=rowCount; i > index; i--) {
-                            tempRow = table.row(i-1).data()
+                        for (var i = rowCount; i > index; i--) {
+                            tempRow = table.row(i - 1).data()
                             table.row(i).data(tempRow)
-                            table.row(i-1).data(insertedRow)
+                            table.row(i - 1).data(insertedRow)
                         }
 
                         //refresh the page
@@ -203,7 +202,7 @@ $(document).ready(function() {
                         $("#ordinancesCount").text(parseInt($("#ordinancesCount").text()) + 1);
 
                     } else {
-                        table.row('.selected').data([col1,col2,col3,col4,col5,col6,col7]).draw(false);
+                        table.row('.selected').data([col1, col2, col3, col4, col5, col6, col7]).draw(false);
                     }
                 }
 
@@ -215,11 +214,10 @@ $(document).ready(function() {
     });
 
     // Delete Modal Form
-    $("#modalDeleteForm").submit(function(e) {
+    $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
         let formAction = $("#modalDeleteForm").attr('action')
-        doAjax(formAction, 'DELETE').then( (response) =>
-        {
+        doAjax(formAction, 'DELETE').then((response) => {
             if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {

@@ -32,6 +32,9 @@ class AnnouncementResource extends JsonResource
             'announcement_pictures' => AnnouncementPictureResource::collection($announcement_pictures),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
+            $this->mergeWhen(isset($this->announcement_pictures_count), [
+                'announcement_pictures_count' => $this->announcement_pictures_count,
+            ]),
             $this->mergeWhen(isset($this->comments_count), [
                 'comments_count' => $this->comments_count,
             ]),
