@@ -31,12 +31,12 @@ class AnnouncementTypeController extends Controller
     public function show($id)
     {
         if ($id == 0) {
-            $announcements = Announcement::where('type_id', NULL)->orderBy('created_at', 'DESC')->get();
+            $announcements = Announcement::with('type')->withCount('comments', 'likes', 'announcement_pictures')->orderBy('created_at', 'DESC')->get();
             $type = (new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
             'announcements_count' => $announcements->count(), 'others' => $announcements ]));
         } else {
             $type = Type::with(['announcements' => function($query) {
-                $query->with('announcement_pictures')->withCount('comments');
+                $query->withCount('comments', 'likes', 'announcement_pictures');
             }])->where('model_type', 'Announcement')->withCount('announcements')->findOrFail($id); }
 
         return view('admin.announcement-types.show')->with('type', $type);

@@ -284,7 +284,13 @@ $(document).ready(function () {
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
         let formAction = $("#modalDeleteForm").attr('action')
+
+        $('#btnDelete').attr("disabled", true); //disabled button
+        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+
         doAjax(formAction, 'DELETE').then((response) => {
+
             if (response.success) {
                 if (isDeletingAnnouncement) {
                     window.setTimeout(function () {
@@ -299,6 +305,10 @@ $(document).ready(function () {
                     $("#announcementPicturesCount").text(parseInt($("#announcementPicturesCount").text()) - 1);
                 }
             }
+
+            $('#btnDelete').attr("disabled", false); //enable button
+            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
         })
         $('#confirmationDeleteModal').modal('hide') //hide
         $('#modalDeleteForm').trigger("reset"); //reset all the values

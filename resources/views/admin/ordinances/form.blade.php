@@ -13,6 +13,8 @@
 
                 <div id="formMethod"></div>
 
+                <input type="hidden" id="changeStatusMethod" name="_method" value="PUT">
+
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="ordinance_no" class="form-label">Ordinance No.</label>

@@ -17,26 +17,27 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'picture_name',
+        'file_path',
+        'address',
+        'created_at',
+        'updated_at',
+        'status',
+        'admin_status_message',
+        'is_verified',
+        'user_role_id',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -54,8 +55,8 @@ class User extends Authenticatable
         return $this->belongsTo(UserRole::class);
     }
 
-    public function verification_requests(){
-        return $this->hasMany(VerificationRequest::class);
+    public function latest_user_verification(){
+        return $this->hasOne(UserVerification::class)->latestOfMany();
     }
 
     public function feedbacks(){

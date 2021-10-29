@@ -194,7 +194,11 @@
                                     @forelse ($announcement->likes as $like)
                                         <tr>
                                             <td>
-                                                <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%" src="{{ asset('storage/'.$like->user->file_path) }}" class="rounded" alt="{{$picture->picture_name}} image">
+                                                <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
+                                                src="{{ isset($like->user->file_path) ? asset('storage/'.$like->user->file_path)
+                                                :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}"
+                                                class="rounded" alt="{{$like->user->getFullNameAttribute()}} image">
+
                                             </td>
 
                                             <td>{{$like->user->getFullNameAttribute()}}</td>
@@ -255,7 +259,8 @@
                                     @forelse ($announcement->comments as $comment)
                                         <tr>
                                             <td>
-                                                <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%" src="{{ asset('storage/'.$comment->user->file_path) }}" class="rounded" alt="{{$picture->picture_name}} image">
+                                                 <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
+                                                src="{{ isset($comment->user->file_path) ? asset('storage/'.$comment->user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$comment->user->getFullNameAttribute()}} image">
                                             </td>
 
                                             <td>{{$comment->user->getFullNameAttribute()}}</td>

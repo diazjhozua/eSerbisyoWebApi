@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,7 @@ class UserSeeder extends Seeder
                     'first_name' =>  $faker->firstName,
                     'middle_name' => $faker->lastName,
                     'last_name' => $faker->lastName,
-                    'email' => $position[$positionNum].$index.'gmail.com',
+                    'email' => $position[$positionNum].$index.'@gmail.com',
                     'password' => Hash::make('12341234'),
                     'picture_name' => $picture_name,
                     'file_path' => $file_path,
@@ -121,7 +122,7 @@ class UserSeeder extends Seeder
 	        DB::table('users')->insert([
                 'first_name' =>  $firstName[$randomNum],
                 'middle_name' => $faker->lastName,
-                'last_name' => $lastName[$randomNum],
+                'last_name' => $faker->lastName,
                 'email' => strtolower($faker->lastName.rand(1,100)).'@gmail.com',
                 'password' => Hash::make('12341234'),
                 'picture_name' => $picture_name,
@@ -136,19 +137,46 @@ class UserSeeder extends Seeder
 	        ]);
         }
 
-        foreach (range(20,30) as $userID)
-        {
+        $unverifiedUsers = User::where('is_verified', 0)->get();
+        foreach ($unverifiedUsers as $user) {
             $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\credentials', false);
             $credentials_file_path = 'credentials/'.$credentials_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
-	        DB::table('verification_requests')->insert([
-                'user_id' =>  $userID,
+	        DB::table('user_verifications')->insert([
+                'user_id' =>  $user->id,
                 'credential_name' => $credentials_name,
                 'credential_file_path' => $credentials_file_path,
+                'admin_message' => '',
+                'status' => 'Pending',
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
 	        ]);
+        }
+
+        $users = [];
+        foreach (range(1,500) as $index)
+        {
+            $timestamp = $faker->dateTimeBetween($startDate = '-3 years', $endDate = 'now', $timezone = null);
+	        $users[] = [
+                'first_name' =>  $faker->firstName($gender = null),
+                'middle_name' => $faker->lastName,
+                'last_name' => $faker->lastName,
+                'email' => $faker->lastName.$faker->email,
+                'password' => Hash::make('12341234'),
+                'purok_id' => $faker->numberBetween(1,5),
+                'address' => $faker->address,
+                'is_verified' => false,
+                'status' => 'Enable',
+                'user_role_id' => 9,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+	        ];
+        }
+
+        $chunks = array_chunk($users, 40);
+        foreach ($chunks as $chunk) {
+            User::insert($chunk);
         }
     }
 }

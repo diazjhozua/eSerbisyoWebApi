@@ -11,11 +11,8 @@
 </svg>
 
 @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mt-3" role="alert">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-        <div class="ml-3">
-            {{ $message }}
-        </div>
+    <div class="alert alert-success alert-dismissible fade show" style="font-size: 10px" role="alert">
+        {{ $message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -23,19 +20,9 @@
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-        <hr>
+    <div class="alert alert-danger alert-dismissible fade show" style="font-size: 10px" role="alert">
         @foreach ($errors->all() as $error)
-            <div class="d-flex align-items-center mb-1">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                <div class="ml-3">
-                    {{ $error }}
-                </div>
-            </div>
-            <hr>
+         {{ $error }}
         @endforeach
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
     </div>
 @endif

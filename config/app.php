@@ -176,8 +176,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
 
-        App\Providers\FortifyServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
+        // App\Providers\FortifyServiceProvider::class,
     ],
 
     /*
@@ -231,8 +232,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Helper' => App\Helper\Helper::class,
 
-        'Helper' => App\Helper\Helper::class
 
     ],
 
