@@ -1,12 +1,126 @@
 @extends('layouts.information')
 
 @section('page-js')
-    <!-- Page level plugins -->
-    <script src="{{ asset('admin/vendor/chart.js/Chart.min.js')}}"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="{{ asset('admin/js/demo/chart-area-demo.js')}}"></script>
-    <script src="{{ asset('admin/js/demo/chart-pie-demo.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        $('#dashboard').addClass('active')
+
+        var userRegistrationCanvas = document.getElementById('userRegistrationChart');
+        var userRegistrationChart = new Chart(userRegistrationCanvas, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [{
+                    label: 'Average User Registration',
+                    data: [{{ $userChart[1]}}, {{ $userChart[2]}}, {{ $userChart[3]}},
+                        {{ $userChart[4]}}, {{ $userChart[5]}}, {{ $userChart[6]}},
+                        {{ $userChart[7]}}, {{ $userChart[8]}}, {{ $userChart[9]}},
+                        {{ $userChart[10]}}, {{ $userChart[11]}}, {{ $userChart[12]}}],
+                    borderColor: '#0275d8',
+                    backgroundColor: '#0275d8',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var feedbackCanvas = document.getElementById('feedbackChart');
+        var feedbackChart = new Chart(feedbackCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Positive {{ $feedbacksData->this_month_positive_count.'%'}}' ,
+                    'Neutral {{ $feedbacksData->this_month_neutral_count.'%'}}' ,
+                    'Negative {{ $feedbacksData->this_month_negative_count.'%'}}' ,
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [{{ $feedbacksData->this_month_positive_count }}, {{ $feedbacksData->this_month_neutral_count }}, {{ $feedbacksData->this_month_negative_count }}],
+                    backgroundColor: [
+                    '#5cb85c',
+                    '#5bc0de',
+                    '#d9534f'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    }
+                },
+            }
+        });
+
+        var projectCanvas = document.getElementById('projectChart');
+        var projectChart = new Chart(projectCanvas, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [{
+                    label: 'Projects Implemented',
+                    data: [{{ $projectChart[1]}}, {{ $projectChart[2]}}, {{ $projectChart[3]}},
+                                    {{ $projectChart[4]}}, {{ $projectChart[5]}}, {{ $projectChart[6]}},
+                                    {{ $projectChart[7]}}, {{ $projectChart[8]}}, {{ $projectChart[9]}},
+                                    {{ $projectChart[10]}}, {{ $projectChart[11]}}, {{ $projectChart[12]}}],
+                    borderColor: '#0275d8',
+                    backgroundColor: '#0275d8',
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    xAxes: [{
+                        barPercentage: 100
+                    }]
+
+                }
+            }
+        });
+
+
+    </script>
+
+@endsection
+
+@section('page-css')
+
+    <style>
+        .graph{
+            position: relative;
+            height: 100%;
+            width: 100% !important;
+            }
+
+        canvas {
+            width: 100% !important;
+        }
+    </style>
+
 @endsection
 
 {{-- Title Page --}}
@@ -26,83 +140,77 @@
 
     <!-- Content Row -->
     <div class="row">
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Registered User (This month) Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Earnings (Monthly)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                <a href="{{ route('admin.users.index') }}">Registered User (This month)</a>
+                                </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $usersData->this_month_count }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <i class="fas fa-calendar fa-2x text-black-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Information Staff Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Earnings (Annual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                <a href="{{ route('admin.staffs.adminStaff') }}">Information Staff</a>
+                                </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $usersData->information_staff_count }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            <i class="fas fa-user-shield fa-2x text-black-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+
+        <!-- Blocked User Card -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
+            <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-                            </div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                <a href="{{ route('admin.users.index') }}">Restricted User (Blocked)</a>
                                 </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                        <div class="progress-bar bg-info" role="progressbar"
-                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                            aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $usersData->blocked_user_count }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <i class="fas fa-user-slash fa-2x text-black-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Pending Requests Card Example -->
+        <!-- Verification Requests Card -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Pending Requests</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                <a href="{{ route('admin.users.index') }}">Verification Requests</a>
+                                </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $verificationCount }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                            <i class="far fa-id-card fa-2x text-black-300"></i>
                         </div>
                     </div>
                 </div>
@@ -111,35 +219,19 @@
     </div>
 
     <!-- Content Row -->
-
     <div class="row">
-
-        <!-- Area Chart -->
+        <!-- Line Chart -->
         <div class="col-xl-8 col-lg-7">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
+                    <h6 class="m-0 font-weight-bold text-primary">User Registration Overview</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
+                    <div class="chart-area graph">
+                        <canvas id="userRegistrationChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -151,37 +243,12 @@
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                            aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
+                    <h6 class="m-0 font-weight-bold text-primary"><a href="{{ route('admin.feedbacks.index') }}">Feedbacks Summary (This month)</a> </h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
-                    </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-primary"></i> Direct
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-success"></i> Social
-                        </span>
-                        <span class="mr-2">
-                            <i class="fas fa-circle text-info"></i> Referral
-                        </span>
+                    <div class="graph">
+                        <canvas id="feedbackChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -192,156 +259,87 @@
     <div class="row">
 
         <!-- Content Column -->
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-8 mb-4">
 
-            <!-- Project Card Example -->
+            <!-- Project Chart Card Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><a href="{{ route('admin.projects.index') }}">Projects Implemented within this year</a></h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small font-weight-bold">Server Migration <span
-                            class="float-right">20%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Sales Tracking <span
-                            class="float-right">40%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Customer Database <span
-                            class="float-right">60%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Payout Details <span
-                            class="float-right">80%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Account Setup <span
-                            class="float-right">Complete!</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="graph">
+                        <canvas id="projectChart"></canvas>
                     </div>
                 </div>
             </div>
-
-            <!-- Color System -->
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-primary text-white shadow">
-                        <div class="card-body">
-                            Primary
-                            <div class="text-white-50 small">#4e73df</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-success text-white shadow">
-                        <div class="card-body">
-                            Success
-                            <div class="text-white-50 small">#1cc88a</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-info text-white shadow">
-                        <div class="card-body">
-                            Info
-                            <div class="text-white-50 small">#36b9cc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-warning text-white shadow">
-                        <div class="card-body">
-                            Warning
-                            <div class="text-white-50 small">#f6c23e</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-danger text-white shadow">
-                        <div class="card-body">
-                            Danger
-                            <div class="text-white-50 small">#e74a3b</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-secondary text-white shadow">
-                        <div class="card-body">
-                            Secondary
-                            <div class="text-white-50 small">#858796</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-light text-black shadow">
-                        <div class="card-body">
-                            Light
-                            <div class="text-black-50 small">#f8f9fc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-dark text-white shadow">
-                        <div class="card-body">
-                            Dark
-                            <div class="text-white-50 small">#5a5c69</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-4 mb-4">
 
             <!-- Illustrations -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Illustrations (This month)</h6>
                 </div>
                 <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                            src="img/undraw_posting_photo.svg" alt="...">
+
+                    {{-- Feedbacks Recieved --}}
+                     <div class="card border-left-primary shadow h-100 py-2 mb-3">
+
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> <a href="{{ route('admin.feedbacks.index') }}"> Feedbacks Recieved </a>
+                                       </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->this_month_total_feedbacks }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="far fa-comment-alt fa-2x text-black-300"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                        constantly updated collection of beautiful svg images that you can use
-                        completely free and without attribution!</p>
-                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                        unDraw &rarr;</a>
+
+                    {{-- Announcement Posted --}}
+                     <div class="card border-left-primary shadow h-100 py-2 mb-3">
+
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        <a href="{{ route('admin.announcements.index') }}">Announcement Posted</a>
+                                      </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $announcementCount }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-bullhorn fa-2x text-black-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Project Posted --}}
+                     <div class="card border-left-primary shadow h-100 py-2 mb-3">
+
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        <a href="{{ route('admin.projects.index') }}"> Project Posted </a>
+                                       </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $thisMonthProjectCount }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-hard-hat fa-2x text-black-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Approach -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                </div>
-                <div class="card-body">
-                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                        custom components and custom utility classes.</p>
-                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                        Bootstrap framework, especially the utility classes.</p>
-                </div>
-            </div>
-
         </div>
     </div>
 
 </div>
-<!-- /.container-fluid -->
 @endsection
 

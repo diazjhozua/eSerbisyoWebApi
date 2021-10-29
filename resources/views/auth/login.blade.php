@@ -1,8 +1,11 @@
 @extends('auth.layouts.app')
 
+@section('css')
 
+@endsection
 @section('content')
 <div class="container">
+
 
     <!-- Outer Row -->
     <div class="row justify-content-center">
@@ -13,38 +16,25 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                        <div class="col-lg-6">
-                            <div class="p-5">
+                        <div class="col-lg-5 d-none d-lg-block p-4">
+                            <img src="https://scontent.fmnl4-1.fna.fbcdn.net/v/t39.30808-6/243218478_227203076120895_4263312640655818418_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeF05x8f7ZdOqwMG5rn5YOiyKqWVRP972EIqpZVE_3vYQgxTjMB9IGW_Cn42cLIX79w_TLKbJI-rIZP014EWcP7S&_nc_ohc=r3J2oUW6fnYAX8NcsIJ&_nc_ht=scontent.fmnl4-1.fna&oh=be06cb32935c05169559cfd19d0e8f84&oe=617EE865"
+                                class="img-fluid mx-auto">
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="p-4">
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
-                                <form class="user" method="post" action="{{ route('login') }}">
+                                @include('inc.message')
+
+                                <form class="user" method="post" action="{{ route('login.authenticate') }}">
                                     @csrf
                                     <div class="form-group">
-                                        @error('email')
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                        @enderror
-
                                         <input type="email" class="form-control form-control-user" name="email"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
+                                                id="exampleInputEmail"
                                                 placeholder="Enter Email Address...">
                                     </div>
                                     <div class="form-group">
-                                        @error('password')
-                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                        @enderror
-
                                         <input type="password" name="password" class="form-control form-control-user"
                                                 id="exampleInputPassword" placeholder="Password">
                                     </div>
@@ -57,13 +47,18 @@
                                     </div>
                                     <button class="btn btn-primary btn-block" type="submit">Log In</button>
                                     <hr>
+
+                                    <div class="alert alert-info m-0" style="font-size: 10px" role="alert">
+                                        Note: This is for admin login only. If you are a resident or biker, please download the android application
+                                        to access the system.
+                                    </div>
                                 </form>
                                 <hr>
                                 <div class="text-center">
-                                    <a class="small" href="{{ route('password.request')}}">Forgot Password?</a>
+                                    {{-- <a class="small" href="{{ route('password.request')}}">Forgot Password?</a> --}}
                                 </div>
                                 <div class="text-center">
-                                    <a class="small" href="{{ route('register') }}">Create an Account!</a>
+                                    {{-- <a class="small" href="{{ route('register') }}">Create an Account!</a> --}}
                                 </div>
                             </div>
                         </div>

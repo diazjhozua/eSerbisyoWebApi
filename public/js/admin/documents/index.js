@@ -157,7 +157,7 @@ $(document).ready(function () {
                     col1 = '<td>' + data.description + '</td>'
                     col2 = '<td><a href="' + window.location.origin + '/admin/document-types/' + data.type_id + '">' + data.document_type + '</a></td>'
                     col3 = '<td>' + data.year + '</td>'
-                    col4 = '<td><a href="' + window.location.origin + '/files/documents/' + data.pdf_name + '">' + data.pdf_name + '</a></td>'
+                    col4 = '<td><a href="' + window.location.origin + '/admin/files/documents/' + data.pdf_name + '">' + data.pdf_name + '</a></td>'
                     col5 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =
@@ -216,6 +216,11 @@ $(document).ready(function () {
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
         let formAction = $("#modalDeleteForm").attr('action')
+
+        $('#btnDelete').attr("disabled", true); //disabled button
+        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+
         doAjax(formAction, 'DELETE').then((response) => {
             if (response.success) {
                 var table = $('#dataTable').DataTable();
@@ -225,6 +230,10 @@ $(document).ready(function () {
 
                 $("#documentsCount").text(parseInt($("#documentsCount").text()) - 1);
             }
+
+            $('#btnDelete').attr("disabled", false); //enable button
+            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
         })
         $('#confirmationDeleteModal').modal('hide') //hide
         $('#modalDeleteForm').trigger("reset"); //reset all the values

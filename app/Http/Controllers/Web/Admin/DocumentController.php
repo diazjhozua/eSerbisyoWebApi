@@ -17,7 +17,7 @@ class DocumentController extends Controller
     public function index()
     {
         $firstDayYear = date('Y-m-d', strtotime('first day of january this year'));
-        $lastDateYear = date('Y-m-d', strtotime('first day of december this year'));
+        $lastDateYear = date('Y-m-d', strtotime('last day of december this year'));
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 

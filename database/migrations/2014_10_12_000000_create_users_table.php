@@ -25,10 +25,10 @@ class CreateUsersTable extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('barangay_id')->unique()->nullable();
-            $table->unsignedBigInteger('purok_id')->nullable()->constrained('puroks')->onDelete('set null');
+            $table->foreignId('purok_id')->nullable()->constrained('puroks')->onDelete('set null');
             $table->string('address');
-            $table->string('picture_name');
-            $table->string('file_path');
+            $table->string('picture_name')->nullable();
+            $table->string('file_path')->nullable();
 
             // User Status
             $table->boolean('is_verified')->nullable();
@@ -36,7 +36,7 @@ class CreateUsersTable extends Migration
             $table->string('admin_status_message')->nullable();
 
             // User Previledge
-            $table->unsignedBigInteger('user_role_id')->on('user_roles')->onDelete('set null');;
+            $table->foreignId('user_role_id')->on('user_roles')->onDelete('set null');;
 
             $table->rememberToken();
             $table->timestamps();

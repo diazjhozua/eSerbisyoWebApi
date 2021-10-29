@@ -100,7 +100,10 @@
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button id="btnDelete" type="submit" value="" class="btn btn-danger" >Delete</button>
+                    <button id="btnDelete" type="submit" value="" class="btn btn-danger" >
+                        <i class="btnDeleteLoadingIcon fa fa-spinner fa-spin" hidden></i>
+                        <span class="btnDeleteTxt">Delete</span>
+                    </button>
                 </div>
             </form>
 		</div>
