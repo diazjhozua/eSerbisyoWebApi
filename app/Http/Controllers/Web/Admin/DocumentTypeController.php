@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DocumentTypeRequest;
+use App\Http\Requests\Report\DocumentReportRequest;
+use App\Http\Requests\Report\TypeReportRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Document;
 use App\Models\Type;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 class DocumentTypeController extends Controller
 {
@@ -17,7 +21,7 @@ class DocumentTypeController extends Controller
         $types->add(new Type([ 'id' => 0, 'name' => 'Others (Document w/o document type)', 'model_type' => 'Document', 'created_at' => now(), 'updated_at' => now(),
             'documents_count' => Document::where('type_id', NULL)->count() ]));
 
-        return view('admin.document-types.index')->with('types', $types);
+        return view('admin.information.document-types.index')->with('types', $types);
     }
 
     public function store(DocumentTypeRequest $request)
@@ -35,7 +39,7 @@ class DocumentTypeController extends Controller
             'documents_count' => $documents->count(), 'documents' => $documents ]));
         } else {  $type = Type::with('documents')->where('model_type', 'Document')->withCount('documents')->findOrFail($id); }
 
-        return view('admin.document-types.show')->with('type', $type);
+        return view('admin.information.document-types.show')->with('type', $type);
     }
 
     public function edit($id)
@@ -61,4 +65,48 @@ class DocumentTypeController extends Controller
         $type->delete();
         return response()->json(Helper::instance()->destroySuccess('document_type'));
     }
+
+    public function report(TypeReportRequest $request) {
+        $types = Type::withCount('documents as count')
+            ->where('model_type', 'Document')->orderBy('created_at','DESC')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($types->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Document w/o document type)', 'model_type' => 'Document', 'created_at' => now(), 'updated_at' => now(),
+            'count' => Document::where('type_id', NULL)->count() ]));
+
+        $title = 'Document Type Publish Report';
+        $modelName = 'Document';
+
+        $pdf = PDF::loadView('admin.information.reports.type', compact('types', 'request', 'title', 'modelName'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
+
+    public function reportShow(DocumentReportRequest $request, $typeID) {
+        $documents = Document::with('type')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->where(function($query) use ($typeID) {
+                if ($typeID == 0) {
+                    return $query->where('type_id', NULL);
+                }else {
+                    return $query->where('type_id', $typeID);
+                }
+            })
+            ->get();
+
+        if ($documents->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+
+    }
+
 }

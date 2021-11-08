@@ -17,7 +17,7 @@ class PositionController extends Controller
         $positions->add(new Position([ 'id' => 0, 'name' => 'Officials with no specified position', 'created_at' => now(), 'updated_at' => now(),
             'employees_count' => Employee::where('position_id', NULL)->count() ]));
 
-        return view('admin.positions.index')->with('positions', $positions);
+        return view('admin.information.positions.index')->with('positions', $positions);
     }
 
     public function store(PositionRequest $request)
@@ -30,11 +30,17 @@ class PositionController extends Controller
     public function show($id)
     {
         if ($id == 0) {
-            $employees = Employee::with('term')->where('position_id', NULL)->orderBy('created_at', 'DESC')->get();
+            $employees = Employee::with('term')->select('employees.*')
+            ->join('terms', 'terms.id', '=', 'employees.term_id')
+            ->orderBy('terms.year_end', 'DESC')
+            ->where('position_id', NULL)->orderBy('created_at', 'DESC')->get();
             $position = new Position([ 'id' => 0, 'name' => 'Officials with no specified position', 'created_at' => now(), 'updated_at' => now(),
             'employees_count' => $employees->count(), 'employees' => $employees]);
-        } else {  $position = Position::with('employees.term')->withCount('employees')->findOrFail($id); }
-        return view('admin.positions.show')->with('position', $position);
+
+        } else {
+            $position = Position::with('employees.term')->withCount('employees')->findOrFail($id);
+        }
+        return view('admin.information.positions.show')->with('position', $position);
     }
 
     public function edit($id)

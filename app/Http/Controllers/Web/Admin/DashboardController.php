@@ -87,12 +87,13 @@ class DashboardController extends Controller
             ->whereRaw("created_at >= '". date('Y-m-d',strtotime('first day of this month')) ."' AND created_at <='".date('Y-m-d',strtotime('last day of this month'))."'")
             ->first();
 
-        $feedbacksData->this_month_positive_count = round(($feedbacksData->this_month_positive_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
-        $feedbacksData->this_month_neutral_count = round(($feedbacksData->this_month_neutral_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
-        $feedbacksData->this_month_negative_count = round(($feedbacksData->this_month_negative_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
+        $feedbacksData->this_month_positive_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 : round(($feedbacksData->this_month_positive_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
+        $feedbacksData->this_month_neutral_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_month_neutral_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
+        $feedbacksData->this_month_negative_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_month_negative_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
 
-        return view('dashboards.information', compact('userChart', 'projectChart', 'usersData', 'feedbacksData', 'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
+        return view('admin.dashboards.information', compact('userChart', 'projectChart', 'usersData', 'feedbacksData', 'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
     }
+
     public function index() {
         return $this->informationAdmin();
     }

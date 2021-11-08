@@ -9,6 +9,7 @@ use App\Http\Resources\FeedbackResource;
 use App\Http\Resources\FeedbackTypeResource;
 use App\Models\Feedback;
 use App\Models\Type;
+use App\Models\User;
 
 class FeedbackController extends Controller
 {
@@ -26,7 +27,7 @@ class FeedbackController extends Controller
 
     public function store(FeedbackRequest $request)
     {
-        $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => 2]));
+        $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => 546]));
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->storeSuccess('feedback'));
     }
 

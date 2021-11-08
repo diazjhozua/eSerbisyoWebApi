@@ -45,7 +45,6 @@ const doAjax = async function (url, method, body) {
                     toastr.error(value)
                 });
             }
-
         }
         return result;
     } catch (error) {
@@ -68,6 +67,11 @@ jQuery.validator.addMethod('filesize', function (value, element, param) {
     return this.optional(element) || (element.files[0].size <= param)
 }, 'File size must be less than {0}');
 
+$.validator.methods.email = function (value, element) {
+    return this.optional(element) || /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(value);
+}
+
+
 jQuery.validator.addMethod("greaterThan",
     function (value, element, params) {
 
@@ -78,7 +82,6 @@ jQuery.validator.addMethod("greaterThan",
         return isNaN(value) && isNaN($(params).val())
             || (Number(value) > Number($(params).val()));
     }, 'Must be greater than {0}.');
-
 
 
 

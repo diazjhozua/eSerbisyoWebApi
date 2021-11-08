@@ -17,7 +17,7 @@ class TermController extends Controller
         $terms->add(new Term([ 'id' => 0, 'name' => 'Officials with no specified term', 'year_start' => 0, 'year_end' => 0, 'created_at' => now(), 'updated_at' => now(),
             'employees_count' => Employee::where('term_id', NULL)->count() ]));
 
-        return view('admin.terms.index')->with('terms', $terms);
+        return view('admin.information.terms.index')->with('terms', $terms);
     }
 
     public function store(TermRequest $request)
@@ -30,12 +30,17 @@ class TermController extends Controller
     public function show($id)
     {
         if ($id == 0) {
-            $employees = Employee::with('position')->where('term_id', NULL)->orderBy('created_at', 'DESC')->get();
+            $employees = Employee::with(['position'])->select('employees.*')
+            ->join('positions', 'positions.id', '=', 'employees.position_id')
+            ->orderBy('positions.ranking')
+            ->where('term_id', NULL)
+            ->get();
+
             $term = new Term([ 'id' => 0, 'name' => 'Officials with no specified term', 'year_start' => 0, 'year_end' => 0, 'created_at' => now(), 'updated_at' => now(),
             'employees_count' => $employees->count(), 'employees' => $employees]);
-        } else {  $term = Term::with('employees.position')->withCount('employees')->findOrFail($id); }
+        } else {  $term = Term::with(['employees.position'])->withCount('employees')->findOrFail($id); }
 
-        return view('admin.terms.show')->with('term', $term);
+        return view('admin.information.terms.show')->with('term', $term);
     }
 
     public function edit($id)
@@ -57,7 +62,7 @@ class TermController extends Controller
     {
         if ($id == 0) { return response()->json(Helper::instance()->noDeleteAccess()); }
         $term = Term::findOrFail($id);
-        Employee::where('term_id', $term->id)->update(['term_id' => NULL, 'custom_term' => 'deleted type: '.$term->name]);
+        Employee::where('term_id', $term->id)->update(['term_id' => NULL, 'custom_term' => 'deleted type: '.$term->name.'('.$term->year_start.'-'.$term->year_end.')']);
         $term->delete();
         return response()->json(Helper::instance()->destroySuccess('term'));
     }

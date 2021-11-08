@@ -18,7 +18,7 @@ class AnnouncementTypeController extends Controller
         $types->add(new Type([ 'id' => 0, 'name' => 'Others (Announcement with deleted types)   ', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
             'announcements_count' => Announcement::where('type_id', NULL)->count() ]));
 
-        return view('admin.announcement-types.index')->with('types', $types);
+        return view('admin.information.announcement-types.index')->with('types', $types);
     }
 
     public function store(AnnouncementTypeRequest $request)
@@ -39,7 +39,7 @@ class AnnouncementTypeController extends Controller
                 $query->withCount('comments', 'likes', 'announcement_pictures');
             }])->where('model_type', 'Announcement')->withCount('announcements')->findOrFail($id); }
 
-        return view('admin.announcement-types.show')->with('type', $type);
+        return view('admin.information.announcement-types.show')->with('type', $type);
     }
 
     public function edit($id)

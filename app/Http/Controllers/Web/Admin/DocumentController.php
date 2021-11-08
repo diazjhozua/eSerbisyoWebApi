@@ -5,10 +5,13 @@ namespace App\Http\Controllers\WEb\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DocumentRequest;
+use App\Http\Requests\Report\DocumentReportRequest;
 use App\Http\Resources\DocumentResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Document;
 use App\Models\Type;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,7 +31,7 @@ class DocumentController extends Controller
         ->first();
 
         $documents = Document::with('type')->orderBy('created_at','DESC')->get();
-        return view('admin.documents.index', compact('documentsData', 'documents'));
+        return view('admin.information.documents.index', compact('documentsData', 'documents'));
     }
 
     public function create()
@@ -67,6 +70,20 @@ class DocumentController extends Controller
         Storage::delete('public/documents/'. $document->pdf_name);
         $document->delete();
         return response()->json(Helper::instance()->destroySuccess('document'));
+    }
+
+    public function report(DocumentReportRequest $request) {
+        $documents = Document::with('type')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($documents->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 
 }

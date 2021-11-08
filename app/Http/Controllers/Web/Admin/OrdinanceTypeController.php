@@ -17,7 +17,7 @@ class OrdinanceTypeController extends Controller
         $types->add(new Type([ 'id' => 0, 'name' => 'Others (Ordinance w/o ordinance type)', 'model_type' => 'Ordinance', 'created_at' => now(), 'updated_at' => now(),
             'ordinances_count' => Ordinance::where('type_id', NULL)->count() ]));
 
-        return view('admin.ordinance-types.index')->with('types', $types);
+        return view('admin.information.ordinance-types.index')->with('types', $types);
     }
 
     public function store(OrdinanceTypeRequest $request)
@@ -35,7 +35,7 @@ class OrdinanceTypeController extends Controller
             'ordinances_count' => $ordinances->count(), 'ordinances' => $ordinances ]));
         } else {  $type = Type::with('ordinances')->where('model_type', 'Ordinance')->withCount('ordinances')->findOrFail($id); }
 
-        return view('admin.ordinance-types.show')->with('type', $type);
+        return view('admin.information.ordinance-types.show')->with('type', $type);
     }
 
     public function edit($id)

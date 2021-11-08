@@ -31,7 +31,7 @@ class EmployeeController extends Controller
         ->first();
 
         $employees = Employee::with('position', 'term')->orderBy('created_at','DESC')->get();
-        return view('admin.employees.index', compact('employeesData', 'employees'));
+        return view('admin.information.employees.index', compact('employeesData', 'employees'));
     }
 
     public function create()
