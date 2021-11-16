@@ -13,6 +13,7 @@ class MissingPersonResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'submitted_by' => $this->user->getFullNameAttribute(),
             'report_type' => $this->report_type.' Report',
             'missing_name' => $this->name,

@@ -31,6 +31,7 @@ class CreateMissingPersonsTable extends Migration
             $table->string('picture_name');
             $table->string('file_path');
             $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
+            $table->string('admin_message')->nullable();
             $table->enum('report_type', ['Missing', 'Found']);
             $table->timestamps();
         });

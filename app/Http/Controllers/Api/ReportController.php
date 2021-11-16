@@ -36,8 +36,8 @@ class ReportController extends Controller
             $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => 2,'picture_name' => $fileName,'file_path' => $filePath]));
         } else { $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => 2])); }
 
-        event(new ReportNotification('This is our first broadcast message'));
-        event(new ReportEvent($report));
+        // event(new ReportNotification('This is our first broadcast message'));
+        event(new ReportEvent($report->load('type')));
 
         return (new ReportResource($report->load('type')))->additional(Helper::instance()->storeSuccess('report'));
     }

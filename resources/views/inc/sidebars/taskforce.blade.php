@@ -96,7 +96,7 @@
 
     <!-- Document Nav Item - Tables -->
     <li id="missingPerson" class="nav-item">
-        <a class="nav-link" href="{{ route('admin.documents.index') }}">
+        <a class="nav-link" href="{{ route('admin.missing-persons.index') }}">
             <img src="{{ asset('assets/img/missingPerson.png') }}" alt="Missing-Person">
             <span>Missing Person</span></a>
     </li>

@@ -3,25 +3,25 @@
 @section('page-js')
     {{-- Custom Scripts for this blade --}}
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-    <script src="{{ asset('js/admin/taskforce/reports/index.js')}}"></script>
+    <script src="{{ asset('js/admin/taskforce/missing-persons/index.js')}}"></script>
+
 @endsection
 
 {{-- Title Page --}}
-@section('title', 'Reports')
+@section('title', 'Missing Person Reports')
 
 @section('content')
 
     {{-- Included Modals --}}
 
     {{-- Create/Edit --}}
-    @include('admin.taskforce.reports.reportFormModal')
-
+    @include('admin.taskforce.missing-persons.formModal')
 
     @include('inc.delete')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Reports
+        <h1 class="h3 mb-0 text-gray-800">Missing Person Reports
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
         <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
@@ -29,11 +29,16 @@
     </div>
 
     <p class="text-justify">
-        These reports was submitted by the residents through sending a report in the e-serbisyo android application. Please respond to the following reports. If the specific
-        reports was not responded, it will automatically marked as ignored. (Urgent - 60 minutes | NonUrgent - 180 minutes).
+        These reports was submitted by the residents through sending a report in the e-serbisyo android application.
     </p>
 
-    <span>Reports statistic within this month (Total: <span id="thisMonthCount"> {{ $reportsData->reports_count}}</span>)</span>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" onclick="createReport()">
+        Create
+    </button>
+
+
+    <h6 class="mt-2">Missing Person Reports statistic within this month (Total: <span id="thisMonthCount"> {{ $missingPersonsData->missing_persons_count}}</span>)</h6>
 
     <div class="row">
         {{-- New Report Card --}}
@@ -44,7 +49,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Pending Report</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthPendingCount">{{ $reportsData->pending_count }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthPendingCount">{{ $missingPersonsData->pending_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-plus-circle fa-2x text-info"></i>
@@ -54,15 +59,15 @@
             </div>
         </div>
 
-        {{-- Noted Report Card --}}
+        {{-- Approved Report Card --}}
         <div class="col-sm mt-2">
             <div class="card border-left-dark shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
-                                Noted Report</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthNotedCount">{{ $reportsData->noted_count }}</div>
+                                Approved Report</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthApprovedCount">{{ $missingPersonsData->approved_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-check-square fa-2x text-dark"></i>
@@ -72,37 +77,36 @@
             </div>
         </div>
 
-
-        {{-- Invalid Report Card --}}
+        {{-- Resolved Report Card --}}
         <div class="col-sm mt-2">
-            <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Invalid Report</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthInvalidCount"> {{ $reportsData->invalid_count }}</div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Resolved Report</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthResolvedCount"> {{ $missingPersonsData->resolved_count }}</div>
                             </div>
                         <div class="col-auto">
-                            <i class="fas fa-times-circle fa-2x text-warning"></i>
+                            <i class="fab fa-resolving fa-2x text-success"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Ingored Report Card --}}
+        {{-- Denied Report Card --}}
         <div class="col-sm mt-2">
             <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Ignored Report</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthIgnoredCount">{{ $reportsData->ignored_count }}</div>
+                                Denied Report</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthDeniedCount">{{ $missingPersonsData->denied_count }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-trash-alt fa-2x text-danger"></i>
+                            <i class="fas fa-times-circle fa-2x text-danger"></i>
                         </div>
                     </div>
                 </div>
@@ -113,17 +117,23 @@
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">List (Total: <span id="reportsCount">{{ $reports->count() }}</span>)</h6>
+            <h6 class="m-0 font-weight-bold text-primary">List (Total: <span id="reportsCount">{{ $missing_persons->count() }}</span>)</h6>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable" style="width:100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Submitted By</th>
                             <th>Type</th>
-                            <th>Classification</th>
+                            <th>Picture</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th>Last Seen</th>
+                            <th>Contact Information</th>
                             <th>Status</th>
                             <th>Reported Date</th>
                             <th>Action</th>
@@ -134,51 +144,64 @@
                             <th>ID</th>
                             <th>Submitted By</th>
                             <th>Type</th>
-                            <th>Classification</th>
+                            <th>Picture</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th>Last Seen</th>
+                            <th>Contact Information</th>
                             <th>Status</th>
                             <th>Reported Date</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        @forelse ($reports as $report)
+                        @forelse ($missing_persons as $missing_person)
                             <tr>
-                                <td>{{ $report->id }}</td>
-                                <td>{{ $report->is_anonymous ? 'Anonymous User' :  $report->user->getFullNameAttribute(). '(#'. $report->user_id .')' }} </td>
-                                @if ($report->type_id != NULL)
-                                    <td><a href="{{ route('admin.report-types.show', $report->type_id) }}">{{ $report->type->name }}</a></td>
-                                @else
-                                    <td>{{ $report->custom_type }}</td>
-                                @endif
+                                <td>{{ $missing_person->id }}</td>
+                                <td>{{ $missing_person->user->getFullNameAttribute(). '(#'. $missing_person->user_id .')' }} </td>
                                 <td>
-                                    @if ($report->urgency_classification == 'Urgent')
-                                        <p class="text-danger"><strong>{{ $report->urgency_classification }}</strong></p>
+                                    @if ($missing_person->report_type == 'Missing')
+                                        <p class="text-info"><strong>{{ $missing_person->report_type }}</strong></p>
                                     @else
-                                        <p class="text-warning"><strong>{{ $report->urgency_classification }}</strong></p>
+                                        <p class="text-warning"><strong>{{ $missing_person->report_type }}</strong></p>
                                     @endif
                                 </td>
 
                                 <td>
-                                    @if ($report->status == 'Noted')
+                                    <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ asset('storage/'.$missing_person->file_path) }}" class="rounded" alt="{{$missing_person->missing_name}} image">
+                                </td>
+
+                                <td>{{ $missing_person->name }}</td>
+                                <td>{{ $missing_person->age.' yr old' }}</td>
+                                <td>{{ $missing_person->height.' '. $missing_person->height_unit }}</td>
+                                <td>{{ $missing_person->weight.' '. $missing_person->weight_unit }}</td>
+                                <td>{{ $missing_person->last_seen }}</td>
+                                <td>{{ $missing_person->contact_information }}</td>
+
+                                <td>
+                                    @if ($missing_person->status == 'Pending')
+                                        <div class="p-2 bg-info text-white rounded-pill text-center">
+                                    @elseif ($missing_person->status == 'Approved')
+                                        <div class="p-2 bg-dark text-white rounded-pill text-center">
+                                    @elseif ($missing_person->status == 'Resolved')
                                         <div class="p-2 bg-success text-white rounded-pill text-center">
-                                    @elseif ($report->status == 'Pending')
-                                        <div class="p-2 bg-warning text-white rounded-pill text-center">
-                                    @elseif ($report->status == 'Ignored')
+                                    @elseif ($missing_person->status == 'Denied')
                                         <div class="p-2 bg-danger text-white rounded-pill text-center">
-                                    @elseif ($report->status == 'Invalid')
-                                        <div class="p-2 bg-secondary text-white rounded-pill text-center">
                                     @endif
-                                        {{ $report->status }}
+                                        {{ $missing_person->status }}
                                     </div>
                                 </td>
 
-                                <td>{{ $report->created_at }}</td>
+                                <td>{{ $missing_person->created_at }}</td>
+
                                 <td>
                                     <ul class="list-inline m-0">
                                         <li class="list-inline-item mb-1">
-                                            <button class="btn btn-primary btn-sm" onclick="viewReport({{ $report->id}})" type="button" data-toggle="tooltip" data-placement="top" title="View">
-                                                View Report
-                                            </button>
+                                            <a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="{{ route('admin.missing-persons.show', $missing_person->id) }}">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
                                         </li>
                                     </ul>
                                 </td>

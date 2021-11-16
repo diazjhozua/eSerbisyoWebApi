@@ -14,20 +14,12 @@ class ReportEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    // public $report;
+    public $report;
 
-    // public function __construct(Report $report)
-    // {
-    //     $this->report = New ReportResource($report);
-    // }
-
-    public $message;
-
-    public function __construct($message)
+    public function __construct(Report $report)
     {
-        $this->message = $message;
+        $this->report = New ReportResource($report);
     }
-
 
     public function broadcastOn()
     {

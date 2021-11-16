@@ -113,6 +113,9 @@
 
     <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
 
+    {{-- Double Scroll --}}
+    <script src="{{ asset('js/doubleScroll.js')}}"></script>
+
     <!-- Page level custom scripts -->
     <script src="{{ asset('admin/js/demo/datatables-demo.js')}}"></script>
 

@@ -20,13 +20,21 @@ class MissingPersonSeeder extends Seeder
         $height_scale = ['feet(ft)', 'centimeter(cm)'];
         $weight_scale = ['kilogram(kg)', 'pound(lbs)'];
 
-        $status = ['Pending', 'Denied', 'Approved', 'Resolved'];
+        $statusArr = ['Pending', 'Denied', 'Approved', 'Resolved'];
         $report_type = ['Missing', 'Found'];
 
         foreach (range(1,30) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppLostAndFounds', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
-            $file_path = 'storage/missing-pictures/'.$picture_name;
+            $file_path = 'missing-pictures/'.$picture_name;
+
+            $admin_message = null;
+
+            $status = $statusArr[array_rand($statusArr)];
+
+            if ($status != 'Pending') {
+                $admin_message = $faker->realText($maxNbChars = 50, $indexSize = 1);
+            }
 
             $missingPerson = MissingPerson::create([
                 'user_id' => $faker->numberBetween(1, 19),
@@ -42,7 +50,8 @@ class MissingPersonSeeder extends Seeder
                 'important_information' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
                 'contact_information' => $faker->tollFreePhoneNumber(),
-                'status' => $status[array_rand($status)],
+                'status' => $status,
+                'admin_message' => $admin_message,
                 'report_type' => $report_type[array_rand($report_type)],
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
