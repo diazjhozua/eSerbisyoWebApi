@@ -46,8 +46,8 @@ class DatabaseSeeder extends Seeder
             OrdinanceTypeSeeder::class,
             ProjectTypeSeeder::class,
             AnnouncementTypeSeeder::class,
-            // ComplaintTypeSeeder::class,
-            // ReportTypeSeeder::class,
+            ComplaintTypeSeeder::class,
+            ReportTypeSeeder::class,
 
 
             FeedbackSeeder::class,
@@ -58,10 +58,11 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             EmployeeSeeder::class,
             AnnouncementSeeder::class,
-            // MissingPersonSeeder::class,
-            // LostAndFoundSeeder::class,
-            // ComplaintSeeder::class,
-            // ReportSeeder::class,
+
+            MissingPersonSeeder::class,
+            LostAndFoundSeeder::class,
+            ComplaintSeeder::class,
+            ReportSeeder::class,
 
             CertificateSeeder::class,
             CertificateFormSeeder::class,

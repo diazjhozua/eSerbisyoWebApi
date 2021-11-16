@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectTypeRequest;
+use App\Http\Requests\Report\ProjectReportRequest;
+use App\Http\Requests\Report\TypeReportRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Project;
 use App\Models\Type;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class ProjectTypeController extends Controller
 {
@@ -17,7 +20,7 @@ class ProjectTypeController extends Controller
         $types->add(new Type([ 'id' => 0, 'name' => '(Others) - Project without assigned project type', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
             'projects_count' => Project::where('type_id', NULL)->count() ]));
 
-        return view('admin.project-types.index')->with('types', $types);
+        return view('admin.information.project-types.index')->with('types', $types);
     }
 
     public function store(ProjectTypeRequest $request)
@@ -35,7 +38,7 @@ class ProjectTypeController extends Controller
             'projects_count' => $projects->count(), 'projects' => $projects ]));
         } else {  $type = Type::with('projects')->where('model_type', 'Project')->withCount('projects')->findOrFail($id); }
 
-        return view('admin.project-types.show')->with('type', $type);
+        return view('admin.information.project-types.show')->with('type', $type);
     }
 
     public function edit($id)
@@ -61,4 +64,47 @@ class ProjectTypeController extends Controller
         $type->delete();
         return response()->json(Helper::instance()->destroySuccess('project_type'));
     }
+
+    public function report(TypeReportRequest $request) {
+        $types = Type::withCount('projects as count')
+            ->where('model_type', 'Project')->orderBy('created_at','DESC')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($types->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Project w/o project type)', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
+            'count' => Project::where('type_id', NULL)->count() ]));
+
+        $title = 'Project Type Publish Report';
+        $modelName = 'Project';
+
+        $pdf = PDF::loadView('admin.information.reports.type', compact('types', 'request', 'title', 'modelName'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
+
+    public function reportShow(ProjectReportRequest $request, $typeID) {
+        $projects = Project::with('type')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->where(function($query) use ($typeID) {
+                if ($typeID == 0) {
+                    return $query->where('type_id', NULL);
+                }else {
+                    return $query->where('type_id', $typeID);
+                }
+            })
+            ->get();
+
+        if ($projects->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.project', compact('projects', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
+
 }

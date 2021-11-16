@@ -16,3 +16,14 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+
+Broadcast::channel('new-report', function () {
+    // if you get here, you've been authenticated (within a custom middleware)
+    return true;
+});
+
+Broadcast::channel('report-channel', function ($user) {
+    // if you get here, you've been authenticated (within a custom middleware)
+    return true;
+});

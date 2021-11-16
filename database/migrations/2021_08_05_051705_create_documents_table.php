@@ -22,14 +22,6 @@ class CreateDocumentsTable extends Migration
             $table->string('pdf_name');
             $table->string('file_path');
             $table->timestamps();
-
-            // $table->id();
-            // $table->foreignId('document_type_id')->nullable()->constrained('document_types')->onDelete('set null');
-            // $table->longText('description')->nullable();
-            // $table->year('year');
-            // $table->string('pdf_name');
-            // $table->string('file_path');
-            // $table->timestamps();
         });
     }
 

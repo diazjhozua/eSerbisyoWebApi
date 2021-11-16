@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('barangay_id')->unique()->nullable();
             $table->foreignId('purok_id')->nullable()->constrained('puroks')->onDelete('set null');
-            $table->string('address');
+            $table->string('address')->nullable()->default('');
             $table->string('picture_name')->nullable();
             $table->string('file_path')->nullable();
 

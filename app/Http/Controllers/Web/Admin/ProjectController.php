@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
+use App\Http\Requests\Report\ProjectReportRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Project;
 use App\Models\Type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class ProjectController extends Controller
 {
@@ -29,7 +31,7 @@ class ProjectController extends Controller
         ->first();
 
         $projects = Project::with('type')->orderBy('created_at','DESC')->get();
-        return view('admin.projects.index', compact('projectsData', 'projects'));
+        return view('admin.information.projects.index', compact('projectsData', 'projects'));
     }
 
     public function create()
@@ -68,5 +70,19 @@ class ProjectController extends Controller
         Storage::delete('public/projects/'. $project->pdf_name);
         $project->delete();
         return response()->json(Helper::instance()->destroySuccess('project'));
+    }
+
+    public function report(ProjectReportRequest $request) {
+        $projects = Project::with('type')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($projects->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.project', compact('projects', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 }

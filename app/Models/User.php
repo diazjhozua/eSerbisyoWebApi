@@ -6,10 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +44,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $with = ['user_role'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->useLogName('information')
+        ->logOnly(['email', 'first_name',  'middle_name', 'last_name', 'address', 'picture_name', 'file_path', 'is_verified', 'status', 'admin_status_message', 'user_role.role'])
+        ->logOnlyDirty()
+        ->setDescriptionForEvent(fn(string $eventName) => "This model has been {$eventName}");
+    }
 
     public function getFullNameAttribute()
     {
@@ -90,5 +104,6 @@ class User extends Authenticatable
     public function certificateForms(){
         return $this->hasMany(CertificateForm::class);
     }
+
 }
 

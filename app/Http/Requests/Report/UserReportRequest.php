@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Requests\Report;
+
+
+use App\Http\Requests\Api\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UserReportRequest extends FormRequest
+{
+
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [
+            'date_start' => ['required', 'date', 'date_format:Y-m-d', 'before_or_equal:date_end'],
+            'date_end' => ['required', 'date', 'date_format:Y-m-d', 'after_or_equal:date_start'],
+            'filter' => ['required', Rule::in(['all', 'enable', 'verified', 'unverified',  'restricted'])],
+            'sort_column' => ['required', Rule::in(['id', 'first_name', 'last_name', 'email', 'address', 'created_at', 'updated_at'])],
+            'sort_option' => ['required', Rule::in(['ASC', 'DESC'])],
+        ];
+    }
+}
