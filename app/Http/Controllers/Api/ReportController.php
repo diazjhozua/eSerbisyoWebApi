@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\ReportEvent;
+use App\Events\ReportNotification;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
@@ -33,6 +35,10 @@ class ReportController extends Controller
             $filePath = $request->file('picture')->storeAs('reports', $fileName, 'public');
             $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => 2,'picture_name' => $fileName,'file_path' => $filePath]));
         } else { $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => 2])); }
+
+        event(new ReportNotification('This is our first broadcast message'));
+        event(new ReportEvent($report));
+
         return (new ReportResource($report->load('type')))->additional(Helper::instance()->storeSuccess('report'));
     }
 

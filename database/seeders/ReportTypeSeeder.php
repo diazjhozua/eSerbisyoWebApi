@@ -16,7 +16,7 @@ class ReportTypeSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        // 26-30
+        // 36-40
         foreach (range(1,5) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             DB::table('types')->insert([

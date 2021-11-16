@@ -35,7 +35,7 @@ class AnnouncementSeeder extends Seeder
             $announcements[] = [
                 'type_id' => $types->random(),
                 'title' => $faker->words($nb = 5, $asText = true),
-                'description' => $faker->paragraph($nbSentences = 40, $variableNbSentences = true),
+                'description' => $faker->paragraph($nbSentences = 15, $variableNbSentences = true),
                 'created_at' => $date,
                 'updated_at' => $date,
             ];

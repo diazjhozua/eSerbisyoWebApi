@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnnouncementRequest;
+use App\Http\Requests\Report\AnnouncementReportRequest;
 use App\Http\Resources\AnnouncementResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
 use App\Models\AnnouncementPicture;
 use App\Models\Type;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -30,7 +33,7 @@ class AnnouncementController extends Controller
         ->first();
 
         $announcements = Announcement::with('type')->withCount('comments', 'likes', 'announcement_pictures')->orderBy('created_at', 'DESC')->get();
-        return view('admin.announcements.index', compact('announcementsData', 'announcements'));
+        return view('admin.information.announcements.index', compact('announcementsData', 'announcements'));
     }
 
     public function create()
@@ -57,7 +60,7 @@ class AnnouncementController extends Controller
     public function show(Announcement $announcement)
     {
         $announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments', 'announcement_pictures');
-        return view('admin.announcements.show')->with('announcement', $announcement);
+        return view('admin.information.announcements.show')->with('announcement', $announcement);
     }
 
     public function edit(Announcement $announcement)
@@ -72,15 +75,25 @@ class AnnouncementController extends Controller
         return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->updateSuccess('announcement'));
     }
 
-    public function destroy(Announcement $announcement)
+    public function report(AnnouncementReportRequest $request) {
+        $announcements = Announcement::with('type')
+            ->withCount('comments', 'likes', 'announcement_pictures')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($announcements->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.announcement', compact('announcements', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
+
+    public function reportProfile(Announcement $announcement)
     {
-        return DB::transaction(function() use ($announcement) {
-            $announcement->load('announcement_pictures');
-            foreach ($announcement->announcement_pictures as $picture) { Storage::delete('public/announcements/'. $picture->picture_name); }
-            AnnouncementPicture::where('announcement_id', $announcement->id)->delete();
-            $announcement->comments()->delete();
-            $announcement->delete();
-            return response()->json(Helper::instance()->destroySuccess('announcement'));
-        });
+        $announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments', 'announcement_pictures');
+        $pdf = PDF::loadView('admin.information.reports.announcementProfile', compact('announcement'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 }

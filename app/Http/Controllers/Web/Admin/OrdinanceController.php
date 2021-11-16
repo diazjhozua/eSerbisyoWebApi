@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrdinanceRequest;
+use App\Http\Requests\Report\OrdinanceReportRequest;
 use App\Http\Resources\OrdinanceResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Ordinance;
 use App\Models\Type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class OrdinanceController extends Controller
 {
@@ -28,7 +30,7 @@ class OrdinanceController extends Controller
         ->first();
 
         $ordinances = Ordinance::with('type')->orderBy('created_at','DESC')->get();
-        return view('admin.ordinances.index', compact('ordinancesData', 'ordinances'));
+        return view('admin.information.ordinances.index', compact('ordinancesData', 'ordinances'));
     }
 
     public function create()
@@ -69,4 +71,17 @@ class OrdinanceController extends Controller
         return response()->json(Helper::instance()->destroySuccess('ordinance'));
     }
 
+    public function report(OrdinanceReportRequest $request) {
+        $ordinances = Ordinance::with('type')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($ordinances->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.ordinance', compact('ordinances', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
 }
