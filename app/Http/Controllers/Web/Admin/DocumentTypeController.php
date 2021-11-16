@@ -106,7 +106,6 @@ class DocumentTypeController extends Controller
 
         $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
         return $pdf->stream();
-
     }
 
 }

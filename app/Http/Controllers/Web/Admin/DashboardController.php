@@ -7,6 +7,7 @@ use App\Models\Announcement;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\UserVerification;
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,7 +95,18 @@ class DashboardController extends Controller
         return view('admin.dashboards.information', compact('userChart', 'projectChart', 'usersData', 'feedbacksData', 'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
     }
 
+    public function taskforceAdmin() {
+
+    }
+
     public function index() {
-        return $this->informationAdmin();
+
+        if (Auth::user()->user_role_id == 2) {
+            return $this->informationAdmin();
+        } else if (Auth::user()->user_role_id == 3) {
+            return $this->informationAdmin();
+        } else if (Auth::user()->user_role_id == 4) {
+            return $this->informationAdmin();
+        }
     }
 }

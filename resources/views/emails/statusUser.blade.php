@@ -4,7 +4,7 @@
 @section('greetings', 'Hello!')
 
 @section('messageUpper')
-    @if ($request->status == 'Enable')
+    @if ($request['status'] == 'Enable')
         Your account has been enabled, you can now login your account using your credentials.
         Please comply to the rules and regulation to prevent your from being banned.
     @else
@@ -16,11 +16,10 @@
 
 {{-- Lower Message --}}
 @section('messageLower1')
-    @if ($request->status == 'Enable')
-        Note: {{ $request->admin_status_message }}
+    @if ($request['status'] == 'Enable')
+        Note: {{ $request['admin_status_message'] }}
     @else
-        Reason: {{ $request->admin_status_message }}
+        Reason: {{ $request['admin_status_message'] }}
     @endif
 @endsection
-
 

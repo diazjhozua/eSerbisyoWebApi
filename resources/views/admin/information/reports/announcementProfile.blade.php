@@ -43,100 +43,111 @@
 
     <hr>
 
-    <div style="page-break-after:always;">
-        <h4>Details</h4>
-        <address>
-            <span><strong>ID: </strong>(#{{ $announcement->id }})</span><br>
-            <span><strong>Title: </strong>{{ $announcement->title }} </span><br>
-            @if ($announcement->type_id)
-                <span><strong>Type: </strong>{{ $announcement->type->name }} (#{{ $announcement->type_id }})</span><br>
-            @else
-                <span><strong>Type: </strong>{{ $announcement->custom_type }}</span><br>
-            @endif
-            <span><strong>Description: </strong></span><br>
-            <span>{{ $announcement->description }} </span><br>
-            <span><strong>Created At: </strong>{{ $announcement->created_at }}</span><br>
-            <span><strong>Updated At: </strong>{{ $announcement->updated_at }} </span><br>
-        </address>
+    <h4>Details</h4>
+    <address>
+        <span><strong>ID: </strong>(#{{ $announcement->id }})</span><br>
+        <span><strong>Title: </strong>{{ $announcement->title }} </span><br>
+        @if ($announcement->type_id)
+            <span><strong>Type: </strong>{{ $announcement->type->name }} (#{{ $announcement->type_id }})</span><br>
+        @else
+            <span><strong>Type: </strong>{{ $announcement->custom_type }}</span><br>
+        @endif
+        <span><strong>Description: </strong></span><br>
+        <span>{{ $announcement->description }} </span><br>
+        <span><strong>Created At: </strong>{{ $announcement->created_at }}</span><br>
+        <span><strong>Updated At: </strong>{{ $announcement->updated_at }} </span><br>
+    </address>
+
+    <div class="breakBefore">
+        <h4 class="text-center"><strong>Picture List</strong></h4>
+
+        <table class="tableLayout">
+            <thead style="background: #F5F5F5;">
+                <tr>
+                    <th>ID</th>
+                    <th>Picture</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            @forelse ($announcement->announcement_pictures as $picture)
+                <tr>
+                    <td>{{ $picture->id }}</td>
+                    <td>
+                    <br>
+                    <p class="text-center">
+                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.$picture->file_path))) }}"
+                        width="110px" height="100px"
+                        alt="logo">
+                    </p>
+                    </td>
+                    <td>{{ $picture->created_at }}</td>
+                    <td>{{ $announcement->updated_at }}</td>
+                </tr>
+            @empty
+                <P>No pictures</P>
+            @endforelse
+            </tbody>
+        </table>
     </div>
 
-    <h4 class="text-center"><strong>Picture List</strong></h4>
-    <table class="table">
-        <thead style="background: #F5F5F5;">
-            <tr>
-                <th>ID</th>
-                <th>Picture</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-            </tr>
-        </thead>
-        <tbody>
-
-        @forelse ($announcement->announcement_pictures as $picture)
-            <tr>
-                <td>{{ $picture->id }}</td>
-                <td>
-                <br>
-                <p class="text-center">
-                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.$picture->file_path))) }}"
-                    width="110px" height="100px"
-                    alt="logo">
-                </p>
-                </td>
-                <td>{{ $picture->created_at }}</td>
-                <td>{{ $announcement->updated_at }}</td>
-            </tr>
-        @empty
-            <P>No pictures</P>
-        @endforelse
-        </tbody>
-    </table>
-
-    <h4 class="text-center"><strong>Comment List</strong></h4>
-    <table class="table">
-        <thead style="background: #F5F5F5;">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Comment</th>
-                <th>Commented At</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($announcement->comments as $comment)
+    <div class="breakBefore">
+        <h4 class="text-center"><strong>Comment List</strong></h4>
+        <table class="tableLayout">
+            <thead style="background: #F5F5F5;">
                 <tr>
-                    <td>{{ $comment->id }}</td>
-                    <td>{{$comment->user->getFullNameAttribute()}} (#{{ $comment->user->id }})</td>
-                    <td>{{$comment->body}}</td>
-                    <td>{{ $comment->created_at }}</td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Comment</th>
+                    <th>Commented At</th>
                 </tr>
-            @empty
-                <p>No comments</p>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($announcement->comments as $comment)
+                    <tr>
+                        <td>{{ $comment->id }}</td>
+                        <td>{{$comment->user->getFullNameAttribute()}} (#{{ $comment->user->id }})</td>
+                        <td>{{$comment->body}}</td>
+                        <td>{{ $comment->created_at }}</td>
+                    </tr>
+                @empty
+                    <p>No comments</p>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-    <h4 class="text-center"><strong>Like List</strong></h4>
-    <table class="table">
-        <thead style="background: #F5F5F5;">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($announcement->likes as $like)
+    <div class="breakBefore">
+         <h4 class="text-center"><strong>Like List</strong></h4>
+        <table class="tableLayout">
+            <thead style="background: #F5F5F5;">
                 <tr>
-                    <td>{{ $like->id }}</td>
-                    <td>{{$like->user->getFullNameAttribute()}} (#{{ $like->user->id }})</td>
-                    <td>{{ $like->created_at }}</td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Date</th>
                 </tr>
-            @empty
-                <p>No likes</p>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($announcement->likes as $like)
+                    <tr>
+                        <td>{{ $like->id }}</td>
+                        <td>{{$like->user->getFullNameAttribute()}} (#{{ $like->user->id }})</td>
+                        <td>{{ $like->created_at }}</td>
+                    </tr>
+                @empty
+                    <p>No likes</p>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+
 
     <div class="row">
         <div class="col-xs-6"></div>

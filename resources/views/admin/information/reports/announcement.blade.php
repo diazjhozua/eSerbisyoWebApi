@@ -47,13 +47,16 @@
         </div>
     </div>
 
-    <table class="table">
+   <table class="tableContent">
         <thead style="background: #F5F5F5;">
             <tr>
                 <th>ID</th>
                 <th>Type</th>
                 <th>Title</th>
                 <th>Description</th>
+                {{-- <th>Picture Uploaded</th>
+                <th>Likes Count</th>
+                <th>Comments Count</th> --}}
                 <th>Created At</th>
                 <th>Updated At</th>
             </tr>
@@ -69,7 +72,18 @@
                         <td>{{ $announcement->type->name }}</td>
                     @endif
                     <td>{{ $announcement->title }}</td>
-                    <td>{{ $announcement->description}}</td>
+                    <td>{{ $announcement->description}}
+                        <br>
+                        <br>
+                        <span><strong> Uploaded: {{ $announcement->announcement_pictures_count}}</strong></span>
+                        <br>
+                        <span><strong>Likes Count: {{ $announcement->likes_count}}</strong></span>
+                        <br>
+                        <span><strong>Comments Count: {{ $announcement->comments_count}}</strong></span>
+                    </td>
+                    {{-- <td>{{ $announcement->announcement_pictures_count}}</td>
+                    <td>{{ $announcement->likes_count}}</td>
+                    <td>{{ $announcement->comments_count}}</td> --}}
                     <td>{{ $announcement->created_at }}</td>
                     <td>{{ $announcement->updated_at }}</td>
                 </tr>

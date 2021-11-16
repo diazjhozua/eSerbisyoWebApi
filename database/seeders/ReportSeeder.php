@@ -21,7 +21,7 @@ class ReportSeeder extends Seeder
 
         foreach (range(1,100) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            $type = $faker->numberBetween(26, 30);
+            $type = $faker->numberBetween(36, 40);
             $custom_type = NULL;
             $isNull = $faker->numberBetween(0,1);
 
@@ -39,16 +39,25 @@ class ReportSeeder extends Seeder
                 $file_path = 'storage/reports/'.$picture_name;
             }
 
+            $admin_message = NULL;
+            $final_status = $status[array_rand($status)];
+
+
+            if ($final_status === 'Noted' || $final_status === 'Invalid') {
+                $admin_message = $faker->realText($maxNbChars = 50, $indexSize = 1);
+            }
+
             DB::table('reports')->insert([
                 'user_id' => $faker->numberBetween(1, 37),
                 'type_id' => $type,
                 'custom_type' => $custom_type,
                 'location_address' => $faker->streetAddress(),
                 'landmark' => $faker->streetName(),
-                'description' => $faker->realText($maxNbChars = 500, $indexSize = 3),
+                'description' => $faker->realText($maxNbChars = 150, $indexSize = 3),
+                'admin_message' => $admin_message,
                 'is_anonymous' => $faker->numberBetween(0, 1),
                 'urgency_classification' => $urgency_classification[array_rand($urgency_classification)],
-                'status' => $status[array_rand($status)],
+                'status' => $final_status,
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'created_at' => $date,

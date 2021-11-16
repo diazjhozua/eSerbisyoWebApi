@@ -271,7 +271,7 @@ $(document).ready(function () {
                     var blob = new Blob([response]);
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = "DocumentReport.pdf";
+                    link.download = "DocumentReport-" + Date.now() + ".pdf";
                     link.click();
 
                 },

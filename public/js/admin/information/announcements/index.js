@@ -236,7 +236,7 @@ $(document).ready(function () {
                     var blob = new Blob([response]);
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = "AnnouncementReport.pdf";
+                    link.download = "AnnouncementReport-" + Date.now() + ".pdf";
                     link.click();
 
                 },

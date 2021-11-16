@@ -43,6 +43,8 @@
 
         @if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 5)
             @include('inc.sidebars.information')
+        @elseif (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 4 || Auth::user()->user_role_id == 7)
+            @include('inc.sidebars.taskforce')
         @endif
 
         <!-- Content Wrapper -->

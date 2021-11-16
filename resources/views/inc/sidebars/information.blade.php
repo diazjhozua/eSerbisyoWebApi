@@ -67,6 +67,13 @@
         Models
     </div>
 
+        <!-- User Nav Item - Tables -->
+    <li id="android" class="nav-item">
+        <a class="nav-link" href="{{ route('admin.androids.index') }}">
+            <img src="{{ asset('assets/img/android.png') }}" alt="Android">
+            <span>Android Version</span></a>
+    </li>
+
     <!-- User Nav Item - Tables -->
     <li id="user" class="nav-item">
         <a class="nav-link" href="{{ route('admin.users.index') }}">

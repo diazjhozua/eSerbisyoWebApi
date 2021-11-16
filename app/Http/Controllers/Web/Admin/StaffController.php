@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ChangeRoleJob;
 use App\Models\User;
 use App\Models\UserRole;
 use Illuminate\Support\Facades\Auth;
@@ -24,15 +25,12 @@ class StaffController extends Controller
     public function promoteUser(User $user) {
         if (Auth::user()->user_role_id == 2) { //if info admin
             $user->fill(['user_role_id' => 5, 'status' => 'Enable', 'is_verified' => 1])->save();
-            $userRole = UserRole::find(5);
         }
 
-        Mail::send('email.promoteUser', ['userRole' => $userRole], function($message) use($user){
-            $message->to($user->email);
-            $message->subject('User Promotion');
-        });
-
         $user->load('user_role');
+        $subject = 'User Promotion';
+        dispatch(new ChangeRoleJob($user, $subject, $user->user_role));
+
         return response()->json(['success' => true, 'message' => $user->getFullNameAttribute().' is promoted to '.$user->user_role->role]);
     }
 
@@ -46,13 +44,13 @@ class StaffController extends Controller
     }
 
     public function demoteStaff(User $user) {
-        $user->fill(['user_role_id' => 9])->save();
-        $userRole = UserRole::find(9);
+        if (Auth::user()->user_role_id == 2) { //if info admin
+            $user->fill(['user_role_id' => 9, 'status' => 'Enable', 'is_verified' => 1])->save();
+        }
 
-        Mail::send('email.demoteUser', ['userRole' => $userRole], function($message) use($user){
-            $message->to($user->email);
-            $message->subject('User Demotion');
-        });
+        $user->load('user_role');
+        $subject = 'User Demotion';
+        dispatch(new ChangeRoleJob($user, $subject, $user->user_role));
 
         return response()->json(['success' => true, 'message' => $user->getFullNameAttribute().' is demoted to basic user (Resident)']);
 

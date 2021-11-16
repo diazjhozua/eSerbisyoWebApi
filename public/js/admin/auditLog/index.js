@@ -57,7 +57,7 @@ $(document).ready(function () {
                     var blob = new Blob([response]);
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = "AuditLogReport.pdf";
+                    link.download = "AuditLogReport-" + Date.now() + ".pdf";
                     link.click();
 
                 },

@@ -60,43 +60,6 @@ class FeedbackController extends Controller
             return response()->json(['No data'], 404);
         }
 
-        $tableContent = '<tr>';
-        foreach($feedbacks as $feedback) {
-            $tableContent .= '<td>'.strval($feedback->id).'</td>';
-            $tableContent .= '<td>'.strval($feedback->is_anonymous ? 'Anonymous User' :  $feedback->user->getFullNameAttribute()).'</td>';
-            $tableContent .= '<td>'.strval($feedback->type_id != 0 ? $feedback->type->name :  'Others/Deleted-'.$feedback->custom_type ).'</td>';
-            $tableContent .= '<td>'.strval($feedback->polarity).'</td>';
-            $tableContent .= '<td>'.strval($feedback->message).'</td>';
-            $tableContent .= '<td>'.strval(!empty($feedback->admin_respond) ? $feedback->admin_respond :  'Not yet responded' ).'</td>';
-            $tableContent .= '<td>'.strval($feedback->status).'</td>';
-            $tableContent .= '<td>'.strval($feedback->created_at).'</td>';
-            $tableContent .= '<td>'.strval($feedback->updated_at).'</td>';
-
-        }
-        $tableContent .= '</tr>';
-
-
-        //         //             <tr>
-        //         //     <td>{{ $feedback->id }}</td>
-        //         //     <td>{{ $feedback->is_anonymous ? 'Anonymous User' :  $feedback->user->getFullNameAttribute() }}</td>
-        //         //     @if ($feedback->type_id != 0)
-        //         //         <td>{{ $feedback->type->name }}</td>
-        //         //     @else
-        //         //         <td>Others/Deleted- {{ $feedback->custom_type }}</td>
-        //         //     @endif
-        //         //     <td>{{ $feedback->polarity}}</td>
-        //         //     <td>{{ $feedback->message}}</td>
-        //         //     @if (!empty($feedback->admin_respond))
-        //         //         <td>{{ $feedback->admin_respond }}</td>
-        //         //     @else
-        //         //         <td>Not yet responded</td>
-        //         //     @endif
-
-        //         //     <td>{{ $feedback->status}}</td>
-        //         //     <td>{{ $feedback->created_at }}</td>
-        //         //     <td>{{ $feedback->updated_at }}</td>
-        //         // </tr>
-
         $feedbacksData = null;
 
         $feedbacksData =  DB::table('feedbacks')
@@ -122,8 +85,10 @@ class FeedbackController extends Controller
                 }
             })->first();
 
-        $pdf = PDF::loadView('admin.information.reports.feedback', compact('feedbacks', 'request', 'feedbacksData', 'tableContent'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('admin.information.reports.feedback', compact('feedbacks', 'request', 'feedbacksData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+
         return $pdf->stream();
+
     }
 
 }

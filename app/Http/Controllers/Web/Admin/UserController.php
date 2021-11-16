@@ -9,10 +9,13 @@ use App\Http\Requests\Report\UserReportRequest;
 use App\Http\Requests\UserVerificationRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserVerificationResource;
+use App\Jobs\StatusUserJob;
+use App\Jobs\VerifyUserJob;
 use App\Models\User;
 use App\Models\UserVerification;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -40,11 +43,13 @@ class UserController extends Controller
     // changeUserStatus
     public function changeUserStatus(ChangeUserStatusRequest $request, User $user) {
         $user->fill($request->validated())->save();
-        $title = $user->request == 'Enable' ? 'Enabled Account' : 'Disabled Account';
+        $subject = $user->request == 'Enable' ? 'Enabled Account' : 'Disabled Account';
 
-        // Mail::send('email.statusUser', ['request' => $request], function($message) use($user, $title){
+        dispatch(new StatusUserJob($user, $subject, $request->all()));
+
+        // Mail::send('email.statusUser', ['request' => $request], function($message) use($user, $subject){
         //     $message->to($user->email);
-        //     $message->subject($title);
+        //     $message->subject($subject);
         // });
 
         return (new UserResource($user->load(['user_role', 'latest_user_verification' => function ($query) {
@@ -72,8 +77,9 @@ class UserController extends Controller
             $user->fill(['is_verified' => 1])->save();
         }
 
-        $title = $request->status == 'Approved' ? 'Verified Account' : 'Failed Verification Account';
+        $subject = $request->status == 'Approved' ? 'Verified Account' : 'Failed Verification Account';
 
+        dispatch(new VerifyUserJob($user, $subject, $request->all()));
         // Mail::send('email.verifyUser', ['request' => $request], function($message) use($user, $title){
         //     $message->to($user->email);
         //     $message->subject($title);

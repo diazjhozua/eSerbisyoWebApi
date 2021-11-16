@@ -24,7 +24,7 @@
 
         <div class="col-xs-5">
             <h4 class="text-center"><strong>Timeframe</strong></h4>
-            <table style="width: 100%">
+            <table style="width: 100%;">
                 <tbody>
                     <tr>
                         <th>Date Start: </th>
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <table>
+    <table class="tableContent">
         <thead style="background: #F5F5F5;">
             <tr>
                 <th>ID</th>
@@ -107,7 +107,7 @@
                 <tr>
                     <td>{{ $feedback->id }}</td>
                     <td>{{ $feedback->is_anonymous ? 'Anonymous User' :  $feedback->user->getFullNameAttribute() }}</td>
-                    {{-- @if ($feedback->type_id != 0)
+                    @if ($feedback->type_id != 0)
                         <td>{{ $feedback->type->name }}</td>
                     @else
                         <td>Others/Deleted- {{ $feedback->custom_type }}</td>
@@ -118,7 +118,7 @@
                         <td>{{ $feedback->admin_respond }}</td>
                     @else
                         <td>Not yet responded</td>
-                    @endif --}}
+                    @endif
 
                     <td>{{ $feedback->status}}</td>
                     <td>{{ $feedback->created_at }}</td>

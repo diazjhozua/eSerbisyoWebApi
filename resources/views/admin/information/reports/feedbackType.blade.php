@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <table class="table">
+   <table class="tableContent">
         <thead style="background: #F5F5F5;">
             <tr>
                 <th>ID</th>
@@ -61,7 +61,6 @@
             </tr>
         </thead>
         <tbody>
-
             @foreach ($types as $type)
                 <tr>
                     <td>{{ $type->id }}</td>

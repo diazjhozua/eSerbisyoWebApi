@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <table class="table">
+    <table class="tableContent">
         <thead style="background: #F5F5F5;">
             <tr>
                 <th>ID</th>
@@ -75,7 +75,7 @@
                     @endif
                     <td>{{ $project->name }}</td>
                     <td>{{ $project->description}}</td>
-                    <td><span style="font-family: DejaVu Sans; sans-serif;">&#8369; {{ number_format($project->cost, 2) }}</span> </td>
+                    <td><span style="font-family: DejaVu Sans; sans-serif;">&#8369;{{ number_format($project->cost, 2) }}</span> </td>
                     <td>{{ $project->project_start}}</td>
                     <td>{{ $project->project_end}}</td>
                     <td>{{ $project->location}}</td>

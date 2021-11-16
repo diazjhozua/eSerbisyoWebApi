@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <form name="reportForm" id="reportForm" action="{{ route('admin.ordinances.report') }}" method="POST" novalidate>
+            <form name="reportForm" id="reportForm" action="@yield('reportRoute')" method="POST" novalidate>
                 <div class="modal-body">
                     <div class="row g-3 mb-3">
 

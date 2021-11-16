@@ -77,6 +77,7 @@ class AnnouncementController extends Controller
 
     public function report(AnnouncementReportRequest $request) {
         $announcements = Announcement::with('type')
+            ->withCount('comments', 'likes', 'announcement_pictures')
             ->whereBetween('created_at', [$request->date_start, $request->date_end])
             ->orderBy($request->sort_column, $request->sort_option)
             ->get();

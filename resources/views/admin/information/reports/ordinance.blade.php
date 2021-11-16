@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <table class="table">
+    <table class="tableContent">
         <thead style="background: #F5F5F5;">
             <tr>
                 <th>ID</th>

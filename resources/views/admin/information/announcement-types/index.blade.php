@@ -16,6 +16,12 @@
     {{-- Create/Edit --}}
     @include('admin.types.form')
 
+    {{-- Report Route to the modal --}}
+    @section('reportRoute', route('admin.announcement-types.report'))
+    {{-- Report Modal --}}
+    @include('admin.types.report')
+
+
     {{-- Delete Modal Confirmation --}}
     @include('inc.delete')
 
@@ -24,8 +30,8 @@
         <h1 class="h3 mb-0 text-gray-800">Announcement Types
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-            class="fas fa-download fa-sm text-white-50"></i> Download Report</a>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
+            class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
     </div>
 
     <p class="text-justify">

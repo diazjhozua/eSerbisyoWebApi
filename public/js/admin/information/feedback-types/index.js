@@ -203,7 +203,7 @@ $(document).ready(function () {
                     var blob = new Blob([response]);
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = "FeedbackTypeReport.pdf";
+                    link.download = "FeedbackTypeReport-" + Date.now() + ".pdf";
                     link.click();
 
                 },

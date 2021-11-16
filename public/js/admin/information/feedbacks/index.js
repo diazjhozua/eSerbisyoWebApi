@@ -149,11 +149,12 @@ $(document).ready(function () {
                     var blob = new Blob([response]);
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = "FeedbackReport.pdf";
+                    link.download = "FeedbackReport-" + Date.now() + ".pdf";
                     link.click();
 
                 },
                 error: function (response) {
+                    console.log(response);
                     toastr.error('Something went wrong :( (It could be the selected option produces no data)')
                 },
                 complete: function () {

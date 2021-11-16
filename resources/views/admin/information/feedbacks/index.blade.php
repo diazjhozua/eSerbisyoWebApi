@@ -23,6 +23,7 @@
             class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
     </div>
 
+
     <span>Feedbacks statistic within this month</span>
     <div class="row">
         {{-- Pending Card --}}
@@ -175,8 +176,7 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        {!! $tableContent !!}
-                        {{-- @forelse ($feedbacks as $feedback)
+                        @forelse ($feedbacks as $feedback)
                             <tr>
                                 <td>{{ $feedback->id }}</td>
                                 <td>{{ $feedback->is_anonymous ? 'Anonymous User' :  $feedback->user->getFullNameAttribute() }}</td>
@@ -209,7 +209,7 @@
 
                         @empty
                             <p>No feedback yet</p>
-                        @endforelse --}}
+                        @endforelse
                     </tbody>
                 </table>
             </div>

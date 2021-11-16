@@ -1,8 +1,10 @@
 <?php
 
+use App\Events\ReportNotification;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Http\Request;
 
 use App\Http\Controllers\Web\Admin\ {
     UserController as AdminUser,
@@ -16,6 +18,8 @@ use App\Models\Document;
 use App\Models\Feedback;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Support\Facades\Storage;
+use Pusher\Pusher;
+
 use Spatie\Activitylog\Models\Activity;
 
 /*
@@ -30,78 +34,37 @@ use Spatie\Activitylog\Models\Activity;
 */
 
 Route::get('/', function () {
-    // $pdf = app('dompdf.wrapper');
-    // $pdf->loadView('admin.pdf.invoice');
-    // return $pdf->download('invoice.pdf');
+    return view('admin.taskforce.sample');
+});
 
-    // $announcement = Announcement::with('likes', 'comments', 'type','announcement_pictures')
-    //     ->withCount('likes', 'comments', 'announcement_pictures')->findOrFail(171);
+Route::get('/event', function () {
+    event(new ReportNotification('This is our first broadcast message'));
+});
 
-    // $pdf = PDF::loadView('admin.reports.announcementProfile', compact('announcement'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-    // return $pdf->stream();
+// Route::post('/pusher/auth', function (Request $request) {
+//         $user = auth()->user();
+//         $socket_id = $request->socket_id;
+//         $channel_name =$request->channel_name;
+//         $key = getenv('PUSHER_APP_KEY');
+//         $secret = getenv('PUSHER_APP_SECRET');
+//         $app_id = getenv('PUSHER_APP_ID');
 
-    $firstDayYear = date('Y-m-d', strtotime('first day of january this year'));
-    $lastDateYear = date('Y-m-d', strtotime('last day of december this year'));
+//         if ($user) {
 
-    $feedbacks = Feedback::with('type')
-        ->whereBetween('created_at', [$firstDayYear, $lastDateYear])
-            ->orderBy('id', 'DESC')
-            ->where(function($query) {
-                if(true) {
+//             $pusher = new Pusher($key, $secret, $app_id);
+//             $auth = $pusher->socket_auth($channel_name, $socket_id);
 
-                }
-                return $query
-                ->where('status', '=', 'Pending');
-            })
-        ->get();
+//             return response($auth, 200);
 
-    $pdf = PDF::loadView('admin.information.reports.feedback', compact('feedbacks'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-    return $pdf->stream();
+//         } else {
+//             header('', true, 403);
+//             echo "Forbidden";
+//             return;
+//         }
+// });
 
-
-
-
-    // $documents = Document::with('type')->get();
-
-    // $firstDayYear = date('Y-m-d', strtotime('first day of january this year'));
-    // $lastDateYear = date('Y-m-d', strtotime('last day of december this year'));
-
-    // // $documents = Document::with('type') // Do some querying..
-    // //         ->whereBetween('created_at', [$firstDayYear, $lastDateYear])
-    // //         ->orderBy('type.name', 'ASC')->get();
-
-    // $documents = Document::with(['type'])
-    //     ->select('documents.*')
-    //     ->whereBetween('documents.created_at', [$firstDayYear, $lastDateYear])
-    //     ->join('types', 'types.id', '=', 'documents.type_id')
-    //     ->orderBy('types.name', 'ASC')
-    //     ->get();
-
-
-    // // dd($documents);
-    // // $pdf = App::make('dompdf.wrapper');
-    // // $pdf->loadView('admin.pdf.invoice', compact('documents'));
-
-
-    // $pdf = PDF::loadView('admin.reports.document', compact('documents'))->setOptions(['defaultFont' => 'sans-serif']);
-    // return $pdf->stream();
-
-    // $pdf = PDF::loadView('admin.pdf.invoice', compact('documents'))->setOptions(['defaultFont' => 'sans-serif', 'isRemoteEnabled' => true]);;
-    // return $pdf->stream();
-    // return $pdf->download('itsolutionstuff.pdf');
-
-
-    // return $pdf->download('invoice.pdf');
-
-
-    // // $pdf = ::loadView('admin.pdf.invoice');
-    // // return $pdf->download('invoice.pdf');
-
-    // // // $activity = Activity::all()->last();
-    // // // dd($activity->causer->user_role->role);
-
-    // // $activity = Activity::all()->last();
-    // // dd($activity);
+Route::get('/', function () {
+    return view('admin.taskforce.sample');
 });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');

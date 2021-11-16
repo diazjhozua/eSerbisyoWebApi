@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateReportsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('reports', function (Blueprint $table) {
@@ -21,6 +17,7 @@ class CreateReportsTable extends Migration
             $table->string('location_address');
             $table->string('landmark');
             $table->longText('description');
+            $table->longText('admin_message')->nullable()->default('');
             $table->boolean('is_anonymous');
             $table->enum('urgency_classification', ['Nonurgent', 'Urgent'])->default('Nonurgent');
             $table->enum('status', ['Pending', 'Ignored', 'Invalid', 'Noted'])->default('Pending');
@@ -30,11 +27,6 @@ class CreateReportsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('reports');

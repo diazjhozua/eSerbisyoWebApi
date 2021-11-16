@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnnouncementTypeRequest;
+use App\Http\Requests\Report\AnnouncementReportRequest;
+use App\Http\Requests\Report\TypeReportRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
 use App\Models\Type;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class AnnouncementTypeController extends Controller
 {
@@ -65,4 +68,48 @@ class AnnouncementTypeController extends Controller
         $type->delete();
         return response()->json(Helper::instance()->destroySuccess('announcement_type'));
     }
+
+    public function report(TypeReportRequest $request) {
+        $types = Type::withCount('announcements as count')
+            ->where('model_type', 'Announcement')->orderBy('created_at','DESC')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->get();
+
+        if ($types->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Announcement w/o announcement type)', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
+            'count' => Announcement::where('type_id', NULL)->count() ]));
+
+        $title = 'Announcement Type Publish Report';
+        $modelName = 'Announcement';
+
+        $pdf = PDF::loadView('admin.information.reports.type', compact('types', 'request', 'title', 'modelName'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
+
+    public function reportShow(AnnouncementReportRequest $request, $typeID) {
+        $announcements = Announcement::with('type')
+            ->withCount('comments', 'likes', 'announcement_pictures')
+            ->whereBetween('created_at', [$request->date_start, $request->date_end])
+            ->orderBy($request->sort_column, $request->sort_option)
+            ->where(function($query) use ($typeID) {
+                if ($typeID == 0) {
+                    return $query->where('type_id', NULL);
+                }else {
+                    return $query->where('type_id', $typeID);
+                }
+            })
+            ->get();
+
+        if ($announcements->isEmpty()) {
+            return response()->json(['No data'], 404);
+        }
+
+        $pdf = PDF::loadView('admin.information.reports.announcement', compact('announcements', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        return $pdf->stream();
+    }
 }
+
