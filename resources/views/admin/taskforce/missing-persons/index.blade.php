@@ -37,7 +37,6 @@
         Create
     </button>
 
-
     <h6 class="mt-2">Missing Person Reports statistic within this month (Total: <span id="thisMonthCount"> {{ $missingPersonsData->missing_persons_count}}</span>)</h6>
 
     <div class="row">
@@ -163,14 +162,16 @@
                                 <td>{{ $missing_person->user->getFullNameAttribute(). '(#'. $missing_person->user_id .')' }} </td>
                                 <td>
                                     @if ($missing_person->report_type == 'Missing')
-                                        <p class="text-info"><strong>{{ $missing_person->report_type }}</strong></p>
-                                    @else
                                         <p class="text-warning"><strong>{{ $missing_person->report_type }}</strong></p>
+                                    @else
+                                        <p class="text-info"><strong>{{ $missing_person->report_type }}</strong></p>
                                     @endif
                                 </td>
 
                                 <td>
-                                    <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ asset('storage/'.$missing_person->file_path) }}" class="rounded" alt="{{$missing_person->missing_name}} image">
+                                    <a href="{{route('admin.viewFiles', [ 'folderName' => 'missing-pictures', 'fileName' => $missing_person->picture_name])}}" target="_blank">
+                                         <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ asset('storage/'.$missing_person->file_path) }}" class="rounded" alt="{{$missing_person->missing_name}} image">
+                                    </a>
                                 </td>
 
                                 <td>{{ $missing_person->name }}</td>
@@ -180,7 +181,7 @@
                                 <td>{{ $missing_person->last_seen }}</td>
                                 <td>{{ $missing_person->contact_information }}</td>
 
-                                <td>
+                                <td class="tdStatus">
                                     @if ($missing_person->status == 'Pending')
                                         <div class="p-2 bg-info text-white rounded-pill text-center">
                                     @elseif ($missing_person->status == 'Approved')
@@ -194,7 +195,7 @@
                                     </div>
                                 </td>
 
-                                <td>{{ $missing_person->created_at }}</td>
+                                <td class="tdCreatedAt">{{ $missing_person->created_at }}</td>
 
                                 <td>
                                     <ul class="list-inline m-0">
@@ -202,6 +203,17 @@
                                             <a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="{{ route('admin.missing-persons.show', $missing_person->id) }}">
                                                 <i class="fas fa-eye"></i>
                                             </a>
+                                        </li>
+
+                                        <li class="list-inline-item mb-1">
+                                            <button class="btn btn-primary btn-sm" onclick="editReport({{ $missing_person->id}})" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </li>
+                                        <li class="list-inline-item mb-1">
+                                            <button class="btn btn-danger btn-sm" type="button" onclick="deleteReport({{ $missing_person->id }})" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </li>
                                     </ul>
                                 </td>

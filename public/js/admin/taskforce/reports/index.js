@@ -213,6 +213,7 @@ $(document).ready(function () {
     $(".datepicker").datepicker({
         format: "yyyy-mm-dd",
     });
+
     $("form[name='reportForm']").validate({
         // Specify validation rules
         rules: {
@@ -235,33 +236,33 @@ $(document).ready(function () {
             $('.btnRespondReportTxt').text($('#statusSelect').val() == 'Noted' ? 'Noting' : 'Invalidating') //set the text of the submit btn
             $('.btnRespondReportLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
 
-            // doAjax(formAction, 'POST', formData).then((response) => {
-            //     if (response.success) {
-            //         const data = response.data
-            //         addOrReplace(data, 'Replace')
+            doAjax(formAction, 'POST', formData).then((response) => {
+                if (response.success) {
+                    const data = response.data
+                    addOrReplace(data, 'Replace')
 
-            //         let reportDate = new Date(data.created_at);
-            //         let currentDate = new Date();
+                    let reportDate = new Date(data.created_at);
+                    let currentDate = new Date();
 
-            //         if (reportDate.getFullYear() == currentDate.getFullYear() && currentDate.getMonth() == reportDate.getMonth()) {
-            //             //means the date is in this current month
-            //             $("#thisMonthPendingCount").text(parseInt($("#thisMonthPendingCount").text()) - 1);
+                    if (reportDate.getFullYear() == currentDate.getFullYear() && currentDate.getMonth() == reportDate.getMonth()) {
+                        //means the date is in this current month
+                        $("#thisMonthPendingCount").text(parseInt($("#thisMonthPendingCount").text()) - 1);
 
-            //             switch (data.status) {
-            //                 case 'Noted':
-            //                     $("#thisMonthNotedCount").text(parseInt($("#thisMonthNotedCount").text()) + 1);
-            //                     break;
-            //                 case 'Invalid':
-            //                     $("#thisMonthInvalidCount").text(parseInt($("#thisMonthInvalidCount").text()) + 1);
-            //                     break;
-            //             }
-            //         }
-            //     }
+                        switch (data.status) {
+                            case 'Noted':
+                                $("#thisMonthNotedCount").text(parseInt($("#thisMonthNotedCount").text()) + 1);
+                                break;
+                            case 'Invalid':
+                                $("#thisMonthInvalidCount").text(parseInt($("#thisMonthInvalidCount").text()) + 1);
+                                break;
+                        }
+                    }
+                }
 
-            //     $('.btnRespondReport').attr("disabled", false); //enable the button
-            //     $('.btnRespondReportTxt').text('Respond') //set the text of the submit btn
-            //     $('.btnRespondReportLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            // })
+                $('.btnRespondReport').attr("disabled", false); //enable the button
+                $('.btnRespondReportTxt').text('Respond') //set the text of the submit btn
+                $('.btnRespondReportLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+            })
 
 
         }

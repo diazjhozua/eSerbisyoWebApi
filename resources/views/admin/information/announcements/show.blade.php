@@ -19,7 +19,7 @@
     {{-- Delete Modal Confirmation --}}
     @include('inc.delete')
 
-        <!-- Page Heading -->
+     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"><button class="btn btn-primary" onclick="window.location=document.referrer;" type="submit"><i class="fas fa-caret-square-left"></i></button> Title:<span id="announcementTitle"> {{ $announcement->title }}</span>
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>

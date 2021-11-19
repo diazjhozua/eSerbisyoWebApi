@@ -1,6 +1,6 @@
-<!-- Create/Edit Announcement Modal -->
-<div class="modal fade" id="reportFormModal" tabindex="-1" role="dialog" aria-labelledby="reportFormModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="announcement">
+<!-- Create/Edit Missing Person Report Modal -->
+<div class="modal fade bd-example-modal-lg" id="reportFormModal" tabindex="-1" role="dialog" aria-labelledby="reportFormModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="announcement">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="reportFormModalHeader" class="modal-title"></h5>
@@ -27,14 +27,14 @@
                             {{-- Report Type --}}
                             <label for="report_type">Type</label>
                             <select class="custom-select" id="report_type" name="report_type">
-                                <option selected>Choose unit</option>
+                                {{-- <option selected>Choose unit</option>
                                 <option value="Missing">Missing</option>
-                                <option value="Found">Found</option>
+                                <option value="Found">Found</option> --}}
                             </select>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-3 mt-lg-0">
                         <div class="col-sm-8">
                             {{-- Unique Sign --}}
                             <div class="form-group">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-3 mt-lg-0">
                         <div class="col-sm-8">
                             {{-- Height --}}
                             <div class="form-group">
@@ -63,18 +63,14 @@
                             {{-- Height Unit --}}
                             <label for="height_unit">Unit</label>
                             <select class="custom-select" id="height_unit" name="height_unit">
-                                <option selected>Choose unit</option>
+                                {{-- <option selected>Choose unit</option>
                                 <option value="feet(ft)">feet(ft)</option>
-                                <option value="centimeter(cm)">centimeter(cm)</option>
+                                <option value="centimeter(cm)">centimeter(cm)</option> --}}
                             </select>
-
                         </div>
                     </div>
 
-
-
-
-                    <div class="row">
+                    <div class="row mt-3 mt-lg-0">
                         <div class="col-sm-8">
                             {{-- Weight --}}
                             <div class="form-group">
@@ -86,16 +82,14 @@
                             {{-- Weight Unit --}}
                             <label for="weight_unit">Unit</label>
                             <select class="custom-select" id="weight_unit" name="weight_unit">
-                                <option selected>Choose unit</option>
+                                {{-- <option selected>Choose unit</option>
                                 <option value="kilogram(kg)">kilogram(kg)</option>
-                                <option value="pound(lbs)">pound(lbs)</option>
+                                <option value="pound(lbs)">pound(lbs)</option> --}}
                             </select>
                         </div>
                     </div>
 
-
-
-                    <div class="row">
+                    <div class="row mt-3 mt-lg-0">
                         <div class="col-sm-6">
                             {{-- Eye Color --}}
                             <div class="form-group">
@@ -131,13 +125,25 @@
                     </div>
 
                     {{-- Missing Person Picture --}}
-                    <div class="form-group">
-                        <label>Select picture (JPG/PNG)</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="picture" name="picture">
-                            <label class="custom-file-label" for="picture">Choose file</label>
+                    <div class="row mt-3 mt-lg-0">
+                        <div class="col-sm-8">
+                            {{-- Picture Upload --}}
+                            <div class="form-group">
+                                <label>Select picture (JPG/PNG)</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="picture" name="picture">
+                                    <label class="custom-file-label" for="picture">Choose file</label>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="col-sm-4" id="currentPictureDiv">
+                             <small class="form-text text-muted">Current Picture</small>
+                            <img id="imgCurrentPicture" style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="" class="rounded" alt="">
+                        </div>
+
                     </div>
+
                 </div>
 
                 <div class="modal-footer">

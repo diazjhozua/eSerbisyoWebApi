@@ -11,7 +11,6 @@ use App\Http\Resources\MissingPersonResource;
 use App\Models\MissingPerson;
 use DB;
 use Helper;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class MissingPersonController extends Controller
@@ -29,6 +28,7 @@ class MissingPersonController extends Controller
         ->first();
 
         $missing_persons = MissingPerson::withCount('comments')->orderBy('created_at','DESC')->get();
+
         return view('admin.taskforce.missing-persons.index', compact('missing_persons', 'missingPersonsData'));
     }
 
@@ -37,7 +37,7 @@ class MissingPersonController extends Controller
         if(request()->ajax()) {
             $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
             $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
-            $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
+            $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "pound(lbs)"] ];
             return response()->json(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits, 'success' => true]);
         }
     }
@@ -56,10 +56,8 @@ class MissingPersonController extends Controller
     public function show(MissingPerson $missing_person)
     {
         $missing_person->load('comments')->loadCount('comments');
-        $statuses = [ (object)[ "id" => 1, "name" => "Pending"], (object) ["id" => 2,"type" => "Denied"] ,
-            (object) ["id" => 3,"type" => "Approved"], (object) ["id" => 4,"type" => "Resolved"] ];
 
-        return view('admin.taskforce.missing-persons.show', compact('missing_person', 'statuses'));
+        return view('admin.taskforce.missing-persons.show', compact('missing_person'));
     }
 
     public function edit(MissingPerson $missing_person)
@@ -67,12 +65,12 @@ class MissingPersonController extends Controller
         if(request()->ajax()) {
             $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
             $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
-            $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
+            $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "pound(lbs)"] ];
             return (new MissingPersonResource($missing_person))->additional(array_merge(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits], Helper::instance()->itemFound('missing-person report')));
         }
     }
 
-    public function update(Request $request, MissingPerson $missing_person)
+    public function update(MissingPersonRequest $request, MissingPerson $missing_person)
     {
         if(request()->ajax()) {
             if($request->hasFile('picture')) {
@@ -85,7 +83,7 @@ class MissingPersonController extends Controller
         }
     }
 
-    public function destroy(MissingPersonRequest $missing_person)
+    public function destroy(MissingPerson $missing_person)
     {
         if(request()->ajax()) {
             Storage::delete('public/missing-pictures/'. $missing_person->picture_name);

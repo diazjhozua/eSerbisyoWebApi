@@ -218,7 +218,6 @@ $(document).ready(function () {
 
 
 
-
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
