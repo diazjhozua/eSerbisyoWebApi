@@ -8,6 +8,7 @@ use App\Http\Requests\CommentRequest;
 use App\Http\Requests\MissingPersonRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\MissingPersonResource;
+use App\Jobs\ChangeStatusReportJob;
 use App\Models\MissingPerson;
 use DB;
 use Helper;
@@ -95,11 +96,17 @@ class MissingPersonController extends Controller
     public function changeStatus(ChangeStatusRequest $request, MissingPerson $missing_person)
     {
         if(request()->ajax()) {
-            if ($request->status == $missing_person->status) {
-                return response()->json(Helper::instance()->sameStatusMessage($request->status, 'missing-person report'));
-            }
+            // if ($request->status == $missing_person->status) {
+            //     return response()->json(Helper::instance()->sameStatusMessage($request->status, 'missing-person report'));
+            // }
+
             $oldStatus = $missing_person->status;
             $missing_person->fill($request->validated())->save();
+
+            $subject = 'Missing Person Report Change Status Notification';
+            $reportName = 'missing person report';
+            dispatch(new ChangeStatusReportJob($missing_person->user->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject));
+
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
     }

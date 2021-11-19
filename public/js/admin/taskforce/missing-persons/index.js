@@ -231,6 +231,40 @@ function addOrReplaceData(data, addOrReplace) {
 
 $(document).ready(function () {
 
+
+    // start of pusher //
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('246912fa37725a18907b', {
+        cluster: 'ap1',
+        authEndpoint: '/broadcasting/auth',
+        forceTLS: true,
+        auth: {
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        }
+    });
+
+    var channel = pusher.subscribe('private-missingPerson-channel');
+
+    channel.bind('missingPerson-channel', function (data) {
+        addOrReplaceData(data.missingPerson, 'Add')
+        toastr.warning('User ' + data.missingPerson.submitted_by + 'submitted a report. Please repond to the specific report.')
+        // add to pending card if it is new report
+        $("#thisMonthCount").text(parseInt($("#thisMonthCount").text()) + 1);
+        $("#thisMonthPendingCount").text(parseInt($("#thisMonthPendingCount").text()) + 1);
+        $("#reportsCount").text(parseInt($("#reportsCount").text()) + 1);
+    });
+
+    channel.bind('pusher:subscription_succeeded', function (members) {
+        toastr.info('Broadcast Server Connected. You may able receive a new report from a resident realtime')
+    });
+
+    // end of pusher //
+
     $('#missingPerson').addClass('active')
 
     // Set class row selected when any button was click in the selected
@@ -246,6 +280,7 @@ $(document).ready(function () {
             currentRowStatus = currentRow.find("td:eq(10)").text().trim();
         }
     })
+
 
     // Initialize Year picker in report form
     $(".datepicker").datepicker({

@@ -133,7 +133,6 @@
                         </select>
                     </div>
 
-
                     {{-- Admin Message --}}
                     <div class="form-group">
                         <label for="description">Message</label>
