@@ -31,17 +31,17 @@ class AuthController extends Controller
             if (Auth::user()->user_role_id == 9 || Auth::user()->user_role_id == 8) {
                 Session::flush();
                 Auth::logout();
-                return response()->json(['success' => false, 'message' => 'Your account is does not have admin priviledges (barangay officials),
-                please download the android application to access the application as a resident or biker.']);
+                return response()->json(['message' => 'Your account is does not have admin priviledges (barangay officials),
+                please download the android application to access the application as a resident or biker.'], 403);
 
             } elseif (Auth::user()->user_role_id < 5) {
-                return response()->json(['success' => true, 'message' => 'Login success', 'route' => route('admin.dashboard.index')]);
+                return response()->json(['message' => 'Login success', 'route' => route('admin.dashboard.index')], 200);
             } elseif(Auth::user()->user_role_id == 5) {
-                return response()->json(['success' => true, 'message' => 'Login success', 'route' => route('admin.users.index')]);
+                return response()->json(['message' => 'Login success', 'route' => route('admin.users.index')], 200);
             }
         }
 
-        return response()->json(['success' => false, 'message' => 'Login details are not valid' ]);
+        return response()->json(['message' => 'Login details are not valid' ], 401);
     }
 
     public function logout() {
@@ -69,7 +69,7 @@ class AuthController extends Controller
             'created_at' => Carbon::now()
         ]);
 
-        Mail::send('email.forgetPassword', ['token' => $token], function($message) use($request){
+        Mail::send('emails.forgetPassword', ['token' => $token], function($message) use($request){
             $message->to($request->email);
             $message->subject('Reset Password');
         });
@@ -89,12 +89,11 @@ class AuthController extends Controller
         DB::table('password_resets')->where(['email'=> $request->email])->delete();
 
         return response()->json([
-            'success' => true,
             'message' => 'Your password has been changed! If your are admin, please login on this page.
             For residents, please use the android application to login',
             'html' => 'Your password has been changed! If your are admin, please <a href="'.route('login').'">login</a> on this page.
             For residents, please use the android application to login',
-        ]);
+        ], 200);
     }
 
     public function showRegisterForm() {
@@ -105,9 +104,8 @@ class AuthController extends Controller
         User::create(array_merge($request->getData(), ['password' => Hash::make($request->password), 'user_role_id' => 8]));
 
         return response()->json([
-            'success' => true,
             'message' => 'Registration Success! If you are a resident or biker, please use the android application to login your account. If you are an administrator, please wait for
             the other admin to approve your request',
-        ]);
+        ], 200);
     }
 }

@@ -16,6 +16,7 @@ class CreateMissingPersonsTable extends Migration
         Schema::create('missing_persons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('contact_user_id')->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->float('height', 5,2);
             $table->enum('height_unit', ['feet(ft)', 'centimeter(cm)']);
@@ -27,11 +28,15 @@ class CreateMissingPersonsTable extends Migration
             $table->string('unique_sign');
             $table->string('important_information');
             $table->string('last_seen');
-            $table->string('contact_information');
+            $table->string('email')->nullable();
+            $table->string('phone_no')->nullable();
             $table->string('picture_name');
             $table->string('file_path');
             $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
+            $table->string('admin_message')->nullable();
             $table->enum('report_type', ['Missing', 'Found']);
+            $table->string('credential_name');
+            $table->string('credential_file_path');
             $table->timestamps();
         });
     }

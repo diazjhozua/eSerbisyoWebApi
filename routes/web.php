@@ -64,6 +64,7 @@ Route::get('/event', function () {
 // });
 
 Route::get('/', function () {
+
     return view('admin.taskforce.sample');
 });
 
@@ -106,11 +107,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:notBasicUse
     // change email
     Route::put('profile/changeEmail', [AdminProfile::class, 'changeEmail'])->name('profile.changeEmail');
 
-
     Route::get('files/{folderName}/{fileName}', function ($folderName, $fileName) {
         $url = Storage::disk('public')->path($folderName.'/'.$fileName);
         return response()->file($url);
     })->name('viewFiles');
 });
+
 
 

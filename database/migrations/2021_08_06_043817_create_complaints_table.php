@@ -16,11 +16,15 @@ class CreateComplaintsTable extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('contact_user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('type_id')->nullable()->constrained('types')->onDelete('set null');
             $table->string('custom_type')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone_no')->nullable();
             $table->longText('reason');
             $table->longText('action');
             $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
+            $table->string('admin_message')->nullable();
             $table->timestamps();
         });
     }

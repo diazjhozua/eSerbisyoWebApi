@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\MissingItemEvent;
+use App\Events\MissingPersonEvent;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeStatusRequest;
@@ -9,8 +11,9 @@ use App\Http\Requests\CommentRequest;
 use App\Http\Requests\LostAndFoundRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\LostAndFoundResource;
+use App\Http\Resources\MissingItemResource;
 use App\Models\LostAndFound;
-use App\Models\MissingPerson;
+use App\Models\MissingItem;
 use Illuminate\Support\Facades\Storage;
 
 class LostAndFoundController extends Controller
@@ -32,9 +35,9 @@ class LostAndFoundController extends Controller
     {
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-        $lost_and_found = LostAndFound::create(array_merge($request->getData(), ['user_id' => 2, 'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
-        $lost_and_found->comments_count = 0;
-        return (new LostAndFoundResource($lost_and_found))->additional(Helper::instance()->storeSuccess('lost-and-found report'));
+        $lost_and_found = MissingItem::create(array_merge($request->getData(), ['user_id' => 2, 'contact_user_id' => 2,'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
+        event(new MissingItemEvent($lost_and_found));
+        return (new MissingItemResource($lost_and_found))->additional(Helper::instance()->storeSuccess('missing-item report'));
     }
 
     public function show(LostAndFound $lost_and_found)
@@ -73,6 +76,7 @@ class LostAndFoundController extends Controller
         if ($request->status == $lost_and_found->status) {
             return response()->json(Helper::instance()->sameStatusMessage($request->status, 'lost-and-found report'));
         }
+
         $oldStatus = $lost_and_found->status;
         $lost_and_found->fill($request->validated())->save();
         return (new LostAndFoundResource($lost_and_found->load('comments')->loadCount('comments')))->additional(Helper::instance()->statusMessage($oldStatus, $lost_and_found->status, 'lost-and-found report'));

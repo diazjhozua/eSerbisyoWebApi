@@ -13,8 +13,18 @@ function createType() {
 
 function editType(id) {
     url = 'complaint-types/' + id + '/edit'
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
+    $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.success(response.message);
+            toastr.info('The fields can now be edited');
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
             const actionURL = '/admin/complaint-types/' + data.id
@@ -22,14 +32,22 @@ function editType(id) {
             $('#typeFormModalHeader').text('Edit Complaint Type') //set the header of the
             $('#nameLabel').text('Complaint Type Name') //set the text of type name in the form
             $('#typeForm').trigger("reset"); //reset all the values
-            $('#typeName').val(data.name) // set the text of the input
-            $('.btnTxt').text('Update') //set the text of the submit btn
+            $('#typeName').val(data.name); // set the text of the input
+            $('.btnTxt').text('Update'); //set the text of the submit btn
             $("#formMethod").empty();
-            $("#formMethod").append(inputMethod) // append formMethod
-            $('#typeForm').attr('action', actionURL) //set action
+            $("#formMethod").append(inputMethod); // append formMethod
+            $('#typeForm').attr('action', actionURL); //set action
+        },
+        error: function (xhr, status, error) {
+            var error = JSON.parse(xhr.responseText);
+
+            // show error message from helper.js
+            ajaxErrorMessage(error);
+        },
+        complete: function () {
+
         }
-    }
-    )
+    });
 }
 
 function deleteType(id) {
@@ -74,12 +92,24 @@ $(document).ready(function () {
             let formMethod = $('#method').val()
             let formData = new FormData(form)
 
-            $('#btnFormSubmit').attr("disabled", true); //disabled login
-            $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
-            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
 
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success) {
+            $.ajax({
+                type: 'POST',
+                url: formAction,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
                     $('#typeFormModal').modal('hide') //hide the modal
 
                     const data = response.data
@@ -137,12 +167,19 @@ $(document).ready(function () {
                     } else {
                         table.row('.selected').data([col0, col1, col2, col3, col4]).draw(false);
                     }
-                }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
 
-                $('#btnFormSubmit').attr("disabled", false);
-                $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
-                $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('#btnFormSubmit').attr("disabled", false);
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+                }
+            });
         }
     });
 
@@ -181,6 +218,7 @@ $(document).ready(function () {
             $('.btnComplaintFormTxt').text('Generating') //set the text of the submit btn
             $('.btnComplaintFormLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
 
+
             $.ajax({
                 type: 'POST',
                 url: formAction,
@@ -217,35 +255,51 @@ $(document).ready(function () {
     });
 
 
-
-
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
-        let formAction = $("#modalDeleteForm").attr('action')
+        let ajaxDelURL = $("#modalDeleteForm").attr('action')
 
-        $('#btnDelete').attr("disabled", true); //disabled button
-        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
-        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+        $.ajax({
+            type: 'DELETE',
+            url: ajaxDelURL,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#btnDelete').attr("disabled", true); //disabled button
+                $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+                $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+            },
+            success: function (response) {
+                toastr.success(response.message);
 
-        doAjax(formAction, 'DELETE').then((response) => {
-            if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {
                     table.row('.selected').remove().draw();
                 });
 
-                // decrement typeCount
+                // decrement termCount
                 $("#typeCount").text(parseInt($("#typeCount").text()) - 1);
+            },
+            error: function (xhr) {
+                var error = JSON.parse(xhr.responseText);
+
+                // show error message from helper.js
+                ajaxErrorMessage(error);
+            },
+            complete: function () {
+                $('#btnDelete').attr("disabled", false); //enable button
+                $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+                $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+
+                $('#confirmationDeleteModal').modal('hide') //hide
+                $('#modalDeleteForm').trigger("reset"); //reset all the values
             }
-
-            $('#btnDelete').attr("disabled", false); //enable button
-            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
-            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-        })
-        $('#confirmationDeleteModal').modal('hide') //hide
-        $('#modalDeleteForm').trigger("reset"); //reset all the values
+        });
     })
-
 })
 

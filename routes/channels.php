@@ -27,3 +27,18 @@ Broadcast::channel('report-channel', function ($user) {
     // if you get here, you've been authenticated (within a custom middleware)
     return true;
 });
+
+Broadcast::channel('missingPerson-channel', function ($user) {
+    // if you get here, you've been authenticated (within a custom middleware)
+    return true;
+});
+
+Broadcast::channel('missingItem-channel', function ($user) {
+    // if you get here, you've been authenticated (within a custom middleware)
+    return true;
+});
+
+Broadcast::channel('feedback-channel', function ($user) {
+    // if you get here, you've been authenticated (within a custom middleware)
+    return true;
+});

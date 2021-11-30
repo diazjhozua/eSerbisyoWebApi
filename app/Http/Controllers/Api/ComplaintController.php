@@ -17,11 +17,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ComplaintController extends Controller
 {
-    public function index()
-    {
-        $complaints = Complaint::with('type')->withCount('complainants', 'defendants')->orderBy('created_at', 'DESC')->get();
-        return ComplaintResource::collection($complaints)->additional(['success' => true]);
-    }
 
     public function create()
     {

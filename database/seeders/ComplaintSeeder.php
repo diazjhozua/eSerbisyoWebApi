@@ -16,7 +16,7 @@ class ComplaintSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        $status = ['Pending', 'Denied', 'Approved', 'Resolved'];
+        $statusArr = ['Pending', 'Denied', 'Approved', 'Resolved'];
 
         foreach (range(1,100) as $complaint_id) {
             $type = $faker->numberBetween(31, 35);
@@ -29,16 +29,29 @@ class ComplaintSeeder extends Seeder
                 $custom_type = $faker->realText($maxNbChars = 10, $indexSize = 1);
             }
 
+            $admin_message = null;
+
+            $status = $statusArr[array_rand($statusArr)];
+
+            if ($status != 'Pending') {
+                $admin_message = $faker->realText($maxNbChars = 50, $indexSize = 1);
+            }
+
             $complainantCount = $faker->numberBetween(1, 2);
             $defendantCount = $faker->numberBetween(1, 5);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $userID = $faker->numberBetween(1, 548);
             DB::table('complaints')->insert([
-                'user_id' => $faker->numberBetween(1, 19),
+                'user_id' => $userID,
+                'contact_user_id' => $userID,
                 'type_id' => $type,
                 'custom_type' => $custom_type,
                 'reason' => $faker->realText($maxNbChars = 500, $indexSize = 3),
                 'action' => $faker->realText($maxNbChars = 500, $indexSize = 3),
-                'status' => $status[array_rand($status)],
+                'email' => $faker->lastName.$faker->email,
+                'phone_no' => $faker->phoneNumber,
+                'status' => $status,
+                'admin_message' => $admin_message,
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);

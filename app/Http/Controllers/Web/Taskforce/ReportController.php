@@ -44,7 +44,6 @@ class ReportController extends Controller
             $subject = $request->status == 'Noted' ? 'Your submitted report was noted by the barangay official' : 'Your submitted report was invalidated' ;
 
             dispatch(new RespondReportJob($report, $subject));
-
             return (new ReportResource($report->load('type')))->additional(Helper::instance()->noted('report'));
         }
     }

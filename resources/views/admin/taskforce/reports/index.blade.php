@@ -7,7 +7,7 @@
 @endsection
 
 {{-- Title Page --}}
-@section('title', 'Report Types')
+@section('title', 'Reports')
 
 @section('content')
 
@@ -44,7 +44,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Pending Report</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $reportsData->pending_count }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthPendingCount">{{ $reportsData->pending_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-plus-circle fa-2x text-info"></i>
@@ -62,7 +62,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Noted Report</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $reportsData->noted_count }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthNotedCount">{{ $reportsData->noted_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-check-square fa-2x text-dark"></i>
@@ -81,7 +81,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Invalid Report</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $reportsData->invalid_count }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthInvalidCount"> {{ $reportsData->invalid_count }}</div>
                             </div>
                         <div class="col-auto">
                             <i class="fas fa-times-circle fa-2x text-warning"></i>
@@ -99,7 +99,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
                                 Ignored Report</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $reportsData->ignored_count }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthIgnoredCount">{{ $reportsData->ignored_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-trash-alt fa-2x text-danger"></i>

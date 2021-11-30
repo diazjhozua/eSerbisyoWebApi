@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MissingItem;
 use App\Models\RequestRequirement;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
@@ -49,18 +50,17 @@ class DatabaseSeeder extends Seeder
             ComplaintTypeSeeder::class,
             ReportTypeSeeder::class,
 
-
-            FeedbackSeeder::class,
-            DocumentSeeder::class,
-            OrdinanceSeeder::class,
-            ProjectSeeder::class,
-            TermSeeder::class,
-            PositionSeeder::class,
-            EmployeeSeeder::class,
-            AnnouncementSeeder::class,
+            // FeedbackSeeder::class,
+            // DocumentSeeder::class,
+            // OrdinanceSeeder::class,
+            // ProjectSeeder::class,
+            // TermSeeder::class,
+            // PositionSeeder::class,
+            // EmployeeSeeder::class,
+            // AnnouncementSeeder::class,
 
             MissingPersonSeeder::class,
-            LostAndFoundSeeder::class,
+            MissingItemSeeder::class,
             ComplaintSeeder::class,
             ReportSeeder::class,
 

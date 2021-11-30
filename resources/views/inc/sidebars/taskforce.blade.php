@@ -89,21 +89,21 @@
 
     <!-- Feedback Nav Item - Tables -->
     <li id="complaint" class="nav-item">
-        <a class="nav-link" href="{{ route('admin.feedbacks.index') }}">
+        <a class="nav-link" href="{{ route('admin.complaints.index') }}">
             <img src="{{ asset('assets/img/complaint.png') }}" alt="Complaint">
             <span>Complaint</span></a>
     </li>
 
     <!-- Document Nav Item - Tables -->
     <li id="missingPerson" class="nav-item">
-        <a class="nav-link" href="{{ route('admin.documents.index') }}">
+        <a class="nav-link" href="{{ route('admin.missing-persons.index') }}">
             <img src="{{ asset('assets/img/missingPerson.png') }}" alt="Missing-Person">
             <span>Missing Person</span></a>
     </li>
 
     <!-- Ordinance Nav Item - Tables -->
     <li id="missingItem" class="nav-item">
-        <a class="nav-link" href="{{ route('admin.ordinances.index') }}">
+        <a class="nav-link" href="{{ route('admin.missing-items.index') }}">
             <img src="{{ asset('assets/img/missingItem.png') }}" alt="Missing-Item">
             <span>Missing Item</span></a>
     </li>

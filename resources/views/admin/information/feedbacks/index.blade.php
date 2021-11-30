@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('page-js')
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="{{ asset('js/admin/information/feedbacks/index.js')}}"></script>
 @endsection
 
@@ -34,7 +35,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Pending Feedback</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->pending_count }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="pendingFeedbackCount">{{ $feedbacksData->pending_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-plus-circle fa-2x text-info"></i>
@@ -52,7 +53,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
                                 Noted Feedback</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->noted_count }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="notedFeedbackCount">{{ $feedbacksData->noted_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-check-square fa-2x text-dark"></i>
@@ -198,9 +199,9 @@
                                 <td>{{ $feedback->created_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">
-                                        <li class="list-inline-item">
+                                        <li class="list-inline-item mb-1">
                                             <button class="btn btn-primary btn-sm" type="button" onclick="sendRespond({{ $feedback->id }})" data-toggle="tooltip" data-placement="top" title="Respond" {{$feedback->status != 'Pending' ? 'disabled' : ''}}>
-                                                Respond
+                                                {{$feedback->status != 'Pending' ? 'Responded' : 'Respond'}}
                                             </button>
                                         </li>
                                     </ul>

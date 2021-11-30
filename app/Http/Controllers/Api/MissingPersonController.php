@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\MissingPersonEvent;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeStatusRequest;
@@ -33,6 +34,8 @@ class MissingPersonController extends Controller
         $fileName = time().'_'.$request->picture->getClientOriginalName();
         $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
         $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => 2,'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
+        event(new MissingPersonEvent($missing_person));
+
         $missing_person->comments_count = 0;
         return (new MissingPersonResource($missing_person))->additional(Helper::instance()->storeSuccess('missing-person report'));
     }

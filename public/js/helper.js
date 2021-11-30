@@ -17,6 +17,15 @@ toastr.options = {
 }
 
 
+function ajaxErrorMessage(error) {
+    if (error.message != null) {
+        toastr.error(error.message)
+    } else {
+        $.each(error.errors, function (key, value) {
+            toastr.error(value)
+        });
+    }
+}
 
 const doAjax = async function (url, method, body) {
     let result;
@@ -32,6 +41,31 @@ const doAjax = async function (url, method, body) {
             cache: false,
             processData: false,
             contentType: false,
+            success: function (response) {
+                toastr.success(response.message)
+                return response;
+            },
+            error: function (xhr, status, error) {
+                var err = JSON.parse(xhr.responseText);
+                alert(err);
+
+                if (err.message != null) {
+                    toastr.error(result.message)
+
+                } else {
+                    $.each(err.errors, function (key, value) {
+                        toastr.error(value)
+                    });
+                }
+
+                return false;
+            },
+            complete: function () {
+                btnReportFormSubmit.attr("disabled", false);
+                btnReportFormTxt.text('Submit');
+                btnReportFormLoadingIcon.prop("hidden", true);
+            }
+
         });
 
         if (result.success) {

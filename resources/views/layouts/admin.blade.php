@@ -32,6 +32,7 @@
     <!-- Custom styles for type template-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
+
     @yield('page-css')
 
 </head>
@@ -107,11 +108,16 @@
     {{-- Helper Function --}}
     <script src="{{ asset('js/helper.js')}}"></script>
 
+    <script src="{{ asset('js/jq-signature.min.js')}}"></script>
+
     <!-- Page level plugins -->
     <script src="{{ asset('admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>
     <script src="{{ asset('admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 
     <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
+
+    {{-- Double Scroll --}}
+    <script src="{{ asset('js/doubleScroll.js')}}"></script>
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('admin/js/demo/datatables-demo.js')}}"></script>
