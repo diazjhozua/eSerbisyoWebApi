@@ -32,6 +32,7 @@
     <!-- Custom styles for type template-->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" rel="stylesheet"/>
 
+
     @yield('page-css')
 
 </head>
@@ -106,6 +107,8 @@
 
     {{-- Helper Function --}}
     <script src="{{ asset('js/helper.js')}}"></script>
+
+    <script src="{{ asset('js/jq-signature.min.js')}}"></script>
 
     <!-- Page level plugins -->
     <script src="{{ asset('admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>

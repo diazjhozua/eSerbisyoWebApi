@@ -3,48 +3,38 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Api\FormRequest;
-use App\Rules\ValidReportType;
-use App\Rules\ValidReportStatus;
 use Illuminate\Validation\Rule;
 
 class LostAndFoundRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         if ($this->isMethod('POST')) {
             return [
                 'item' => 'required|string|min:3|max:120',
+                'contact_user_id' => 'exists:users,id',
                 'last_seen' => 'required|string|min:3|max:120',
-                'description' => 'required|string|min:3|max:120',
-                'contact_information' => 'required|string|min:3|max:120',
+                'description' => 'required|string|min:3|max:250',
+                'email' => 'required|max:30|email',
+                'phone_no' => 'required|numeric',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],
                 'picture' => 'required|mimes:jpeg,png|max:3000',
             ];
-
-
         }
 
         if ($this->isMethod('PUT')) {
             return [
                 'item' => 'required|string|min:3|max:120',
+                'contact_user_id' => 'exists:users,id',
                 'last_seen' => 'required|string|min:3|max:120',
-                'description' => 'required|string|min:3|max:120',
-                'contact_information' => 'required|string|min:3|max:120',
+                'description' => 'required|string|min:3|max:250',
+                'email' => 'required|max:30|email',
+                'phone_no' => 'required|numeric',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],
                 'picture' => 'mimes:jpeg,png|max:3000',
             ];
@@ -52,7 +42,7 @@ class LostAndFoundRequest extends FormRequest
     }
 
     public function getData() {
-        $data = $this->only(['item', 'last_seen', 'description', 'weight', 'contact_information', 'report_type']);
+        $data = $this->only(['item', 'last_seen', 'description', 'weight', 'email', 'phone_no', 'report_type']);
         return $data;
     }
 

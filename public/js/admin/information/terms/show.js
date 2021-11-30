@@ -1,44 +1,108 @@
-function createEmployee() {
-    const url = window.location.origin + '/admin/employees/create'
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
-            const positions = response.positions;
-            const terms = response.terms;
-            console.log(terms);
-            $('.custom-file-label').html(''); //empty the html in the file input
-            $('#employeeForm').trigger("reset") //reset all the input values
-            $('#employeePositionDropDwn').empty() //reset dropdown button
-            $('#employeeTermDropDwn').empty()
-            $("#formMethod").empty(); //empty form method div
-            $("#currentPictureDiv").hide(); // hide the current picture div
-            $('#imgCurrentPicture').removeAttr('src'); //remoce the src attribute
-            $("#imgCurrentPicture").prop("alt", ""); //remove the alt text
 
-            $('#employeePositionDropDwn').append($("<option selected/>").val("").text('Choose...'))
-            $.each(positions, function () {
+function resetForm() {
+    $('.custom-file-label').html(''); //empty the html in the file input
+    $('#employeeForm').trigger("reset") //reset all the input values
+    $('#employeePositionDropDwn').empty() //reset dropdown button
+    $('#employeeTermDropDwn').empty()
+    $("#formMethod").empty(); //empty form method div
+    $("#currentPictureDiv").hide(); // hide the current picture div
+    $('#imgCurrentPicture').removeAttr('src'); //remoce the src attribute
+    $("#imgCurrentPicture").prop("alt", ""); //remove the alt text
+};
+
+function showEmployeeFormModal(ajaxUrl, inputMethod, titleHeader, btnTxt, employeeData, positionSelect, termSelect) {
+    //reset form fields
+    resetForm();
+
+    $("#formMethod").append(inputMethod) // append formMethod div
+    $('#employeeForm').attr('action', ajaxUrl) //set the method of the form
+    $('#employeeFormModal').modal('show')
+    $('#employeeFormModalHeader').text(titleHeader)
+    $('.btnTxt').text(btnTxt) //set the text of the submit btn
+
+    if (employeeData != null) {
+        //meaning the user is editing
+        //assigning values to input fields
+        $('#name').val(employeeData.name);
+        $('#description').val(employeeData.description);
+        $('.custom-file-label').html(employeeData.picture_name);
+        $("#currentPictureDiv").show(); // show the current picture div
+        console.log(employeeData.picture_src);
+        $('#imgCurrentPicture').prop('src', employeeData.picture_src); //add the src attribute
+        $("#imgCurrentPicture").prop("alt", employeeData.name); //add the alt text
+
+        //populate position select drop down
+        $('#employeePositionDropDwn').append($("<option selected/>").val(employeeData.position_id).text(employeeData.position_id == 0 ? employeeData.custom_position : employeeData.position))
+        $.each(positionSelect, function () {
+            if (this.id != employeeData.position_id) {
                 // Populate Position Drop Dowm
-                $('#employeePositionDropDwn').append($("<option />").val(this.id).text(this.name))
-            })
+                $('#employeePositionDropDwn').append($("<option />").val(this.id).text(this.name));
+            }
+        });
 
-            //since it is from the docu profile, the docutype would be fixed depending kung anong page yun
-            const currentTermID = window.location.href.match(/terms\/(\d+)/)
-            $.each(terms, function () {
+        // populate term select dropdow
+        $('#employeeTermDropDwn').append($("<option selected/>").val(employeeData.term_id).text(employeeData.term_id == 0 ? employeeData.custom_term : employeeData.term));
+        $.each(termSelect, function () {
+            if (this.id != employeeData.term_id) {
                 // Populate Term Drop Dowm
-                if (currentTermID[1] == this.id) {
-                    $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
-                }
-            })
+                $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'));
+            }
+        });
 
-            let actionURL = '/admin/employees/'
-            let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
-            $("#formMethod").append(inputMethod) // append formMethod div
-            $('#employeeForm').attr('action', actionURL) //set the method of the form
-            $('#employeeFormModal').modal('show')
-            $('#employeeFormModalHeader').text('Publish Employee')
-            $('.btnTxt').text('Store') //set the text of the submit btn
+    } else {
+        // the form is in creating mode
+
+        // poplute employeePositionDropDwn
+        $('#employeePositionDropDwn').append($("<option selected/>").val("").text('Choose...'));
+        $.each(positionSelect, function () {
+            // Populate Position Drop Dowm
+            $('#employeePositionDropDwn').append($("<option />").val(this.id).text(this.name))
+        });
+
+        // since it is from the term profile, the currentTermID would be fixed depending kung anong page yun
+        const currentTermID = window.location.href.match(/terms\/(\d+)/)
+        $.each(termSelect, function () {
+            // Populate Term Drop Dowm
+            if (currentTermID[1] == this.id) {
+                $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
+            }
+        })
+
+    }
+}
+
+function createEmployee() {
+    const ajaxCreateURL = window.location.origin + '/admin/employees/create'
+
+    $.ajax({
+        type: 'GET',
+        url: ajaxCreateURL,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.success(response.message);
+
+            const termSelect = response.terms;
+            const positionSelect = response.positions;
+            const inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
+            const ajaxStoreURL = '/admin/employees/ ';
+
+            //show form modal
+            showEmployeeFormModal(ajaxStoreURL, inputMethod, 'Create Employee', 'Store', null, positionSelect, termSelect);
+
+        },
+        error: function (xhr) {
+            var error = JSON.parse(xhr.responseText);
+
+            // show error message from helper.js
+            ajaxErrorMessage(error);
         }
-    })
+    });
 }
 
 function deleteEmployee(id) {
@@ -50,57 +114,40 @@ function deleteEmployee(id) {
 
 function editEmployee(id) {
 
-    url = window.location.origin + '/admin/employees/' + id + '/edit'
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
-            const data = response.data
-            const positions = response.positions;
-            const terms = response.terms;
+    ajaxEditUrl = window.location.origin + '/admin/employees/' + id + '/edit'
 
+    $.ajax({
+        type: 'GET',
+        url: ajaxEditUrl,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.success(response.message);
 
-            $('.custom-file-label').html(''); //empty the html in the file input
-            $('#employeeForm').trigger("reset") //reset all the input values
-            $('#employeePositionDropDwn').empty() //reset dropdown button
-            $('#employeeTermDropDwn').empty()
-            $("#formMethod").empty(); //empty form method div
-            $("#currentPictureDiv").hide(); // hide the current picture div
-            $('#imgCurrentPicture').removeAttr('src'); //remoce the src attribute
-            $("#imgCurrentPicture").prop("alt", ""); //remove the alt text
+            const employeeData = response.data;
+            const termSelect = response.terms;
+            const positionSelect = response.positions;
+            const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
+            const ajaxUpdateURL = '/admin/employees/' + employeeData.id;
 
-            $('#employeePositionDropDwn').append($("<option selected/>").val(data.position_id).text(data.position_id == 0 ? data.custom_position : data.position))
-            $.each(positions, function () {
-                if (this.id != data.position_id) {
-                    // Populate Position Drop Dowm
-                    $('#employeePositionDropDwn').append($("<option />").val(this.id).text(this.name))
-                }
-            })
+            //show form modal
+            showEmployeeFormModal(ajaxUpdateURL, inputMethod, 'Create Employee', 'Update', employeeData, positionSelect, termSelect);
 
-            $('#employeeTermDropDwn').append($("<option selected/>").val(data.term_id).text(data.term_id == 0 ? data.custom_term : data.term))
-            $.each(terms, function () {
-                if (this.id != data.term_id) {
-                    // Populate Term Drop Dowm
-                    $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
-                }
-            })
+        },
+        error: function (xhr) {
+            var error = JSON.parse(xhr.responseText);
 
-            $('#name').val(data.name)
-            $('#description').val(data.description)
-            $('.custom-file-label').html(data.picture_name)
-            $("#currentPictureDiv").show(); // show the current picture div
-            $('#imgCurrentPicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
-            $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
-
-            let actionURL = '/admin/employees/' + data.id
-            let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-
-            $("#formMethod").append(inputMethod) // append formMethod div
-            $('#employeeForm').attr('action', actionURL) //set the method of the form
-            $('#employeeFormModal').modal('show')
-            $('#employeeFormModalHeader').text('Edit Employee')
-            $('.btnTxt').text('Update') //set the text of the submit btn
+            // show error message from helper.js
+            ajaxErrorMessage(error);
         }
-    })
+    });
 }
+
+
 
 $(document).ready(function () {
     // Set class row selected when any button was click in the selected
@@ -173,23 +220,35 @@ $(document).ready(function () {
 
         submitHandler: function (form, event) {
             event.preventDefault()
-            let formAction = $("#employeeForm").attr('action')
+            let ajaxStoreURL = $("#employeeForm").attr('action')
             let formMethod = $('#method').val()
             let formData = new FormData(form)
 
-            $('#btnFormSubmit').attr("disabled", true); //disabled login
-            $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
-            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+            $.ajax({
+                type: 'POST',
+                url: ajaxStoreURL,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
 
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success != null && response.success == true) {
                     $('#employeeFormModal').modal('hide') //hide the modal
 
-                    const data = response.data
+                    const data = response.data;
 
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.name + '</td>'
-                    col2 = '<td><img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + window.location.origin + '/storage/' + data.file_path + '" class="rounded" alt="' + data.name + ' image"></td>'
+                    col2 = '<td><img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.picture_src + '" class="rounded" alt="' + data.name + '"></td>'
                     col3 = '<td><a href="' + window.location.origin + '/admin/positions/' + data.position_id + '">' + data.position + '</a></td>'
                     col4 = '<td>' + data.description + '</td>'
                     col5 = '<td>' + data.updated_at + '</td>'
@@ -235,58 +294,73 @@ $(document).ready(function () {
 
 
                     } else {
-                        // get the current href parameter
-                        const currentTermID = window.location.href.match(/terms\/(\d+)/)
-
-                        // check if the data is equal to the current href parameter
-                        if (parseInt(currentTermID[1]) != parseInt(data.term_id)) {
-                            var table = $('#dataTable').DataTable();
-                            $('.selected').fadeOut(800, function () {
-                                table.row('.selected').remove().draw();
-                            });
-
-                            // decrement employeesCount
-                            $("#employeesCount").text(parseInt($("#employeesCount").text()) - 1);
-                        } else {
-                            table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6]).draw(false);
-                        }
+                        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6]).draw(false);
                     }
-                }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
 
-                $('#btnFormSubmit').attr("disabled", false);
-                $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
-                $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+
+
+                    $('#btnFormSubmit').attr("disabled", false); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", true) //show the fa loading icon from submit btn
+                }
+            });
+
+
         }
     });
 
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
-        let formAction = $("#modalDeleteForm").attr('action')
+        let ajaxDelURL = $("#modalDeleteForm").attr('action')
 
-        $('#btnDelete').attr("disabled", true); //disabled button
-        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
-        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+        $.ajax({
+            type: 'DELETE',
+            url: ajaxDelURL,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#btnDelete').attr("disabled", true); //disabled button
+                $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+                $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+            },
+            success: function (response) {
+                toastr.success(response.message);
 
-        doAjax(formAction, 'DELETE').then((response) => {
-            if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {
                     table.row('.selected').remove().draw();
                 });
 
-                // decrement typeCount
+                // decrement empCount;
                 $("#employeesCount").text(parseInt($("#employeesCount").text()) - 1);
+            },
+            error: function (xhr) {
+                var error = JSON.parse(xhr.responseText);
+
+                // show error message from helper.js
+                ajaxErrorMessage(error);
+            },
+            complete: function () {
+                $('#btnDelete').attr("disabled", false); //enable button
+                $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+                $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+
+                $('#confirmationDeleteModal').modal('hide') //hide
+                $('#modalDeleteForm').trigger("reset"); //reset all the values
             }
-
-            $('#btnDelete').attr("disabled", false); //enable button
-            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
-            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-
-        })
-        $('#confirmationDeleteModal').modal('hide') //hide
-        $('#modalDeleteForm').trigger("reset"); //reset all the values
+        });
     })
 
 })

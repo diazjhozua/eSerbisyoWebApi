@@ -1,37 +1,54 @@
-function createPosition() {
-    let actionURL = '/admin/positions/'
-    let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
-    $('#positionFormModal').modal('show') //show the modal
-    $('#positionFormModalHeader').text('Create Position') //set the header of the
-    $('.btnTxt').text('Store') //set the text of the submit btn
+// function to show
+function showFormModal(ajaxURL, method, header, btnTxt) {
+    $('#positionFormModal').modal('show'); //show the modal
+    $('#positionFormModalHeader').text(header); //set the header of the
+    $('.btnTxt').text(btnTxt); //set the text of the submit btn
     $('#positionForm').trigger("reset"); //reset all the values
     $("#formMethod").empty();
-    $("#formMethod").append(inputMethod) // append formMethod
-    $('#positionForm').attr('action', actionURL) //set the method of the form
+    $("#formMethod").append(method); // append formMethod
+    $('#positionForm').attr('action', ajaxURL); //set the method of the form
+}
+
+function createPosition() {
+    const ajaxCreateURL = '/admin/positions/';
+    const method = '<input type="hidden" id="method" name="_method" value="POST">';
+
+    showFormModal(ajaxCreateURL, method, 'Create Position', 'Store');
 }
 
 function editPosition(id) {
-    url = 'positions/' + id + '/edit'
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
+    const ajaxEditURL = 'positions/' + id + '/edit'
+
+    $.ajax({
+        type: 'GET',
+        url: ajaxEditURL,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.success(response.message);
+
             const data = response.data;
-            const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-            const actionURL = '/admin/positions/' + data.id
-            $('#positionFormModal').modal('show') //show the modal
-            $('#positionFormModalHeader').text('Edit Term') //set the header of the
-            $('#positionForm').trigger("reset"); //reset all the values
+            const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
+            const ajaxUpdateURL = '/admin/positions/' + data.id;
+
+            showFormModal(ajaxUpdateURL, inputMethod, 'Edit Position', 'Update');
 
             // set the input values
             $('#ranking').val(data.ranking)
             $('#name').val(data.name)
             $('#job_description').val(data.job_description)
+        },
+        error: function (xhr) {
+            var error = JSON.parse(xhr.responseText);
 
-            $('.btnTxt').text('Update') //set the text of the submit btn
-            $("#formMethod").empty();
-            $("#formMethod").append(inputMethod) // append formMethod
-            $('#positionForm').attr('action', actionURL) //set action
+            // show error message from helper.js
+            ajaxErrorMessage(error);
         }
-    })
+    });
 }
 
 function deletePosition(id) {
@@ -77,19 +94,30 @@ $(document).ready(function () {
 
         submitHandler: function (form, event) {
             event.preventDefault()
-            let formAction = $("#positionForm").attr('action')
-            let formMethod = $('#method').val()
-            let formData = new FormData(form)
+            const ajaxURL = $("#positionForm").attr('action')
+            const formMethod = $('#method').val()
+            const formData = new FormData(form)
 
-            $('#btnFormSubmit').attr("disabled", true); //disabled login
-            $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
-            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+            $.ajax({
+                type: 'POST',
+                url: ajaxURL,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
 
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success != null && response.success == true) {
-                    $('#positionFormModal').modal('hide') //hide the modal
+                    const data = response.data;
 
-                    const data = response.data
 
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.name + '</td>'
@@ -139,18 +167,26 @@ $(document).ready(function () {
                         table.page(currentPage).draw(false)
 
                         // increment termCount
-                        $("#termCount").text(parseInt($("#termCount").text()) + 1);
-
+                        $("#positionCount").text(parseInt($("#positionCount").text()) + 1);
 
                     } else {
                         table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6]).draw(false);
                     }
-                }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
 
-                $('#btnFormSubmit').attr("disabled", false);
-                $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
-                $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('#positionFormModal').modal('hide') //hide the modal
+
+                    $('#btnFormSubmit').attr("disabled", false);
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+                }
+            });
         }
     })
 
@@ -158,29 +194,48 @@ $(document).ready(function () {
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
-        let formAction = $("#modalDeleteForm").attr('action')
+        let ajaxDelURL = $("#modalDeleteForm").attr('action')
 
-        $('#btnDelete').attr("disabled", true); //disabled button
-        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
-        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+        $.ajax({
+            type: 'DELETE',
+            url: ajaxDelURL,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#btnDelete').attr("disabled", true); //disabled button
+                $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+                $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+            },
+            success: function (response) {
+                toastr.success(response.message);
 
-        doAjax(formAction, 'DELETE').then((response) => {
-            if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {
                     table.row('.selected').remove().draw();
                 });
 
                 // decrement termCount
-                $("#termCount").text(parseInt($("#termCount").text()) - 1);
-            }
+                $("#positionCount").text(parseInt($("#positionCount").text()) - 1);
+            },
+            error: function (xhr) {
+                var error = JSON.parse(xhr.responseText);
 
-            $('#btnDelete').attr("disabled", false); //enable button
-            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
-            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-        })
-        $('#confirmationDeleteModal').modal('hide') //hide
-        $('#modalDeleteForm').trigger("reset"); //reset all the values
+                // show error message from helper.js
+                ajaxErrorMessage(error);
+            },
+            complete: function () {
+                $('#btnDelete').attr("disabled", false); //enable button
+                $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+                $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+
+                $('#confirmationDeleteModal').modal('hide') //hide
+                $('#modalDeleteForm').trigger("reset"); //reset all the values
+            }
+        });
     })
 
 })

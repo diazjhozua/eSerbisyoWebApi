@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\FeedbackEvent;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedbackRequest;
@@ -28,6 +29,7 @@ class FeedbackController extends Controller
     public function store(FeedbackRequest $request)
     {
         $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => 546]));
+        event(new FeedbackEvent($feedback->load('type')));
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->storeSuccess('feedback'));
     }
 

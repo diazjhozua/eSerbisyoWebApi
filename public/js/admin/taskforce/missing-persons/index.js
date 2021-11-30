@@ -70,59 +70,97 @@ function populateAllSelectFields(data, reportTypes, heightUnits, weightUnits) {
 }
 
 function createReport() {
-    url = 'missing-persons/create'
-    doAjax(url, 'GET').then((response) => {
-        const reportTypes = response.reportTypes;
-        const heightUnits = response.heightUnits;
-        const weightUnits = response.weightUnits;
+    url = 'missing-persons/create';
+    $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            const reportTypes = response.reportTypes;
+            const heightUnits = response.heightUnits;
+            const weightUnits = response.weightUnits;
 
-        let actionURL = '/admin/missing-persons/';
-        let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
+            let actionURL = '/admin/missing-persons/';
+            let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
 
-        //modify modal form function
-        modifyModal('Publish Missing Report', 'Store', inputMethod, actionURL);
+            //modify modal form function
+            modifyModal('Publish Missing Report', 'Store', inputMethod, actionURL);
 
-        //populate all the report select form fields
-        populateAllSelectFields(null, reportTypes, heightUnits, weightUnits);
+            //populate all the report select form fields
+            populateAllSelectFields(null, reportTypes, heightUnits, weightUnits);
+        },
+        error: function (xhr, status, error) {
+            var error = JSON.parse(xhr.responseText);
 
-    })
+            // show error message from helper.js
+            ajaxErrorMessage(error);
+        },
+        complete: function () {
+
+        }
+    });
 }
 
 function editReport(id) {
     url = 'missing-persons/' + id + '/edit'
-    doAjax(url, 'GET').then((response) => {
-        const data = response.data; //missing report data
-        const reportTypes = response.reportTypes;
-        const heightUnits = response.heightUnits;
-        const weightUnits = response.weightUnits;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.info('The fields can now be edited');
 
-        let actionURL = '/admin/missing-persons/' + data.id;
-        let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
+            const data = response.data; //missing report data
+            const reportTypes = response.reportTypes;
+            const heightUnits = response.heightUnits;
+            const weightUnits = response.weightUnits;
 
-        //modify modal form function
-        modifyModal('Edit Missing Report', 'Update', inputMethod, actionURL);
+            let actionURL = '/admin/missing-persons/' + data.id;
+            let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
 
-        //populate all the report select form fields
-        populateAllSelectFields(data, reportTypes, heightUnits, weightUnits);
+            //modify modal form function
+            modifyModal('Edit Missing Report', 'Update', inputMethod, actionURL);
 
-        // populate and show the current picture of missing person data
-        $('.custom-file-label').html(data.picture_name);
-        $("#currentPictureDiv").show(); // show the current picture div
-        $('#imgCurrentPicture').prop('src', data.picture_src); //add the src attribute
-        $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
+            //populate all the report select form fields
+            populateAllSelectFields(data, reportTypes, heightUnits, weightUnits);
 
-        // populate fields of missing person data
-        $('#name').val(data.name);
-        $('#unique_sign').val(data.unique_sign);
-        $('#age').val(data.age);
-        $('#height').val(data.height);
-        $('#weight').val(data.weight);
-        $('#eyes').val(data.eyes);
-        $('#hair').val(data.hair);
-        $('#contact_information').val(data.contact_information);
-        $('#last_seen').val(data.last_seen);
-        $('#important_information').val(data.important_information);
-    })
+            // populate and show the current picture of missing person data
+            $('.custom-file-label').html(data.picture_name);
+            $("#currentPictureDiv").show(); // show the current picture div
+            $('#imgCurrentPicture').prop('src', data.picture_src); //add the src attribute
+            $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
+
+            // populate fields of missing person data
+            $('#name').val(data.name);
+            $('#contact_user_id').val(data.contact_id);
+            $('#unique_sign').val(data.unique_sign);
+            $('#age').val(data.age);
+            $('#height').val(data.height);
+            $('#weight').val(data.weight);
+            $('#eyes').val(data.eyes);
+            $('#hair').val(data.hair);
+            $('#email').val(data.email);
+            $('#phone_no').val(data.phone_no);
+            $('#last_seen').val(data.last_seen);
+            $('#important_information').val(data.important_information);
+        },
+        error: function (xhr, status, error) {
+            var error = JSON.parse(xhr.responseText);
+
+            // show error message from helper.js
+            ajaxErrorMessage(error);
+        }
+    });
 }
 
 //delete function
@@ -136,7 +174,7 @@ function deleteReport(id) {
 function addOrReplaceData(data, addOrReplace) {
 
     col0 = '<td>' + data.id + '</td>';
-    col1 = '<td>' + data.submitted_by + '(#' + data.user_id + ')' + '</td>';
+    col1 = '<td>' + data.user_name + '(#' + data.user_id + ')' + '(#' + data.user_role + ')' + '</td>';
     let className = data.report_type == 'Missing' ? 'text-warning' : 'text-info';
 
     col2 = '<p class="' + className + '"><strong>' + data.report_type + '</strong></p>';
@@ -152,8 +190,24 @@ function addOrReplaceData(data, addOrReplace) {
     col6 = '<td>' + data.height + '' + data.height_unit + '</td>';
     col7 = '<td>' + data.weight + '' + data.weight_unit + '</td>';
     col8 = '<td>' + data.last_seen + '</td>';
-    col9 = '<td>' + data.contact_information + ' yr old</td>';
 
+
+    let col9;
+    if (data.user_id == data.contact_id) {
+        col9 = '<td> Same user </td>';
+    } else {
+        col9 = '<td>' + data.contact_name + '(#' + data.contact_id + ')' + '(#' + data.contact_role + ')' + '</td>';
+    }
+
+    col10 =
+        '<td>' +
+        '<span>Email: <br>' +
+        '<strong>' + data.email + '</strong>' +
+        '</span> <br>' +
+        '<span>Phone No: <br>' +
+        '<strong>' + data.phone_no + '</strong>' +
+        '</span>' +
+        '</td>';
 
     switch (data.status) {
         case 'Pending':
@@ -170,13 +224,13 @@ function addOrReplaceData(data, addOrReplace) {
             break;
     }
 
-    col10 = '<td>' +
+    col11 = '<td>' +
         '<div class="p-2 ' + className + ' text-white rounded-pill text-center">' +
         data.status +
         '</div>' +
         '</td>';
 
-    col11 = '<td>' + data.created_at + '</td>';
+    col12 = '<td>' + data.created_at + '</td>';
 
 
     viewBtn =
@@ -198,17 +252,19 @@ function addOrReplaceData(data, addOrReplace) {
         '</button>' +
         '</li>'
 
-    col12 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
+    col13 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
 
     // Get table reference - note: dataTable() not DataTable()
     var table = $('#dataTable').DataTable();
+
+
     if (addOrReplace == 'Replace') {
         // if replacing the table row
-        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12]).draw(false);
+        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13]).draw(false);
     } else {
         // if adding new table row
         var currentPage = table.page();
-        table.row.add([col0, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12]).draw()
+        table.row.add([col0, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13]).draw()
 
         selectedRow = 0
         var index = table.row(selectedRow).index(),
@@ -231,7 +287,6 @@ function addOrReplaceData(data, addOrReplace) {
 
 $(document).ready(function () {
 
-
     // start of pusher //
 
     // Enable pusher logging - don't include this in production
@@ -252,7 +307,7 @@ $(document).ready(function () {
 
     channel.bind('missingPerson-channel', function (data) {
         addOrReplaceData(data.missingPerson, 'Add')
-        toastr.warning('User ' + data.missingPerson.submitted_by + 'submitted a report. Please repond to the specific report.')
+        toastr.warning('User ' + data.missingPerson.user_name + 'submitted a report. Please repond to the specific report.')
         // add to pending card if it is new report
         $("#thisMonthCount").text(parseInt($("#thisMonthCount").text()) + 1);
         $("#thisMonthPendingCount").text(parseInt($("#thisMonthPendingCount").text()) + 1);
@@ -267,6 +322,11 @@ $(document).ready(function () {
 
     $('#missingPerson').addClass('active')
 
+    $('input[type="file"]').change(function (e) {
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
+
     // Set class row selected when any button was click in the selected
     $('#dataTable').on('click', 'tr', function () {
         if (!$(this).hasClass('selected')) {
@@ -276,16 +336,10 @@ $(document).ready(function () {
             var currentRow = $(this).closest("tr");
 
             //set value of global variables
-            currentRowCreatedAt = currentRow.find("td:eq(11)").text();
-            currentRowStatus = currentRow.find("td:eq(10)").text().trim();
+            currentRowCreatedAt = currentRow.find("td:eq(12)").text();
+            currentRowStatus = currentRow.find("td:eq(11)").text().trim();
         }
     })
-
-
-    // Initialize Year picker in report form
-    $(".datepicker").datepicker({
-        format: "yyyy-mm-dd",
-    });
 
     $("form[name='reportForm']").validate({
         // Specify validation rules
@@ -294,6 +348,11 @@ $(document).ready(function () {
                 required: true,
                 minlength: 3,
                 maxlength: 100,
+            },
+            contact_user_id: {
+                required: true,
+                number: true,
+                min: 1,
             },
             height: {
                 required: true,
@@ -347,11 +406,18 @@ $(document).ready(function () {
                 minlength: 3,
                 maxlength: 60,
             },
-            contact_information: {
+            email: {
                 required: true,
-                minlength: 3,
-                maxlength: 250,
+                email: true,
+                maxlength: 30,
             },
+            phone_no: {
+                required: true,
+                number: true,
+                minlength: 11,
+                maxlength: 11,
+            },
+
             report_type: {
                 required: true,
             },
@@ -377,12 +443,23 @@ $(document).ready(function () {
             let formMethod = $('#method').val()
             let formData = new FormData(form)
 
-            $('.btnFormSubmit').attr("disabled", true); //disabled login
-            $('.btnFormTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
-            $('.btnFormLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success) {
+            $.ajax({
+                type: 'POST',
+                url: formAction,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('.btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnFormTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
+                    $('.btnFormLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
                     const data = response.data
                     $('#reportFormModal').modal('hide') //hide the modal
 
@@ -394,26 +471,43 @@ $(document).ready(function () {
                         $("#thisMonthPendingCount").text(parseInt($("#thisMonthPendingCount").text()) + 1);
                         $("#reportsCount").text(parseInt($("#reportsCount").text()) + 1);
                     }
-                }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
 
-                $('.btnFormSubmit').attr("disabled", false); //enable the button
-                $('.btnFormTxt').text('') //set the text of the submit btn
-                $('.btnFormLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('.btnFormSubmit').attr("disabled", false); //enable the button
+                    $('.btnFormTxt').text('') //set the text of the submit btn
+                    $('.btnFormLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+                }
+            });
         }
     });
 
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
-        let formAction = $("#modalDeleteForm").attr('action')
+        let ajaxDelURL = $("#modalDeleteForm").attr('action')
 
-        $('#btnDelete').attr("disabled", true); //disabled button
-        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
-        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
-
-        doAjax(formAction, 'DELETE').then((response) => {
-            if (response.success) {
+        $.ajax({
+            type: 'DELETE',
+            url: ajaxDelURL,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#btnDelete').attr("disabled", true); //disabled button
+                $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+                $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+            },
+            success: function (response) {
+                toastr.success(response.message);
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {
                     table.row('.selected').remove().draw();
@@ -446,15 +540,21 @@ $(document).ready(function () {
                             break;
                     }
                 }
+            },
+            error: function (xhr) {
+                var error = JSON.parse(xhr.responseText);
+
+                // show error message from helper.js
+                ajaxErrorMessage(error);
+            },
+            complete: function () {
+                $('#btnDelete').attr("disabled", false); //enable button
+                $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+                $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+
+                $('#confirmationDeleteModal').modal('hide') //hide
+                $('#modalDeleteForm').trigger("reset"); //reset all the values
             }
-
-            $('#btnDelete').attr("disabled", false); //enable button
-            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
-            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-        })
-
-        $('#confirmationDeleteModal').modal('hide') //hide
-        $('#modalDeleteForm').trigger("reset"); //reset all the values
+        });
     })
-
 })

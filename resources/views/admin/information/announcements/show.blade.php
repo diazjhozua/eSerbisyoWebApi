@@ -73,7 +73,7 @@
             </div>
             <div class="col">
                 {{-- Announcement Card --}}
-                    <!-- DataTales Example -->
+                <!-- DataTales Example -->
                 <div class="card shadow mt-2 mb-4">
                     <div class="card-header d-flex justify-content-between align-items:center py-3">
                         <h6 class="font-weight-bold text-primary">Announcement Pictures (Total: <span id="announcementPicturesCount">{{ $announcement->announcement_pictures_count}}</span> pictures) </h6>

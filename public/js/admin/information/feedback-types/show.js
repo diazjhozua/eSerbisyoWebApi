@@ -37,13 +37,23 @@ $(document).ready(function () {
             let formAction = $("#respondForm").attr('action')
             let formData = new FormData(form)
 
-            $('#btnFormSubmit').attr("disabled", true); //disabled login
-            $('.btnTxt').text('Responding') //set the text of the submit btn
-            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success) {
-                    $('#feedbackRespondModal').modal('hide') //hide the modal
+            $.ajax({
+                type: 'POST',
+                url: formAction,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text('Responding') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
 
                     const data = response.data
 
@@ -78,12 +88,22 @@ $(document).ready(function () {
                     // add or minus some cards
                     $("#pendingFeedbackCount").text(parseInt($("#pendingFeedbackCount").text()) - 1);
                     $("#notedFeedbackCount").text(parseInt($("#notedFeedbackCount").text()) + 1);
-                }
 
-                $('#btnFormSubmit').attr("disabled", false); //disabled login
-                $('.btnTxt').text('Respond') //set the text of the submit btn
-                $('.loadingIcon').prop("hidden", true) //show the fa loading icon from submit btn
-            })
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
+
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('#feedbackRespondModal').modal('hide') //hide the modal
+
+                    $('#btnFormSubmit').attr("disabled", false); //disabled login
+                    $('.btnTxt').text('Respond') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", true) //show the fa loading icon from submit btn
+                }
+            });
         }
     });
 

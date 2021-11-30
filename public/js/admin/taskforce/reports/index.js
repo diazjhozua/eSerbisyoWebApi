@@ -1,8 +1,19 @@
 function viewReport(reportID) {
     let url = 'reports/' + reportID
 
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.success(response.message);
+
             const data = response.data;
 
             $('#reportFormModal').modal('show') //show the modal
@@ -75,9 +86,15 @@ function viewReport(reportID) {
                     }
                 })
             }
-        }
-    })
 
+        },
+        error: function (xhr) {
+            var error = JSON.parse(xhr.responseText);
+
+            // show error message from helper.js
+            ajaxErrorMessage(error);
+        }
+    });
 }
 
 function addOrReplace(data, addOrReplace) {
@@ -232,12 +249,23 @@ $(document).ready(function () {
             let formAction = $("#reportForm").attr('action')
             let formData = new FormData(form)
 
-            $('.btnRespondReport').attr("disabled", true); //disabled login
-            $('.btnRespondReportTxt').text($('#statusSelect').val() == 'Noted' ? 'Noting' : 'Invalidating') //set the text of the submit btn
-            $('.btnRespondReportLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success) {
+            $.ajax({
+                type: 'POST',
+                url: formAction,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('.btnRespondReport').attr("disabled", true); //disabled login
+                    $('.btnRespondReportTxt').text($('#statusSelect').val() == 'Noted' ? 'Noting' : 'Invalidating') //set the text of the submit btn
+                    $('.btnRespondReportLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
                     const data = response.data
                     addOrReplace(data, 'Replace')
 
@@ -257,14 +285,19 @@ $(document).ready(function () {
                                 break;
                         }
                     }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
+
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('.btnRespondReport').attr("disabled", false); //enable the button
+                    $('.btnRespondReportTxt').text('Respond') //set the text of the submit btn
+                    $('.btnRespondReportLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
                 }
-
-                $('.btnRespondReport').attr("disabled", false); //enable the button
-                $('.btnRespondReportTxt').text('Respond') //set the text of the submit btn
-                $('.btnRespondReportLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
-
-
+            });
         }
     });
 

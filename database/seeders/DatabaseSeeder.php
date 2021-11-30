@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MissingItem;
 use App\Models\RequestRequirement;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
@@ -59,14 +60,14 @@ class DatabaseSeeder extends Seeder
             // AnnouncementSeeder::class,
 
             MissingPersonSeeder::class,
-            LostAndFoundSeeder::class,
+            MissingItemSeeder::class,
             ComplaintSeeder::class,
             ReportSeeder::class,
 
-            // CertificateSeeder::class,
-            // CertificateFormSeeder::class,
-            // CertificateFormRequirementSeeder::class,
-            // OrderSeeder::class,
+            CertificateSeeder::class,
+            CertificateFormSeeder::class,
+            CertificateFormRequirementSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

@@ -12,7 +12,7 @@
 @section('content')
 
     {{-- Change Status Form Modal --}}
-    @include('admin.taskforce.missing-persons.changeStatusFormModal')
+    @include('admin.taskforce.inc.changeStatusFormModal')
 
     {{-- Delete Modal Confirmation --}}
     @include('inc.delete')
@@ -38,6 +38,11 @@
                 Change Status
             </button>
 
+            {{-- View Credentials --}}
+            <a id="currentCredential" href="{{ route('admin.viewFiles', [ 'folderName' => 'credentials', 'fileName' => $missing_person->credential_name ]) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
+                View Credentials
+            </a>
+
         </h1>
 
         <a href="" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
@@ -47,14 +52,16 @@
 
     <div class="information">
         <div class="row">
-            <div class="col-sm-6 mt-3">
+            <div class="col-md-6 col-sm-6 mt-3">
                 {{-- Missing Report Information --}}
                 <div class="card text-black mb-3">
                     <img class="mt-2 mx-auto d-block" style="height:200px; max-height: 200px; max-width:200px; width: 200px;" id="currentImage" src="{{ asset('storage/'.$missing_person->file_path) }}" alt="Card image cap">
                     <div class="card-body">
 
                         <p class="card-text"><strong>Submitted By: {{ $missing_person->user->getFullNameAttribute() }} #{{ $missing_person->user->id }} - ({{ $missing_person->user->user_role->role }}) </strong></p>
-                        <p class="card-text"><small class="text-muted">Submitted at: <span id="currentCreatedAt"> {{ $missing_person->created_at }}</span> || Updated at: <span id="currentUpdatedAt">{{ $missing_person->updated_at }}</span></small></p>
+                        <p class="card-text"><strong>Contact User: <span id="currentContactName">{{ $missing_person->contact->getFullNameAttribute() }}</span> #<span id="currentContactID">{{ $missing_person->contact->id }}</span> - (<span id="currentContactRole">{{ $missing_person->contact->user_role->role }}</span>) </strong></p>
+                        <p class="card-text"><strong>Latest Admin Message: </strong></p>
+                        <p class="card-text"><small class="text-black" id="currentAdminMessage">{{ $missing_person->admin_message }}</small></p>
 
                         <div class="form-group">
                             <label>Status</label>
@@ -76,7 +83,7 @@
 
                             <div id="formMethod"></div>
                                 <div class="row">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-8 col-sm-8">
                                         {{-- Name --}}
                                         <div class="form-group">
                                             <label for="title">Missing Person Name</label>
@@ -91,6 +98,12 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="contact_user_id">Contact (USER ID) - (The specified user_id will receive notification within the application)</label>
+                                    <input type="number" class="form-control" name="contact_user_id" id="contact_user_id" value="{{ $missing_person->contact_user_id }}" disabled>
+                                </div>
+
 
                                 <div class="row mt-3 mt-lg-0">
                                     <div class="col-sm-8">
@@ -161,9 +174,21 @@
                                 </div>
 
                                 {{-- Contact Information --}}
-                                <div class="form-group">
-                                    <label for="contact_information">Contact Information</label>
-                                    <textarea class="form-control" name="contact_information" id="contact_information" rows="2" disabled>{{ $missing_person->contact_information }}</textarea>
+                                <div class="row mt-3 mt-lg-0">
+                                    <div class="col-sm-6">
+                                        {{-- Email --}}
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="text" class="form-control" name="email" id="email" value="{{ $missing_person->email }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{-- Phone No --}}
+                                        <div class="form-group">
+                                            <label for="phone_no">Phone No</label>
+                                            <input type="text" class="form-control" name="phone_no" id="phone_no" value="{{ $missing_person->phone_no }}" disabled>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {{-- Last seen --}}
@@ -214,10 +239,10 @@
                 </div>
             </div>
 
-            <div class="col-sm-6">
+            <div class="col-md-6 col-sm-6">
                 <div class="card shadow mt-2 mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">People who comment on this announcement <span id="commentsCount">({{ $missing_person->comments->count() }})</span></h6>
+                        <h6 class="m-0 font-weight-bold text-primary">People who comment on this report <span id="commentsCount">({{ $missing_person->comments->count() }})</span></h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -258,7 +283,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <p>No likes added</p>
+                                        <p>No comments added</p>
                                     @endforelse
                                 </tbody>
                             </table>

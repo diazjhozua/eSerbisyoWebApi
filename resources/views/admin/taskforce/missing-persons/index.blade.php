@@ -132,6 +132,7 @@
                             <th>Height</th>
                             <th>Weight</th>
                             <th>Last Seen</th>
+                            <th>User Contact</th>
                             <th>Contact Information</th>
                             <th>Status</th>
                             <th>Reported Date</th>
@@ -149,6 +150,7 @@
                             <th>Height</th>
                             <th>Weight</th>
                             <th>Last Seen</th>
+                            <th>User Contact</th>
                             <th>Contact Information</th>
                             <th>Status</th>
                             <th>Reported Date</th>
@@ -159,7 +161,7 @@
                         @forelse ($missing_persons as $missing_person)
                             <tr>
                                 <td>{{ $missing_person->id }}</td>
-                                <td>{{ $missing_person->user->getFullNameAttribute(). '(#'. $missing_person->user_id .')' }} </td>
+                                <td>{{ $missing_person->user->getFullNameAttribute(). '(#'. $missing_person->user_id .')' . '(Role: '. $missing_person->user->user_role->role. ' )' }} </td>
                                 <td>
                                     @if ($missing_person->report_type == 'Missing')
                                         <p class="text-warning"><strong>{{ $missing_person->report_type }}</strong></p>
@@ -179,7 +181,25 @@
                                 <td>{{ $missing_person->height.' '. $missing_person->height_unit }}</td>
                                 <td>{{ $missing_person->weight.' '. $missing_person->weight_unit }}</td>
                                 <td>{{ $missing_person->last_seen }}</td>
-                                <td>{{ $missing_person->contact_information }}</td>
+
+                                @if ($missing_person->user_id === $missing_person->contact_user_id)
+                                    <td> Same user </td>
+                                @else
+                                    <td>{{ $missing_person->contact->getFullNameAttribute(). '(#'. $missing_person->contact_user_id .')' . '(Role: '. $missing_person->contact->user_role->role . ' )' }} </td>
+                                @endif
+
+                                <td>
+                                    <span>Email: <br>
+                                        <strong> {{ $missing_person->email }} </strong>
+                                    </span>
+
+                                    <br>
+                                    <span>Phone No: <br>
+                                        <strong> {{ $missing_person->phone_no }} </strong>
+                                    </span>
+                                </td>
+
+
 
                                 <td class="tdStatus">
                                     @if ($missing_person->status == 'Pending')

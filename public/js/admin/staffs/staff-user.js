@@ -38,22 +38,35 @@ $(document).ready(function () {
     })
 
     // Change Role Form
+
     $("#changeRoleForm").submit(function (e) {
         e.preventDefault()
         $('.selected').addClass('promoting');
-        let formAction = $("#changeRoleForm").attr('action')
+        let ajaxURL = $("#changeRoleForm").attr('action')
 
-        $('#btnChangeRoleFormSubmit').attr("disabled", true); //disabled button
-        $('.btnChangeRoleTxt').text('Promoting') //set the text of the submit btn
-        $('.btnChangeRoleLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+        // Change Role Ajax Request
+        $.ajax({
+            type: 'PUT',
+            url: ajaxURL,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#btnChangeRoleFormSubmit').attr("disabled", true); //disabled button
+                $('.btnChangeRoleTxt').text('Promoting') //set the text of the submit btn
+                $('.btnChangeRoleLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
 
-        selectedButton.attr("disabled", true);
-        selectedButton.children(".btnPromoteTxt").text('Promoting')
-        selectedButton.children(".btnPromoteIcon").prop("hidden", true)
-        selectedButton.children(".btnPromoteLoadingIcon").prop("hidden", false)
+                selectedButton.attr("disabled", true);
+                selectedButton.children(".btnPromoteTxt").text('Promoting')
+                selectedButton.children(".btnPromoteIcon").prop("hidden", true)
+                selectedButton.children(".btnPromoteLoadingIcon").prop("hidden", false)
+            },
+            success: function (response) {
+                toastr.success(response.message);
 
-        doAjax(formAction, 'PUT').then((response) => {
-            if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.promoting').fadeOut(800, function () {
                     table.row('.promoting').remove().draw();
@@ -64,15 +77,22 @@ $(document).ready(function () {
 
                 // increment staffCount
                 $("#staffCount").text(parseInt($("#staffCount").text()) + 1);
+            },
+            error: function (xhr) {
+                var error = JSON.parse(xhr.responseText);
+
+                // show error message from helper.js
+                ajaxErrorMessage(error);
+            },
+            complete: function () {
+                $('#btnChangeRoleFormSubmit').attr("disabled", false)
+                $('.btnChangeRoleTxt').text('Promote')
+                $('.btnChangeRoleLoadingIcon').prop("hidden", true)
+
+                $('#changeRoleModal').modal('hide') //hide
+                $('#changeRoleForm').trigger("reset"); //reset all the values
             }
-
-            $('#btnChangeRoleFormSubmit').attr("disabled", false)
-            $('.btnChangeRoleTxt').text('Promote')
-            $('.btnChangeRoleLoadingIcon').prop("hidden", true)
-        })
-        $('#changeRoleModal').modal('hide') //hide
-        $('#changeRoleForm').trigger("reset"); //reset all the values
-
+        });
     })
 
 })

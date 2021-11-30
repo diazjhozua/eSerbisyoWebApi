@@ -30,6 +30,7 @@ class OrdinanceResource extends JsonResource
 
             'custom_type' => $this->custom_type,
             'pdf_name' => $this->pdf_name,
+            'pdf_src' => route('admin.viewFiles', [ 'folderName' => 'ordinances', 'fileName' => $this->pdf_name]),
             'file_path' => $this->file_path,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),

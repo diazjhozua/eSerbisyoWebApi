@@ -34,6 +34,12 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="contact_user_id">Contact (USER ID) - (The specified user_id will receive notification within the application)</label>
+                        <input type="number" class="form-control" name="contact_user_id" id="contact_user_id">
+                    </div>
+
+
                     <div class="row mt-3 mt-lg-0">
                         <div class="col-sm-8">
                             {{-- Unique Sign --}}
@@ -107,9 +113,21 @@
                     </div>
 
                     {{-- Contact Information --}}
-                    <div class="form-group">
-                        <label for="contact_information">Contact Information</label>
-                        <textarea class="form-control" name="contact_information" id="contact_information" rows="2"></textarea>
+                    <div class="row mt-3 mt-lg-0">
+                        <div class="col-sm-6">
+                            {{-- Email --}}
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" name="email" id="email">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            {{-- Phone No --}}
+                            <div class="form-group">
+                                <label for="phone_no">Phone No</label>
+                                <input type="text" class="form-control" name="phone_no" id="phone_no">
+                            </div>
+                        </div>
                     </div>
 
                     {{-- Last seen --}}

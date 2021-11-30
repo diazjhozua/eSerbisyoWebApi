@@ -6,7 +6,9 @@ use App\Http\Controllers\Web\Taskforce\ {
     ReportTypeController as ReportTypeCtrl,
     ComplaintTypeController as ComplaintTypeCtrl,
     ReportController as ReportCtrl,
-    MissingPersonController as MissingPersonCtrl
+    MissingPersonController as MissingPersonCtrl,
+    MissingItemController as MissingItemCtrl,
+    ComplaintController as ComplaintCtrl,
 };
 
 // For Super Admin, Info Admin, and Info Staff
@@ -18,9 +20,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:taskForceAd
     Route::put('reports/{report}/respond',  [ReportCtrl::class, 'respond']);
     Route::resource('reports', ReportCtrl::class)->only(['index', 'show']);
 
-    Route::post('missing-persons/{missing_person}/comment',  [MissingPersonCtrl::class, 'comment']);
     Route::put('missing-persons/change-status/{missing_person}', [MissingPersonCtrl::class, 'changeStatus']);
     Route::resource('missing-persons', MissingPersonCtrl::class);
+
+    Route::put('missing-items/change-status/{missing_item}', [MissingItemCtrl::class, 'changeStatus']);
+    Route::resource('missing-items', MissingItemCtrl::class);
+
+    Route::resource('complaints', ComplaintCtrl::class);
 
 });
 

@@ -32,6 +32,7 @@ class EmployeeResource extends JsonResource
             'custom_position' => $this->custom_position,
             'description' => $this->description,
             'picture_name' => $this->picture_name,
+            'picture_src' => route('admin.viewFiles', [ 'folderName' => 'employees', 'fileName' => $this->picture_name]),
             'file_path' => $this->file_path,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),

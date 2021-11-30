@@ -29,6 +29,7 @@ class ProjectResource extends JsonResource
             'project_end' => $this->project_end,
             'location' => $this->location,
             'pdf_name' => $this->pdf_name,
+            'pdf_src' => route('admin.viewFiles', [ 'folderName' => 'projects', 'fileName' => $this->pdf_name]),
             'file_path' => $this->file_path,
             'is_starting'=> $this->is_starting,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),

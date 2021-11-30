@@ -75,6 +75,19 @@ class AnnouncementController extends Controller
         return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->updateSuccess('announcement'));
     }
 
+    public function destroy(Announcement $announcement)
+    {
+        return DB::transaction(function() use ($announcement) {
+            $announcement->load('announcement_pictures');
+            foreach ($announcement->announcement_pictures as $picture) { Storage::delete('public/announcements/'. $picture->picture_name); }
+            AnnouncementPicture::where('announcement_id', $announcement->id)->delete();
+            $announcement->comments()->delete();
+            $announcement->delete();
+            return response()->json(Helper::instance()->destroySuccess('announcement'));
+        });
+    }
+
+
     public function report(AnnouncementReportRequest $request) {
         $announcements = Announcement::with('type')
             ->withCount('comments', 'likes', 'announcement_pictures')

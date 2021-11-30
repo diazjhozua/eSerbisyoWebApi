@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLostAndFoundsTable extends Migration
+class CreateMissingItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,22 @@ class CreateLostAndFoundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('lost_and_founds', function (Blueprint $table) {
+        Schema::create('missing_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('contact_user_id')->constrained('users')->onDelete('cascade');
             $table->string('item');
             $table->string('last_seen');
             $table->string('description');
-            $table->string('contact_information');
+            $table->string('email')->nullable();
+            $table->string('phone_no')->nullable();
             $table->string('picture_name');
             $table->string('file_path');
             $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
+            $table->string('admin_message')->nullable();
             $table->enum('report_type', ['Missing', 'Found']);
+            $table->string('credential_name');
+            $table->string('credential_file_path');
             $table->timestamps();
         });
     }
@@ -35,6 +40,6 @@ class CreateLostAndFoundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lost_and_founds');
+        Schema::dropIfExists('missing_items');
     }
 }

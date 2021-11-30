@@ -1,7 +1,20 @@
+// global variables
+var currentRowCreatedAt; //for deleting purposes
+
 function createEmployee() {
     const url = 'employees/create'
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+
             const positions = response.positions;
             const terms = response.terms;
             $('.custom-file-label').html(''); //empty the html in the file input
@@ -33,19 +46,36 @@ function createEmployee() {
             $('#employeeFormModal').modal('show')
             $('#employeeFormModalHeader').text('Publish Employee')
             $('.btnTxt').text('Store') //set the text of the submit btn
+
+        },
+        error: function (xhr) {
+            var error = JSON.parse(xhr.responseText);
+
+            // show error message from helper.js
+            ajaxErrorMessage(error);
         }
-    })
+    });
 }
 
 function editEmployee(id) {
 
     url = 'employees/' + id + '/edit'
-    doAjax(url, 'GET').then((response) => {
-        if (response.success) {
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            toastr.success(response.message);
+
             const data = response.data
             const positions = response.positions;
             const terms = response.terms;
-
 
             $('.custom-file-label').html(''); //empty the html in the file input
             $('#employeeForm').trigger("reset") //reset all the input values
@@ -87,8 +117,15 @@ function editEmployee(id) {
             $('#employeeFormModal').modal('show')
             $('#employeeFormModalHeader').text('Edit Employee')
             $('.btnTxt').text('Update') //set the text of the submit btn
+
+        },
+        error: function (xhr) {
+            var error = JSON.parse(xhr.responseText);
+
+            // show error message from helper.js
+            ajaxErrorMessage(error);
         }
-    })
+    });
 }
 
 function deleteEmployee(id) {
@@ -103,6 +140,14 @@ $(document).ready(function () {
         if (!$(this).hasClass('selected')) {
             $('#dataTable').DataTable().$('tr.selected').removeClass('selected')
             $(this).addClass('selected')
+
+            var currentRow = $(this).closest("tr");
+
+            //set value of global variables
+            currentRowCreatedAt = currentRow.find("td:eq(6)").text();
+
+
+
         }
     })
 
@@ -172,19 +217,29 @@ $(document).ready(function () {
             let formMethod = $('#method').val()
             let formData = new FormData(form)
 
-            $('#btnFormSubmit').attr("disabled", true); //disabled login
-            $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
-            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success != null && response.success == true) {
-                    $('#employeeFormModal').modal('hide') //hide the modal
+            $.ajax({
+                type: 'POST',
+                url: formAction,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
 
                     const data = response.data
 
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.name + '</td>'
-                    col2 = '<td><img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + window.location.origin + '/storage/' + data.file_path + '" class="rounded" alt="' + data.name + ' image"></td>'
+                    col2 = '<td><img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.picture_src + '" class="rounded" alt="' + data.name + ' image"></td>'
                     col3 = '<td><a href="' + window.location.origin + '/admin/positions/' + data.position_id + '">' + data.position + '</a></td>'
                     col4 = '<td><a href="' + window.location.origin + '/admin/terms/' + data.term_id + '">' + data.term + '</a></td>'
                     col5 = '<td>' + data.description + '</td>'
@@ -229,45 +284,100 @@ $(document).ready(function () {
                         // increment employeeCount
                         $("#employeesCount").text(parseInt($("#employeesCount").text()) + 1);
 
+                        $("#thisDayCount").text(parseInt($("#thisDayCount").text()) + 1);
+                        $("#thisMonthCount").text(parseInt($("#thisMonthCount").text()) + 1);
+                        $("#thisYearCount").text(parseInt($("#thisYearCount").text()) + 1);
+
+
 
                     } else {
                         table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7]).draw(false);
                     }
-                }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
 
-                $('#btnFormSubmit').attr("disabled", false);
-                $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
-                $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('#employeeFormModal').modal('hide') //hide the modal
+
+                    $('#btnFormSubmit').attr("disabled", false); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", true) //show the fa loading icon from submit btn
+                }
+            });
         }
     });
 
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {
         e.preventDefault()
-        let formAction = $("#modalDeleteForm").attr('action')
+        let ajaxDelURL = $("#modalDeleteForm").attr('action');
 
-        $('#btnDelete').attr("disabled", true); //disabled button
-        $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
-        $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+        $.ajax({
+            type: 'DELETE',
+            url: ajaxDelURL,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            cache: false,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#btnDelete').attr("disabled", true); //disabled button
+                $('.btnDeleteTxt').text('Deleting') //set the text of the submit btn
+                $('.btnDeleteLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
+            },
+            success: function (response) {
+                toastr.success(response.message);
 
-        doAjax(formAction, 'DELETE').then((response) => {
-            if (response.success) {
                 var table = $('#dataTable').DataTable();
                 $('.selected').fadeOut(800, function () {
                     table.row('.selected').remove().draw();
                 });
 
-                // decrement typeCount
+                // decrement empCount;
                 $("#employeesCount").text(parseInt($("#employeesCount").text()) - 1);
-            }
 
-            $('#btnDelete').attr("disabled", false); //enable button
-            $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
-            $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-        })
-        $('#confirmationDeleteModal').modal('hide') //hide
-        $('#modalDeleteForm').trigger("reset"); //reset all the values
+                let reportDate = new Date(currentRowCreatedAt);
+                let currentDate = new Date();
+
+                let offset;
+                offset = reportDate.getTimezoneOffset()
+                reportDate = new Date(reportDate.getTime() - (offset * 60 * 1000))
+
+                offset = currentDate.getTimezoneOffset()
+                currentDate = new Date(currentDate.getTime() - (offset * 60 * 1000))
+
+                if (reportDate.toISOString().split('T')[0] == currentDate.toISOString().split('T')[0]) {
+                    $("#thisDayCount").text(parseInt($("#thisDayCount").text()) - 1);
+                    $("#thisMonthCount").text(parseInt($("#thisMonthCount").text()) - 1);
+                    $("#thisYearCount").text(parseInt($("#thisYearCount").text()) - 1);
+                } else if (reportDate.getFullYear() == currentDate.getFullYear() && currentDate.getMonth() == reportDate.getMonth()) {
+                    // decrement this month total report count
+                    $("#thisMonthCount").text(parseInt($("#thisMonthCount").text()) - 1);
+                    $("#thisYearCount").text(parseInt($("#thisYearCount").text()) - 1);
+                } else if (reportDate.getFullYear() == currentDate.getFullYear()) {
+                    $("#thisYearCount").text(parseInt($("#thisYearCount").text()) - 1);
+                }
+            },
+            error: function (xhr) {
+                var error = JSON.parse(xhr.responseText);
+
+                // show error message from helper.js
+                ajaxErrorMessage(error);
+            },
+            complete: function () {
+                $('#btnDelete').attr("disabled", false); //enable button
+                $('.btnDeleteTxt').text('Delete') //set the text of the delete btn
+                $('.btnDeleteLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+
+                $('#confirmationDeleteModal').modal('hide') //hide
+                $('#modalDeleteForm').trigger("reset"); //reset all the values
+            }
+        });
     })
 
 })

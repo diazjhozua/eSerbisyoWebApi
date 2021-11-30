@@ -10,6 +10,7 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\MissingPersonResource;
 use App\Jobs\ChangeStatusReportJob;
 use App\Models\MissingPerson;
+use Auth;
 use DB;
 use Helper;
 use Illuminate\Support\Facades\Storage;
@@ -48,8 +49,7 @@ class MissingPersonController extends Controller
         if(request()->ajax()) {
             $fileName = time().'_'.$request->picture->getClientOriginalName();
             $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-            $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => 2,'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
-            $missing_person->comments_count = 0;
+            $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => Auth::id(),'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->storeSuccess('missing-person report'));
         }
     }
@@ -57,7 +57,6 @@ class MissingPersonController extends Controller
     public function show(MissingPerson $missing_person)
     {
         $missing_person->load('comments')->loadCount('comments');
-
         return view('admin.taskforce.missing-persons.show', compact('missing_person'));
     }
 
@@ -96,6 +95,7 @@ class MissingPersonController extends Controller
     public function changeStatus(ChangeStatusRequest $request, MissingPerson $missing_person)
     {
         if(request()->ajax()) {
+
             // if ($request->status == $missing_person->status) {
             //     return response()->json(Helper::instance()->sameStatusMessage($request->status, 'missing-person report'));
             // }
@@ -105,15 +105,9 @@ class MissingPersonController extends Controller
 
             $subject = 'Missing Person Report Change Status Notification';
             $reportName = 'missing person report';
-            dispatch(new ChangeStatusReportJob($missing_person->user->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject));
+            dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject));
 
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
-    }
-
-    public function comment(CommentRequest $request, MissingPerson $missing_person)
-    {
-        $comment = $missing_person->comments()->create(array_merge($request->validated(), ['user_id' => 2]));
-        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 }

@@ -41,15 +41,27 @@ $(document).ready(function () {
         },
         submitHandler: function (form, event) {
             event.preventDefault()
-            let formAction = $("#registerForm").attr('action')
+            let ajaxURL = $("#registerForm").attr('action')
             let formData = new FormData(form)
 
-            $('.btnFormSbmit').attr("disabled", true); //disabled login
-            $('.btnTxt').text('Registering') //set the text of the submit btn
-            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+            $.ajax({
+                type: 'POST',
+                url: ajaxURL,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('.btnFormSbmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text('Registering') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message)
 
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success != null && response.success == true) {
                     $('#successMessage').html(response.message)
                     $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
                     $('.btnTxt').text('Registration completed') //set the text of the submit btn
@@ -61,12 +73,21 @@ $(document).ready(function () {
                     $("#email").prop('disabled', true);
                     $("#password").prop('disabled', true);
                     $("#password_confirmation").prop('disabled', true);
-                } else {
+                },
+
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
+
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
                     $('.btnFormSbmit').attr("disabled", false); //disabled login
                     $('.btnTxt').text('Reset') //set the text of the submit btn
                     $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
                 }
-            })
+            });
+
         }
 
     })
