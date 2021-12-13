@@ -19,7 +19,7 @@ class ReportSeeder extends Seeder
         $status = ['Pending', 'Ignored', 'Invalid', 'Noted'];
         $urgency_classification = ['Nonurgent', 'Urgent'];
 
-        foreach (range(1,100) as $index) {
+        foreach (range(1,900) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $type = $faker->numberBetween(36, 40);
             $custom_type = NULL;

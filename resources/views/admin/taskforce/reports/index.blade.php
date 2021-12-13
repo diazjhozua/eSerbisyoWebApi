@@ -12,12 +12,9 @@
 @section('content')
 
     {{-- Included Modals --}}
+    @include('admin.taskforce.reports.reportSelectModal')
 
-    {{-- Create/Edit --}}
     @include('admin.taskforce.reports.reportFormModal')
-
-
-    @include('inc.delete')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">

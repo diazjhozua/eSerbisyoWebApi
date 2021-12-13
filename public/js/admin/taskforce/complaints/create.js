@@ -98,7 +98,11 @@ function modifyComplainantModal(title, btnText, inputMethod, actionURL, complain
     complainantForm.attr('action', actionURL) //set the method of the form
 
     inputComplainantName.val(complainantName); // set name
-    signaturePad.fromDataURL(signature);
+
+    if (signature != null) {
+        signaturePad.fromDataURL(signature);
+    }
+
 }
 
 function modifyDefendantModal(title, btnText, inputMethod, actionURL, defendantName) {
@@ -205,6 +209,7 @@ function addOrReplaceDefendant(defendantName, addOrReplace) {
 
 function addOrReplaceComplainant(complainantName, signature, addOrReplace) {
 
+    console.log(`Table signature: ${signature}`);
     col0 = '<td>' + complainantName + '</td>';
     var image = new Image();
     image.src = signature;
@@ -355,6 +360,8 @@ $(document).ready(function () {
                 // get the name and image in the complainant form
                 let complainantName = inputComplainantName.val();
 
+                console.log(`Signature : ${signature}`)
+
                 addOrReplaceComplainant(complainantName, signature, formMethod == 'POST' ? 'Add' : 'Replace')
             }
         }
@@ -500,7 +507,14 @@ $(document).ready(function () {
                     contentType: false,
 
                     success: function (response) {
-                        toastr.success('Report successfully downloaded')
+                        toastr.success('Complaint successfully added');
+
+                        if (response.success) {
+                            window.setTimeout(function () {
+                                window.location.replace(window.location.origin + '/admin/complaints');
+                            }, 2000);
+                        }
+
                     },
                     error: function (xhr, status, error) {
                         var err = JSON.parse(xhr.responseText);

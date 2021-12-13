@@ -3,84 +3,35 @@
 namespace App\Http\Controllers\Web\Taskforce;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DefendantRequest;
+use App\Http\Resources\DefendantResource;
 use App\Models\Complaint;
+use App\Models\Defendant;
+use Helper;
 use Illuminate\Http\Request;
 
 class DefendantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function store(DefendantRequest $request)
     {
-        //
+        $defendant = Defendant::create($request->validated());
+        return (new DefendantResource($defendant))->additional(Helper::instance()->storeSuccess('defendant'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function edit(Defendant $defendant)
     {
-        //
+        return (new DefendantResource($defendant))->additional(array_merge(Helper::instance()->itemFound('defendant')));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function update(DefendantRequest $request, Defendant $defendant)
     {
-        //
+        $defendant->fill($request->validated())->save();
+        return (new DefendantResource($defendant))->additional(Helper::instance()->updateSuccess('defendant'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Complaint $complaint)
+    public function destroy(Defendant $defendant)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Complaint $complaint)
-    {
-        //
+        $defendant->delete();
+        return response()->json(Helper::instance()->destroySuccess('defendant'));
     }
 }

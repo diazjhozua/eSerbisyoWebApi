@@ -59,6 +59,7 @@
                 <div class="container-fluid">
                     <!-- Begin Page Content -->
                     @yield('content')
+
                     <!-- /.container-fluid -->
                 </div>
 

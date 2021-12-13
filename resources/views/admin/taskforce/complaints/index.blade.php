@@ -14,9 +14,7 @@
 
     {{-- Included Modals --}}
 
-    {{-- Create/Edit --}}
-    @include('admin.taskforce.missing-persons.formModal')
-
+    @include('admin.taskforce.complaints.reportSelectModal')
     @include('inc.delete')
 
     <!-- Page Heading -->
@@ -24,8 +22,8 @@
         <h1 class="h3 mb-0 text-gray-800">Complaints
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
-        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#ComplaintModal"><i
-            class="fas fa-download fa-sm text-white-50" ></i> Download Complaint</button>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
+            class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
     </div>
 
     <p class="text-justify">
@@ -181,8 +179,6 @@
                                     </span>
                                 </td>
 
-
-
                                 <td class="tdStatus">
                                     @if ($complaint->status == 'Pending')
                                         <div class="p-2 bg-info text-white rounded-pill text-center">
@@ -202,15 +198,9 @@
                                 <td>
                                     <ul class="list-inline m-0">
                                         <li class="list-inline-item mb-1">
-                                            <a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="{{ route('admin.missing-persons.show', $complaint->id) }}">
+                                            <a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="{{ route('admin.complaints.show', $complaint->id) }}">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                        </li>
-
-                                        <li class="list-inline-item mb-1">
-                                            <button class="btn btn-primary btn-sm" onclick="editComplaint({{ $complaint->id}})" type="button" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
                                         </li>
                                         <li class="list-inline-item mb-1">
                                             <button class="btn btn-danger btn-sm" type="button" onclick="deleteComplaint({{ $complaint->id }})" data-toggle="tooltip" data-placement="top" title="Delete">

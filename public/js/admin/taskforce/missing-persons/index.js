@@ -341,7 +341,7 @@ $(document).ready(function () {
         }
     })
 
-    $("form[name='reportForm']").validate({
+    $("form[name='missingForm']").validate({
         // Specify validation rules
         rules: {
             name: {
@@ -486,6 +486,52 @@ $(document).ready(function () {
             });
         }
     });
+
+    // Validation for report form
+    $("form[name='reportForm']").validate({
+        // Specify validation rules
+        rules: {
+            date_start: {
+                required: true,
+            },
+            date_end: {
+                required: true,
+                greaterThan: "#date_start"
+            },
+            sort_column: {
+                required: true,
+            },
+            sort_option: {
+                required: true,
+            },
+            report_option: {
+                required: true,
+            },
+            status_option: {
+                required: true,
+            },
+        },
+        messages: {
+            date_end: {
+                greaterThan: "Date end must be greater than selected date start"
+            },
+        },
+
+        submitHandler: function (form, event) {
+            event.preventDefault();
+
+            let date_start = $('#date_start').val();
+            let date_end = $('#date_end').val();
+            let sort_column = $('#sort_column').val();
+            let sort_option = $('#sort_option').val();
+            let report_option = $('#report_option').val();
+            let status_option = $('#status_option').val();
+
+            var url = window.location.origin + `/admin/missing-persons/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${report_option}/${status_option}`;
+            window.open(url, '_blank');
+        }
+    });
+
 
     // Delete Modal Form
     $("#modalDeleteForm").submit(function (e) {

@@ -17,6 +17,8 @@
     {{-- Create/Edit --}}
     @include('admin.taskforce.missing-persons.formModal')
 
+    @include('admin.taskforce.missing-persons.reportSelectModal')
+
     @include('inc.delete')
 
     <!-- Page Heading -->

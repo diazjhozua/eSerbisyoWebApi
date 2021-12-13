@@ -27,6 +27,7 @@ class ComplaintRequest extends FormRequest
     public function rules()
     {
 
+
         if ($this->isMethod('POST')) {
             return [
                 'type_id' => ['required_without:custom_type', new OneOf($this, ["type_id", "custom_type"]), Rule::exists('types', 'id')->where(function ($query) {
@@ -34,7 +35,7 @@ class ComplaintRequest extends FormRequest
                 })],
                 'custom_type' => ['required_without:type_id', new OneOf($this, ["type_id", "custom_type"]), 'string', 'min:4', 'max:60'],
                 'contact_user_id' => 'exists:users,id',
-                                'email' => 'required|max:30|email',
+                'email' => 'required|max:150|email',
                 'phone_no' => 'required|numeric',
                 'reason' => 'required:string|min:4|max:500',
                 'action' => 'required:string|min:4|max:500',
@@ -52,10 +53,10 @@ class ComplaintRequest extends FormRequest
                 'type_id' => ['required_without:custom_type', new OneOf($this, ["type_id", "custom_type"]), Rule::exists('types', 'id')->where(function ($query) {
                     return $query->where('model_type', 'Complaint');
                 })],
-                'contact_user_id' => 'exists:users,id',
-                'email' => 'required|max:30|email',
-                'phone_no' => 'required|numeric',
                 'custom_type' => ['required_without:type_id', new OneOf($this, ["type_id", "custom_type"]), 'string', 'min:4', 'max:60'],
+                'contact_user_id' => 'exists:users,id',
+                'email' => 'required|max:150|email',
+                'phone_no' => 'required|numeric',
                 'reason' => 'required:string|min:4|max:500',
                 'action' => 'required:string|min:4|max:500',
             ];

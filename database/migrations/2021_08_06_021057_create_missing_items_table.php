@@ -27,8 +27,8 @@ class CreateMissingItemsTable extends Migration
             $table->enum('status', ['Pending', 'Denied', 'Approved', 'Resolved'])->default('Pending');
             $table->string('admin_message')->nullable();
             $table->enum('report_type', ['Missing', 'Found']);
-            $table->string('credential_name');
-            $table->string('credential_file_path');
+            $table->string('credential_name')->nullable();
+            $table->string('credential_file_path')->nullable();
             $table->timestamps();
         });
     }

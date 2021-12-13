@@ -178,7 +178,6 @@ class FeedbackTypeController extends Controller
 
         $pdf = PDF::loadView('admin.information.reports.feedbackType', compact('types', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
         return $pdf->stream();
-
     }
 
     public function reportShow(FeedbackReportRequest $request, $typeID) {

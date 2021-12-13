@@ -11,8 +11,10 @@ function createType() {
     $('#typeForm').attr('action', actionURL) //set the method of the form
 }
 
+
 function editType(id) {
     url = 'complaint-types/' + id + '/edit'
+
     $.ajax({
         type: 'GET',
         url: url,
@@ -51,9 +53,9 @@ function editType(id) {
 }
 
 function deleteType(id) {
-    $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/complaint-types/' + id)
-    $('#confirmationMessage').text('Do you really want to delete this complaint-type? This process cannot be undone. All of the complaints related to this type would be transfer to "Others"')
+    $('#confirmationDeleteModal').modal('show');
+    $('#modalDeleteForm').attr('action', '/admin/complaint-types/' + id);
+    $('#confirmationMessage').text('Do you really want to delete this complaint-type? This process cannot be undone. All of the complaints related to this type would be transfer to "Others"');
 }
 
 $(document).ready(function () {
@@ -61,8 +63,8 @@ $(document).ready(function () {
     // Set class row selected when any button was click in the selected
     $('#dataTable').on('click', 'tr', function () {
         if (!$(this).hasClass('selected')) {
-            $('#dataTable').DataTable().$('tr.selected').removeClass('selected')
-            $(this).addClass('selected')
+            $('#dataTable').DataTable().$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
         }
     })
 
@@ -71,9 +73,9 @@ $(document).ready(function () {
         format: "yyyy-mm-dd",
     });
 
-    $('#TypeNavCollapse').addClass('active')
-    $('#collapseType').collapse()
-    $('#complaintType').addClass('active')
+    $('#TypeNavCollapse').addClass('active');
+    $('#collapseType').collapse();
+    $('#complaintType').addClass('active');
 
     // Create Modal Form Validation
     $("form[name='typeForm']").validate({
@@ -91,7 +93,6 @@ $(document).ready(function () {
             let formAction = $("#typeForm").attr('action')
             let formMethod = $('#method').val()
             let formData = new FormData(form)
-
 
             $.ajax({
                 type: 'POST',
@@ -184,7 +185,8 @@ $(document).ready(function () {
     });
 
     // Validation for complaint form
-    $("form[name='complaintForm']").validate({
+    // Validation for report form
+    $("form[name='reportForm']").validate({
         // Specify validation rules
         rules: {
             date_start: {
@@ -210,47 +212,13 @@ $(document).ready(function () {
         submitHandler: function (form, event) {
             event.preventDefault()
 
-            let formAction = $("#complaintForm").attr('action')
-            // let formAction = window.location.origin + '/admin/document-types/complaint'
-            let formData = new FormData(form)
+            let date_start = $('#date_start').val();
+            let date_end = $('#date_end').val();
+            let sort_column = $('#sort_column').val();
+            let sort_option = $('#sort_option').val();
 
-            $('.btnComplaintFormSubmit').attr("disabled", true); //disabled login
-            $('.btnComplaintFormTxt').text('Generating') //set the text of the submit btn
-            $('.btnComplaintFormLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-
-            $.ajax({
-                type: 'POST',
-                url: formAction,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                data: formData,
-                xhrFields: {
-                    responseType: 'blob'
-                },
-                cache: false,
-                processData: false,
-                contentType: false,
-
-                success: function (response) {
-                    toastr.success('Complaint successfully downloaded')
-                    var blob = new Blob([response]);
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = "DocumentTypeComplaint-" + Date.now() + ".pdf";
-                    link.click();
-
-                },
-                error: function (response) {
-                    toastr.error('Something went wrong :( (It could be the selected option produces no data)')
-                },
-                complete: function () {
-                    $('.btnComplaintFormSubmit').attr("disabled", false); //enable the button
-                    $('.btnComplaintFormTxt').text('Generate') //set the text of the submit btn
-                    $('.btnComplaintFormLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-                }
-            });
+            var url = window.location.origin + `/admin/complaint-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}`;
+            window.open(url, '_blank');
         }
     });
 

@@ -37,6 +37,29 @@ class AuditLogController extends Controller
 
         }
 
+        if (Auth::user()->user_role_id == 4) {
+
+            $logs = Activity::where('log_name', 'taskforce')->orderBy('created_at', 'DESC')->get();
+
+            $logsData =  DB::table('activity_log')
+            ->selectRaw("count(case when event = 'created' then 1 end) as this_month_created_count")
+            ->selectRaw("count(case when event = 'updated' then 1 end) as this_month_updated_count")
+            ->selectRaw("count(case when event = 'deleted' then 1 end) as this_month_deleted_count")
+            ->whereRaw("log_name = 'information'")
+            ->where('created_at', '>=', $firstDayMonth)
+            ->where('created_at', '<=', $lastDayMonth)
+            ->first();
+
+            $info = '
+                The list shows the activity made by the admin and staff of the information team or any resident/biker who is accessing the functionality that is in the scope of your role. Every data changes or created made
+                by the any information team, will be tracked here. You can determine here if the specific staff has made a suspicious activity in the system.
+                The following models are tracked: Documents, Ordinances, Projects, Announcements, Announcement Picture, Types, Users, and Feedbacks (Only when the staff responded to the feedback).
+                Feedback creation logs was intentionally disable to hide the author name to preserve their confidentiality (It means that only the admin responded to feedback would be audited).
+            ';
+
+        }
+
+
         return view('admin.auditLog.index', compact('logs', 'info', 'logsData'));
     }
 
