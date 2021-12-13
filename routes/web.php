@@ -3,6 +3,7 @@
 use App\Events\ReportNotification;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\User\HomeController;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,7 @@ use Barryvdh\Debugbar\Facade as Debugbar;
 use Illuminate\Support\Facades\Storage;
 use Pusher\Pusher;
 
+
 use Spatie\Activitylog\Models\Activity;
 
 /*
@@ -34,9 +36,30 @@ use Spatie\Activitylog\Models\Activity;
 */
 
 Route::get('/', function () {
+    
     return view('admin.taskforce.sample');
 });
 
+Route::get('/brgindigency', function () {
+    // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
+    // return $pdf->stream();
+    return view('admin.certificates.brgindigency');
+});
+Route::get('/brgclear', function () {
+    return view('admin.certificates.brgclear');
+});
+Route::get('/brgid', function () {
+    return view('admin.certificates.brgid');
+});
+Route::get('/busclear', function () {
+    return view('admin.certificates.busclear');
+});
+Route::get('/brgcedula', function () {
+    return view('admin.certificates.brgcedula');
+});
+Route::get('/brgindigency', function () {
+    return view('admin.certificates.brgindigency');
+});
 Route::get('/event', function () {
     event(new ReportNotification('This is our first broadcast message'));
 });
@@ -90,7 +113,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->g
     Route::get('staffs/promote-users', [AdminStaff::class, 'users'])->name('staffs.users');
     Route::put('staffs/promote-users/{user}', [AdminStaff::class, 'promoteUser'])->name('staffs.promoteUser');
 });
+//For User
 
+Route::get('home', [HomeController::class, 'home'])->name('Home');
+Route::get('downloads', [HomeController::class, 'downloads'])->name('Downloads');
+Route::get('terms', [HomeController::class, 'terms'])->name('Terms');
+Route::get('privacy', [HomeController::class, 'privacy'])->name('Privacy');
 
 // For all admin and staff
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:notBasicUser'])->group(function () {
