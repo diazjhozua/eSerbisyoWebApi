@@ -31,7 +31,7 @@ function viewReport(reportID) {
             let actionURL = 'reports/' + data.id + '/respond/'
             $('#reportForm').attr('action', actionURL)
 
-            $('#urgencyClassification').text(data.urgency_classification)
+            $('#urgency_classification').text(data.urgency_classification)
             $('#location_address').text(data.location_address)
             $('#landmark').text(data.landmark)
             $('#description').text(data.description)
@@ -231,7 +231,7 @@ $(document).ready(function () {
         format: "yyyy-mm-dd",
     });
 
-    $("form[name='reportForm']").validate({
+    $("form[name='respondReportForm']").validate({
         // Specify validation rules
         rules: {
             status: {
@@ -298,6 +298,51 @@ $(document).ready(function () {
                     $('.btnRespondReportLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
                 }
             });
+        }
+    });
+
+    // Validation for report form
+    $("form[name='reportForm']").validate({
+        // Specify validation rules
+        rules: {
+            date_start: {
+                required: true,
+            },
+            date_end: {
+                required: true,
+                greaterThan: "#date_start"
+            },
+            sort_column: {
+                required: true,
+            },
+            sort_option: {
+                required: true,
+            },
+            classification_option: {
+                required: true,
+            },
+            status_option: {
+                required: true,
+            },
+        },
+        messages: {
+            date_end: {
+                greaterThan: "Date end must be greater than selected date start"
+            },
+        },
+
+        submitHandler: function (form, event) {
+            event.preventDefault();
+
+            let date_start = $('#date_start').val();
+            let date_end = $('#date_end').val();
+            let sort_column = $('#sort_column').val();
+            let sort_option = $('#sort_option').val();
+            let classification_option = $('#classification_option').val();
+            let status_option = $('#status_option').val();
+
+            var url = window.location.origin + `/admin/reports/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${classification_option}/${status_option}`;
+            window.open(url, '_blank');
         }
     });
 

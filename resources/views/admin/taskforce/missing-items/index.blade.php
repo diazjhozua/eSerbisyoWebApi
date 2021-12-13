@@ -17,6 +17,8 @@
     {{-- Create/Edit --}}
     @include('admin.taskforce.missing-items.formModal')
 
+    @include('admin.taskforce.missing-items.reportSelectModal')
+
     @include('inc.delete')
 
     <!-- Page Heading -->

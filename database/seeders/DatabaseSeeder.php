@@ -50,24 +50,24 @@ class DatabaseSeeder extends Seeder
             ComplaintTypeSeeder::class,
             ReportTypeSeeder::class,
 
-            // FeedbackSeeder::class,
-            // DocumentSeeder::class,
-            // OrdinanceSeeder::class,
-            // ProjectSeeder::class,
-            // TermSeeder::class,
-            // PositionSeeder::class,
-            // EmployeeSeeder::class,
-            // AnnouncementSeeder::class,
+            FeedbackSeeder::class,
+            DocumentSeeder::class,
+            OrdinanceSeeder::class,
+            ProjectSeeder::class,
+            TermSeeder::class,
+            PositionSeeder::class,
+            EmployeeSeeder::class,
+            AnnouncementSeeder::class,
 
             MissingPersonSeeder::class,
             MissingItemSeeder::class,
             ComplaintSeeder::class,
             ReportSeeder::class,
 
-            CertificateSeeder::class,
-            CertificateFormSeeder::class,
-            CertificateFormRequirementSeeder::class,
-            OrderSeeder::class,
+            // CertificateSeeder::class,
+            // CertificateFormSeeder::class,
+            // CertificateFormRequirementSeeder::class,
+            // OrderSeeder::class,
         ]);
     }
 }

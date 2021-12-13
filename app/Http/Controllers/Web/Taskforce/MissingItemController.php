@@ -76,7 +76,7 @@ class MissingItemController extends Controller
                 $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
                 $missing_item->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
             } else { $missing_item->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
-            return (new MissingItemResource($missing_item->load('comments')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-item report'));
+            return (new MissingItemResource($missing_item->load('comments', 'contact')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-item report'));
         }
     }
 
@@ -104,4 +104,61 @@ class MissingItemController extends Controller
 
         return (new MissingItemResource($missing_item))->additional(Helper::instance()->statusMessage($oldStatus, $missing_item->status, 'missing-item'));
     }
+
+    public function report($date_start,  $date_end, $sort_column, $sort_option, $report_option, $status_option) {
+
+        try {
+            $missingItems = MissingItem::whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
+                ->where(function($query) use ($report_option, $status_option) {
+                    if($report_option == 'all' && $status_option == 'all') {
+                        return null;
+                    } elseif ($report_option == 'all' && $status_option != 'all') {
+                        return $query->where('status', '=', ucwords($status_option));
+                    } elseif ($report_option != 'all' && $status_option == 'all') {
+                        return $query->where('report_type', '=', ucwords($report_option));
+                    } else {
+                        return $query->where('status', '=', ucwords($status_option))
+                        ->where('report_type', '=', ucwords($report_option));
+                    }
+                })->get();
+        } catch(\Illuminate\Database\QueryException $ex){}
+
+        if ($missingItems->isEmpty()) {
+            $title = 'Report - No data';
+            $description = 'No data';
+            return view('errors.404Report', compact('title', 'description'));
+        }
+
+        $reportsData = null;
+
+        $reportsData =  DB::table('reports')
+            ->selectRaw('count(*) as missing_items_count')
+            ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
+            ->selectRaw("count(case when status = 'Resolved' then 1 end) as resolved_count")
+            ->selectRaw("count(case when status = 'Denied' then 1 end) as denied_count")
+            ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
+            ->where('created_at', '>=', $date_start)
+            ->where('created_at', '<=', $date_end)
+            ->where(function($query) use ($report_option, $status_option) {
+                if($report_option == 'all' && $status_option == 'all') {
+                    return null;
+                } elseif ($report_option == 'all' && $status_option != 'all') {
+                    return $query->where('status', '=', ucwords($status_option));
+                } elseif ($report_option != 'all' && $status_option == 'all') {
+                    return $query->where('report_type', '=', ucwords($report_option));
+                } else {
+                    return $query->where('status', '=', ucwords($status_option))
+                    ->where('report_type', '=', ucwords($report_option));
+                }
+            })->first();
+
+        $title = 'Missing Item Reports';
+        $modelName = 'Missing Item';
+
+        return view('admin.taskforce.pdf.missingItem', compact('title', 'modelName', 'missingItems', 'reportsData',
+            'date_start', 'date_end', 'sort_column', 'sort_option', 'report_option', 'status_option'
+        ));
+    }
+
 }

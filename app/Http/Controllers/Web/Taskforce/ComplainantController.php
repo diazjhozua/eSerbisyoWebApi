@@ -3,84 +3,59 @@
 namespace App\Http\Controllers\Web\Taskforce;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ComplainantRequest;
+use App\Http\Resources\ComplainantResource;
+use App\Models\Complainant;
 use App\Models\Complaint;
+use Helper;
 use Illuminate\Http\Request;
+use Storage;
 
 class ComplainantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function store(ComplainantRequest $request)
     {
-        //
+        $image_parts = explode(";base64,", $request->signature);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+
+        $image_base64 = base64_decode($image_parts[1]);
+        $fileName = uniqid().time().'.'.$image_type;
+        $filePath = 'signatures/'.$fileName;
+        // save to storage/app/photos as the new $filename
+        Storage::disk('public')->put($filePath, $image_base64);
+
+        $complainant = Complainant::create(array_merge($request->getData(), ['signature_picture' => $fileName,'file_path' => $filePath]));
+        return (new ComplainantResource($complainant->load('complaint')))->additional(Helper::instance()->storeSuccess('complainant'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function edit(Complainant $complainant)
     {
-        //
+        return (new ComplainantResource($complainant))->additional(array_merge(Helper::instance()->itemFound('complainant')));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function update(ComplainantRequest $request, Complainant $complainant)
     {
-        //
+        if($request->signature != null) {
+            $image_parts = explode(";base64,", $request->signature);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName = uniqid().time().'.'.$image_type;
+            $filePath = 'signatures/'.$fileName;
+            // save to storage/app/photos as the new $filename
+            Storage::disk('public')->put($filePath, $image_base64);
+            $complainant->fill(array_merge($request->getData(), ['signature_picture' => $fileName,'file_path' => $filePath]))->save();
+        } else { $complainant->fill($request->getData())->save(); }
+
+        return (new ComplainantResource($complainant))->additional(Helper::instance()->updateSuccess('complainant'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Complaint $complaint)
+    public function destroy(Complainant $complainant)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Complaint $complaint)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Complaint  $complaint
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Complaint $complaint)
-    {
-        //
+        Storage::delete('public/signatures/'. $complainant->signature_picture);
+        $complainant->delete();
+        return response()->json(Helper::instance()->destroySuccess('complainant'));
     }
 }

@@ -32,7 +32,7 @@ class ComplainantRequest extends FormRequest
                 'name' => ['required', 'string', 'min:5', 'max:150', Rule::unique('complainants', 'name')->where(function ($query) use ($complaint_id) {
                     return $query->where('complaint_id', $complaint_id);
                 })],
-                'signature' => 'required|mimes:jpeg,png|max:3000',
+                'signature' => 'required|distinct|base64image',
             ];
         }
 
@@ -44,7 +44,7 @@ class ComplainantRequest extends FormRequest
                 'name' => ['required', 'string', 'min:5', 'max:150', Rule::unique('complainants', 'name')->where(function ($query) use ($complaint_id) {
                     return $query->where('complaint_id', $complaint_id);
                 })->ignore($id)],
-                'signature' => 'mimes:jpeg,png|max:3000',
+                'signature' => 'required|distinct|base64image',
             ];
         }
     }

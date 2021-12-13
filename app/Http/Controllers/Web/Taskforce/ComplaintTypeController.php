@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Web\Taskforce;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ComplaintTypeRequest;
+use App\Http\Requests\TaskforceReport\TypeReportRequest;
 use App\Http\Resources\TypeResource;
 use App\Models\Complaint;
 use App\Models\Type;
+use Carbon\Carbon;
+use DB;
 use Helper;
 use Illuminate\Http\Request;
+use Log;
 
 class ComplaintTypeController extends Controller
 {
@@ -31,10 +35,43 @@ class ComplaintTypeController extends Controller
     public function show($id)
     {
         if ($id == 0) {
-            $complaints = Complaint::where('type_id', NULL)->orderBy('created_at', 'DESC')->get();
-            $type = (new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Complaint', 'created_at' => now(), 'updated_at' => now(),
-            'complaints_count' => $complaints->count(), 'others' => $complaints ]));
-        } else {  $type = Type::with('complaints')->where('model_type', 'Complaint')->withCount('complaints')->findOrFail($id); }
+            $otherTotals = DB::table('complaints')
+            ->selectRaw('count(*) as complaints_count')
+            ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
+            ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
+            ->selectRaw("count(case when status = 'Invalid' then 1 end) as invalid_count")
+            ->selectRaw("count(case when status = 'Ignored' then 1 end) as ignored_count")
+            ->where('type_id', '=', NULL)
+            ->first();
+
+            $type = new Type([
+                'id' => 0,
+                'name' => 'Others',
+                'model_type' => 'Complaint',
+                'created_at' => now(),
+                'updated_at' => now(),
+                'pending_count' => $otherTotals->pending_count,
+                'noted_count' => $otherTotals->noted_count,
+                'invalid_count' => $otherTotals->invalid_count,
+                'ignored_count' => $otherTotals->ignored_count,
+                'complaints' => Complaint::where('type_id', '=', NULL)
+                    ->orderBy('created_at', 'DESC')->get()
+            ]);
+
+        } else {
+            $type = Type::with(['complaints' => function ($query) {
+                $query->orderBy('created_at', 'DESC');
+            }])->withCount(['complaints','complaints as pending_count' => function ($query) {
+                $query->where('status', 'Pending');
+            }, 'complaints as noted_count' => function ($query) {
+                $query->where('status', 'Noted');
+            }, 'complaints as invalid_count' => function ($query) {
+                $query->where('status', 'Invalid');
+            }, 'complaints as ignored_count' => function ($query) {
+                $query->where('status', 'Ignored');
+            }])->where('model_type', 'Complaint')->findOrFail($id);
+        }
+
         return view('admin.taskforce.complaint-types.show', compact('type'));
     }
 
@@ -61,4 +98,68 @@ class ComplaintTypeController extends Controller
         $type->delete();
         return response()->json(Helper::instance()->destroySuccess('complaint_type'));
     }
+
+    public function reportShow($id, $date_start, $date_end, $sort_column, $sort_option, $status_option)
+    {
+        $complaints = null;
+        try {
+            $complaints = Complaint::with('type', 'defendants', 'complainants')
+                ->whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
+                ->where(function($query) use ($status_option) {
+                    if($status_option == 'all') {
+                        return null;
+                    } else {
+                        return $query->where('status', '=', ucwords($status_option));
+                    }
+                })
+                ->where(function($query) use ($id) {
+                if ($id == 0) {
+                    return $query->where('type_id', NULL);
+                }else {
+                    return $query->where('type_id', $id);
+                }
+                })->get();
+        } catch(\Illuminate\Database\QueryException $ex){}
+
+        if ($complaints == null) {
+            $title = 'Report - No data';
+            $description = 'No data';
+            return view('errors.404Report', compact('title', 'description'));
+        }
+
+        $complaintsData = null;
+
+        $complaintsData =  DB::table('complaints')
+            ->selectRaw('count(*) as complaints_count')
+            ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
+            ->selectRaw("count(case when status = 'Denied' then 1 end) as denied_count")
+            ->selectRaw("count(case when status = 'Approved' then 1 end) as approved_count")
+            ->selectRaw("count(case when status = 'Resolved' then 1 end) as resolved_count")
+            ->where('created_at', '>=', $date_start)
+            ->where('created_at', '<=', $date_end)
+            ->where(function($query) use ($status_option) {
+                if($status_option == 'all') {
+                    return null;
+                } else {
+                    return $query->where('status', '=', ucwords($status_option));
+                }
+            })
+            ->where(function($query) use ($id) {
+                if ($id == 0) {
+                    return $query->where('type_id', NULL);
+                }else {
+                    return $query->where('type_id', $id);
+                }
+                })
+            ->first();
+
+        $title = 'User Submitted Complaints Reports';
+        $modelName = 'Complaint';
+
+        return view('admin.taskforce.pdf.complaint', compact('title', 'modelName', 'complaints', 'complaintsData',
+            'date_start', 'date_end', 'sort_column', 'sort_option', 'status_option'
+        ));
+    }
+
 }

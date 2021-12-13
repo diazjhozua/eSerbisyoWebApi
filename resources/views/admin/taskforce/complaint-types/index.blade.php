@@ -15,6 +15,10 @@
     {{-- Create/Edit --}}
     @include('admin.types.form')
 
+    {{-- Report Modal --}}
+    @include('admin.types.report')
+
+
 
     @include('inc.delete')
 
@@ -64,6 +68,7 @@
                             <th>Action</th>
                         </tr>
                     </tfoot>
+
                     <tbody>
                         @forelse ($types as $type)
                             <tr>

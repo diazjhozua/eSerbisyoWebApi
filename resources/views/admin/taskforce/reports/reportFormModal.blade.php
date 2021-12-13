@@ -48,7 +48,7 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
 			</div>
-            <form id="reportForm" name="reportForm" action="">
+            <form id="reportForm" name="respondReportForm" action="">
 
                 <div class="modal-body">
                     <label>Submitted by:</label>

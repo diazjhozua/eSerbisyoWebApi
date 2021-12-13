@@ -39,7 +39,7 @@
             </button>
 
             {{-- View Credentials --}}
-            <a id="currentCredential" href="{{ route('admin.viewFiles', [ 'folderName' => 'credentials', 'fileName' => $missing_person->credential_name ]) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
+            <a id="currentCredential" href="{{ route('admin.viewFiles', [ 'folderName' => 'credentials', 'fileName' => $missing_person->credential_name ? $missing_person->credential_name : 'asd'  ]) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
                 View Credentials
             </a>
 

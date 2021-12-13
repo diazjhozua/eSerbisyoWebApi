@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <form name="reportForm" id="reportForm" action="" method="POST" enctype="multipart/form-data" novalidate>
+            <form name="missingForm" id="reportForm" action="" method="POST" enctype="multipart/form-data" novalidate>
 
                 <div id="formMethod"></div>
 

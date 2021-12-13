@@ -23,16 +23,26 @@ class ComplaintResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'submitted_by' => $this->user->getFullNameAttribute(),
+            'user_id' => $this->user_id,
+            'user_name' => $this->user->getFullNameAttribute(),
+            'user_role' => $this->user->user_role->role,
 
             $this->mergeWhen($this->relationLoaded('type'), [
                 'type_id'  => !$type instanceof MissingValue && isset($this->type->id) ? $this->type->id : 0,
-                'type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
+                'complaint_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
 
+
+            'contact_id' => $this->contact_user_id,
+            'contact_name' => $this->contact->getFullNameAttribute(),
+            'contact_role' => $this->contact->user_role->role,
             'custom_type' => $this->custom_type,
             'reason' => $this->reason,
             'action' => $this->action,
+            'email' => $this->email,
+            'phone_no' => $this->phone_no,
+            'status' => $this->status,
+            'admin_message' => $this->admin_message,
 
             $this->mergeWhen(isset($this->complainants_count), [
                 'complainants_count' => $this->complainants_count,

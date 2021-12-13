@@ -141,7 +141,8 @@
                                             @break
                                     @endswitch
                                 </td>
-                                <td>{{ $log->causer->first_name .' '. $log->causer->last_name }}</td>
+
+                                <td>{{ $log->causer->first_name .' '. $log->causer->last_name }} (#{{$log->causer->id}})</td>
                                 <td>
                                     @if ($log->causer->user_role_id == 1)
                                         {{-- FOR SUPER ADMIN --}}

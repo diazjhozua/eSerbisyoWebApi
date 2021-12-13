@@ -1,0 +1,144 @@
+@media print {
+	#printPageButton {
+		display: none;
+	}
+}
+
+.row {
+	display: flex;
+}
+.column {
+	flex: 50%;
+	padding: 0px;
+}
+
+div,
+h6,
+b {
+	font-size: 16pt;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	font: 12pt "Roman";
+}
+* {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+.page {
+	width: 350mm;
+	margin: 0% 0% 0% 0%;
+	filter: progid:DXImageTransform.Microsoft.BasicImage(Rotation=1);
+	min-height: 297mm;
+	padding: 20mm;
+	margin: 10mm auto;
+	border: 1px #d3d3d3 solid;
+	border-radius: 5px;
+	background: white;
+	/*box-shadow: 0 0 5px rgba(0, 0, 0, 0);*/
+}
+.subpage {
+	padding: 0cm;
+	/*border: 5px black solid;*/
+	/*  height: 257mm;*/
+	outline: 0cm #fff solid;
+}
+
+.brg {
+}
+
+.cupang {
+	margin-top: -9rem;
+	margin-left: 61rem;
+}
+
+.lindot {
+	height: 2px;
+	background-color: gray;
+	margin-top: 4rem;
+}
+
+.timef {
+	margin-top: -9.8rem;
+	margin-left: 48rem;
+}
+.dits {
+	margin-top: 2rem;
+	margin-left: 35rem;
+}
+
+.regi {
+	width: 462px;
+	padding: 0px;
+	border: 2px #ededed;
+	background-color: #ededed;
+	margin: 0;
+	font-weight: bold;
+}
+.regiz {
+	margin-left: 36rem;
+}
+
+thead {
+	background-color: #ededed;
+}
+
+.printdiz {
+	margin-top: 2rem;
+	margin-left: 32rem;
+}
+
+table {
+	table-layout: auto;
+	border: 0px;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+.server-name p {
+	width: 157px;
+	word-wrap: break-word;
+	display: block;
+}
+
+.cell-breakWord {
+	overflow-wrap: break-word;
+}
+
+.tableContent {
+	font-size: 15px;
+	width: 100%;
+	margin: auto;
+	border: 1px solid black;
+	table-layout: auto;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	font-size: 15px;
+}
+
+.tableContent th {
+	padding: 10px;
+	text-align: center;
+	border: 1px solid black;
+}
+
+.tableContent p {
+	padding: 0;
+}
+
+.tableContent td {
+	padding: 6px;
+	border-width: 0px;
+	margin: 0px;
+	text-align: left;
+	border: 1px solid black;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	-ms-word-break: break-word;
+	word-break: break-word;
+}

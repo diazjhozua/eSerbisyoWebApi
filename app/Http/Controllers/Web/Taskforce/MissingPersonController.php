@@ -79,7 +79,7 @@ class MissingPersonController extends Controller
                 $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
                 $missing_person->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
             } else {   $missing_person->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
-            return (new MissingPersonResource($missing_person->load('comments')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-person report'));
+            return (new MissingPersonResource($missing_person->load('comments', 'contact')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-person report'));
         }
     }
 
@@ -109,5 +109,60 @@ class MissingPersonController extends Controller
 
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
+    }
+    public function report($date_start,  $date_end, $sort_column, $sort_option, $report_option, $status_option) {
+
+        try {
+            $missingPersons = MissingPerson::whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
+                ->where(function($query) use ($report_option, $status_option) {
+                    if($report_option == 'all' && $status_option == 'all') {
+                        return null;
+                    } elseif ($report_option == 'all' && $status_option != 'all') {
+                        return $query->where('status', '=', ucwords($status_option));
+                    } elseif ($report_option != 'all' && $status_option == 'all') {
+                        return $query->where('report_type', '=', ucwords($report_option));
+                    } else {
+                        return $query->where('status', '=', ucwords($status_option))
+                        ->where('report_type', '=', ucwords($report_option));
+                    }
+                })->get();
+        } catch(\Illuminate\Database\QueryException $ex){}
+
+        if ($missingPersons->isEmpty()) {
+            $title = 'Report - No data';
+            $description = 'No data';
+            return view('errors.404Report', compact('title', 'description'));
+        }
+
+        $reportsData = null;
+
+        $reportsData =  DB::table('missing_persons')
+            ->selectRaw('count(*) as missing_persons_count')
+            ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
+            ->selectRaw("count(case when status = 'Resolved' then 1 end) as resolved_count")
+            ->selectRaw("count(case when status = 'Denied' then 1 end) as denied_count")
+            ->selectRaw("count(case when status = 'Approved' then 1 end) as approved_count")
+            ->where('created_at', '>=', $date_start)
+            ->where('created_at', '<=', $date_end)
+            ->where(function($query) use ($report_option, $status_option) {
+                if($report_option == 'all' && $status_option == 'all') {
+                    return null;
+                } elseif ($report_option == 'all' && $status_option != 'all') {
+                    return $query->where('status', '=', ucwords($status_option));
+                } elseif ($report_option != 'all' && $status_option == 'all') {
+                    return $query->where('report_type', '=', ucwords($report_option));
+                } else {
+                    return $query->where('status', '=', ucwords($status_option))
+                    ->where('report_type', '=', ucwords($report_option));
+                }
+            })->first();
+
+        $title = 'Missing Person Reports';
+        $modelName = 'Missing Person';
+
+        return view('admin.taskforce.pdf.missingPerson', compact('title', 'modelName', 'missingPersons', 'reportsData',
+            'date_start', 'date_end', 'sort_column', 'sort_option', 'report_option', 'status_option'
+        ));
     }
 }

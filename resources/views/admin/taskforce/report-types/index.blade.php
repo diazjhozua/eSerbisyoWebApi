@@ -15,6 +15,8 @@
     {{-- Create/Edit --}}
     @include('admin.types.form')
 
+    {{-- Report Modal --}}
+    @include('admin.types.report')
 
     @include('inc.delete')
 
