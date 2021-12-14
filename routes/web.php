@@ -36,7 +36,7 @@ use Spatie\Activitylog\Models\Activity;
 */
 
 Route::get('/', function () {
-    
+
     return view('admin.taskforce.sample');
 });
 
