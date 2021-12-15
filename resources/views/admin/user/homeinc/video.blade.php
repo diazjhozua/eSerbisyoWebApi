@@ -27,7 +27,7 @@
                     </div> <!-- end of image-container -->
                     <!-- end of video preview -->
 
-                    <div class="p-heading">What better way to demonstrate why you should utilize the Barangay Cupang E-Serybisyo application with a video. Included are instructions on how to use the app and all of its fantastic features.</div>        
+                    <div class="p-heading">What better way to demonstrate why you should utilize the Barangay Cupang E-Serybisyo application with a video. Included are instructions on how to use the app and all of its fantastic features.</div>
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->

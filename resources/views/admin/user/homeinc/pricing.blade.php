@@ -38,7 +38,7 @@
                                 </li>
                             </ul>
                             <div class="button-wrapper">
-                                <a class="btn-solid-reg page-scroll" href="sign-up.html">SIGN UP</a>
+                                <a class="btn-solid-reg page-scroll" href="/login">SIGN UP</a>
                             </div>
                         </div>
                                                         </div>
@@ -71,7 +71,7 @@
                                 </li>
                             </ul>
                             <div class="button-wrapper">
-                                <a class="btn-solid-reg page-scroll" href="sign-up.html">SIGN UP</a>
+                                <a class="btn-solid-reg page-scroll" href="/login">SIGN UP</a>
                             </div>
                         </div>
                                                     </div>
@@ -106,7 +106,7 @@
                                 </li>
                             </ul>
                             <div class="button-wrapper">
-                                <a class="btn-solid-reg page-scroll" href="sign-up.html">SIGN UP</a>
+                                <a class="btn-solid-reg page-scroll" href="/login">SIGN UP</a>
                             </div>
                         </div>
                     </div> <!-- end of card -->

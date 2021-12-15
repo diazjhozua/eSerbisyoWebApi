@@ -41,7 +41,7 @@
                                 <div class="col-lg-6">
                                     <div class="text-container">
                                         <h3>Compacted Centralized Data</h3>
-                                        <p style="text-align: justify;">The system makes it simple to utilize the application by providing a single centralized application for all data that meets all of the system's needs.Find out and submit the <a class="blue page-scroll" href="sign-up.html">Sign Up Form</a> and you will receive access to the app with full experience of Barangay Cupang E-Serbisyo.</p>
+                                        <p style="text-align: justify;">The system makes it simple to utilize the application by providing a single centralized application for all data that meets all of the system's needs.Find out and submit the <a class="blue page-scroll" href="/login">Sign Up Form</a> and you will receive access to the app with full experience of Barangay Cupang E-Serbisyo.</p>
                                         <ul class="list-unstyled li-space-lg">
                                             <li class="media">
                                                 <i class="fas fa-square"></i>
@@ -173,7 +173,7 @@
                             <i class="fas fa-square"></i><div class="media-body">Data access can be readily monitored and controlled.</div>
                         </li>
                     </ul>
-                    <a class="btn-solid-reg mfp-close" href="sign-up.html">SIGN UP</a> <a class="btn-outline-reg mfp-close as-button" href="#screenshots">BACK</a>
+                    <a class="btn-solid-reg mfp-close" href="/login">SIGN UP</a> <a class="btn-outline-reg mfp-close as-button" href="#screenshots">BACK</a>
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->
@@ -212,7 +212,7 @@
                             <i class="fas fa-square"></i><div class="media-body">Real-time data provides the most up-to-date information.</div>
                         </li>
                     </ul>
-                    <a class="btn-solid-reg mfp-close" href="sign-up.html">SIGN UP</a> <a class="btn-outline-reg mfp-close as-button" href="#screenshots">BACK</a>
+                    <a class="btn-solid-reg mfp-close" href="/login">SIGN UP</a> <a class="btn-outline-reg mfp-close as-button" href="#screenshots">BACK</a>
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->
@@ -248,7 +248,7 @@
                             <i class="fas fa-square"></i><div class="media-body">Appointments are covered by a system-generated queue of requests.</div>
                         </li>
                     </ul>
-                    <a class="btn-solid-reg mfp-close" href="sign-up.html">SIGN UP</a> <a class="btn-outline-reg mfp-close as-button" href="#screenshots">BACK</a>
+                    <a class="btn-solid-reg mfp-close" href="/login">SIGN UP</a> <a class="btn-outline-reg mfp-close as-button" href="#screenshots">BACK</a>
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->

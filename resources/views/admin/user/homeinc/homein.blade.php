@@ -7,7 +7,7 @@
                         <div class="text-container">
                             <h1>BARANGAY CUPANG E-SERBISYO</h1>
                             <p class="p-large">Barangay Cupang Application to streamline your barangay needs and take advantage of our line services.</p>
-                            <a class="btn-solid-lg page-scroll" href="sign-up.html">SIGN UP</a>
+                            <a class="btn-solid-lg page-scroll" href="/login">SIGN UP</a>
                         </div> <!-- end of text-container -->
                     </div> <!-- end of col -->
                     <div class="col-lg-6 col-xl-7">
@@ -31,10 +31,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    
+
                     <!-- Image Slider -->
                     <div class="slider-container">
-                        
+
                         <div class="swiper-container image-slider">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide">
@@ -52,7 +52,7 @@
                                 <div class="swiper-slide">
                                         <img class="img-fluid" src="assets/img/user/mtics.png"  style="width:100%; height: 40px;"alt="alternative">
                                 </div>
-                                
+
                             </div> <!-- end of swiper-wrapper -->
                         </div> <!-- end of swiper container -->
                     </div> <!-- end of slider-container -->
