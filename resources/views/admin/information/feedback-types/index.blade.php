@@ -25,8 +25,10 @@
         <h1 class="h3 mb-0 text-gray-800">Feedback Types
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
-        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
-            class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @if (Auth::user()->user_role_id < 5)
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
+                class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @endif
     </div>
 
     <p class="text-justify">Feedback type can be classified as a topic where registered residents can choose what topic they are going to give feedback.

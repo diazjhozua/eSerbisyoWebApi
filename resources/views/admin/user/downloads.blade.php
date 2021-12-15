@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumbs">
-                        <a href="/home#home">Home</a><i class="fa fa-angle-double-right"></i><span>Downloads</span>
+                        <a href="/#home">Home</a><i class="fa fa-angle-double-right"></i><span>Downloads</span>
                     </div> <!-- end of breadcrumbs -->
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
@@ -31,13 +31,12 @@
     </div> <!-- end of ex-basic-1 -->
     <!-- end of breadcrumbs -->
 
-
     <!-- Privacy Content -->
     <div class="ex-basic-2">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                  
+
                     <div class="text-container">
                         <div class="table-container">
                          <h3 class="tabledown">Downloads</h3>
@@ -45,40 +44,26 @@
                             <table class=table>
                             <thead>
                                 <tr>
-                                    <th>Name</th>
                                     <th>Version</th>
+                                    <th>Description</th>
                                     <th>Date-Release</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td data-label="Name"><a href=https://www.youtube.com/>Youtube</a></td>
-                                    <td data-label="Version">v7287</td>
-                                    <td data-label="Date-Release">January 6,2021</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Name"><a href=https://www.youtube.com/>Youtube</a></td>
-                                    <td data-label="Version">v7287</td>
-                                    <td data-label="Date-Release">January 6,2021</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Name"><a href=https://www.youtube.com/>Youtube</a></td>
-                                    <td data-label="Version">v7287</td>
-                                    <td data-label="Date-Release">January 6,2021</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Name"><a href=https://www.youtube.com/>Youtube</a></td>
-                                    <td data-label="Version">v7287</td>
-                                    <td data-label="Date-Release">January 6,2021</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Name"><a href=https://www.youtube.com/>Youtube</a></td>
-                                    <td data-label="Version">v7287</td>
-                                    <td data-label="Date-Release">January 6,2021</td>
-                                </tr>
-                                
+                                @forelse ($androids as $android)
+                                    <tr>
 
-
+                                        <td data-label="Version">
+                                            <a href="{{route('downloadFiles', [ 'folderName' => 'androids', 'fileName' => $android->file_name])}}" target="_blank">
+                                               {{ $android->version }}
+                                            </a>
+                                        </td>
+                                        <td data-label="Description">{{ $android->description }}</td>
+                                        <td data-label="Date-Release">{{ date_format($android->created_at,'d-m-Y') }}</td>
+                                    </tr>
+                                @empty
+                                    <p>No android application yet</p>
+                                @endforelse
                             </tbody>
 
                         </table>
@@ -97,7 +82,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumbs">
-                        <a href="index.html">Home</a><i class="fa fa-angle-double-right"></i><span>Downloads    </span>
+                        <a href="/">Home</a><i class="fa fa-angle-double-right"></i><span>Downloads    </span>
                     </div> <!-- end of breadcrumbs -->
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
@@ -105,7 +90,11 @@
     </div> <!-- end of ex-basic-1 -->
     <!-- end of breadcrumbs -->
 
-        
+        <!-- Footer -->
+    @include('admin.user.homeinc.footer')
+
+
+
 
 
 

@@ -4,7 +4,7 @@
 
 
 @section('content')
-    
+
     <!-- Header -->
     <header id="header" class="ex-header">
         <div class="container">
@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumbs">
-                        <a href="index.html">Home</a><i class="fa fa-angle-double-right"></i><span>Privacy Policy</span>
+                        <a href="/">Home</a><i class="fa fa-angle-double-right"></i><span>Privacy Policy</span>
                     </div> <!-- end of breadcrumbs -->
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
@@ -61,8 +61,8 @@
                                         <i class="fas fa-square"></i>
                                         <div class="media-body" style="text-align: justify;">The data in the Barangay Cupang E-Serbisyo System is continuously backed up and will not fail.</div>
                                     </li>
-                                   
-                                   
+
+
                                 </ul>
                             </div> <!-- end of col -->
 
@@ -84,8 +84,8 @@
                             </div> <!-- end of col -->
                         </div> <!-- end of row -->
                     </div> <!-- end of text-container-->
-                    
-                   
+
+
 
                     <div class="text-container">
                         <h3>For the Barangay Cupang E-Barangay System, we process content for users</h3>
@@ -96,14 +96,14 @@
                         <h3>Acceptance of Our System's Use</h3>
 					    <p style="text-align: justify;">You consent to the collection, transmission, storage, disclosure, and use of your Personal Information in the manner set out in this Privacy Policy by using our services or submitting or collecting any Personal Information via the Services. If you do not agree to your Personal Information being used in these ways, please stop using our Services to be able for us to guarantee that you did not agree with our private policy.</p>
                     </div> <!-- end of text-container -->
-                                       
-                    
+
+
                         <div class="col-md-6">
 
                             <!-- Privacy Form -->
                             <
 
-                        </div> <!-- end of col--> 
+                        </div> <!-- end of col-->
                     </div> <!-- end of row -->
                     <a class="btn-outline-reg" href="/home#home">BACK</a>
                 </div> <!-- end of col-->
@@ -119,12 +119,15 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumbs">
-                        <a href="/home#header">Home</a><i class="fa fa-angle-double-right"></i><span>Privacy Policy</span>
+                        <a href="/#header">Home</a><i class="fa fa-angle-double-right"></i><span>Privacy Policy</span>
                     </div> <!-- end of breadcrumbs -->
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->
     </div> <!-- end of ex-basic-1 -->
     <!-- end of breadcrumbs -->
+
+    <!-- Footer -->
+    @include('admin.user.homeinc.footer')
 
 @endsection

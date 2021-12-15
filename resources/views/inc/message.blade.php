@@ -11,7 +11,7 @@
 </svg>
 
 @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-dismissible fade show" style="font-size: 10px" role="alert">
+    <div class="alert alert-success alert-dismissible fade show" style="font-size: 15px" role="alert">
         {{ $message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -20,7 +20,7 @@
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger alert-dismissible fade show" style="font-size: 10px" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show" style="font-size: 15px" role="alert">
         @foreach ($errors->all() as $error)
          {{ $error }}
         @endforeach

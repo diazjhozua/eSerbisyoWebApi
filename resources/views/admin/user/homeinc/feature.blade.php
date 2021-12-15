@@ -56,7 +56,7 @@
                                                 <div class="media-body">Improved data integrity</div>
                                             </li>
                                         </ul>
-                                        <a class="btn-solid-reg popup-with-move-anim" href="#details-lightbox-1">LIGHTBOX</a>
+                                        <a class="btn-solid-reg popup-with-move-anim" href="#details-lightbox-1">SEE MORE</a>
                                     </div> <!-- end of text-container -->
                                 </div> <!-- end of col -->
                             </div> <!-- end of row -->
@@ -89,7 +89,7 @@
                                                 <div class="media-body">Responsive real-time data</div>
                                             </li>
                                         </ul>
-                                        <a class="btn-solid-reg popup-with-move-anim" href="#details-lightbox-2">LIGHTBOX</a>
+                                        <a class="btn-solid-reg popup-with-move-anim" href="#details-lightbox-2">SEE MORE</a>
                                     </div> <!-- end of text-container -->
                                 </div> <!-- end of col -->
                             </div> <!-- end of row -->
@@ -122,13 +122,13 @@
                                                 <div class="media-body">Online viewing of requested documents</div>
                                             </li>
                                         </ul>
-                                        <a class="btn-solid-reg popup-with-move-anim" href="#details-lightbox-3">LIGHTBOX</a>
+                                        <a class="btn-solid-reg popup-with-move-anim" href="#details-lightbox-3">SEE MORE</a>
                                     </div> <!-- end of text-container -->
                                 </div> <!-- end of col -->
                             </div> <!-- end of row -->
                         </div> <!-- end of tab-pane -->
                         <!-- end of tab -->
-                        
+
                     </div> <!-- end of tab content -->
                     <!-- end of tabs content -->
 

@@ -83,7 +83,7 @@ $(document).ready(function () {
                 },
                 complete: function () {
                     $('.btnFormSbmit').attr("disabled", false); //disabled login
-                    $('.btnTxt').text('Reset') //set the text of the submit btn
+                    $('.btnTxt').text('Register') //set the text of the submit btn
                     $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
                 }
             });
