@@ -1,46 +1,7 @@
-@extends ('layouts.user')
+@extends('layouts.auth')
 
 @section('content')
-
-    <!-- Header -->
-    <header id="header" class="ex-2-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1>Forgot Your Password?</h1>
-                   <p>We get it, stuff happens. Just enter your email address below and we'll send you a link to reset your password!</p>
-                    <!-- Sign Up Form -->
-                    <div class="form-container">
-
-                        @include('inc.message')
-
-                        <form class="user" method="post" action="{{ route('forget.password.post') }}">
-                            @csrf
-                            <div class="form-group">
-                                <input type="email" name="email" class="form-control form-control-user"
-                                    id="exampleInputEmail" aria-describedby="emailHelp"
-                                    placeholder="Enter Email Address...">
-                            </div>
-
-                            <div class="form-group"><button class="btn btn-primary btn-user btn-block" type="submit">Reset Password</button></div>
-                        </form>
-                        <hr>
-                        <div class="text-center">
-                            <a class="small" href="{{ route('register.get') }}">Create an Account!</a>
-                        </div>
-                        <div class="text-center">
-                            <a class="small" href="{{ route('login') }}">Already have an account? Login!</a>
-                        </div>
-                    </div> <!-- end of form container -->
-                    <!-- end of sign up form -->
-
-                </div> <!-- end of col -->
-            </div> <!-- end of row -->
-        </div> <!-- end of container -->
-    </header> <!-- end of ex-header -->
-    <!-- end of header -->
-
-{{-- <div class="container">
+<div class="container">
 
     <!-- Outer Row -->
     <div class="row justify-content-center">
@@ -94,5 +55,5 @@
             </div>
         </div>
     </div>
-</div> --}}
+</div>
 @endsection

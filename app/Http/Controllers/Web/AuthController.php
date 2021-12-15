@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Log;
 use Mail;
 use Route;
 use Str;
@@ -26,18 +27,22 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        Log::debug('hehehe');
         $credentials = $request->validated();
         if (Auth::attempt($credentials)) {
             if (Auth::user()->user_role_id == 9 || Auth::user()->user_role_id == 8) {
                 Session::flush();
                 Auth::logout();
-                return response()->json(['message' => 'Your account is does not have admin priviledges (barangay officials),
+                return response()->json(['message' => 'Your account does not have admin priviledges (barangay officials),
                 please download the android application to access the application as a resident or biker.'], 403);
 
             } elseif (Auth::user()->user_role_id < 5) {
+                Log::debug('hehehe');
                 return response()->json(['message' => 'Login success', 'route' => route('admin.dashboard.index')], 200);
             } elseif(Auth::user()->user_role_id == 5) {
                 return response()->json(['message' => 'Login success', 'route' => route('admin.users.index')], 200);
+            } elseif(Auth::user()->user_role_id == 7) {
+                return response()->json(['message' => 'Login success', 'route' => route('admin.reports.index')], 200);
             }
         }
 

@@ -21,8 +21,10 @@
         <h1 class="h3 mb-0 text-gray-800"><button class="btn btn-primary" onclick="window.location=document.referrer;" type="submit"><i class="fas fa-caret-square-left"></i></button> Report Type: {{ $type->name }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
-        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
-            class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @if (Auth::user()->user_role_id < 5)
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
+                class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @endif
     </div>
 
     <input type="hidden" id="reportTypeID" value="{{ $type->id }}">

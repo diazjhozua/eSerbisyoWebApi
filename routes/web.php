@@ -35,10 +35,12 @@ use Spatie\Activitylog\Models\Activity;
 |
 */
 
-Route::get('/', function () {
+// LANDING PAGE
+Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/downloads', [HomeController::class, 'downloads'])->name('download');
+Route::get('/terms', [HomeController::class, 'terms'])->name('term');
+Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 
-    return view('admin.taskforce.sample');
-});
 
 Route::get('/brgindigency', function () {
     // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
@@ -86,10 +88,10 @@ Route::get('/event', function () {
 //         }
 // });
 
-Route::get('/', function () {
+// Route::get('/', function () {
 
-    return view('admin.taskforce.sample');
-});
+//     return view('admin.taskforce.sample');
+// });
 
 Route::get('login', [AuthController::class, 'index'])->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('login.authenticate');
@@ -113,12 +115,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->g
     Route::get('staffs/promote-users', [AdminStaff::class, 'users'])->name('staffs.users');
     Route::put('staffs/promote-users/{user}', [AdminStaff::class, 'promoteUser'])->name('staffs.promoteUser');
 });
-//For User
 
-Route::get('home', [HomeController::class, 'home'])->name('Home');
-Route::get('downloads', [HomeController::class, 'downloads'])->name('Downloads');
-Route::get('terms', [HomeController::class, 'terms'])->name('Terms');
-Route::get('privacy', [HomeController::class, 'privacy'])->name('Privacy');
+Route::get('files/{folderName}/{fileName}', function ($folderName, $fileName) {
+
+    if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
+        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+        return response()->download($url);
+    }else{
+        return view('errors.NOFILE');
+    }
+})->name('downloadFiles');
 
 // For all admin and staff
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:notBasicUser'])->group(function () {
@@ -135,8 +141,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:notBasicUse
     Route::put('profile/changeEmail', [AdminProfile::class, 'changeEmail'])->name('profile.changeEmail');
 
     Route::get('files/{folderName}/{fileName}', function ($folderName, $fileName) {
-        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
-        return response()->file($url);
+        if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
+            $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+            return response()->file($url);
+        }else{
+            return view('errors.NOFILE');
+        }
     })->name('viewFiles');
 });
 

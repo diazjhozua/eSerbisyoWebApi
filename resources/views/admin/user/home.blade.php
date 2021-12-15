@@ -1,10 +1,8 @@
 @extends ('layouts.user')
 
 
+@section('content')
 
-
-@section('content') 
-   
     {{-- Included Home Page --}}
     @include('admin.user.homeinc.homein')
 
@@ -16,13 +14,11 @@
 
     {{-- Included Video --}}
     @include('admin.user.homeinc.video')
-    
-
 
     {{-- Included Pricing --}}
     @include('admin.user.homeinc.pricing')
 
+    <!-- Footer -->
+    @include('admin.user.homeinc.footer')
 
-
-   
 @endsection

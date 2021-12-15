@@ -39,6 +39,10 @@ class isAdmin
             if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 4) {
                 return $next($request);
             }
+        } elseif ($userMainRole == 'taskForceStaff') {
+            if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 4 || Auth::user()->user_role_id == 7) {
+                return $next($request);
+            }
         } elseif ($userMainRole =='admin') {
             if (Auth::user()->user_role_id < 5) {
                 return $next($request);

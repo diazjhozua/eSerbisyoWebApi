@@ -124,22 +124,22 @@
         <div class="container">
 
             <div class="row">
-            
-                <div class="col-lg-12">      
-                
+
+                <div class="col-lg-12">
+
                     <!-- Text Slider -->
                     <div class="slider-container">
                         <div class="swiper-container text-slider">
                             <div class="swiper-wrapper">
-                            
+
                                 <!-- Slide -->
                                 <div class="swiper-slide">
                                     <div class="image-wrapper">
                                         <img class="img-fluid" src="assets/img/user/diaz.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text">I started to use Tivo with the free trial about a year ago and never stopped since then. It does all the repeating marketing tasks and allows me to focus on core development activities like new product research and design. I love it and recommend it to everyone.</div>
-                                        <div class="testimonial-author">Jhozua M. Diaz - Full stack Web & Android developer</div>
+                                        <div class="testimonial-text">Lord Ipsum nulla ipsum mi, ornare nec orci ac, blandit vehicula eros. Duis enim lacus, rhoncus et sollicitudin ultricies, auctor ac diam. Quisque arcu eros, hendrerit vitae interdum ac, commodo id orci. Sed ligula erat, interdum nec diam in, malesuada cursus ligula. Integer est augue, finibus a elit nec, commodo malesuada sapien. In vitae mollis urna, sit amet molestie ex. Integer nec nibh malesuada, luctus sem vitae, faucibus libero.</div>
+                                        <div class="testimonial-author">Jhozua M. Diaz -  Lead Researcher, Full stack Web Developer, & Android Developer</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
@@ -181,7 +181,7 @@
                                 <!-- end of slide -->
 
                             </div> <!-- end of swiper-wrapper -->
-                            
+
                             <!-- Add Arrows -->
                             <div class="swiper-button-next"></div>
                             <div class="swiper-button-prev"></div>
