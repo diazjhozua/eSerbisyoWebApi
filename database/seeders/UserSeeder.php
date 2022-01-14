@@ -66,20 +66,18 @@ class UserSeeder extends Seeder
         }
 
         // For biker
-        foreach (range(1,5) as $index)
+        foreach (range(1,20) as $index)
         {
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
             $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            $randomNum = $faker->unique()->numberBetween(0, 4);
 	        DB::table('users')->insert([
-                'first_name' =>  $firstName[$randomNum],
+                'first_name' =>  $faker->firstName,
                 'middle_name' => $faker->lastName,
-                'last_name' => $lastName[$randomNum],
-                'email' => strtolower($lastName[$randomNum]).'@gmail.com',
-                 'phone_no' => $faker->phoneNumber,
+                'last_name' => $faker->lastName,
+                'email' => strtolower($faker->firstName.$faker->lastName.$faker->buildingNumber).'@gmail.com',
+                'phone_no' => $faker->phoneNumber,
                 'password' => Hash::make('12341234'),
-
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'purok_id' => $faker->numberBetween(1,5),
@@ -87,23 +85,26 @@ class UserSeeder extends Seeder
                 'is_verified' => true,
                 'status' => 'Enable',
                 'user_role_id' => 8,
+                'bike_type' => $faker->realText($maxNbChars = 20, $indexSize = 2),
+                'bike_color' => $faker->realText($maxNbChars = 20, $indexSize = 2),
+                'bike_size' => $faker->realText($maxNbChars = 20, $indexSize = 2),
                 'created_at' => $timestamp,
                 'updated_at' => $timestamp,
 	        ]);
         }
+
 
         foreach (range(6,19) as $index)
         {
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
             $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            $randomNum = $faker->unique()->numberBetween(5, 18);
 	        DB::table('users')->insert([
-                'first_name' =>  $firstName[$randomNum],
+                'first_name' =>  $faker->firstName,
                 'middle_name' => $faker->lastName,
-                'last_name' => $lastName[$randomNum],
-                'email' => strtolower($lastName[$randomNum]).'@gmail.com',
-                 'phone_no' => $faker->phoneNumber,
+                'last_name' => $faker->lastName,
+                'email' => strtolower($faker->firstName.$faker->lastName.$faker->buildingNumber).'@gmail.com',
+                'phone_no' => $faker->phoneNumber,
                 'password' => Hash::make('12341234'),
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
@@ -124,10 +125,10 @@ class UserSeeder extends Seeder
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
 	        DB::table('users')->insert([
-                'first_name' =>  $firstName[$randomNum],
+                'first_name' =>  $faker->firstName,
                 'middle_name' => $faker->lastName,
                 'last_name' => $faker->lastName,
-                'email' => strtolower($faker->lastName.rand(1,100)).'@gmail.com',
+                'email' => strtolower($faker->firstName.$faker->lastName.$faker->buildingNumber).'@gmail.com',
                 'phone_no' => $faker->phoneNumber,
                 'password' => Hash::make('12341234'),
                 'picture_name' => $picture_name,
@@ -167,7 +168,7 @@ class UserSeeder extends Seeder
                 'first_name' =>  $faker->firstName($gender = null),
                 'middle_name' => $faker->lastName,
                 'last_name' => $faker->lastName,
-                'email' => $faker->lastName.$faker->email,
+                'email' => strtolower($faker->firstName.$faker->lastName.$faker->buildingNumber).'@gmail.com',
                 'phone_no' => $faker->phoneNumber,
                 'password' => Hash::make('12341234'),
                 'purok_id' => $faker->numberBetween(1,5),
@@ -183,6 +184,27 @@ class UserSeeder extends Seeder
         $chunks = array_chunk($users, 40);
         foreach ($chunks as $chunk) {
             User::insert($chunk);
+        }
+
+        // for biker request application
+        foreach (range(1,30) as $index)
+        {
+            $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\bikers', false);
+            $credentials_file_path = 'bikers/'.$credentials_name;
+            DB::table('biker_requests')->insert([
+                'user_id' => $faker->numberBetween(20, 500),
+                'bike_type' => $faker->realText($maxNbChars = 20, $indexSize = 2),
+                'bike_color' => $faker->realText($maxNbChars = 20, $indexSize = 2),
+                'bike_size' => $faker->realText($maxNbChars = 20, $indexSize = 2),
+                'reason' => $faker->realText($maxNbChars = 150, $indexSize = 2),
+                'credential_name' => $credentials_name,
+                'credential_file_path' => $credentials_file_path,
+                'admin_message' => '',
+                'status' => 'Pending',
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ]);
         }
     }
 }

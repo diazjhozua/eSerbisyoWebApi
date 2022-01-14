@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-	
-	<title></title>
-</head>
+    <head>
+        <title>@yield('title')</title>
 
-<body>
-@yield('content')
-</body>
-
-
-
-
+        <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}"/>
+        @yield('page-css')
+    </head>
+    <body>
+        @yield('content')
+    </body>
 </html>

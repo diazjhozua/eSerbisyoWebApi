@@ -78,9 +78,7 @@
                             </div>
                         </div>
 
-
                         <form name="reportForm" id="reportForm" action="" method="POST" enctype="multipart/form-data" novalidate>
-
                             <div id="formMethod"></div>
                                 <div class="row">
                                     <div class="col-sm-8 col-sm-8">

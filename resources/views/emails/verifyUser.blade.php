@@ -4,7 +4,7 @@
 @section('greetings', 'Hello!')
 
 @section('messageUpper')
-    @if ($request->status == 'Approved')
+    @if ($request['status'] == 'Approved')
         Your verification request is approved, you may now used this account for submitting feedbacks, communicate in posts,
         reporting, and certificate request.
     @else
@@ -16,10 +16,10 @@
 
 {{-- Lower Message --}}
 @section('messageLower1')
-    @if ($request->status == 'Approved')
-        Note: {{ $request->admin_message }}
+    @if ($request['status'] == 'Approved')
+        Note: {{ $request['admin_message'] }}
     @else
-        Reason: {{ $request->admin_message }}
+        Reason: {{ $request['admin_message'] }}
     @endif
 @endsection
 

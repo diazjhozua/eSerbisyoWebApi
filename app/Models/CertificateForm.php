@@ -11,7 +11,7 @@ class CertificateForm extends Model
 
     protected $guarded = [];
 
-    protected $with = ['user'];
+    protected $with = ['user', 'certificate'];
 
     public function user(){
         return $this->belongsTo(User::class);

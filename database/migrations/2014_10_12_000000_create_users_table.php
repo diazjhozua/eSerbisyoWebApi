@@ -36,6 +36,11 @@ class CreateUsersTable extends Migration
             $table->enum('status', ['Enable', 'Disable'])->default('Enable');
             $table->string('admin_status_message')->nullable();
 
+            // Biker Profile
+            $table->string('bike_type')->nullable();
+            $table->string('bike_color')->nullable();
+            $table->string('bike_size')->nullable();
+
             // User Previledge
             $table->foreignId('user_role_id')->on('user_roles')->onDelete('set null');;
 

@@ -585,23 +585,6 @@ $(document).ready(function () {
                         COMPLAINANT_BTN_LOADING.prop("hidden", true) //hide the fa loading icon from submit btn
                     }
                 });
-
-
-                // setTimeout(function () {
-                //     btnComplainantFormSubmit.attr("disabled", false);
-                //     btnComplainantFormBtnTxt.text(formMethod == 'POST' ? 'Add' : 'Update');
-                //     btnComplainantFormLoadingIcon.prop("hidden", true);
-                // }, 1000);
-
-                // complainantFormModal.modal('hide');
-                // toastr.success(formMethod == 'POST' ? 'Complainant Added' : 'Complainant Updated');
-
-                // // get the name and image in the complainant form
-                // let complainantName = inputComplainantName.val();
-
-                // console.log(`Signature : ${signature}`)
-
-                // addOrReplaceComplainant(complainantName, signature, formMethod == 'POST' ? 'Add' : 'Replace')
             }
         }
     });

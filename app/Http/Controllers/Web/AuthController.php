@@ -36,11 +36,14 @@ class AuthController extends Controller
                 return response()->json(['message' => 'Your account does not have admin priviledges (barangay officials),
                 please download the android application to access the application as a resident or biker.'], 403);
 
-            } elseif (Auth::user()->user_role_id < 5) {
-                Log::debug('hehehe');
+            } elseif (Auth::user()->user_role_id == 1) {
+                return response()->json(['message' => 'Login success', 'route' => route('admin.dashboard.index')], 200);
+            }  elseif (Auth::user()->user_role_id < 5) {
                 return response()->json(['message' => 'Login success', 'route' => route('admin.dashboard.index')], 200);
             } elseif(Auth::user()->user_role_id == 5) {
                 return response()->json(['message' => 'Login success', 'route' => route('admin.users.index')], 200);
+            } elseif(Auth::user()->user_role_id == 6) {
+                return response()->json(['message' => 'Login success', 'route' => route('admin.orders.index')], 200);
             } elseif(Auth::user()->user_role_id == 7) {
                 return response()->json(['message' => 'Login success', 'route' => route('admin.reports.index')], 200);
             }

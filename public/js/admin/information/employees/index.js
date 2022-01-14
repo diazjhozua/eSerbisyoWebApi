@@ -146,8 +146,6 @@ $(document).ready(function () {
             //set value of global variables
             currentRowCreatedAt = currentRow.find("td:eq(6)").text();
 
-
-
         }
     })
 

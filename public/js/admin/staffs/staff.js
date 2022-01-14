@@ -1,4 +1,5 @@
 function demote(id) {
+    $('#positionSelectContainer').hide();
     let actionURL = '/admin/staffs/demoteStaff/' + id
     console.log(id)
     $('#changeRoleForm').attr('action', actionURL) //set the method of the form
@@ -14,7 +15,6 @@ function demote(id) {
     $('.btnChangeRole').removeClass('btn-success').addClass('btn-danger');
 
     $('#changeRoleModal').modal('show') //show bootstrap modal
-
 }
 
 $(document).ready(function () {

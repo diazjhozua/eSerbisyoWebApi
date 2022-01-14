@@ -42,10 +42,14 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        @if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 5)
+        @if (Auth::user()->user_role_id == 2 || Auth::user()->user_role_id == 5)
             @include('inc.sidebars.information')
-        @elseif (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 4 || Auth::user()->user_role_id == 7)
+        @elseif (Auth::user()->user_role_id == 3 || Auth::user()->user_role_id == 6)
+            @include('inc.sidebars.certification')
+        @elseif (Auth::user()->user_role_id == 4 || Auth::user()->user_role_id == 7)
             @include('inc.sidebars.taskforce')
+        @elseif (Auth::user()->user_role_id == 1)
+            @include('inc.sidebars.superAdmin')
         @endif
 
         <!-- Content Wrapper -->

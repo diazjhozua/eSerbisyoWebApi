@@ -73,8 +73,8 @@ $(document).ready(function () {
         format: "yyyy-mm-dd",
     });
 
-    $('#TypeNavCollapse').addClass('active');
-    $('#collapseType').collapse();
+    $('#TypeTaskforceNavCollapse').addClass('active');
+    $('#collapseTaskforceType').collapse();
     $('#complaintType').addClass('active');
 
     // Create Modal Form Validation

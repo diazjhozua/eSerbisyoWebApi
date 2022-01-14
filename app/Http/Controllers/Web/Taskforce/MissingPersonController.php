@@ -110,6 +110,7 @@ class MissingPersonController extends Controller
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
     }
+
     public function report($date_start,  $date_end, $sort_column, $sort_option, $report_option, $status_option) {
 
         try {

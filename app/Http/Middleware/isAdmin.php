@@ -43,6 +43,18 @@ class isAdmin
             if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 4 || Auth::user()->user_role_id == 7) {
                 return $next($request);
             }
+        } elseif ($userMainRole == 'certificateAdmin') {
+            if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 3) {
+                return $next($request);
+            }
+        } elseif ($userMainRole == 'certificateStaff') {
+            if (Auth::user()->user_role_id == 1 || Auth::user()->user_role_id == 3 || Auth::user()->user_role_id == 6) {
+                return $next($request);
+            }
+        } elseif ($userMainRole =='superAdmin') {
+            if (Auth::user()->user_role_id == 1) {
+                return $next($request);
+            }
         } elseif ($userMainRole =='admin') {
             if (Auth::user()->user_role_id < 5) {
                 return $next($request);

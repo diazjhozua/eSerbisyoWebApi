@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    $('#auditLogItem').addClass('active');
+
     // Initialize Year picker in report form
     $(".datepicker").datepicker({
         format: "yyyy-mm-dd",

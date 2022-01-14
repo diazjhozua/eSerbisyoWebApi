@@ -85,7 +85,6 @@ class UserController extends Controller
         //     $message->subject($title);
         // });
 
-
         return (new UserResource($user))->additional(Helper::instance()->updateSuccess($user->getFullNameAttribute().' verification request - '. strtolower($request->status)));
     }
 

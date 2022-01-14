@@ -23,7 +23,12 @@
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Total: <span id="userCount">{{ $users->count()}}</span> (Users) ---- <span id="staffCount">{{ $staffCount }}</span> (Admin Staff)</h6>
+
+            @if (Auth::user()->user_role_id == 1)
+                <h6 class="m-0 font-weight-bold text-primary">Total: <span id="userCount">{{ $users->count()}}</span></h6>
+            @else
+                <h6 class="m-0 font-weight-bold text-primary">Total: <span id="userCount">{{ $users->count()}}</span> (Users) ---- <span id="staffCount">{{ $staffCount }}</span> (Admin Staff)</h6>
+            @endif
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -69,11 +74,19 @@
                                 <td>
                                     <ul class="list-inline m-0">
                                         <li class="list-item mb-1">
-                                            <button class="btn btn-success btn-sm btnPromote" onclick="promote({{$user->id}})" type="button" data-toggle="tooltip" data-placement="top" title="Disable User">
-                                                <span class="btnText btnPromoteTxt">Promote</span>
-                                                <i class="btnPromoteIcon fas fa-level-up-alt ml-1"></i>
-                                                <i class="btnPromoteLoadingIcon fa fa-spinner fa-spin" hidden></i>
-                                            </button>
+                                            @if (Auth::user()->user_role_id == 1)
+                                                <button class="btn btn-success btn-sm btnPromote" onclick="promoteAnyUser({{$user->id}})" type="button" data-toggle="tooltip" data-placement="top" title="Disable User">
+                                                    <span class="btnText btnPromoteTxt">Promote</span>
+                                                    <i class="btnPromoteIcon fas fa-level-up-alt ml-1"></i>
+                                                    <i class="btnPromoteLoadingIcon fa fa-spinner fa-spin" hidden></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-success btn-sm btnPromote" onclick="promote({{$user->id}})" type="button" data-toggle="tooltip" data-placement="top" title="Disable User">
+                                                    <span class="btnText btnPromoteTxt">Promote</span>
+                                                    <i class="btnPromoteIcon fas fa-level-up-alt ml-1"></i>
+                                                    <i class="btnPromoteLoadingIcon fa fa-spinner fa-spin" hidden></i>
+                                                </button>
+                                            @endif
                                         </li>
                                     </ul>
                                 </td>
