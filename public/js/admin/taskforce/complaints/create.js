@@ -370,35 +370,35 @@ $(document).ready(function () {
     reportForm.validate({
         // Specify validation rules
         rules: {
-            // type_id: {
-            //     required: true,
-            // },
-            // contact_user_id: {
-            //     required: true,
-            //     number: true,
-            //     min: 1,
-            // },
-            // email: {
-            //     required: true,
-            //     email: true,
-            //     maxlength: 30,
-            // },
-            // phone_no: {
-            //     required: true,
-            //     number: true,
-            //     minlength: 11,
-            //     maxlength: 11,
-            // },
-            // reason: {
-            //     required: true,
-            //     minlength: 4,
-            //     maxlength: 500,
-            // },
-            // action: {
-            //     required: true,
-            //     minlength: 4,
-            //     maxlength: 500,
-            // }
+            type_id: {
+                required: true,
+            },
+            contact_user_id: {
+                required: true,
+                number: true,
+                min: 1,
+            },
+            email: {
+                required: true,
+                email: true,
+                maxlength: 30,
+            },
+            phone_no: {
+                required: true,
+                number: true,
+                minlength: 11,
+                maxlength: 11,
+            },
+            reason: {
+                required: true,
+                minlength: 4,
+                maxlength: 500,
+            },
+            action: {
+                required: true,
+                minlength: 4,
+                maxlength: 500,
+            }
 
         },
         submitHandler: function (form, event) {

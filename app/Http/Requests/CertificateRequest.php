@@ -19,8 +19,7 @@ class CertificateRequest extends FormRequest
             'name' => ['required', 'string', 'min:6', 'max:200'],
             'price' => ['required', 'numeric' , 'between:0,5000.99'],
             'status' => ['required', Rule::in(['Available', 'Unavailable'])],
-            'is_open_delivery' => ['required', new BooleanRule],
-            'delivery_fee' => ['required', 'between:0,99.99'],
+            'is_open_delivery' => ['required', Rule::in([0, 1])],
         ];
     }
 }

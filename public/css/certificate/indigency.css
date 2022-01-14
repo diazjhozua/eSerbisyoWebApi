@@ -1,132 +1,133 @@
 body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #FFF;
-  font: 12pt "Roman";
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	font: 12pt "Roman";
 }
 * {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 }
 .page {
-  width: 210mm;
-  min-height: 297mm;
-  padding: 20mm;
-  margin: 10mm auto;
-  border: 1px #D3D3D3 solid;
-  border-radius: 5px;
-  background: white;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0);
+	width: 210mm;
+	min-height: 297mm;
+	padding: 20mm;
+	margin: 10mm auto;
+	border: 1px #d3d3d3 solid;
+	border-radius: 5px;
+	background: white;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0);
 }
 .subpage {
-  padding: 1cm;
-  border: 5px black solid;
-  height: 257mm;
-  outline: 2cm #FFF solid;
+	padding: 1cm;
+	border: 1px black solid;
+	height: 257mm;
+	outline: 2cm #fff solid;
 }
-
 
 img {
-display: inline-block;
+	display: inline-block;
 }
 div.brgcup {
-margin-top: -6rem;
-margin-left: 5.4rem;
+	margin-top: -6rem;
+	margin-left: 5.4rem;
 }
 div.rep {
-margin-top: 1rem;
-margin-left: 12.5rem;
+	margin-top: 1rem;
+	margin-left: 12.5rem;
 }
-div.city{
-margin-top: -56.6rem;
-margin-left: 16.5rem;
+div.city {
+	margin-top: -56.6rem;
+	margin-left: 16.5rem;
 }
-div.brg{
-margin-top: -1rem;
-margin-left: 15.6rem;
+div.brg {
+	margin-top: -1rem;
+	margin-left: 15.6rem;
 }
-div.munti{
-margin-top: -6.1rem;
-margin-left: 28.4rem;
+div.munti {
+	margin-top: -6.1rem;
+	margin-left: 28.4rem;
 }
-div.office{
-margin-top: -1rem;
-margin-left: 9rem;
+div.office {
+	margin-top: -1rem;
+	margin-left: 9rem;
 }
-div.cert{
-margin-top: -1rem;
-margin-left: -0.1rem;
+div.cert {
+	margin-top: -1rem;
+	margin-left: -0.1rem;
 }
-div.twhom{
-margin-top: 8rem;
-margin-left: -6rem;
+div.twhom {
+	margin-top: 8rem;
+	margin-left: -6rem;
 }
-div.certify{
-margin-top: 3rem;
-margin-left: -7rem;
-margin-right: 3rem;
-text-align: justify;
-font-size: 12px;
-line-height: 2 ;
-
+div.certify {
+	margin-top: 3rem;
+	margin-left: -7rem;
+	margin-right: 3rem;
+	text-align: justify;
+	font-size: 12px;
+	line-height: 2;
 }
-div.issued{
-margin-top: 3rem;
-margin-left: -7rem;
-margin-right: 2rem;
-text-align: justify;
-font-size: 12px;
-line-height: 2 ;
+div.issued {
+	margin-top: 1.5rem;
+	margin-left: -7rem;
+	margin-right: 2rem;
+	text-align: justify;
+	font-size: 12px;
+	line-height: 2;
 }
-div.certby{
-margin-top: 8rem;
-margin-left: 10rem;
-
+div.certby {
+	margin-top: 8rem;
+	margin-left: 10rem;
 }
-div.signaz{
-margin-top:  -1rem;
-margin-left: 19rem;
-
+div.signaz {
+	margin-top: -1rem;
+	margin-left: 18rem;
 }
-div.signa{
-margin-top: -3.2rem;
-margin-left: 15rem;
+div.signa {
+	margin-top: -2.2rem;
+	margin-left: 12rem;
 }
-div.brgchm{
-margin-top: 0rem;
-margin-left: 18rem;
+div.brgchm {
+	margin-top: 0rem;
+	margin-left: 18rem;
 }
-div.ordnum{
-margin-top: 1rem;
-margin-left: -7rem;
+div.ordnum {
+	margin-top: 1rem;
+	margin-left: -7rem;
 }
-div.dateish{
-margin-top: 0.5rem;
-margin-left: -7rem; 
+div.dateish {
+	margin-top: 0.5rem;
+	margin-left: -7rem;
 }
-div.docstamp{
-margin-top: 0.6rem;
-margin-left: -7rem; 
+div.docstamp {
+	margin-top: 0.6rem;
+	margin-left: -7rem;
 }
-h3, .h3{
-font-size: 14px;
-font-weight:normal;
+h3,
+.h3 {
+	font-size: 14px;
+	font-weight: normal;
 }
-h4, .h4{
-font-size: 14px;
-font-weight:bold;
+h4,
+.h4 {
+	font-size: 14px;
+	font-weight: bold;
 }
-h5, .h5{
-font-size: 18px;
-font-weight:bold;
+h5,
+.h5 {
+	font-size: 18px;
+	font-weight: bold;
 }
-h6, .h6{
-font-size: 25px;
-font-weight:bold;
+h6,
+.h6 {
+	font-size: 25px;
+	font-weight: bold;
 }
-p, .p{
-text-indent: 50px;
-letter-spacing: 1px;
+p,
+.p {
+	text-indent: 50px;
+	letter-spacing: 1px;
 }

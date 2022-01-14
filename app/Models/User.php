@@ -73,8 +73,28 @@ class User extends Authenticatable
         return $this->hasOne(UserVerification::class)->latestOfMany();
     }
 
+    public function latest_biker_request(){
+        return $this->hasOne(BikerRequest::class)->latestOfMany();
+    }
+
+    public function bikers_requests(){
+        return $this->hasMany(BikerRequest::class);
+    }
+
+    public function user_requirements(){
+        return $this->hasMany(UserRequirement::class);
+    }
+
     public function feedbacks(){
         return $this->hasMany(Feedback::class);
+    }
+
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
+
+    public function delivers(){
+        return $this->hasMany(Order::class, 'delivered_by', 'id');
     }
 
     public function missing_persons(){

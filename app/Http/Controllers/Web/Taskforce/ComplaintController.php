@@ -73,10 +73,12 @@ class ComplaintController extends Controller
                 Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' => $fileName,'file_path' => $filePath]);
                 $complainantCount++;
             }
+
             foreach ($request->defendant_list as $key => $value) {
                 Defendant::create(['complaint_id' => $complaint->id, 'name' => $value['name']]);
                 $defendantCount++;
             }
+
             $complaint->complainants_count = $complainantCount;
             $complaint->defendants_count = $defendantCount;
 

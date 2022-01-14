@@ -1,6 +1,9 @@
+var formData = new FormData();
+
 function promote(id) {
-    var $this = $(this);
-    $this.text('tite');
+
+    $('#positionSelectContainer').hide();
+
     let actionURL = '/admin/staffs/promote-users/' + id
 
     $('#changeRoleForm').attr('action', actionURL) //set the method of the form
@@ -18,6 +21,29 @@ function promote(id) {
     $('#changeRoleModal').modal('show') //show bootstrap modal
 
 }
+
+function promoteAnyUser(id) {
+    $('#positionSelectContainer').show();
+
+    formData.append('user_role_id', $('#inputSelPosID').val());
+
+    let actionURL = '/admin/staffs/promote/' + id
+
+    $('#changeRoleForm').attr('action', actionURL) //set the method of the form
+    $('#changeRoleForm').trigger("reset")
+
+    $("#iconBoxLogo").attr('class', 'fas fa-level-up-alt') //change font awesome icon to disable
+    // change color
+    $(".modal-confirm .icon-box").css("border", "3px solid #42ba96");
+    $(".modal-confirm .icon-box i").css("color", "#42ba96");
+
+    $('#confirmationMessage').text('Do you really want to promote this user? Once the user is promoted to any type of admin or staff, that specific user would have access in accordance to their respective role.')
+    $('.btnChangeRoleTxt').text('Promote');
+    $('.btnChangeRole').removeClass('btn-success').addClass('btn-success');
+
+    $('#changeRoleModal').modal('show') //show bootstrap modal
+}
+
 $(document).ready(function () {
     var selectedButton;
     $('.btnPromote').click(function () {
@@ -42,12 +68,16 @@ $(document).ready(function () {
     $("#changeRoleForm").submit(function (e) {
         e.preventDefault()
         $('.selected').addClass('promoting');
-        let ajaxURL = $("#changeRoleForm").attr('action')
+        let ajaxURL = $("#changeRoleForm").attr('action');
+
+
+        formData.append('_method', 'PUT');
 
         // Change Role Ajax Request
         $.ajax({
-            type: 'PUT',
+            type: 'POST',
             url: ajaxURL,
+            data: formData,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
             },
@@ -59,10 +89,6 @@ $(document).ready(function () {
                 $('.btnChangeRoleTxt').text('Promoting') //set the text of the submit btn
                 $('.btnChangeRoleLoadingIcon').prop("hidden", false) //show the fa loading icon from delete btn
 
-                selectedButton.attr("disabled", true);
-                selectedButton.children(".btnPromoteTxt").text('Promoting')
-                selectedButton.children(".btnPromoteIcon").prop("hidden", true)
-                selectedButton.children(".btnPromoteLoadingIcon").prop("hidden", false)
             },
             success: function (response) {
                 toastr.success(response.message);

@@ -100,12 +100,9 @@
 
                         <div class="col-md-6">
 
-                            <!-- Privacy Form -->
-                            <
-
                         </div> <!-- end of col-->
                     </div> <!-- end of row -->
-                    <a class="btn-outline-reg" href="/home#home">BACK</a>
+                    <a class="btn-outline-reg" href="/#home">BACK</a>
                 </div> <!-- end of col-->
             </div> <!-- end of row -->
         </div> <!-- end of container -->

@@ -41,7 +41,6 @@ Route::get('/downloads', [HomeController::class, 'downloads'])->name('download')
 Route::get('/terms', [HomeController::class, 'terms'])->name('term');
 Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 
-
 Route::get('/brgindigency', function () {
     // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
     // return $pdf->stream();
@@ -50,6 +49,11 @@ Route::get('/brgindigency', function () {
 Route::get('/brgclear', function () {
     return view('admin.certificates.brgclear');
 });
+
+Route::get('/cedula', function () {
+    return view('admin.certificates.cedula');
+});
+
 Route::get('/brgid', function () {
     return view('admin.certificates.brgid');
 });
@@ -59,9 +63,14 @@ Route::get('/busclear', function () {
 Route::get('/brgcedula', function () {
     return view('admin.certificates.brgcedula');
 });
-Route::get('/brgindigency', function () {
-    return view('admin.certificates.brgindigency');
+
+
+Route::get('/checkout', function () {
+    // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
+    // return $pdf->stream();
+    return view('admin.certification.orders.show');
 });
+
 Route::get('/event', function () {
     event(new ReportNotification('This is our first broadcast message'));
 });
@@ -103,6 +112,7 @@ Route::get('forget-password', [AuthController::class, 'showForgetPassword'])->na
 Route::post('forget-password', [AuthController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [AuthController::class, 'submitResetPasswordForm'])->name('reset.password.post');
+
 
 
 // For Super Admin and all Admin

@@ -49,7 +49,7 @@
         </li>
 
         <!-- Nav Item - Tables -->
-        <li class="nav-item">
+        <li id="auditLogItem" class="nav-item">
             <a class="nav-link" href="{{ route('admin.auditLogs') }}">
                 <img src="{{ asset('assets/img/audit.png') }}" alt="Audit">
                 <span>Audit Logs</span></a>

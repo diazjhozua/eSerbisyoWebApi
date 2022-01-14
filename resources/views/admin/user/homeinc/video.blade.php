@@ -1,13 +1,4 @@
 
-
-
-
-
-
-
-
-
-
 <!-- Video -->
 <div id="video" class="basic-2">
         <div class="container">

@@ -86,6 +86,24 @@
             <form id="changeRoleForm" name="changeRoleForm" method="POST">
                 <div class="modal-body" >
                     <p class="text-justify" id="confirmationMessage"></p>
+
+                    <div class="form-group" id="positionSelectContainer" style="display:none;">
+                        <div class="text-left">
+                            <label for="inputSelPosID" class="form-label">Position:</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="inputSelPosID" name="inputSelPosID">
+                                <option value="2" selected>Information Admin</option>
+                                <option value="3">Certification Admin</option>
+                                <option value="4">TaskForce Admin</option>
+                                <option value="5">Information Staff</option>
+                                <option value="6">Certification Staff</option>
+                                <option value="7">Taskforce Staff</option>
+                                <option value="1">Super Admin</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

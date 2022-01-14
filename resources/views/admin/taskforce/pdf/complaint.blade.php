@@ -59,8 +59,6 @@
         <div class="regi">
             <pre> <b>{{ $modelName }} Submitted:</b> {{ $complaints->count() }}</pre>
         </div>
-
-
     </div>
 
     <table class="tableContent mb-4">

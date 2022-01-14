@@ -62,13 +62,13 @@
                 <a class="navbar-brand logo-image" href="/"><img src="{{ asset('assets/img/user/logo.png')}}" alt="Barangay Cupang" style ="height:50px; width:50px"></a>
 
                 <!-- Mobile Menu Toggle Button -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".collapse" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-awesome fas fa-bars"></span>
                     <span class="navbar-toggler-awesome fas fa-times"></span>
                 </button>
                 <!-- end of mobile menu toggle button -->
 
-                <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <div class="collapse navbar-collapse" id="navi">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
                             <a class="nav-link page-scroll" href="/#header">HOME <span class="sr-only">(current)</span></a>

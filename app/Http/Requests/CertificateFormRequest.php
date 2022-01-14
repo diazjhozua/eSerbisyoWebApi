@@ -15,50 +15,60 @@ class CertificateFormRequest extends FormRequest
     public function rules()
     {
         $certificate_id = $this->get('certificate_id');
-
-        if ($this->isMethod('POST')) {
-            $vallidation = [
-                'certificate_id' => ['required', Rule::exists('certificates', 'id')->where(function ($query) {
-                    return $query->where('status', 'Available');
-                })],
-                'name' => ['required', 'string', 'min:4', 'max:150'],
-                'address' => ['required', 'string', 'min:4', 'max:250'],
-                'signature' => 'required|mimes:jpeg,png|max:3000',
-            ];
-        }
-
+            //  'certificate_id' => ['required', Rule::exists('certificates', 'id')->where(function ($query) {
+            //         return $query->where('status', 'Available');
+            //     })],
         if ($this->isMethod('PUT')) {
             $vallidation = [
-                'certificate_id' => ['required', Rule::exists('certificates', 'id')->where(function ($query) {
-                    return $query->where('status', 'Available');
-                })],
-                'name' => ['required', 'string', 'min:4', 'max:150'],
+                'certificate_id' => ['required', Rule::exists('certificates', 'id')],
+                'first_name' => ['required', 'string', 'min:4', 'max:150'],
+                'middle_name' => ['required', 'string', 'min:4', 'max:150'],
+                'last_name' => ['required', 'string', 'min:4', 'max:150'],
                 'address' => ['required', 'string', 'min:4', 'max:250'],
-                'signature' => 'mimes:jpeg,png|max:3000',
             ];
         }
 
         switch ($certificate_id) {
             case 1: //brgyIndigency
                 $vallidation = array_merge($vallidation, [
+                    'civil_status' => ['required' ,Rule::in(['Single', 'Married', 'Divorced', 'Widowed'])],
+                    'birthday' => ['required', 'date', 'date_format:Y-m-d'],
+                    'citizenship' => 'string|min:4|max:50',
                     'purpose' => ['required', 'string', 'min:5', 'max:250']
                 ]);
                 break;
             case 2: //brgyCedula
                 $vallidation = array_merge($vallidation, [
-                    'birthday' => ['required', 'date', 'date_format:Y-m-d', 'before:today'],
-                    'birthplace' => ['required', 'string', 'min:5', 'max:250'],
-                    'citizenship' => ['required', 'string', 'min:5', 'max:250'],
-                    'civil_status' => ['required', Rule::in(['Single', 'Married', 'Divorced', 'Widowed'])],
+                    'civil_status' => ['required' ,Rule::in(['Single', 'Married', 'Divorced', 'Widowed'])],
+                    'birthday' => ['required', 'date', 'date_format:Y-m-d'],
+                    'citizenship' => 'string|min:4|max:50',
+                    'profession' => 'string|min:4|max:50',
+                    'height' => 'numeric|between:1,10.99',
+                    'weight' => 'numeric|between:1,200.99',
+                    'sex' => [Rule::in(['Male', 'Female'])],
+                    'cedula_type' => [Rule::in(['Individual', 'Corporation'])],
+                    'tin_no' => 'integer|between:111111111,999999999',
+                    'icr_no' => 'integer|between:111111111,999999999',
+                    'basic_tax' => 'numeric|between:1,5',
+                    'additional_tax' => 'numeric|between:0,5000',
+                    'gross_receipt_preceding' => 'numeric|between:0,5000',
+                    'gross_receipt_profession' => 'numeric|between:0,5000',
+                    'real_property' => 'numeric|between:0,5000',
+                    'interest' => 'numeric|between:0,100',
                 ]);
                 break;
             case 3: //brgyClearance
                 $vallidation = array_merge($vallidation, [
+                    'civil_status' => ['required' ,Rule::in(['Single', 'Married', 'Divorced', 'Widowed'])],
+                    'birthday' => ['required', 'date', 'date_format:Y-m-d'],
+                    'citizenship' => 'string|min:4|max:50',
                     'purpose' => ['required', 'string', 'min:5', 'max:250']
                 ]);
                 break;
             case 4: //brgyID
                 $vallidation = array_merge($vallidation, [
+                    'civil_status' => ['required' ,Rule::in(['Single', 'Married', 'Divorced', 'Widowed'])],
+                    'birthday' => ['required', 'date', 'date_format:Y-m-d'],
                     'contact_no' => ['required', 'phone:PH'],
                     'contact_person' => ['required', 'string', 'min:5', 'max:250'],
                     'contact_person_no' => ['required', 'different:contact_no', 'phone:PH'],
@@ -76,43 +86,30 @@ class CertificateFormRequest extends FormRequest
         return $vallidation;
     }
 
-    public function getPostIndigencyData() {
-        return $this->only(['certificate_id', 'name', 'address', 'purpose']);
-    }
 
     public function getPutIndigencyData() {
-        return $this->only(['name', 'address', 'purpose']);
-    }
-
-    public function getPostCedulaData() {
-        return $this->only(['certificate_id', 'name', 'address', 'birthday', 'birthplace', 'citizenship', 'civil_status']);
+        return $this->only(['first_name', 'middle_name', 'last_name', 'address', 'civil_status', 'birthday', 'citizenship', 'purpose']);
     }
 
     public function getPutCedulaData() {
-        return $this->only(['name', 'address', 'birthday', 'birthplace', 'citizenship', 'civil_status']);
-    }
-
-    public function getPostClearanceData() {
-        return $this->only(['certificate_id', 'name', 'address', 'purpose']);
+        return $this->only([
+            'first_name', 'middle_name', 'last_name', 'address', 'civil_status', 'birthday', 'citizenship',
+            'profession', 'height', 'weight', 'sex', 'cedula_type', 'tin_no' , 'icr_no', 'basic_tax', 'additional_tax',
+            'gross_receipt_preceding', 'gross_receipt_profession' , 'real_property', 'interest',
+        ]);
     }
 
     public function getPutClearanceData() {
-        return $this->only(['name', 'address', 'purpose']);
-    }
-
-    public function getPostIDData() {
-        return $this->only(['certificate_id', 'name', 'address', 'contact_no', 'contact_person', 'contact_person_no', 'contact_person_relation']);
+        return $this->only(['first_name', 'middle_name', 'last_name', 'address', 'civil_status', 'birthday', 'citizenship', 'purpose']);
     }
 
     public function getPutIDData() {
-        return $this->only(['name', 'address', 'contact_no', 'contact_person', 'contact_person_no', 'contact_person_relation']);
-    }
-
-    public function getPostBusinessData() {
-        return $this->only(['certificate_id', 'name', 'address', 'purpose', 'business_name']);
+        return $this->only([
+            'first_name', 'middle_name', 'last_name', 'address', 'civil_status', 'birthday',
+            'contact_no', 'contact_person', 'contact_person', 'contact_person_relation']);
     }
 
     public function getPutBusinessData() {
-        return $this->only(['name', 'address', 'purpose', 'business_name']);
+        return $this->only(['first_name', 'middle_name', 'last_name', 'address', 'business_name']);
     }
 }

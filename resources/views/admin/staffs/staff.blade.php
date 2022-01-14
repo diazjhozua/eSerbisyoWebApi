@@ -3,7 +3,6 @@
 @section('page-js')
     {{-- Custom Scripts for this blade --}}
     <script src="{{ asset('js/admin/staffs/staff.js')}}"></script>
-
 @endsection
 
 {{-- Title Page --}}
@@ -20,7 +19,7 @@
         </h1>
     </div>
 
-        <!-- DataTales Example -->
+    <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Total: <span id="staffCount">{{ $users->count()}}</span> (Information Admin Staff)</h6>
@@ -59,6 +58,7 @@
                                     <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
                                     src="{{ isset($user->file_path) ? asset('storage/'.$user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$user->getFullNameAttribute()}} image">
                                 </td>
+
                                 <td>{{$user->getFullNameAttribute()}}</td>
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->user_role->role}}</td>

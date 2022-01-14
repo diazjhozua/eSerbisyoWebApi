@@ -7,6 +7,10 @@
     <script>
         $('#dashboard').addClass('active')
 
+        $('#dashboardCollapse').addClass('active');
+        $('#collapseDashboard').collapse();
+        $('#taskforceDashboardItem').addClass('active');
+
         var reportSubmittedCanvas= document.getElementById('reportSubmittedChart');
         var userReportChart = new Chart(reportSubmittedCanvas, {
             type: 'line',
@@ -76,8 +80,6 @@
             }
         });
 
-
-
         var complaintCanvas = document.getElementById('complaintChart');
         var complaintChart = new Chart(complaintCanvas, {
             type: 'bar',
@@ -132,7 +134,7 @@
 @endsection
 
 {{-- Title Page --}}
-@section('title', 'Barangay Cupang - Dashboards')
+@section('title', 'Barangay Cupang - Taskforce Dashboard')
 
 
 @section('content')
@@ -141,7 +143,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <h1 class="h3 mb-0 text-gray-800">Taskforce Dashboard</h1>
     </div>
 
     <!-- Content Row -->
