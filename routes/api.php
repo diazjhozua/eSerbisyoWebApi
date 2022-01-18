@@ -49,10 +49,12 @@ Route::group([
     Route::put('/changePassword', [JwtAuthCtrl::class, 'changePassword']);
     Route::put('/changeEmail', [JwtAuthCtrl::class, 'changeEmail']);
     Route::put('/updateProfile', [JwtAuthCtrl::class, 'updateUserInfo']);
-    Route::get('/logout', [JwtAuthCtrl::class, 'logout']);
-
-    // Route::resource('ordinances', OrdinanceController::class);
+    Route::get('/myProfile', [JwtAuthCtrl::class, 'user']);
+    Route::get('/myVerificationRequest', [JwtAuthCtrl::class, 'myVerificationRequest']);
+    Route::post('/submitVerificationRequest', [JwtAuthCtrl::class, 'submitVerificationRequest']);
 });
+
+
 
 Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
 Route::put('feedbacks/{feedback}/noted', [FeedbackController::class, 'noted']);

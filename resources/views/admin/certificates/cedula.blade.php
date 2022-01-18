@@ -8,13 +8,11 @@
 
     <link href="{{ asset('css/certificate/cedula.css')}}" rel="stylesheet"/>
 	<link href="{{ asset('css/certificate/bootstrap.css')}}" rel="stylesheet">
-
-
     {{-- Custom Scripts for this blade --}}
-
 </head>
 
 <body>
+<button id="printPageButton"  onclick="window.print()">PRINT</button>
 <div style="position:absolute;left:50%;margin-left:-306px;top:0px;width:612px;height:792px;border-style:outset;overflow:hidden">
 <div style="position:absolute;left:0px;top:0px">
 <img src="{{ asset('assets/img/certificates/background1.jpg')}}" width=612 height=792></div>

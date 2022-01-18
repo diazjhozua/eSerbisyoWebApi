@@ -17,15 +17,17 @@ class UserVerificationResource extends JsonResource
             'last_name' => $this->user->last_name,
             'address' => $this->user->address,
             'purok' => $this->user->purok,
+            'role' => $this->user->user_role->role,
             'picture_name' => $this->user->picture_name,
             'file_path' => $this->user->file_path,
             'credential_name' => $this->credential_name,
             'status' => $this->status,
-            'admin_message' => $this->admin_message,
+            'admin_message' => $this->admin_message == null ? 'Not yet responded' : $this->admin_message,
             'credential_file_path' => $this->credential_file_path,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
+
 
         return $data;
     }
