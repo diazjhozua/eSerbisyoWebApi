@@ -2,6 +2,7 @@
 
 @section('page-js')
     {{-- Custom Scripts for this blade --}}
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="{{ asset('js/admin/information/verificationRequests/index.js')}}"></script>
 @endsection
 

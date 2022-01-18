@@ -9,15 +9,18 @@
 @section('title', 'Indigency')
 
 @section('content')
+
     <div class="book">
         <div class="page">
             <div class="subpage">
+                <button id="printPageButton"  onclick="window.print()">PRINT</button>
                 <div class="rep">
                     <h3>Republic of the Philippines</h3>
                 </div>
             </div>
 
             <div class="city">
+
                 <h3>City of Muntinlupa</h3>
             </div>
 

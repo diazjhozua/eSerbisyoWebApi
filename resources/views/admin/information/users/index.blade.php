@@ -170,21 +170,6 @@
                                 <td>{{$user->created_at}}</td>
                                 <td>
                                     <ul class="list-inline m-0">
-                                        {{-- Check if there is  --}}
-                                        @if ($user->is_verified != 1)
-                                            @if (isset($user->latest_user_verification))
-                                                @if ($user->latest_user_verification->status == 'Pending')
-                                                    <li class="list-item mb-1">
-                                                        <button class="btn btn-info btn-sm" type="button" onclick="viewVerificationRequest({{ $user->latest_user_verification->id }}, this)" data-toggle="tooltip" data-placement="top" title="Review Request">
-                                                            <span class="btnText btnVerifyTxt">Review Request</span>
-                                                            <i class="btnVerifyIcon fas fa-money-check ml-1"></i>
-                                                            <i class="btnVerifyLoadingIcon fa fa-spinner fa-spin" hidden></i>
-                                                        </button>
-                                                    </li>
-                                                @endif
-                                            @endif
-                                        @endif
-
                                         {{-- Check if the user is enabled or disabled --}}
                                         @if ($user->status == 'Enable')
                                             <li class="list-item mb-1">

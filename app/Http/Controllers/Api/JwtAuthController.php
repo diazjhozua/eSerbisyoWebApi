@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserVerificationEvent;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\ChangeEmailRequest;
@@ -9,9 +10,12 @@ use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\Api\RegistrationRequest;
 use App\Http\Requests\Api\UserInfoRequest;
+use App\Http\Requests\Api\UserVerificationRequest;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserVerificationResource;
 use App\Models\User;
+use App\Models\UserVerification;
 use Hash;
 use Helper;
 use Illuminate\Http\Request;
@@ -29,7 +33,6 @@ class JwtAuthController extends Controller
         }
         return $this->generateToken($token);
     }
-
 
     public function register(RegistrationRequest $request) {
         User::create(array_merge($request->validated(), ['password' => Hash::make($request->password), 'user_role_id' => 9]));
@@ -52,7 +55,6 @@ class JwtAuthController extends Controller
 
     public function updateUserInfo(UserInfoRequest $request) {
         $user = User::findOrFail(auth('api')->user()->id);
-        $user->fill($request->getData())->save();
         if($request->picture != ''){
             if($user->picture_name != '') {
                 Storage::delete('public/users/'. $user->picture_name);
@@ -67,7 +69,47 @@ class JwtAuthController extends Controller
         } else {
             $user->fill($request->getData())->save();
         }
-        return (new UserProfileResource($user))->additional(Helper::instance()->updateSuccess('user profile'));
+        return response()->json([
+            'data' => $user,
+            'message' => 'user profile is successfully updated',
+        ], 200);
+
+        // return (new UserProfileResource($user))->additional(Helper::instance()->updateSuccess('user profile'));
+    }
+
+    // get latest verification request submitted by the authenticated user
+    public function myVerificationRequest() {
+        $userVerification = UserVerification::with('user')->where('user_id', auth('api')->user()->id)->orderBy('created_at','DESC')->first();
+
+        if ($userVerification == null) {
+            return response()->json(['isEmpty' => true], 200);
+        }
+
+        return response()->json(['isEmpty' => false, 'data' => new UserVerificationResource($userVerification)], 200);
+    }
+
+    public function submitVerificationRequest(UserVerificationRequest $request) {
+        $userVerification = UserVerification::with('user')->where('user_id', auth('api')->user()->id)->where('status', 'Pending')->orderBy('created_at','DESC')->first();
+
+        if ($userVerification != null) {
+            return response()->json(['message' => 'You have already submitted a request. Please wait for the administrator to respond to your current request' ], 406);
+        }
+
+        $fileName = uniqid().time().'.jpg';
+        $filePath = 'credentials/'.$fileName;
+
+        Storage::disk('public')->put($filePath, base64_decode($request->picture));
+
+        $userVerification = UserVerification::create([
+            'user_id' =>  auth('api')->user()->id,
+            'credential_name' => $fileName,
+            'credential_file_path' => $filePath,
+            'status' => 'Pending'
+        ]);
+
+        event(new UserVerificationEvent($userVerification->load('user.purok')));
+
+        return (new UserVerificationResource($userVerification))->additional(Helper::instance()->storeSuccess('user_verification_request'));
     }
 
     /**
@@ -89,7 +131,9 @@ class JwtAuthController extends Controller
      * User
     */
     public function user() {
-        return (new UserResource(auth('api')->user()));
+        return response()->json([
+            'data' => auth('api')->user()
+        ], 200);
     }
 
     /**

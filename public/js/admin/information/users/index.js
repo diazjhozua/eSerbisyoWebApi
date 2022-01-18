@@ -57,52 +57,6 @@ function replaceData(data) {
 
 }
 
-function viewVerificationRequest(requestID, button) {
-    selectedBtnVerify = $(button);
-    selectedBtnVerify.removeClass('activeVerify')
-    selectedBtnVerify.addClass('activeVerify')
-
-    ajaxURL = 'users/viewUserVerification/' + requestID
-
-    $.ajax({
-        type: 'GET',
-        url: ajaxURL,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        },
-        cache: false,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            toastr.success(response.message);
-
-            const data = response.data;
-
-            $('#reviewRequestModal').modal('show') //show bootstrap modal
-            $('#profileHead').text(data.first_name + ' ' + data.last_name + ' Profile');
-            $('#profilePicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
-            $("#profilePicture").prop("alt", data.first_name + ' ' + data.last_name + ' picture'); //add the alt text
-            $('#firstName').text(data.first_name)
-            $('#middleName').text(data.middle_name)
-            $('#lastName').text(data.last_name)
-            $('#purok').text(data.purok.purok)
-            $('#address').text(data.address)
-            $('#credentials').html('<a href="' + window.location.origin + '/admin/files/credentials/' + data.credential_name + '" target="_blank">' + data.credential_name + '</a></a>')
-
-            $('#verifyRequestForm').trigger("reset")
-            let actionURL = '/admin/users/verifyUser/' + data.id
-            $('#verifyRequestForm').attr('action', actionURL)
-        },
-        error: function (xhr) {
-            var error = JSON.parse(xhr.responseText);
-
-            // show error message from helper.js
-            ajaxErrorMessage(error);
-        }
-    });
-
-}
-
 function enable(userID, button) {
     selectedBtnEnable = $(button)
     selectedBtnEnable.removeClass('activeEnable')
@@ -249,85 +203,6 @@ $(document).ready(function () {
         }
     });
 
-    $("form[name='verifyRequestForm']").validate({
-        // Specify validation rules
-        rules: {
-            status: {
-                required: true,
-            },
-            admin_message: {
-                required: true,
-                minlength: 4,
-                maxlength: 250,
-            },
-        },
-
-        submitHandler: function (form, event) {
-            event.preventDefault()
-            $('.selected').addClass('verifying');
-            let ajaxURL = $("#verifyRequestForm").attr('action')
-            let formData = new FormData(form)
-
-            $('#btnVerifyRequestFormSubmit').attr("disabled", true); //disabled login
-            $('.btnVerifyRequestTxt').text($('#reviewRequestInputSelect').val() == 'Approved' ? 'Approving' : 'Denying') //set the text of the submit btn
-            $('.btnVerifyRequestLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            selectedBtnVerify.attr("disabled", true);
-            selectedBtnVerify.children(".btnVerifyTxt").text($('#reviewRequestInputSelect').val() == 'Approved' ? 'Approving' : 'Denying')
-            selectedBtnVerify.children(".btnVerifyIcon").prop("hidden", true)
-            selectedBtnVerify.children(".btnVerifyLoadingIcon").prop("hidden", false)
-
-            $.ajax({
-                type: 'POST',
-                url: ajaxURL,
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                cache: false,
-                processData: false,
-                contentType: false,
-                beforeSend: function () {
-                    $('#btnVerifyRequestFormSubmit').attr("disabled", true); //disabled login
-                    $('.btnVerifyRequestTxt').text($('#reviewRequestInputSelect').val() == 'Approved' ? 'Approving' : 'Denying') //set the text of the submit btn
-                    $('.btnVerifyRequestLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-                    selectedBtnVerify.attr("disabled", true);
-                    selectedBtnVerify.children(".btnVerifyTxt").text($('#reviewRequestInputSelect').val() == 'Approved' ? 'Approving' : 'Denying')
-                    selectedBtnVerify.children(".btnVerifyIcon").prop("hidden", true)
-                    selectedBtnVerify.children(".btnVerifyLoadingIcon").prop("hidden", false)
-                },
-                success: function (response) {
-                    toastr.success(response.message);
-
-                    let data = response.data
-                    $('#reviewRequestModal').modal('hide') //hide the modal
-
-                    replaceData(data);
-
-                    if (data.verification_status == 'Verified') {
-                        $("#verificationCount").text(parseInt($("#verificationCount").text()) - 1);
-                    }
-                },
-                error: function (xhr) {
-                    var error = JSON.parse(xhr.responseText);
-
-                    // show error message from helper.js
-                    ajaxErrorMessage(error);
-                },
-                complete: function () {
-
-                    $('#changeStatusModal').modal('hide') //hide the modal
-
-                    $('#btnVerifyRequestFormSubmit').attr("disabled", false); //enable the button
-                    $('.btnVerifyRequestTxt').text('Submit') //set the text of the submit btn
-                    $('.btnVerifyRequestLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-
-                    $('.selected').removeClass('verifying');
-                }
-            });
-        }
-    });
 
     // Validation for report form
     $("form[name='reportForm']").validate({

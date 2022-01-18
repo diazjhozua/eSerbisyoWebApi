@@ -9,38 +9,44 @@
 @section('title', 'Barangay ID')
 
 @section('content')
+
 	<div class="container">
+
 		<div class="padding">
-		  	<div class="font">
-                <div class="top">
-                    <img src="{{ asset('assets/img/certificates/munti.png')}}" alt="Muntinlupa">
-                    <p>Republic of the Philippines</p>
-                    <p class="city"> City of Muntinlupa </p>
-                    <p class="barangay"> BARANGAY </p>
-                    <p class="cupang"> CUPANG </p>
-              	</div>
-              	<div class="bottom">
-                    <img src="{{ asset('assets/img/certificates/munti.png')}}" alt="Muntinlupa">
-                    <p>I.D. Number:<u> {{ $certificateForm->id }}</u></p>
-                    <p class="name"><u>{{ $certificateForm->first_name }} {{ ucwords($certificateForm->middle_name[0]).'.' }} {{ $certificateForm->last_name }}</u></p>
-                    <p class= "nm">Name</p>
-              	</div>
-                <div class="person">
-                    <img src="{{ asset('storage/'.$certificateForm->file_path) }}" alt="Signature">
-                    <p>_______________________________</p>
-                    <p class="signature"> Signature</p>
+            <button id="printPageButton"  onclick="window.print()">PRINT</button>
+            <div class="fronterist">
+                <div class="font">
+                    <div class="top">
+                        <img src="{{ asset('assets/img/certificates/munti.png')}}" alt="Muntinlupa">
+                        <p>Republic of the Philippines</p>
+                        <p class="city"> City of Muntinlupa </p>
+                        <p class="barangay"> BARANGAY </p>
+                        <p class="cupang"> CUPANG </p>
+                    </div>
+                    <div class="bottom">
+                        <img src="{{ asset('assets/img/certificates/munti.png')}}" alt="Muntinlupa">
+                        <p>I.D. Number:<u> {{ $certificateForm->id }}</u></p>
+                        <p class="name"><u>{{ $certificateForm->first_name }} {{ ucwords($certificateForm->middle_name[0]).'.' }} {{ $certificateForm->last_name }}</u></p>
+                        <p class= "nm">Name</p>
+                    </div>
+                    <div class="person">
+                        {{-- <img src="{{ asset('storage/'.$certificateForm->file_path) }}" alt="Signature"> --}}
+                        <p>_______________________________</p>
+                        <p class="signature"> Signature</p>
+                    </div>
                 </div>
-          	</div>
+            </div>
+
 		</div>
 
 		<div class="back">
 		    <br>
             <div class="details-info">
-                <p class="addr">{{ $certificateForm->address }} Cupang</p>
+                <p class="addr">{{ $certificateForm->address }} </p>
                 <p><b>ADDRESS:</b>____________________________________</p>
                 <br>
 
-                <p class="mcty">Muntinlupa City</p>
+                <p class="mcty">Cupang Muntinlupa City</p>
                 <p>______________________________________________</p>
                 <br>
                 <p class="num">{{ $certificateForm->contact_no }}</p>
