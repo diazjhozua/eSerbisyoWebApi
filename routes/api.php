@@ -30,11 +30,28 @@ use App\Http\Controllers\Api\ {
     RequirementController,
     CertificateFormController,
 
+    JwtAuthController as JwtAuthCtrl
+
 };
 use App\Http\Requests\CertificateFormRequest;
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::post('/register', [JwtAuthCtrl::class, 'register']);
+Route::post('/login', [JwtAuthCtrl::class, 'login']);
+
+Route::post('/token-refresh', [JwtAuthCtrl::class, 'refresh']);
+Route::post('/signout', [JwtAuthCtrl::class, 'signout']);
+
+Route::group([
+    'middleware' => 'jwtAuth',
+], function ($router) {
+    Route::get('/myProfile', [JwtAuthCtrl::class, 'user']);
+    Route::put('/changePassword', [JwtAuthCtrl::class, 'changePassword']);
+    Route::put('/changeEmail', [JwtAuthCtrl::class, 'changeEmail']);
+    Route::put('/updateProfile', [JwtAuthCtrl::class, 'updateUserInfo']);
+    Route::get('/logout', [JwtAuthCtrl::class, 'logout']);
+
+    // Route::resource('ordinances', OrdinanceController::class);
 });
 
 Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
@@ -84,9 +101,5 @@ Route::resource('certificates', CertificateController::class)->except(['create',
 Route::resource('requirements', RequirementController::class)->except(['create']);
 
 Route::resource('certificate-form-requests', CertificateFormController::class);
-
-
-
-
 
 

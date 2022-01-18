@@ -127,13 +127,13 @@ $(document).ready(function () {
                 minlength: 6,
                 maxlength: 500,
             },
-            apk: {
-                required: function () {
-                    return $('#method').val() == 'POST'
-                },
-                extension: "apk",
-                filesize: 60485760, //10mb in bytes
-            },
+            // apk: {
+            //     required: function () {
+            //         return $('#method').val() == 'POST'
+            //     },
+            //     extension: "apk",
+            //     filesize: 60485760, //10mb in bytes
+            // },
         },
         messages: {
             pdf: {

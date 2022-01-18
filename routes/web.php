@@ -102,10 +102,15 @@ Route::get('/event', function () {
 //     return view('admin.taskforce.sample');
 // });
 
-Route::get('login', [AuthController::class, 'index'])->name('login');
-Route::post('login', [AuthController::class, 'login'])->name('login.authenticate');
-Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register.get');
-Route::post('register', [AuthController::class, 'submitRegisterForm'])->name('register.post');
+
+Route::group(['guard' => 'web'], function () {
+    Route::get('login', [AuthController::class, 'index'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login.authenticate');
+    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register.get');
+    Route::post('register', [AuthController::class, 'submitRegisterForm'])->name('register.post');
+});
+
+
 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('forget-password', [AuthController::class, 'showForgetPassword'])->name('forget.password.get');

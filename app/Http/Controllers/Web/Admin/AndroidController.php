@@ -35,7 +35,7 @@ class AndroidController extends Controller
     {
         if($request->hasFile('apk')) {
             Storage::delete('public/androids/'. $android->file_name);
-            $fileName = time().'_'.$request->pdf->getClientOriginalName();
+            $fileName = time().'_'.$request->apk->getClientOriginalName();
             $filePath = $request->file('apk')->storeAs('androids', $fileName, 'public');
             $android->fill(array_merge($request->getData(), ['file_name' => $fileName,'file_path' => $filePath]))->save();
         } else { $android->fill($request->getData())->save(); }

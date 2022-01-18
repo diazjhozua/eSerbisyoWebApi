@@ -435,31 +435,37 @@ $(document).ready(function () {
                 required: true,
                 number: true,
                 min: 1,
+                max: 5,
             },
             additionalTax: {
                 required: false,
                 number: true,
-                min: 1,
+                min: 0,
+                max: 5000,
             },
             grossProceeding: {
                 required: false,
                 number: true,
-                min: 1,
+                min: 0,
+                max: 5000,
             },
             grossProfession: {
                 required: false,
                 number: true,
-                min: 1,
+                min: 0,
+                max: 5000,
             },
             realProperty: {
                 required: false,
                 number: true,
-                min: 1,
+                min: 0,
+                max: 5000,
             },
             interest: {
                 required: false,
                 number: true,
                 min: 0,
+                max: 1,
             },
 
             // For Business ID
@@ -578,7 +584,7 @@ $(document).ready(function () {
 
                     window.setTimeout(function () {
                         window.location.reload();
-                    }, 2000);
+                    }, 1000);
 
                 },
                 error: function (xhr) {

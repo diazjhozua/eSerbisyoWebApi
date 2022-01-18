@@ -94,10 +94,12 @@ class OrderSeeder extends Seeder
                             break;
                         case 2: //brgyCedula
                             Log::debug('Cedula');
+                            $basicTax = $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34);
+                            $cedulaPrice = $certificate->price + $basicTax;
                             $certificateForm = CertificateForm::create([
                                 'user_id' => $user->id,
                                 'certificate_id' => $certificateID,
-                                'price_filled' => $certificate->price,
+                                'price_filled' => $cedulaPrice,
                                 'first_name' => $faker->firstName($gender = null),
                                 'middle_name' => $faker->lastName,
                                 'last_name' => $faker->lastName,
@@ -113,7 +115,7 @@ class OrderSeeder extends Seeder
                                 'height' => $faker->randomFloat($nbMaxDecimals = 2, $min = 1.6, $max = 8),
                                 'weight' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
                                 'profession' => $faker->word(),
-                                'basic_tax' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
+                                'basic_tax' => $basicTax,
                                 // 'signature_picture' => $picture,
                                 // 'file_path' => $file_path,
                                 'status' => 'Approved',

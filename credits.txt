@@ -45,3 +45,5 @@ Missing Person
 
 Missing Item
 <div>Icons made by <a href="https://www.flaticon.com/authors/eucalyp" title="Eucalyp">Eucalyp</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+https://remotestack.io/build-jwt-authentication-in-laravel/

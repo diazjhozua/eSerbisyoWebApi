@@ -80,10 +80,6 @@ class UserController extends Controller
         $subject = $request->status == 'Approved' ? 'Verified Account' : 'Failed Verification Account';
 
         dispatch(new VerifyUserJob($user, $subject, $request->all()));
-        // Mail::send('email.verifyUser', ['request' => $request], function($message) use($user, $title){
-        //     $message->to($user->email);
-        //     $message->subject($title);
-        // });
 
         return (new UserResource($user))->additional(Helper::instance()->updateSuccess($user->getFullNameAttribute().' verification request - '. strtolower($request->status)));
     }

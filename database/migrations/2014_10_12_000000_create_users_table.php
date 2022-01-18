@@ -22,9 +22,9 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             // User Information
-            $table->string('first_name');
+            $table->string('first_name')->nullable();
             $table->string('middle_name')->nullable();
-            $table->string('last_name');
+            $table->string('last_name')->nullable();
             $table->string('barangay_id')->unique()->nullable();
             $table->foreignId('purok_id')->nullable()->constrained('puroks')->onDelete('set null');
             $table->string('address')->nullable()->default('');
@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('file_path')->nullable();
 
             // User Status
-            $table->boolean('is_verified')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->enum('status', ['Enable', 'Disable'])->default('Enable');
             $table->string('admin_status_message')->nullable();
 

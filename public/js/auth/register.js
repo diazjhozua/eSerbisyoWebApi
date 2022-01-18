@@ -17,6 +17,9 @@ $(document).ready(function () {
                 minlength: 4,
                 maxlength: 150,
             },
+            purok_id: {
+                required: true,
+            },
             email: {
                 required: true,
                 email: true,

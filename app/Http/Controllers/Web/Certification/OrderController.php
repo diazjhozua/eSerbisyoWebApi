@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Web\Certification;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderAdminRequest;
-use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Jobs\OrderStatusJob;
 use App\Models\Certificate;
@@ -14,7 +13,6 @@ use App\Models\Order;
 use App\Models\UserRequirement;
 use DB;
 use Helper;
-use Illuminate\Http\Request;
 use Log;
 
 class OrderController extends Controller
@@ -151,9 +149,18 @@ class OrderController extends Controller
                             break;
                         case 2:
                             // Barangay Cedula
+                            $totalTax = $value['basic_tax'] + $value['additional_tax'] + ($value['gross_receipt_preceding'] == null ? 0 : $value['gross_receipt_preceding']) + ($value['gross_receipt_profession'] == null ? 0 : $value['gross_receipt_profession']) + ($value['real_property'] == null ? 0 : $value['real_property']);
+                            if ($value['interest'] == null ? 0 : $value['interest'] != 0) {
+                                $interest = $totalTax * $value['interest']->interest;
+                                $totalAmountTax = $totalTax + $interest;
+                            } else {
+                                $totalAmountTax = $totalTax;
+                            }
+                            $cedulaPrice = $certificate->price + $totalAmountTax;
+
                             $certificateForm = CertificateForm::create([
                                 'certificate_id' => $certificateID,
-                                'price_filled' => $certificate->price,
+                                'price_filled' => $cedulaPrice,
                                 'first_name' => $value['first_name'],
                                 'middle_name' =>  $value['middle_name'],
                                 'last_name' =>  $value['last_name'],
@@ -178,6 +185,7 @@ class OrderController extends Controller
                                 'status' => 'Approved',
                             ]);
                             break;
+
                         case 3:
                             // Barangay Clearance
                             $certificateForm = CertificateForm::create([

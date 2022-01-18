@@ -9,8 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, LogsActivity;
 
@@ -32,6 +33,7 @@ class User extends Authenticatable
         'admin_status_message',
         'is_verified',
         'user_role_id',
+        'purok_id',
         'email',
         'password',
     ];
@@ -125,5 +127,12 @@ class User extends Authenticatable
         return $this->hasMany(CertificateForm::class);
     }
 
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims() {
+        return [];
+    }
 }
 

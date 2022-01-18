@@ -15,7 +15,7 @@ class AndroidRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'version' => 'required|string|min:6|max:25|unique:androids',
+            'version' => 'required|string|min:6|max:25',
             'description' => 'required|string|min:6|max:500',
         ];
 

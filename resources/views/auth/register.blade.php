@@ -49,6 +49,16 @@
                                     placeholder="Last name">
                             </div>
 
+                            <div class="form-group">
+                                <select class="custom-select" id="purok_id" name="purok_id">
+                                    <option value="" selected>Select purok</option>
+                                    <option value="1">Purok 1</option>
+                                    <option value="2">Purok 2</option>
+                                    <option value="3">Purok 3</option>
+                                    <option value="4">Purok 4</option>
+                                    <option value="5">Purok 5</option>
+                                </select>
+                            </div>
 
                             <div class="form-group">
                                 <input type="email" class="form-control form-control-user"

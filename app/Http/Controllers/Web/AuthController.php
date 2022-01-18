@@ -41,7 +41,7 @@ class AuthController extends Controller
             }  elseif (Auth::user()->user_role_id < 5) {
                 return response()->json(['message' => 'Login success', 'route' => route('admin.dashboard.index')], 200);
             } elseif(Auth::user()->user_role_id == 5) {
-                return response()->json(['message' => 'Login success', 'route' => route('admin.users.index')], 200);
+                return response()->json(['message' => 'Login success', 'route' => route('admin.user-verifications.index')], 200);
             } elseif(Auth::user()->user_role_id == 6) {
                 return response()->json(['message' => 'Login success', 'route' => route('admin.orders.index')], 200);
             } elseif(Auth::user()->user_role_id == 7) {

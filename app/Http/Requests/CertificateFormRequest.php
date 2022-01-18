@@ -48,13 +48,13 @@ class CertificateFormRequest extends FormRequest
                     'sex' => [Rule::in(['Male', 'Female'])],
                     'cedula_type' => [Rule::in(['Individual', 'Corporation'])],
                     'tin_no' => 'integer|between:111111111,999999999',
-                    'icr_no' => 'integer|between:111111111,999999999',
+                    'icr_no' => 'integer',
                     'basic_tax' => 'numeric|between:1,5',
                     'additional_tax' => 'numeric|between:0,5000',
                     'gross_receipt_preceding' => 'numeric|between:0,5000',
                     'gross_receipt_profession' => 'numeric|between:0,5000',
                     'real_property' => 'numeric|between:0,5000',
-                    'interest' => 'numeric|between:0,100',
+                    'interest' => 'numeric|between:0,1',
                 ]);
                 break;
             case 3: //brgyClearance

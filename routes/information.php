@@ -17,6 +17,7 @@ use App\Http\Controllers\Web\Admin\ {
     AnnouncementController as AdminAnnouncement,
     AnnouncementPictureController as AdminAnnouncementPicture,
     UserController as AdminUser,
+    UserVerificationController as AdminUserVerification,
     StaffController as AdminStaff,
     AndroidController as AdminAndroid
 };
@@ -78,6 +79,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoStaff']
     Route::resource('announcement-types', AdminAnnouncementType::class)->except(['create']);
     Route::resource('announcement-pictures', AdminAnnouncementPicture::class)->except(['index', 'show', 'create']);
     Route::resource('announcements', AdminAnnouncement::class);
+
+    Route::get('user-verifications', [AdminUser::class, 'index'])->name('users.index');
+
+    Route::resource('user-verifications', AdminUserVerification::class)->except(['create', 'store', 'show', 'destroy']);
 
     Route::get('users', [AdminUser::class, 'index'])->name('users.index');
     Route::put('users/changeStatus/{user}', [AdminUser::class, 'changeUserStatus']);
