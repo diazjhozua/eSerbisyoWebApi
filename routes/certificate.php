@@ -36,6 +36,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificate
     Route::resource('certificates', CertificateCtrl::class)->except(['destroy', 'create', 'store']);
     Route::resource('requirements', RequirementCtrl::class)->except(['show']);
 
+    Route::get('orders/receipt/{order}', [OrderCtrl::class, 'printReceipt'])->name('orders.receipt');
     Route::resource('orders', OrderCtrl::class);
     Route::resource('certificateForms', CertificateFormCtrl::class)->only(['edit', 'update']);
 

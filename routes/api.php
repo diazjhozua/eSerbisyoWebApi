@@ -52,13 +52,15 @@ Route::group([
     Route::get('/myProfile', [JwtAuthCtrl::class, 'user']);
     Route::get('/myVerificationRequest', [JwtAuthCtrl::class, 'myVerificationRequest']);
     Route::post('/submitVerificationRequest', [JwtAuthCtrl::class, 'submitVerificationRequest']);
+
+    Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update', 'show', 'delete']);
+    Route::resource('reports', ReportController::class)->except(['edit', 'update', 'delete']);
 });
 
 
 
 Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
-Route::put('feedbacks/{feedback}/noted', [FeedbackController::class, 'noted']);
-Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update', 'delete']);
+
 Route::resource('document-types', DocumentTypeController::class)->except(['create']);
 Route::resource('documents', DocumentController::class);
 
@@ -84,8 +86,8 @@ Route::resource('complaints', ComplaintController::class);
 // Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
 Route::resource('report-types', ReportTypeController::class)->except(['create']);
 
-Route::put('reports/{report}/respond',  [ReportController::class, 'respond']);
-Route::resource('reports', ReportController::class);
+// Route::put('reports/{report}/respond',  [ReportController::class, 'respond']);
+// Route::resource('reports', ReportController::class);
 Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 
 Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
