@@ -29,9 +29,11 @@
                         <p class="name"><u>{{ $certificateForm->first_name }} {{ ucwords($certificateForm->middle_name[0]).'.' }} {{ $certificateForm->last_name }}</u></p>
                         <p class= "nm">Name</p>
                     </div>
+                    
                     <div class="person">
                         {{-- <img src="{{ asset('storage/'.$certificateForm->file_path) }}" alt="Signature"> --}}
-                        <p>_______________________________</p>
+                        <img src="{{ asset('assets/img/certificates/signa.png')}}" alt="img">
+                        <p>____________________________________________________</p>
                         <p class="signature"> Signature</p>
                     </div>
                 </div>
@@ -43,28 +45,28 @@
 		    <br>
             <div class="details-info">
                 <p class="addr">{{ $certificateForm->address }} </p>
-                <p><b>ADDRESS:</b>____________________________________</p>
+                <p style="font-size:14px"><b>ADDRESS:</b>______________________________________</p>
                 <br>
 
                 <p class="mcty">Cupang Muntinlupa City</p>
-                <p>______________________________________________</p>
+                <p style="font-size:14px">_______________________________________________</p>
                 <br>
                 <p class="num">{{ $certificateForm->contact_no }}</p>
-                <p><b>Contact No:___________________________________ </b></p>
+                <p style="font-size:15px"><b>Contact No:_________________________________</b></p>
                 <br>
                 <p class="bday">{{  \Carbon\Carbon::parse($certificateForm->birthday )->format('l jS \\of F Y') }}</p>
-                <p><b>BIRTHDATE:_________________________________ </b></p>
+                <p style="font-size:14px"><b>BIRTHDATE:_____________________________________</b></p>
                 <br>
                 <p class="pobt">{{ $certificateForm->birthplace }}</p>
-                <p><b>PLACE OF BIRTH:____________________________ </b></p>
+                <p style="font-size:14px"><b>PLACE OF BIRTH:_______________________________</b></p>
                 <br>
                 <p class="dateis">{{ \Carbon\Carbon::now()->isoFormat('MMM Do YYYY') }}</p>
-                <p><b>DATE ISSUED:________________________________ </b></p>
+                <p style="font-size:14px"><b>DATE ISSUED:___________________________________ </b></p>
                 <br>
                 <p class="connum">{{ $certificateForm->contact_person_no }}</p>
-                <p><b>CONTACT PERSON/NO:_______________________</b></p>
+                <p style="font-size:14px"><b>CONTACT PERSON/NO:__________________________</b></p>
                     <p class="conname">{{ $certificateForm->contact_person }} ({{ $certificateForm->contact_person_relation }})</p>
-                <p><b>______________________________________________</b></p>
+                <p style="font-size:14px"><b>________________________________________________</b></p>
 
 
                 <div class="signaz">
