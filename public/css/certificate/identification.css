@@ -9,7 +9,7 @@ button {
 	border: none;
 	width: 350px;
 	margin-top: -90px;
-	margin-left: 100px;
+	margin-left: 50px;
 	color: white;
 	position: absolute;
 	padding: 15px 32px;
@@ -37,8 +37,8 @@ button {
 }
 
 .fronterist {
-	height: 375px;
-	width: 250px;
+	height: 575px;
+	width: 435px;
 	border-style: solid;
 	border-radius: 10px;
 	background-color: #ffffff;
@@ -48,17 +48,19 @@ button {
 	width: 210mm;
 	min-height: 297mm;
 	padding: 20mm;
+	margin-left: 250px;
+	
 	/* margin: 10mm auto;
 	border: 1px #d3d3d3 solid; */
 	border-radius: 5px;
 	background: white;
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0);
-	display: flex;
+	/* display: flex; */
 	align-items: center;
 	justify-content: center;
 	/* background-color: #e6ebe0; */
-	flex-direction: row;
-	flex-flow: wrap;
+	/* flex-direction: row;
+	flex-flow: wrap; */
 }
 .font {
 	height: 375px;
@@ -72,6 +74,7 @@ button {
 	border-style: solid;
 	padding-right: 20px;
 	border: 10px black;
+	margin-bottom: 100px;
 }
 .top {
 	height: 30%;
@@ -83,43 +86,43 @@ button {
 	border-top-right-radius: 15px;
 }
 .top img {
-	height: 45px;
-	width: 45px;
+	height: 95px;
+	width: 95px;
 
 	border-radius: 10px;
 	position: absolute;
 	top: 18px;
-	left: 24px;
+	left: 12px;
 }
 .top p {
 	position: relative;
 	top: 23px;
-	left: 25px;
+	left: 110px;
 	text-align: center;
 
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 21px;
 	text-emphasis: spacing;
 }
 .top .city {
-	font-size: 12px;
+	font-size: 21px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .top .barangay {
-	font-size: 13px;
-	top: 30px;
-	left: 10px;
+	font-size: 22px;
+	top: 40px;
+	left: 105px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 	color: #ff0000;
 }
 .top .cupang {
-	font-size: 32px;
-	top: 28px;
-	left: 8px;
+	font-size: 52px;
+	top: 32px;
+	left: 98px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
@@ -138,52 +141,57 @@ button {
 }
 .bottom p {
 	position: relative;
-	bottom: -110px;
+	bottom: -250px;
+	left: 95px;
 	text-align: center;
 	text-transform: capitalize;
 	font-weight: bold;
-	font-size: 11px;
+	font-size: 21px;
 	text-emphasis: spacing;
 }
 .bottom img {
-	height: 100px;
-	width: 100px;
+	height: 160px;
+	width: 160px;
 	background-color: #e6ebe0;
 	border-radius: 10px;
 	position: absolute;
-	left: 75px;
+	left: 145px;
+	top: 70px
 }
 .bottom .name {
-	font-size: 13px;
-	bottom: -120px;
-	left: 10px;
+	font-size: 23px;
+	bottom: -256px;
+	left: 100px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 	text-transform: capitalize;
 }
 .bottom .nm {
-	font-size: 11px;
-	bottom: -120px;
-	left: 10px;
+	font-size: 18px;
+	bottom: -260px;
+	left: 100px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 	text-transform: capitalize;
 }
+
 .person img {
-	height: 70px;
-	width: 70px;
-	bottom: 20px;
+	height: 100px;
+	width: 100px;
+	bottom: -190px;
+	
 	border-radius: 10px;
 	position: absolute;
 
-	left: 100px;
+	left: 180px;
 }
+
 .person p {
 	position: relative;
-	bottom: -200px;
-	left: 10px;
+	bottom: -405px;
+	left: 77px;
 	text-align: center;
 	text-transform: capitalize;
 	font-weight: bold;
@@ -192,12 +200,12 @@ button {
 }
 .person .signature {
 	position: relative;
-	bottom: -200px;
-	left: 10px;
+	bottom: -410px;
+	left: 100px;
 	text-align: center;
 	text-transform: capitalize;
 	font-weight: bold;
-	font-size: 11px;
+	font-size: 18px;
 	text-emphasis: spacing;
 }
 .munti {
@@ -207,49 +215,49 @@ button {
 	transform: translate(-50%, -50%);
 }
 .back {
-	height: 375px;
-	width: 250px;
+	height: 575px;
+	width: 435px;
 	border-style: solid;
 	border-radius: 10px;
 	background-color: #ffffff;
 }
 .back .addr {
-	font-size: 8px;
+	font-size: 16px;
 	margin-bottom: -10px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .back .mcty {
-	font-size: 8px;
+	font-size: 16px;
 	margin-bottom: -10px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .back .num {
-	font-size: 8px;
+	font-size: 16px;
 	margin-bottom: -10px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .back .bday {
-	font-size: 8px;
+	font-size: 16px;
 	margin-bottom: -10px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .back .pobt {
-	font-size: 8px;
+	font-size: 16px;
 	margin-bottom: -10px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .back .connum {
-	font-size: 8px;
+	font-size: 16px;
 	margin-left: 50px;
 	margin-bottom: -8px;
 	font-weight: bold;
@@ -257,7 +265,7 @@ button {
 	text-align: center;
 }
 .back .conname {
-	font-size: 8px;
+	font-size: 16px;
 	margin-top: 5px;
 	margin-bottom: -8px;
 	font-weight: bold;
@@ -265,31 +273,31 @@ button {
 	text-align: center;
 }
 .back .dateis {
-	font-size: 8px;
+	font-size: 16px;
 	margin-bottom: -8px;
 	font-weight: bold;
 	text-emphasis: spacing;
 	text-align: center;
 }
 .details-info p {
-	font-size: 8px;
+	font-size: 16px;
 	text-indent: 30px;
 }
 .signaz img {
-	height: 30px;
-	width: 30px;
-	margin-top: 10px;
-	margin-left: 7rem;
-	margin-bottom: -1rem;
+	height: 90px;
+	width: 90px;
+	margin-top: 6px;
+	margin-left: 11.5rem;
+	margin-bottom: -3.5rem;
 }
 .signaz p {
 	position: relative;
-	bottom: 15px;
+	bottom: 22px;
 	left: -13px;
 	text-align: center;
 	text-transform: capitalize;
 
-	font-size: 11px;
+	font-size: 14px;
 	text-emphasis: spacing;
 }
 .signaz .signame {
@@ -300,7 +308,7 @@ button {
 	text-transform: capitalize;
 	font-weight: bold;
 	color: red;
-	font-size: 7px;
+	font-size: 14px;
 	text-emphasis: spacing;
 }
 .signaz .signameby {
@@ -311,17 +319,17 @@ button {
 	text-align: center;
 	text-transform: capitalize;
 	font-weight: bold;
-	font-size: 6px;
+	font-size: 13px;
 	text-emphasis: spacing;
 }
 .writ .ident {
 	margin: 20px;
 	position: relative;
-	bottom: 20px;
+	bottom: 26px;
 	left: -1px;
 	text-align: justify;
 	text-justify: inter-word;
-	font-size: 8px;
+	font-size: 12px;
 	letter-spacing: 1.2px;
 	font-weight: bold;
 }
