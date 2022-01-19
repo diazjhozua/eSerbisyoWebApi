@@ -21,7 +21,7 @@ class FeedbackResource extends JsonResource
             'custom_type' => $this->custom_type,
             'polarity' => $this->polarity,
             'message' => $this->message,
-            'admin_respond' => $this->admin_respond,
+            'admin_respond' => $this->admin_respond == null ? 'Not yet responded' : $this->admin_respond,
             'status' => $this->status,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),

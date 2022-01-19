@@ -11,36 +11,29 @@ use App\Http\Resources\FeedbackTypeResource;
 use App\Models\Feedback;
 use App\Models\Type;
 use App\Models\User;
+use Carbon\Carbon;
 
 class FeedbackController extends Controller
 {
     public function index()
     {
-        $feedbacks = Feedback::with('type')->orderBy('created_at','desc')->get();
-        return FeedbackResource::collection($feedbacks)->additional(['success' => true]);
+        $feedbacks = Feedback::with('type')->where('user_id', auth('api')->user()->id)->orderBy('created_at','desc')->get();
+        return FeedbackResource::collection($feedbacks);
     }
 
     public function create()
     {
         $types = Type::where('model_type', 'Feedback')->get();
-        return ['types' => FeedbackTypeResource::collection($types), 'success' => true] ;
+        return response()->json(['types' => FeedbackTypeResource::collection($types)], 200);
     }
 
     public function store(FeedbackRequest $request)
     {
-        $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => 546]));
+        // if (Feedback::whereDate('created_at', Carbon::today())->where('user_id', auth('api')->user()->id)->exists()) {
+        //     return response()->json(["message" => "You have already submitted feedback within this day, please comeback tommorow to submit another feedback"], 403);
+        // }
+        $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => auth('api')->user()->id]));
         event(new FeedbackEvent($feedback->load('type')));
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->storeSuccess('feedback'));
-    }
-
-    public function show(Feedback $feedback)
-    {
-        return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->itemFound('feedback'));
-    }
-
-    public function noted(Feedback $feedback) {
-        if ($feedback->status === 'Noted' || $feedback->status === 'Ignored') { return response()->json(Helper::instance()->alreadyNoted('feedback')); }
-        $feedback->fill(['status' => 'Noted'])->save();
-        return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->noted('feedback'));
     }
 }

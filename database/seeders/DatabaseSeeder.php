@@ -48,15 +48,15 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             // // Type Seeder
-            // FeedbackTypeSeeder::class,
-            // DocumentTypeSeeder::class,
-            // OrdinanceTypeSeeder::class,
-            // ProjectTypeSeeder::class,
-            // AnnouncementTypeSeeder::class,
-            // ComplaintTypeSeeder::class,
-            // ReportTypeSeeder::class,
+            FeedbackTypeSeeder::class,
+            DocumentTypeSeeder::class,
+            OrdinanceTypeSeeder::class,
+            ProjectTypeSeeder::class,
+            AnnouncementTypeSeeder::class,
+            ComplaintTypeSeeder::class,
+            ReportTypeSeeder::class,
 
-            // FeedbackSeeder::class,
+            FeedbackSeeder::class,
             // DocumentSeeder::class,
             // OrdinanceSeeder::class,
             // ProjectSeeder::class,
@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
             // MissingPersonSeeder::class,
             // MissingItemSeeder::class,
             // ComplaintSeeder::class,
-            // ReportSeeder::class,
+            ReportSeeder::class,
 
             CertificateSeeder::class,
             UserRequirementSeeder::class,

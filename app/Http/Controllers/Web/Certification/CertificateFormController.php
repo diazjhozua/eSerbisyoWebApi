@@ -7,6 +7,8 @@ use App\Http\Requests\CertificateFormRequest;
 use App\Http\Resources\CertificateFormResource;
 use App\Models\Certificate;
 use App\Models\CertificateForm;
+use App\Models\CertificateFormOrder;
+use App\Models\Order;
 use Helper;
 use Illuminate\Http\Request;
 
@@ -51,7 +53,20 @@ class CertificateFormController extends Controller
                 $certificateForm->fill($request->getPutBusinessData())->save();
                 break;
             default:
+
+
         }
+
+        $certificateOrder = CertificateFormOrder::where('certificate_form_id', $certificateForm->id)->orderBy('created_at','DESC')->first();
+
+        $order = Order::with('certificateForms')->find($certificateOrder->order_id);
+
+        $total_price = 0;
+        foreach ($order->certificateForms as $certificateForm) {
+            $total_price = $total_price + $certificateForm->price_filled;
+        }
+
+        $order->fill(['total_price' => $total_price])->save();
 
         return response()->json(['message' => 'Certificate form is updated' ], 200);
     }

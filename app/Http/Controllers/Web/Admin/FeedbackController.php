@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class FeedbackController extends Controller
 {
     public function index() {
+
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
 

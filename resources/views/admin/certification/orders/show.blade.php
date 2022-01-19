@@ -340,7 +340,7 @@
         </div>
 
         <div class="col-md-8 col-sm-8">
-            <button type="button" class="btn btn-outline-primary btn-sm btn-block m-2" id="printReceipt">Print Receipt</button>
+            <a type="button" class="btn btn-outline-primary btn-sm btn-block m-2" id="printReceipt" href="{{ route('admin.orders.receipt', $order->id) }}" target="_blank">Print Receipt</a>
             <div class="row">
                 <div class="col-md-6 col-sm-6">
                     {{-- APPLICATION STATUS --}}

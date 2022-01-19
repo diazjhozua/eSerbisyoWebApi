@@ -36,7 +36,7 @@ class ReportSeeder extends Seeder
 
             if ($picture_availability == 1) {
                 $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppReports', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\reports', false);
-                $file_path = 'storage/reports/'.$picture_name;
+                $file_path = 'reports/'.$picture_name;
             }
 
             $admin_message = NULL;

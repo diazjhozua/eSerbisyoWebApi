@@ -354,6 +354,10 @@ class OrderController extends Controller
         return response()->json(Helper::instance()->destroySuccess('order'));
     }
 
+    public function printReceipt(Order $order) {
+        return view('admin.certification.orders.receipt', compact('order'));
+    }
+
     public function report($date_start,  $date_end, $sort_column, $sort_option, $pick_up_type, $order_status, $application_status) {
 
         $title = 'Report - No data';
@@ -440,4 +444,6 @@ class OrderController extends Controller
             'date_start', 'date_end', 'sort_column', 'sort_option', 'pick_up_type', 'order_status', 'application_status',
         ));
     }
+
+
 }
