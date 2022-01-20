@@ -8,7 +8,7 @@ button {
 	background-color: #4caf50; /* Green */
 	border: none;
 	width: 350px;
-	margin-top: -90px;
+	margin-top: -70px;
 	margin-left: 50px;
 	color: white;
 	position: absolute;
@@ -49,7 +49,7 @@ button {
 	min-height: 297mm;
 	padding: 20mm;
 	margin-left: 250px;
-	
+
 	/* margin: 10mm auto;
 	border: 1px #d3d3d3 solid; */
 	border-radius: 5px;
@@ -156,7 +156,7 @@ button {
 	border-radius: 10px;
 	position: absolute;
 	left: 145px;
-	top: 70px
+	top: 70px;
 }
 .bottom .name {
 	font-size: 23px;
@@ -181,7 +181,7 @@ button {
 	height: 100px;
 	width: 100px;
 	bottom: -190px;
-	
+
 	border-radius: 10px;
 	position: absolute;
 
