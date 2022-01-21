@@ -57,12 +57,12 @@ class DatabaseSeeder extends Seeder
             ReportTypeSeeder::class,
 
             FeedbackSeeder::class,
-            // DocumentSeeder::class,
-            // OrdinanceSeeder::class,
-            // ProjectSeeder::class,
-            // TermSeeder::class,
-            // PositionSeeder::class,
-            // EmployeeSeeder::class,
+            DocumentSeeder::class,
+            OrdinanceSeeder::class,
+            ProjectSeeder::class,
+            TermSeeder::class,
+            PositionSeeder::class,
+            EmployeeSeeder::class,
             AnnouncementSeeder::class,
             // AndroidSeeder::class,
 
