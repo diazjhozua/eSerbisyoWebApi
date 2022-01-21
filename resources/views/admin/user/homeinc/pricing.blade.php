@@ -1,8 +1,8 @@
 
 
 <!-- Pricing -->
-<div id="pricing" class="cards-2">
-        <div class="container">
+<div id="aboutUs" class="cards-2">
+        {{-- <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="above-heading">PRICING</div>
@@ -114,7 +114,7 @@
                     <p style="text-align: center;"><i>"We believe that residents should not be charged for using an online app for barangay cupang services. Barangay E-serbisyo is essential, particularly in terms of safety and avoiding physical contact between inhabitants, particularly in waiting lines."</i></p>
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
-        </div> <!-- end of container -->
+        </div> <!-- end of container --> --}}
     </div> <!-- end of cards-2 -->
     <!-- end of pricing -->
   <!-- Testimonials -->

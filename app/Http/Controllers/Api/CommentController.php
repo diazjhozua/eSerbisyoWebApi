@@ -12,18 +12,32 @@ class CommentController extends Controller
 {
     public function edit(Comment $comment)
     {
-        return (new CommentResource($comment))->additional(Helper::instance()->itemFound('comment'));
+        if ($comment->user_id == auth('api')->user()->id) {
+            return (new CommentResource($comment))->additional(Helper::instance()->itemFound('comment'));
+        } else {
+            return response()->json(["message" => "You can only edit your comment."], 403);
+        }
+
     }
 
     public function update(CommentRequest $request, Comment $comment)
     {
-        $comment->fill($request->validated())->save();
-        return (new CommentResource($comment))->additional(Helper::instance()->updateSuccess('comment'));
+        if ($comment->user_id == auth('api')->user()->id) {
+            $comment->fill($request->validated())->save();
+            return (new CommentResource($comment))->additional(Helper::instance()->updateSuccess('comment'));
+        } else {
+            return response()->json(["message" => "You can only update your comment."], 403);
+        }
     }
 
     public function destroy(Comment $comment)
     {
-        $comment->delete();
-        return response()->json(Helper::instance()->destroySuccess('comment'));
+        if ($comment->user_id == auth('api')->user()->id) {
+            $comment->delete();
+            return response()->json(Helper::instance()->destroySuccess('comment'));
+        } else {
+            return response()->json(["message" => "You can only delete your comment."], 403);
+        }
+
     }
 }

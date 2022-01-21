@@ -14,7 +14,7 @@ class CommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'body' => 'required|profanity|string|min:3|max:250',
+            'body' => 'required|profanity|string|min:3|max:60',
         ];
     }
 }

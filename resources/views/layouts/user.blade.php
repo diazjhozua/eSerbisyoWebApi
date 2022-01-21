@@ -94,7 +94,7 @@
                         <!-- end of dropdown menu -->
 
                         <li class="nav-item">
-                            <a class="nav-link page-scroll" href="/#pricing">PRICING</a>
+                            <a class="nav-link page-scroll" href="/#aboutUs">ABOUT US</a>
                         </li>
                     </ul>
                     @auth

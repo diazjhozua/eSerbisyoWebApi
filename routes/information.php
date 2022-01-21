@@ -84,10 +84,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoStaff']
 
     Route::resource('user-verifications', AdminUserVerification::class)->except(['create', 'store', 'show', 'destroy']);
 
-    Route::get('users', [AdminUser::class, 'index'])->name('users.index');
-    Route::put('users/changeStatus/{user}', [AdminUser::class, 'changeUserStatus']);
-    Route::get('users/viewUserVerification/{user_verification}', [AdminUser::class, 'viewUserVerification']);
-    Route::put('users/verifyUser/{user_verification}', [AdminUser::class, 'verifyUser']);
+
 });
 
 

@@ -55,6 +55,12 @@
                 <span>Audit Logs</span></a>
         </li>
 
+        <!-- User Nav Item - Tables -->
+        <li id="user" class="nav-item">
+            <a class="nav-link" href="{{ route('admin.users.index') }}">
+                <img src="{{ asset('assets/img/users.png') }}" alt="Users">
+                <span>Users</span></a>
+        </li>
 
 
     @endif
@@ -74,12 +80,7 @@
             <span>Verification Requests</span></a>
     </li>
 
-    <!-- User Nav Item - Tables -->
-    <li id="user" class="nav-item">
-        <a class="nav-link" href="{{ route('admin.users.index') }}">
-            <img src="{{ asset('assets/img/users.png') }}" alt="Users">
-            <span>Users</span></a>
-    </li>
+
 
     <!-- User Nav Item - Tables -->
     <li id="android" class="nav-item">
