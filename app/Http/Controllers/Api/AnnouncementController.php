@@ -8,10 +8,12 @@ use App\Http\Requests\AnnouncementRequest;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\AnnouncementResource;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\LikeResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
 use App\Models\AnnouncementPicture;
 use App\Models\Type;
+use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,8 +21,43 @@ class AnnouncementController extends Controller
 {
     public function index()
     {
-        $announcements = Announcement::with('type','announcement_pictures')->withCount('comments', 'likes')->orderBy('created_at', 'DESC')->get();
+        $announcements = Announcement::with('type','announcement_pictures')->withCount('comments', 'likes')->with('likes')->orderBy('created_at', 'DESC')->get();
         return AnnouncementResource::collection($announcements)->additional(['success' => true]);
+    }
+
+    public function show(Announcement $announcement)
+    {
+        return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
+    }
+
+    public function getLikeList(Announcement $announcement) {
+        $announcement = $announcement->load('likes');
+        $likes = $announcement->likes;
+        return (LikeResource::collection($likes));
+    }
+
+
+    public function like(Announcement $announcement) {
+        $like = $announcement->likes()->where('user_id', auth('api')->user()->id)->get();
+        if (count($like)>0) {
+            $like->each->delete();
+            $isLike = false;
+        } else {
+            $like = $announcement->likes()->create(['user_id' => auth('api')->user()->id]);
+            $isLike = true;
+        }
+        return Helper::instance()->likeStatus('announcement', $isLike);
+    }
+
+    public function getCommentList(Announcement $announcement) {
+        $announcement = $announcement->load('comments');
+        $comments = $announcement->comments;
+        return (CommentResource::collection($comments));
+    }
+
+    public function comment(CommentRequest $request, Announcement $announcement) {
+        $comment = $announcement->comments()->create(array_merge($request->validated(), ['user_id' => auth('api')->user()->id]));
+        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 
     public function create()
@@ -44,49 +81,29 @@ class AnnouncementController extends Controller
         return (new AnnouncementResource($announcement->load('type','announcement_pictures')))->additional(Helper::instance()->storeSuccess('announcement'));
     }
 
-    public function show(Announcement $announcement)
-    {
-        return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
-    }
+    // public function edit(Announcement $announcement)
+    // {
+    //     $types = Type::where('model_type', 'Announcement')->get();
+    //     return (new AnnouncementResource($announcement->load('type')))->additional(array_merge(['types' => TypeResource::collection($types)],Helper::instance()->itemFound('announcement')));
+    // }
 
-    public function edit(Announcement $announcement)
-    {
-        $types = Type::where('model_type', 'Announcement')->get();
-        return (new AnnouncementResource($announcement->load('type')))->additional(array_merge(['types' => TypeResource::collection($types)],Helper::instance()->itemFound('announcement')));
-    }
+    // public function update(AnnouncementRequest $request, Announcement $announcement)
+    // {
+    //     $announcement->fill($request->getData())->save();
+    //     return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->updateSuccess('announcement'));
+    // }
 
-    public function update(AnnouncementRequest $request, Announcement $announcement)
-    {
-        $announcement->fill($request->getData())->save();
-        return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->updateSuccess('announcement'));
-    }
+    // public function destroy(Announcement $announcement)
+    // {
+    //     return DB::transaction(function() use ($announcement) {
+    //         $announcement->load('announcement_pictures');
+    //         foreach ($announcement->announcement_pictures as $picture) { Storage::delete('public/announcements/'. $picture->picture_name); }
+    //         AnnouncementPicture::where('announcement_id', $announcement->id)->delete();
+    //         $announcement->comments()->delete();
+    //         $announcement->delete();
+    //         return response()->json(Helper::instance()->destroySuccess('announcement'));
+    //     });
+    // }
 
-    public function destroy(Announcement $announcement)
-    {
-        return DB::transaction(function() use ($announcement) {
-            $announcement->load('announcement_pictures');
-            foreach ($announcement->announcement_pictures as $picture) { Storage::delete('public/announcements/'. $picture->picture_name); }
-            AnnouncementPicture::where('announcement_id', $announcement->id)->delete();
-            $announcement->comments()->delete();
-            $announcement->delete();
-            return response()->json(Helper::instance()->destroySuccess('announcement'));
-        });
-    }
 
-    public function comment(CommentRequest $request, Announcement $announcement) {
-        $comment = $announcement->comments()->create(array_merge($request->validated(), ['user_id' => 2]));
-        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
-    }
-
-    public function like(Announcement $announcement) {
-        $like = $announcement->likes()->where('user_id', 2)->get();
-        if (count($like)>0) {
-            $like->each->delete();
-            $isLike = false;
-        } else {
-            $like = $announcement->likes()->create(['user_id' => 2]);
-            $isLike = true;
-        }
-        return Helper::instance()->likeStatus('announcement', $isLike);
-    }
 }

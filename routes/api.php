@@ -4,8 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\ {
-    FeedbackTypeController,
     FeedbackController,
+    ReportController,
+    UserRequirementController,
+
+    FeedbackTypeController,
+
     DocumentTypeController,
     DocumentController,
     TermController,
@@ -20,7 +24,7 @@ use App\Http\Controllers\Api\ {
     ComplainantController,
     DefendantController,
     ReportTypeController,
-    ReportController,
+
     AnnouncementTypeController,
     AnnouncementController,
     AnnouncementPictureController,
@@ -55,8 +59,15 @@ Route::group([
 
     Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update', 'show', 'delete']);
     Route::resource('reports', ReportController::class)->except(['edit', 'update', 'delete']);
-});
+    Route::resource('userRequirements', UserRequirementController::class)->except(['show', 'edit', 'update','delete']);
 
+    Route::get('announcements/like/{announcement}',  [AnnouncementController::class, 'getLikeList']);
+    Route::get('announcements/comment/{announcement}',  [AnnouncementController::class, 'getCommentList']);
+    Route::post('announcements/like/{announcement}',  [AnnouncementController::class, 'like']);
+    Route::post('announcements/comment/{announcement}',  [AnnouncementController::class, 'comment']);
+    Route::resource('announcements', AnnouncementController::class)->only(['index', 'show']);
+    Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
+});
 
 
 Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
@@ -92,7 +103,7 @@ Route::resource('announcement-types', AnnouncementTypeController::class)->except
 
 Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
 // Route::post('announcements/{announcement}/comment',  [AnnouncementController::class, 'comment']);
-Route::resource('announcements', AnnouncementController::class);
+
 // Route::resource('announcement-pictures', AnnouncementPictureController::class)->only(['store', 'destroy']);
 // Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
 

@@ -60,6 +60,13 @@
                 <img src="{{ asset('assets/img/audit.png') }}" alt="Audit">
                 <span>Audit Logs</span></a>
         </li>
+
+        <!-- User Nav Item - Tables -->
+        <li id="user" class="nav-item">
+            <a class="nav-link" href="{{ route('admin.users.index') }}">
+                <img src="{{ asset('assets/img/users.png') }}" alt="Users">
+                <span>Users</span></a>
+        </li>
     @endif
 
     <!-- Divider -->
@@ -70,18 +77,17 @@
         Information Models
     </div>
 
-        <!-- User Nav Item - Tables -->
+    <li id="verificationRequests" class="nav-item">
+        <a class="nav-link" href="{{ route('admin.user-verifications.index') }}">
+            <img src="{{ asset('assets/img/requests.png') }}" alt="Verification Requests">
+            <span>Verification Requests</span></a>
+    </li>
+
+    <!-- User Nav Item - Tables -->
     <li id="android" class="nav-item">
         <a class="nav-link" href="{{ route('admin.androids.index') }}">
             <img src="{{ asset('assets/img/android.png') }}" alt="Android">
             <span>Android Version</span></a>
-    </li>
-
-    <!-- User Nav Item - Tables -->
-    <li id="user" class="nav-item">
-        <a class="nav-link" href="{{ route('admin.users.index') }}">
-            <img src="{{ asset('assets/img/users.png') }}" alt="Users">
-            <span>Users</span></a>
     </li>
 
     <!-- Barangay Official Nav Item - Pages Collapse Menu -->

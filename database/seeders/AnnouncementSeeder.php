@@ -29,7 +29,7 @@ class AnnouncementSeeder extends Seeder
         $types = collect(Type::where('model_type', 'Announcement')->get()->modelKeys());
         $users = collect(User::all()->modelKeys());
 
-        foreach (range(1,1000) as $id) {
+        foreach (range(1,100) as $id) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             //announcements
             $announcements[] = [
@@ -57,7 +57,7 @@ class AnnouncementSeeder extends Seeder
             // announcement_comments
             $afterDate = $faker->dateTimeBetween($date, $date->format('Y-m-d H:i:s').' +10 days');
 
-            for ($i = 0; $i <= $faker->numberBetween(1, 10); $i++) {
+            for ($i = 0; $i <= $faker->numberBetween(1, 2); $i++) {
                 $comments[] = [
                     'user_id' => $users->random(),
                     'body' => $faker->realText($maxNbChars = 40, $indexSize = 1),
@@ -68,7 +68,7 @@ class AnnouncementSeeder extends Seeder
                 ];
             }
 
-            for ($i = 0; $i < rand(1, $users->count()); $i++) {
+            for ($i = 0; $i < rand(1, 5); $i++) {
                 $likes[] = [
                     'user_id' => $users->random(),
                     'likeable_id' => $id,
@@ -79,7 +79,7 @@ class AnnouncementSeeder extends Seeder
             }
         }
 
-        $chunks = array_chunk($announcements, 400);
+        $chunks = array_chunk($announcements, 20);
         foreach ($chunks as $chunk) {
             Announcement::insert($chunk);
         }

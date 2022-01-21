@@ -37,4 +37,13 @@ class Announcement extends Model
     public function likes() {
         return $this->morphMany(Like::class, 'likeable');
     }
+
+    public function selfLike()
+    {
+        if($this->likes->contains('user_id', auth('api')->user()->id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -122,6 +122,11 @@ Route::post('reset-password', [AuthController::class, 'submitResetPasswordForm']
 
 // For Super Admin and all Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->group(function () {
+    Route::get('users', [AdminUser::class, 'index'])->name('users.index');
+    Route::put('users/changeStatus/{user}', [AdminUser::class, 'changeUserStatus']);
+    Route::get('users/viewUserVerification/{user_verification}', [AdminUser::class, 'viewUserVerification']);
+    Route::put('users/verifyUser/{user_verification}', [AdminUser::class, 'verifyUser']);
+
     Route::get('dashboard', [AdminDashboard::class, 'index'])->name('dashboard.index');
     Route::post('audit-logs/reports', [AuditLog::class, 'report'])->name('auditLogs.reports');
     Route::get('audit-logs', [AuditLog::class, 'index'])->name('auditLogs');

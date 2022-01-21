@@ -27,6 +27,9 @@ class AnnouncementResource extends JsonResource
                 'announcement_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
             'custom_type' => $this->custom_type,
+            $this->mergeWhen($this->relationLoaded('likes'), [
+                'selfLike' => $this->selfLike(),
+            ]),
             'title' => $this->title,
             'description' => $this->description,
             'announcement_pictures' => AnnouncementPictureResource::collection($announcement_pictures),

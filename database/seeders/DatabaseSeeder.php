@@ -63,7 +63,7 @@ class DatabaseSeeder extends Seeder
             // TermSeeder::class,
             // PositionSeeder::class,
             // EmployeeSeeder::class,
-            // AnnouncementSeeder::class,
+            AnnouncementSeeder::class,
             // AndroidSeeder::class,
 
             // MissingPersonSeeder::class,
