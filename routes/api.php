@@ -65,27 +65,31 @@ Route::group([
     Route::get('announcements/comment/{announcement}',  [AnnouncementController::class, 'getCommentList']);
     Route::post('announcements/like/{announcement}',  [AnnouncementController::class, 'like']);
     Route::post('announcements/comment/{announcement}',  [AnnouncementController::class, 'comment']);
-    Route::resource('announcements', AnnouncementController::class)->only(['index', 'show']);
+    Route::resource('announcements', AnnouncementController::class)->only(['index']);
     Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
-});
 
+    Route::resource('documents', DocumentController::class)->only(['index']);
+    Route::resource('ordinances', OrdinanceController::class)->only(['index']);
+    Route::resource('projects', ProjectController::class)->only(['index']);
+    Route::resource('employees', EmployeeController::class)->only(['index']);
+
+    Route::post('missingPersons/comment/{missingPerson}',  [MissingPersonController::class, 'comment']);
+    Route::resource('missingPersons', MissingPersonController::class);
+});
 
 Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
 
 Route::resource('document-types', DocumentTypeController::class)->except(['create']);
-Route::resource('documents', DocumentController::class);
+
 
 Route::resource('terms', TermController::class)->except(['create']);
 Route::resource('positions', PositionController::class)->except(['create']);
-Route::resource('employees', EmployeeController::class);
-Route::resource('projects', ProjectController::class);
+
+
 
 Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
-Route::resource('ordinances', OrdinanceController::class);
 
-Route::post('missing-persons/{missing_person}/comment',  [MissingPersonController::class, 'comment']);
-Route::put('missing-persons/change-status/{missing_person}', [MissingPersonController::class, 'changeStatus']);
-Route::resource('missing-persons', MissingPersonController::class);
+
 Route::post('lost-and-found/{lost_and_found}/comment',  [LostAndFoundController::class, 'comment']);
 Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
 Route::resource('lost-and-found', LostAndFoundController::class);

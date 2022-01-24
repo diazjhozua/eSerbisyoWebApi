@@ -13,9 +13,6 @@ use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
 use App\Models\AnnouncementPicture;
 use App\Models\Type;
-use Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class AnnouncementController extends Controller
 {
@@ -25,17 +22,12 @@ class AnnouncementController extends Controller
         return AnnouncementResource::collection($announcements)->additional(['success' => true]);
     }
 
-    public function show(Announcement $announcement)
-    {
-        return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
-    }
 
     public function getLikeList(Announcement $announcement) {
         $announcement = $announcement->load('likes');
         $likes = $announcement->likes;
         return (LikeResource::collection($likes));
     }
-
 
     public function like(Announcement $announcement) {
         $like = $announcement->likes()->where('user_id', auth('api')->user()->id)->get();
@@ -60,26 +52,31 @@ class AnnouncementController extends Controller
         return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 
-    public function create()
-    {
-        $types = Type::where('model_type', 'Announcement')->get();
-        return ['types' => TypeResource::collection($types), 'success' => true];
-    }
+    // public function show(Announcement $announcement)
+    // {
+    //     return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
+    // }
 
-    public function store(AnnouncementRequest $request)
-    {
-        $announcement = Announcement::create($request->getData());
-        $announcement->comments_count = 0;
-        $announcement->likes_count = 0;
-        if (isset($request->picture_list)) {
-            foreach ($request->picture_list as $key => $value) {
-                $fileName = time().'_'.$value['picture']->getClientOriginalName();
-                $filePath =   $value['picture']->storeAs('announcements', $fileName, 'public');
-                AnnouncementPicture::create(['announcement_id' => $announcement->id, 'picture_name' => $fileName,'file_path' => $filePath]);
-            }
-        }
-        return (new AnnouncementResource($announcement->load('type','announcement_pictures')))->additional(Helper::instance()->storeSuccess('announcement'));
-    }
+    // public function create()
+    // {
+    //     $types = Type::where('model_type', 'Announcement')->get();
+    //     return ['types' => TypeResource::collection($types), 'success' => true];
+    // }
+
+    // public function store(AnnouncementRequest $request)
+    // {
+    //     $announcement = Announcement::create($request->getData());
+    //     $announcement->comments_count = 0;
+    //     $announcement->likes_count = 0;
+    //     if (isset($request->picture_list)) {
+    //         foreach ($request->picture_list as $key => $value) {
+    //             $fileName = time().'_'.$value['picture']->getClientOriginalName();
+    //             $filePath =   $value['picture']->storeAs('announcements', $fileName, 'public');
+    //             AnnouncementPicture::create(['announcement_id' => $announcement->id, 'picture_name' => $fileName,'file_path' => $filePath]);
+    //         }
+    //     }
+    //     return (new AnnouncementResource($announcement->load('type','announcement_pictures')))->additional(Helper::instance()->storeSuccess('announcement'));
+    // }
 
     // public function edit(Announcement $announcement)
     // {

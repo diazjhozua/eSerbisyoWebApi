@@ -110,15 +110,11 @@ Route::group(['guard' => 'web'], function () {
     Route::post('register', [AuthController::class, 'submitRegisterForm'])->name('register.post');
 });
 
-
-
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('forget-password', [AuthController::class, 'showForgetPassword'])->name('forget.password.get');
 Route::post('forget-password', [AuthController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
 Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('reset.password.get');
 Route::post('reset-password', [AuthController::class, 'submitResetPasswordForm'])->name('reset.password.post');
-
-
 
 // For Super Admin and all Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->group(function () {
@@ -136,7 +132,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->g
     Route::put('staffs/promote-users/{user}', [AdminStaff::class, 'promoteUser'])->name('staffs.promoteUser');
 });
 
-Route::get('files/{folderName}/{fileName}', function ($folderName, $fileName) {
+
+Route::get('view/{folderName}/{fileName}', function ($folderName, $fileName) {
+
+    if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
+        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+        return response()->download($url);
+    }else{
+        return view('errors.NOFILE');
+    }
+})->name('viewFiles');
+
+Route::get('download/{folderName}/{fileName}', function ($folderName, $fileName) {
 
     if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
         $url = Storage::disk('public')->path($folderName.'/'.$fileName);
@@ -145,6 +152,7 @@ Route::get('files/{folderName}/{fileName}', function ($folderName, $fileName) {
         return view('errors.NOFILE');
     }
 })->name('downloadFiles');
+
 
 // For all admin and staff
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:notBasicUser'])->group(function () {
