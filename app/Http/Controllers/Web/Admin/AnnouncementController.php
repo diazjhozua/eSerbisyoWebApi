@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Log;
 
 class AnnouncementController extends Controller
 {
@@ -45,6 +46,7 @@ class AnnouncementController extends Controller
     public function store(AnnouncementRequest $request)
     {
         $announcement = Announcement::create($request->getData());
+        Log::debug($announcement->id);
         $announcement->comments_count = 0;
         $announcement->likes_count = 0;
         if (isset($request->picture_list)) {
@@ -86,7 +88,6 @@ class AnnouncementController extends Controller
             return response()->json(Helper::instance()->destroySuccess('announcement'));
         });
     }
-
 
     public function report(AnnouncementReportRequest $request) {
         $announcements = Announcement::with('type')

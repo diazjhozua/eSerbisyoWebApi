@@ -34,8 +34,9 @@ use App\Http\Controllers\Api\ {
     RequirementController,
     CertificateFormController,
 
-    JwtAuthController as JwtAuthCtrl
-
+    JwtAuthController as JwtAuthCtrl,
+    MissingItemController,
+    OrderController
 };
 use App\Http\Requests\CertificateFormRequest;
 
@@ -73,52 +74,59 @@ Route::group([
     Route::resource('projects', ProjectController::class)->only(['index']);
     Route::resource('employees', EmployeeController::class)->only(['index']);
 
+    Route::get('missingPersons/comment/{missingPerson}',  [MissingPersonController::class, 'getCommentList']);
     Route::post('missingPersons/comment/{missingPerson}',  [MissingPersonController::class, 'comment']);
+    Route::get('missingPersons/authReports', [MissingPersonController::class, 'authReports']);
     Route::resource('missingPersons', MissingPersonController::class);
+
+    Route::get('missingItems/comment/{missingItem}',  [MissingItemController::class, 'getCommentList']);
+    Route::post('missingItems/comment/{missingItem}',  [MissingItemController::class, 'comment']);
+    Route::get('missingItems/authReports', [MissingItemController::class, 'authReports']);
+    Route::resource('missingItems', MissingItemController::class);
+
+    Route::resource('complaints', ComplaintController::class);
+    Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
+    Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
+
+    Route::get('orders/create/{pickupType}', [OrderController::class, 'create']);
+    Route::get('orders/certificates', [OrderController::class, 'certificates']);
+    Route::resource('orders', OrderController::class)->except(['create']);
 });
 
-Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
+// Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);
+// Route::resource('document-types', DocumentTypeController::class)->except(['create']);
+// Route::resource('terms', TermController::class)->except(['create']);
+// Route::resource('positions', PositionController::class)->except(['create']);
 
-Route::resource('document-types', DocumentTypeController::class)->except(['create']);
+// Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
+// Route::post('lost-and-found/{lost_and_found}/comment',  [LostAndFoundController::class, 'comment']);
+// Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
+// Route::resource('lost-and-found', LostAndFoundController::class);
 
+// Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
+// // Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 'changeStatus']);
+// Route::resource('complaints', ComplaintController::class);
+// // Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
+// // Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
+// Route::resource('report-types', ReportTypeController::class)->except(['create']);
 
-Route::resource('terms', TermController::class)->except(['create']);
-Route::resource('positions', PositionController::class)->except(['create']);
+// // Route::put('reports/{report}/respond',  [ReportController::class, 'respond']);
+// // Route::resource('reports', ReportController::class);
+// Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
 
+// Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
+// // Route::post('announcements/{announcement}/comment',  [AnnouncementController::class, 'comment']);
 
+// // Route::resource('announcement-pictures', AnnouncementPictureController::class)->only(['store', 'destroy']);
+// // Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
 
-Route::resource('ordinance-types', OrdinanceTypeController::class)->except(['create']);
-
-
-Route::post('lost-and-found/{lost_and_found}/comment',  [LostAndFoundController::class, 'comment']);
-Route::put('lost-and-found/change-status/{lost_and_found}', [LostAndFoundController::class, 'changeStatus']);
-Route::resource('lost-and-found', LostAndFoundController::class);
-
-Route::resource('complaint-types', ComplaintTypeController::class)->except(['create']);
-// Route::put('complaints/change-status/{complaint}', [ComplaintController::class, 'changeStatus']);
-Route::resource('complaints', ComplaintController::class);
-// Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
-// Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
-Route::resource('report-types', ReportTypeController::class)->except(['create']);
-
-// Route::put('reports/{report}/respond',  [ReportController::class, 'respond']);
-// Route::resource('reports', ReportController::class);
-Route::resource('announcement-types', AnnouncementTypeController::class)->except(['create']);
-
-Route::post('announcements/{announcement}/like',  [AnnouncementController::class, 'like']);
-// Route::post('announcements/{announcement}/comment',  [AnnouncementController::class, 'comment']);
-
-// Route::resource('announcement-pictures', AnnouncementPictureController::class)->only(['store', 'destroy']);
-// Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
-
-// Route::get('certificates/{certificate}/add-requirement',  [CertificateController::class, 'addRequirement']);
-// Route::post('certificates/store-requirements',  [CertificateController::class, 'storeRequirement']);
-// Route::delete('certificates/{certificate}/{requirement}',  [CertificateController::class, 'destroyRequirement']);
+// // Route::get('certificates/{certificate}/add-requirement',  [CertificateController::class, 'addRequirement']);
+// // Route::post('certificates/store-requirements',  [CertificateController::class, 'storeRequirement']);
+// // Route::delete('certificates/{certificate}/{requirement}',  [CertificateController::class, 'destroyRequirement']);
 
 
-Route::resource('certificates', CertificateController::class)->except(['create', 'store', 'destroy']);
-Route::resource('requirements', RequirementController::class)->except(['create']);
+// Route::resource('requirements', RequirementController::class)->except(['create']);
 
-Route::resource('certificate-form-requests', CertificateFormController::class);
+// Route::resource('certificate-form-requests', CertificateFormController::class);
 
 

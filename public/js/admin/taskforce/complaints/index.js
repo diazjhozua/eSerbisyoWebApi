@@ -143,8 +143,8 @@ $(document).ready(function () {
     var channel = pusher.subscribe('private-complaint-channel');
 
     channel.bind('complaint-channel', function (data) {
-        addOrReplaceData(data.missingItem, 'Add')
-        toastr.warning('User ' + data.missingItem.user_name + 'submitted a complaint. Please repond to the specific complaint.')
+        addOrReplaceData(data.complaint, 'Add')
+        toastr.warning('User ' + data.complaint.user_name + 'submitted a complaint. Please repond to the specific complaint.')
         // add to pending card if it is new report
         THIS_MONTH_COUNT.text(parseInt(THIS_MONTH_COUNT.text()) + 1);
         THIS_MONTH_PENDING_COUNT.text(parseInt(THIS_MONTH_PENDING_COUNT.text()) + 1);

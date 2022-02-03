@@ -47,6 +47,7 @@ class ComplaintController extends Controller
 
     public function store(ComplaintRequest $request)
     {
+
         return DB::transaction(function() use ($request) {
             $complaint = Complaint::create(array_merge($request->getData(), ['status' => 'Pending','user_id' => 2]));
             $complainantCount = 0;

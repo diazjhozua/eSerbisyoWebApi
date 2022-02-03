@@ -383,6 +383,26 @@
                 </div>
             </div>
 
+            @if ($order->pick_up_type == 'Delivery')
+                {{-- Payment --}}
+                <label class="ml-2">Biker Payment Status</label>
+                <div class="input-group mb-3 ml-2">
+                    <select class="custom-select" id="inputDeliveryPayment">
+                        <option value="{{ $order->delivery_payment_status }}" selected>{{ $order->delivery_payment_status }}</option>
+                        @forelse ($deliveryPayments as $deliveryPayment)
+                            @if ($order->delivery_payment_status != $deliveryPayment->type)
+                                <option value="{{ $deliveryPayment->type }}">{{ $deliveryPayment->type }} </option>
+                            @endif
+                        @empty
+                            <option value="">Error! Please refresh the page</option>
+                        @endforelse
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="btnDeliveryPayment">Change</button>
+                    </div>
+                </div>
+            @endif
+
              {{-- Order List--}}
             <div class="card shadow mb-4">
                 <div class="card-header d-flex justify-content-between align-items:center py-3">
@@ -516,8 +536,14 @@
                     </div>
                 </div>
             </div>
-
             {{-- END OF - Order List --}}
+
+            {{-- If biker is delivered the biker --}}
+            @if ($order->order_status == 'Received' && $order->pick_up_type == 'Delivery')
+                <h1>Biker proof of delivery</h1>
+                <img class="mt-2 mx-auto d-block" style="height:300px; width: 300px;" id="currentImage"
+                   src="{{ isset($order->file_path) ? asset('storage/'.$order->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="biker proof of web">
+            @endif
 
         </div>
     </div>

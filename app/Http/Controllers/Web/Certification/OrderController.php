@@ -72,7 +72,6 @@ class OrderController extends Controller
                         Log::debug($value['cedula_type']);
                         $isCompleteFormFields = false;
                     }
-
                     break;
                 case 3:
                     // Barangay Clearance
@@ -294,7 +293,11 @@ class OrderController extends Controller
             (object) ["id" => 2, "type" => "DNR"]
         ];
 
-        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements'));
+        $deliveryPayments = [
+            (object)[ "id" => 1, "type" => "Pending"], (object) ["id" => 2, "type" => "Received"],
+        ];
+
+        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements', 'deliveryPayments'));
     }
 
     public function edit(Order $order)
@@ -338,9 +341,14 @@ class OrderController extends Controller
             $subject = 'Order\'s Admin Message Notification';
             $changeValue =  'admin_message';
             $order->fill(['admin_message' => $request->admin_message])->save();
+        } else {
+            $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
         }
 
-        dispatch(new OrderStatusJob($order, $subject, $changeValue));
+        if (!isset($request->delivery_payment_status)) {
+            dispatch(new OrderStatusJob($order, $subject, $changeValue));
+        }
+
         return response()->json(['message' => 'Order status has been updated' ], 200);
     }
 

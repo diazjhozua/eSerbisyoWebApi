@@ -21,7 +21,7 @@ class AnnouncementRequest extends FormRequest
             'title' => 'required|string|min:4|max:250',
             'description' => 'required|string|min:10|max:63206',
             'picture_list' => 'array',
-            'picture_list.*' => 'required|distinct|mimes:jpeg,png|max:3000',
+            'picture_list.*' => 'distinct|mimes:jpeg,png|max:3000',
         ];
     }
 

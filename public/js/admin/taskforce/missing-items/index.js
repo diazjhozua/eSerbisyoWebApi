@@ -130,6 +130,119 @@ function deleteReport(id) {
     $('#confirmationMessage').text('Do you really want to delete this missing item report data? This process cannot be undone. All of the comments related to this report will be deleted');
 }
 
+
+// add or replace the in the datatable
+function addOrReplaceData(data, addOrReplace) {
+
+    col0 = '<td>' + data.id + '</td>';
+    col1 = '<td>' + data.user_name + '(#' + data.user_id + ')' + '(#' + data.user_role + ')' + '</td>';
+    let className = data.report_type == 'Missing' ? 'text-warning' : 'text-info';
+
+    col2 = '<p class="' + className + '"><strong>' + data.report_type + '</strong></p>';
+
+    col3 = '<td>' +
+        '<a href="' + data.picture_link + '" target="_blank">' +
+        '<img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.picture_src + '" class="rounded" alt="' + data.name + ' image">' +
+        '</a>' +
+        '</td>';
+
+    col4 = '<td>' + data.item + '</td>';
+    col5 = '<td>' + data.description + '</td>';
+    col6 = '<td>' + data.last_seen + '</td>';
+
+
+    let col7;
+    if (data.user_id == data.contact_id) {
+        col7 = '<td> Same user </td>';
+    } else {
+        col7 = '<td>' + data.contact_name + '(#' + data.contact_id + ')' + '(#' + data.contact_role + ')' + '</td>';
+    }
+
+    col8 =
+        '<td>' +
+        '<span>Email: <br>' +
+        '<strong>' + data.email + '</strong>' +
+        '</span> <br>' +
+        '<span>Phone No: <br>' +
+        '<strong>' + data.phone_no + '</strong>' +
+        '</span>' +
+        '</td>';
+
+    switch (data.status) {
+        case 'Pending':
+            className = 'bg-info';
+            break;
+        case 'Approved':
+            className = 'bg-white';
+            break;
+        case 'Resolved':
+            className = 'bg-success';
+            break;
+        case 'Denied':
+            className = 'bg-danger';
+            break;
+    }
+
+    col9 = '<td>' +
+        '<div class="p-2 ' + className + ' text-white rounded-pill text-center">' +
+        data.status +
+        '</div>' +
+        '</td>';
+
+    col10 = '<td>' + data.created_at + '</td>';
+
+
+    viewBtn =
+        '<li class="list-inline-item mb-1">' +
+        '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="' + window.location.origin + '/admin/missing-persons/' + data.id + '"><i class="fas fa-eye"></i>' +
+        '</a></li>'
+
+    editBtn =
+        '<li class="list-inline-item mb-1">' +
+        '<button class="btn btn-primary btn-sm" onclick="editReport(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
+        '<i class="fas fa-edit"></i>' +
+        '</button>' +
+        '</li>'
+
+    deleteBtn =
+        '<li class="list-inline-item mb-1">' +
+        '<button class="btn btn-danger btn-sm" onclick="editReport(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+        '<i class="fas fa-trash-alt"></i>' +
+        '</button>' +
+        '</li>'
+
+    col11 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
+
+    // Get table reference - note: dataTable() not DataTable()
+    var table = $('#dataTable').DataTable();
+
+
+    if (addOrReplace == 'Replace') {
+        // if replacing the table row
+        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11]).draw(false);
+    } else {
+        // if adding new table row
+        var currentPage = table.page();
+        table.row.add([col0, col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11]).draw()
+
+        selectedRow = 0
+        var index = table.row(selectedRow).index(),
+            rowCount = table.data().length - 1,
+            insertedRow = table.row(rowCount).data(),
+            tempRow
+
+        for (var i = rowCount; i > index; i--) {
+            tempRow = table.row(i - 1).data()
+            table.row(i).data(tempRow)
+            table.row(i - 1).data(insertedRow)
+        }
+
+        //refresh the page
+        table.page(currentPage).draw(false)
+    }
+
+}
+
 $(document).ready(function () {
 
     // start of pusher //
@@ -152,7 +265,7 @@ $(document).ready(function () {
 
     channel.bind('missingItem-channel', function (data) {
         addOrReplaceData(data.missingItem, 'Add')
-        toastr.warning('User ' + data.missingItem.user_name + 'submitted a report. Please repond to the specific report.')
+        toastr.warning('User ' + data.missingItem.user_name + ' submitted a report. Please repond to the specific report.')
         // add to pending card if it is new report
         $("#thisMonthCount").text(parseInt($("#thisMonthCount").text()) + 1);
         $("#thisMonthPendingCount").text(parseInt($("#thisMonthPendingCount").text()) + 1);

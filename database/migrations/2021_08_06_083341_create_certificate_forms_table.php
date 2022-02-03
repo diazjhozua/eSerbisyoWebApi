@@ -47,6 +47,7 @@ class CreateCertificateFormsTable extends Migration
             $table->string('contact_person_relation')->nullable();
             $table->string('citizenship')->nullable();
             $table->string('purpose')->nullable();
+
             $table->date('date_requested')->nullable();
             $table->date('date_released')->nullable();
             $table->date('date_expiry')->nullable();

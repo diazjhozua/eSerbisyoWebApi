@@ -27,7 +27,6 @@ class ReportController extends Controller
     {
         $types = Type::where('model_type', 'Report')->get();
         return response()->json(['types' => TypeResource::collection($types)], 200);
-
     }
 
     public function store(ReportRequest $request)
