@@ -97,9 +97,9 @@ $(document).ready(function () {
                 maxlength: 63206,
             },
             'picture_list[]': {
-                required: function () {
-                    return $('#method').val() == 'POST'
-                },
+                // required: function () {
+                //     return $('#method').val() == 'POST'
+                // },
                 extension: "jpeg|jpg|png",
                 filesize: 10485760, //10mb in bytes
             },
@@ -212,15 +212,6 @@ $(document).ready(function () {
                 }
             });
 
-            doAjax(formAction, 'POST', formData).then((response) => {
-                if (response.success != null && response.success == true) {
-
-                }
-
-                $('#btnFormSubmit').attr("disabled", false);
-                $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
-                $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            })
         }
     })
 

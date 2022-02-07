@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Events\MissingPersonEvent;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ChangeStatusRequest;
+use App\Http\Requests\Api\MissingPersonRequest;
 use App\Http\Requests\CommentRequest;
-use App\Http\Requests\MissingPersonRequest;
 use App\Http\Resources\CommentResource;
+
 use App\Http\Resources\MissingPersonResource;
 use App\Models\MissingPerson;
 use Illuminate\Support\Facades\Storage;
@@ -18,66 +18,121 @@ class MissingPersonController extends Controller
     public function index()
     {
         // fetch all approved missing person
-        $missing_persons = MissingPerson::withCount('comments')->orderBy('created_at','DESC')->get();
+        $missing_persons = MissingPerson::withCount('comments')->where('status', 'Approved')->orderBy('created_at','DESC')->get();
         return MissingPersonResource::collection($missing_persons)->additional(['success' => true]);
     }
 
-    public function create()
+    public function authReports()
     {
-        $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
-        $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
-        $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
-        return response()->json(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits, 'success' => true]);
+        // fetch all authenticated missing person item
+        $missing_persons = MissingPerson::withCount('comments')->where('contact_user_id', auth('api')->user()->id)->orderBy('created_at','DESC')->get();
+        return MissingPersonResource::collection($missing_persons)->additional(['success' => true]);
+    }
+
+    public function getCommentList(MissingPerson $missingPerson) {
+        $missingPerson = $missingPerson->load('comments');
+        $comments = $missingPerson->comments;
+        return (CommentResource::collection($comments));
+    }
+
+    public function comment(CommentRequest $request, MissingPerson $missingPerson) {
+        $comment = $missingPerson->comments()->create(array_merge($request->validated(), ['user_id' => auth('api')->user()->id]));
+        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 
     public function store(MissingPersonRequest $request)
     {
-        $fileName = time().'_'.$request->picture->getClientOriginalName();
-        $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-        $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => 2,'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
-        event(new MissingPersonEvent($missing_person));
+        $missingFileName = uniqid().time().'.jpg';
+        $missingFilePath = 'missing-pictures/'.$missingFileName;
+        Storage::disk('public')->put($missingFilePath, base64_decode($request->picture));
 
-        $missing_person->comments_count = 0;
-        return (new MissingPersonResource($missing_person))->additional(Helper::instance()->storeSuccess('missing-person report'));
+        $credentialFileName = uniqid().time().'.jpg';
+        $credentialFilePath = 'credentials/'.$credentialFileName;
+        Storage::disk('public')->put($credentialFilePath, base64_decode($request->credential));
+
+        $missingPerson = MissingPerson::create(array_merge($request->getData(),
+            [
+            'user_id' => auth('api')->user()->id, 'contact_user_id' => auth('api')->user()->id, 'status' => 'Pending',
+            'picture_name' => $missingFileName, 'file_path' => $missingFilePath,
+            'credential_name' => $credentialFileName, 'credential_file_path' => $credentialFilePath
+            ]
+        ));
+
+        $missingPerson->comments_count = 0;
+        event(new MissingPersonEvent($missingPerson));
+        return (new MissingPersonResource($missingPerson))->additional(Helper::instance()->storeSuccess('missing person report'));
+
     }
 
-    public function show(MissingPerson $missingPerson)
-    {
-        $statuses = [ (object)[ "id" => 1, "name" => "Pending"], (object) ["id" => 2,"type" => "Denied"] ,
-            (object) ["id" => 3,"type" => "Approved"], (object) ["id" => 4,"type" => "Resolved"] ];
-        return (new MissingPersonResource($missingPerson->load('comments')->loadCount('comments')))->additional(array_merge(['statuses' => $statuses],Helper::instance()->itemFound('missing-person report')));
-    }
+    // public function show(MissingPerson $missingPerson)
+    // {
+    //     return (new MissingPersonResource($missingPerson->load('comments')->loadCount('comments')))->additional(array_merge(['statuses' => $statuses],Helper::instance()->itemFound('missing-person report')));
+    // }
 
     public function edit(MissingPerson $missingPerson)
     {
-        $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
-        $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
-        $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
-        return (new MissingPersonResource($missingPerson))->additional(array_merge(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits], Helper::instance()->itemFound('missing-person report')));
+        // $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
+        // $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
+        // $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
+
+        if ($missingPerson->contact_user_id != auth('api')->user()->id) {
+            return response()->json(["message" => "You can only edit your reports."], 403);
+        }
+
+        return (new MissingPersonResource($missingPerson->loadCount('comments')));
+        // return (new MissingPersonResource($missingPerson))->additional(array_merge(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits], Helper::instance()->itemFound('missing-person report')));
     }
 
     public function update(MissingPersonRequest $request, MissingPerson $missingPerson)
     {
-        if($request->hasFile('picture')) {
-            Storage::delete('public/missing-pictures/'. $missingPerson->picture_name);
-            $fileName = time().'_'.$request->picture->getClientOriginalName();
-            $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-            $missingPerson->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
-        } else {   $missingPerson->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
-        return (new MissingPersonResource($missingPerson->load('comments')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-person report'));
+
+        if ($missingPerson->contact_user_id != auth('api')->user()->id) {
+            return response()->json(["message" => "You can only update your reports."], 403);
+        }
+
+        $missingFileName = $missingPerson->picture_name;
+        $missingFilePath = $missingPerson->file_path;
+        $credentialFileName = $missingPerson->credential_name;
+        $credentialFilePath = $missingPerson->credential_file_path;
+
+        if ($request->picture != '') {
+            if($missingPerson->picture_name != '') {
+                Storage::delete('public/missing-pictures/'. $missingPerson->picture_name);
+            }
+
+            $missingFileName = uniqid().time().'.jpg';
+            $missingFilePath = 'missing-pictures/'.$missingFileName;
+            Storage::disk('public')->put($missingFilePath, base64_decode($request->picture));
+        }
+
+        if ($request->credential != '') {
+            if($missingPerson->credential_name != '') {
+                Storage::delete('public/credentials/'. $missingPerson->credential_name);
+            }
+            $credentialFileName = uniqid().time().'.jpg';
+            $credentialFilePath = 'credentials/'.$credentialFileName;
+            Storage::disk('public')->put($credentialFilePath, base64_decode($request->credential));
+        }
+
+        $missingPerson->fill(array_merge($request->getData(),             [
+            'status' => 'Pending',
+            'picture_name' => $missingFileName, 'file_path' => $missingFilePath,
+            'credential_name' => $credentialFileName, 'credential_file_path' => $credentialFilePath,
+            ]))->save();
+
+        return (new MissingPersonResource($missingPerson->load('comments')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing person report'));
     }
 
-    public function destroy(MissingPerson $missing_person)
+    public function destroy(MissingPerson $missingPerson)
     {
-        Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
-        $missing_person->delete();
-        return response()->json(Helper::instance()->destroySuccess('missing-person report'));
-    }
+        if ($missingPerson->contact_user_id != auth('api')->user()->id) {
+            return response()->json(["message" => "You can only delete your reports."], 403);
+        }
 
-
-    public function comment(CommentRequest $request, MissingPerson $missing_person) {
-        $comment = $missing_person->comments()->create(array_merge($request->validated(), ['user_id' => 2]));
-        return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
+        Storage::delete('public/missing-pictures/'. $missingPerson->picture_name);
+        Storage::delete('public/credentials/'. $missingPerson->credential_name);
+        $missingPerson->delete();
+        return response()->json(Helper::instance()->destroySuccess('missing person report'));
     }
 
     // public function changeStatus(ChangeStatusRequest $request, MissingPerson $missing_person) {
@@ -88,5 +143,14 @@ class MissingPersonController extends Controller
     //     $missing_person->fill($request->validated())->save();
     //     return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
     // }
+
+    //     public function create()
+    // {
+    //     $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
+    //     $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
+    //     $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
+    //     return response()->json(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits, 'success' => true]);
+    // }
+
 
 }

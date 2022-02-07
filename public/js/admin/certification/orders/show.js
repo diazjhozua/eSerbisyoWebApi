@@ -6,12 +6,14 @@ const BTN_PICKUP_DATE = $('#btnChangePickupDate');
 const BTN_ADMIN_MESSAGE = $('#btnChangeAdminMessage');
 const BTN_APPLICATION_STATUS = $('#btnChangeApplicationStatus');
 const BTN_ORDER_STATUS = $('#btnChangeOrderStatus');
+const BTN_DELIVERY_PAYMENT = $('#btnDeliveryPayment');
 
 const INPUT_SEL_PICKUP_STATUS = $('#inputSelPickupStatus');
 const INPUT_PICKUP_DATE = $('#inputPickupDate');
 const INPUT_ADMIN_MESSAGE = $('#inputAdminMessage');
 const INPUT_SEL_APPLICATION_STATUS = $('#inputSelApplicationStatus');
 const INPUT_SEL_ORDER_STATUS = $('#inputSelOrderStatus');
+const INPUT_SEL_DELIVERY_PAYMENT = $('#inputDeliveryPayment');
 const INPUT_ORDER_ID = $('#inputOrderID');
 
 
@@ -59,6 +61,7 @@ const CONT_BUSINESS = $('.businessContainer');
 const CONT_IDENTIFICATION = $('.identificationContainer');
 
 var pickup_date = null;
+var delivery_payment_status = null;
 var application_status = null;
 var pick_up_type = null;
 var order_status = null;
@@ -205,7 +208,10 @@ function editOrderStatus() {
         formData.append('order_status', order_status);
     } else if (admin_message != null) {
         formData.append('admin_message', admin_message);
+    } else if (delivery_payment_status != null) {
+        formData.append('delivery_payment_status', delivery_payment_status);
     }
+
 
     $.ajax({
         type: 'POST',
@@ -227,6 +233,8 @@ function editOrderStatus() {
             pick_up_type = null;
             order_status = null;
             admin_message = null;
+
+            window.location.reload(true);
         },
         error: function (xhr, status, error) {
             var err = JSON.parse(xhr.responseText);
@@ -314,6 +322,18 @@ $(document).ready(function () {
             toastr.error('Order status value is incorrect. Do not manipulate DOM elements');
         } else {
             order_status = INPUT_SEL_ORDER_STATUS.val();
+            editOrderStatus();
+        }
+    });
+
+
+    BTN_DELIVERY_PAYMENT.click(function () {
+        deliveryPayStat = ['Pending', 'Received'];
+
+        if (!deliveryPayStat.includes(INPUT_SEL_DELIVERY_PAYMENT.val())) {
+            toastr.error('Biker payment status value is incorrect. Do not manipulate DOM elements');
+        } else {
+            delivery_payment_status = INPUT_SEL_DELIVERY_PAYMENT.val();
             editOrderStatus();
         }
     });

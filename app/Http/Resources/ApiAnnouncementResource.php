@@ -2,17 +2,16 @@
 
 namespace App\Http\Resources;
 
-use App\Models\AnnouncementPicture;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 
-class AnnouncementResource extends JsonResource
+class ApiAnnouncementResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -28,6 +27,9 @@ class AnnouncementResource extends JsonResource
                 'announcement_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
             'custom_type' => $this->custom_type,
+            $this->mergeWhen($this->relationLoaded('likes'), [
+                'selfLike' => $this->selfLike(),
+            ]),
             'title' => $this->title,
             'description' => $this->description,
             'announcement_pictures' => AnnouncementPictureResource::collection($announcement_pictures),

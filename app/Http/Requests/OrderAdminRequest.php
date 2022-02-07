@@ -20,7 +20,7 @@ class OrderAdminRequest extends FormRequest
                 'name' => 'required|string|min:3|max:100',
                 'email' => 'required|max:150|email',
                 'phone_no' => 'required|numeric',
-                'location_address' => 'required|string|min:3|max:100',
+                'location_address' => 'required|string|min:3|max:200',
                 'certificate_forms' => 'required|array|between:1,10',
                 'certificate_forms.*.first_name' => 'required|string|min:4|max:150',
                 'certificate_forms.*.middle_name' => 'required|string|min:4|max:150',
@@ -56,6 +56,7 @@ class OrderAdminRequest extends FormRequest
                 'application_status' => [Rule::in(['Pending', 'Cancelled', 'Approved', 'Denied'])],
                 'pick_up_type' => [Rule::in(['Walkin', 'Pickup', 'Delivery'])],
                 'order_status' => [Rule::in(['Waiting', 'Received', 'DNR'])],
+                'delivery_payment_status' => [Rule::in(['Pending', 'Received'])],
                 'pickup_date' => ['date', 'date_format:Y-m-d'],
                 'admin_message' => ['string', 'min:4', 'max:250'],
             ];

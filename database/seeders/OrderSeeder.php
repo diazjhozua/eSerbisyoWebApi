@@ -19,8 +19,6 @@ class OrderSeeder extends Seeder
 
     public function run()
     {
-
-
         $faker = \Faker\Factory::create();
 
         $users = User::where('is_verified', '=', 1)->get();
@@ -37,14 +35,31 @@ class OrderSeeder extends Seeder
                 $long = $faker->longitude();
                 $lat = $faker->latitude();
 
+                $fileName = null;
+                $filePath = null;
+
+                if ($pickup == "Delivery") {
+                    $fileName = $faker->file($sourceDir = 'C:\Project Assets\AppMissingPersons', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\orders', false);
+                    $filePath = 'orders/'.$fileName;
+                }
+
+                $admin_message = null;
+                if ($application != 'Pending') {
+                    $admin_message = $faker->realText($maxNbChars = 50, $indexSize = 1);
+                }
+
+                $pickupDate = $faker->date($format = 'Y-m-d', $max = 'now');
                 $order = Order::create([
                     'ordered_by' => $user->id,
                     'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
                     // 'total_price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
+                    'name' => $faker->name,
                     'pick_up_type' => $pickup,
                     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
-                    'pickup_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                    'pickup_date' => $pickupDate,
+                    'received_at' => $pickup === 'Delivery' ? $faker->date($format = 'Y-m-d', $max = 'now') : $pickupDate,
                     'application_status' => $application,
+                    'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
                     'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',
                     'location_address' => $faker->address(),
                     'email' => $faker->lastName.$faker->email,
@@ -53,6 +68,9 @@ class OrderSeeder extends Seeder
                     'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
                     'rider_long' => $pickup === 'Delivery' ? $long : NULL,
                     'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                    'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
+                    'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
+                    'admin_message' => $admin_message,
                     'created_at' => $date,
                     'updated_at' => $date,
                 ]);

@@ -7,21 +7,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AnnouncementRequest;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\AnnouncementResource;
+use App\Http\Resources\ApiAnnouncementResource;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\LikeResource;
-use App\Http\Resources\TypeResource;
 use App\Models\Announcement;
-use App\Models\AnnouncementPicture;
-use App\Models\Type;
+
 
 class AnnouncementController extends Controller
 {
     public function index()
     {
         $announcements = Announcement::with('type','announcement_pictures')->withCount('comments', 'likes')->with('likes')->orderBy('created_at', 'DESC')->get();
-        return AnnouncementResource::collection($announcements)->additional(['success' => true]);
+        return ApiAnnouncementResource::collection($announcements)->additional(['success' => true]);
     }
-
 
     public function getLikeList(Announcement $announcement) {
         $announcement = $announcement->load('likes');

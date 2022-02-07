@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use App\Http\Requests\Api\FormRequest;
 use App\Rules\OneOf;
@@ -9,15 +9,14 @@ use Log;
 
 class ComplaintRequest extends FormRequest
 {
-
     public function authorize()
     {
         return true;
     }
 
+
     public function rules()
     {
-
         if ($this->isMethod('POST')) {
             return [
                 'type_id' => ['required_without:custom_type', new OneOf($this, ["type_id", "custom_type"]), Rule::exists('types', 'id')->where(function ($query) {
@@ -88,4 +87,8 @@ class ComplaintRequest extends FormRequest
         return $data;
     }
 
+        public function getApiData() {
+        $data = $this->only(['type_id', 'contact_user_id', 'email', 'phone_no',  'custom_type', 'reason', 'action']);
+        return $data;
+    }
 }

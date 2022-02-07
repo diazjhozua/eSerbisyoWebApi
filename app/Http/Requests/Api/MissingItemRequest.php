@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use App\Http\Requests\Api\FormRequest;
 use Illuminate\Validation\Rule;
 
 class MissingItemRequest extends FormRequest
 {
-
     public function authorize()
     {
         return true;
@@ -18,26 +17,26 @@ class MissingItemRequest extends FormRequest
         if ($this->isMethod('POST')) {
             return [
                 'item' => 'required|string|min:3|max:120',
-                'contact_user_id' => 'exists:users,id',
                 'last_seen' => 'required|string|min:3|max:120',
                 'description' => 'required|string|min:3|max:250',
-                'email' => 'required|max:30|email',
+                'email' => 'required|max:150|email',
                 'phone_no' => 'required|numeric',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],
-                'picture' => 'required|mimes:jpeg,png|max:3000',
+                'picture' =>  'required|base64image',
+                'credential' =>  'required|base64image',
             ];
         }
 
         if ($this->isMethod('PUT')) {
             return [
                 'item' => 'required|string|min:3|max:120',
-                'contact_user_id' => 'exists:users,id',
                 'last_seen' => 'required|string|min:3|max:120',
                 'description' => 'required|string|min:3|max:250',
-                'email' => 'required|max:30|email',
+                'email' => 'required|max:150|email',
                 'phone_no' => 'required|numeric',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],
-               'picture' => 'mimes:jpeg,png|max:3000',
+                'picture' =>  'base64image',
+                'credential' =>  'base64image',
             ];
         }
     }

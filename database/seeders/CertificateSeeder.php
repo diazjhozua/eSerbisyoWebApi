@@ -44,39 +44,38 @@ class CertificateSeeder extends Seeder
             'name' => 'Municipal Business Permit',
         ]);
 
-
         Certificate::create([
             'name' => 'Barangay Indigency',
             'price' => 100,
-            'status' => $status[array_rand($status)],
+            'status' => "Available",
             'is_open_delivery' => $faker->numberBetween(0, 1),
         ]);
 
         Certificate::create([
             'name' => 'Barangay Cedula',
             'price' => 150,
-            'status' => $status[array_rand($status)],
+            'status' => "Available",
             'is_open_delivery' => $faker->numberBetween(0, 1),
         ]);
 
         Certificate::create([
             'name' => 'Barangay Clearance',
             'price' => 100,
-            'status' => $status[array_rand($status)],
+            'status' => "Available",
             'is_open_delivery' => $faker->numberBetween(0, 1),
         ]);
 
         Certificate::create([
             'name' => 'Barangay ID',
             'price' => 100,
-            'status' => $status[array_rand($status)],
+            'status' => "Available",
             'is_open_delivery' => $faker->numberBetween(0, 1),
         ]);
 
         Certificate::create([
             'name' => 'Barangay Business Permit',
             'price' => 100,
-            'status' => $status[array_rand($status)],
+            'status' => "Available",
             'is_open_delivery' => $faker->numberBetween(0, 1),
         ]);
 

@@ -10,7 +10,6 @@ use App\Models\CertificateForm;
 use App\Models\CertificateFormOrder;
 use App\Models\Order;
 use Helper;
-use Illuminate\Http\Request;
 
 class CertificateFormController extends Controller
 {
@@ -53,8 +52,6 @@ class CertificateFormController extends Controller
                 $certificateForm->fill($request->getPutBusinessData())->save();
                 break;
             default:
-
-
         }
 
         $certificateOrder = CertificateFormOrder::where('certificate_form_id', $certificateForm->id)->orderBy('created_at','DESC')->first();

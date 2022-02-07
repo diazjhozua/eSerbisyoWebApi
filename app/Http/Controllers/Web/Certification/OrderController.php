@@ -72,7 +72,6 @@ class OrderController extends Controller
                         Log::debug($value['cedula_type']);
                         $isCompleteFormFields = false;
                     }
-
                     break;
                 case 3:
                     // Barangay Clearance
@@ -115,6 +114,7 @@ class OrderController extends Controller
                     'phone_no' => $request->phone_no,
                     'location_address' => $request->location_address,
                     'pickup_date' => now(),
+                    'received_at' => now(),
                     'application_status' => 'Approved',
                     'admin_message' => 'No need to respond (Walkin)',
                     'pick_up_type' => 'Walkin',
@@ -294,7 +294,11 @@ class OrderController extends Controller
             (object) ["id" => 2, "type" => "DNR"]
         ];
 
-        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements'));
+        $deliveryPayments = [
+            (object)[ "id" => 1, "type" => "Pending"], (object) ["id" => 2, "type" => "Received"],
+        ];
+
+        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements', 'deliveryPayments'));
     }
 
     public function edit(Order $order)
@@ -308,7 +312,13 @@ class OrderController extends Controller
             $subject = 'Order\'s Application Status Notification';
             $changeValue =  'application_status';
             Log::debug('Application Status');
-            $order->fill(['application_status' => $request->application_status])->save();
+
+            if ($request->application_status == 'Denied' || $request->application_status == 'Cancelled') {
+                $order->fill(['order_status' => '', 'application_status' => $request->application_status])->save();
+            } else {
+                $order->fill(['application_status' => $request->application_status])->save();
+            }
+
             $order = $order->load('certificateForms');
             $ids = $order->certificateForms()->pluck('id');
             foreach($ids as $id) {
@@ -338,9 +348,13 @@ class OrderController extends Controller
             $subject = 'Order\'s Admin Message Notification';
             $changeValue =  'admin_message';
             $order->fill(['admin_message' => $request->admin_message])->save();
+        } else {
+            $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
+        }
+        if (!isset($request->delivery_payment_status)) {
+            dispatch(new OrderStatusJob($order, $subject, $changeValue));
         }
 
-        dispatch(new OrderStatusJob($order, $subject, $changeValue));
         return response()->json(['message' => 'Order status has been updated' ], 200);
     }
 

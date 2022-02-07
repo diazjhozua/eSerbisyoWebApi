@@ -41,13 +41,15 @@ class DatabaseSeeder extends Seeder
         Storage::delete($files);
         $files = Storage::allFiles('public/requirements/');
         Storage::delete($files);
+        $files = Storage::allFiles('public/orders/');
+        Storage::delete($files);
 
         $this->call([
             PurokSeeder::class,
             UserRoleSeeder::class,
             UserSeeder::class,
 
-            // // Type Seeder
+            // Type Seeder
             FeedbackTypeSeeder::class,
             DocumentTypeSeeder::class,
             OrdinanceTypeSeeder::class,
@@ -56,20 +58,20 @@ class DatabaseSeeder extends Seeder
             ComplaintTypeSeeder::class,
             ReportTypeSeeder::class,
 
-            FeedbackSeeder::class,
-            DocumentSeeder::class,
-            OrdinanceSeeder::class,
-            ProjectSeeder::class,
-            TermSeeder::class,
-            PositionSeeder::class,
-            EmployeeSeeder::class,
-            AnnouncementSeeder::class,
+            // FeedbackSeeder::class,
+            // DocumentSeeder::class,
+            // OrdinanceSeeder::class,
+            // ProjectSeeder::class,
+            // TermSeeder::class,
+            // PositionSeeder::class,
+            // EmployeeSeeder::class,
+            // AnnouncementSeeder::class,
             // AndroidSeeder::class,
 
             // MissingPersonSeeder::class,
             // MissingItemSeeder::class,
             // ComplaintSeeder::class,
-            ReportSeeder::class,
+            // ReportSeeder::class,
 
             CertificateSeeder::class,
             UserRequirementSeeder::class,
