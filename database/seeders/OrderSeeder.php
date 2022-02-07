@@ -48,6 +48,7 @@ class OrderSeeder extends Seeder
                     $admin_message = $faker->realText($maxNbChars = 50, $indexSize = 1);
                 }
 
+                $pickupDate = $faker->date($format = 'Y-m-d', $max = 'now');
                 $order = Order::create([
                     'ordered_by' => $user->id,
                     'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
@@ -55,7 +56,8 @@ class OrderSeeder extends Seeder
                     'name' => $faker->name,
                     'pick_up_type' => $pickup,
                     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
-                    'pickup_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+                    'pickup_date' => $pickupDate,
+                    'received_at' => $pickup === 'Delivery' ? $faker->date($format = 'Y-m-d', $max = 'now') : $pickupDate,
                     'application_status' => $application,
                     'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
                     'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',

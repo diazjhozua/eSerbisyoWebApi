@@ -114,6 +114,7 @@ class OrderController extends Controller
                     'phone_no' => $request->phone_no,
                     'location_address' => $request->location_address,
                     'pickup_date' => now(),
+                    'received_at' => now(),
                     'application_status' => 'Approved',
                     'admin_message' => 'No need to respond (Walkin)',
                     'pick_up_type' => 'Walkin',
@@ -311,7 +312,13 @@ class OrderController extends Controller
             $subject = 'Order\'s Application Status Notification';
             $changeValue =  'application_status';
             Log::debug('Application Status');
-            $order->fill(['application_status' => $request->application_status])->save();
+
+            if ($request->application_status == 'Denied' || $request->application_status == 'Cancelled') {
+                $order->fill(['order_status' => '', 'application_status' => $request->application_status])->save();
+            } else {
+                $order->fill(['application_status' => $request->application_status])->save();
+            }
+
             $order = $order->load('certificateForms');
             $ids = $order->certificateForms()->pluck('id');
             foreach($ids as $id) {
@@ -344,7 +351,6 @@ class OrderController extends Controller
         } else {
             $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
         }
-
         if (!isset($request->delivery_payment_status)) {
             dispatch(new OrderStatusJob($order, $subject, $changeValue));
         }

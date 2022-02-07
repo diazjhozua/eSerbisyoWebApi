@@ -9,7 +9,6 @@ class CreateOrdersTable extends Migration
 
     public function up()
     {
-
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ordered_by')->nullable()->constrained('users')->onDelete('cascade');
@@ -21,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->float('total_price', 100,2)->default(0);
             $table->float('delivery_fee', 200,2)->default(0);
             $table->date('pickup_date')->nullable();
+            $table->date('received_at')->nullable();
             $table->enum('application_status', ['Pending', 'Cancelled', 'Approved', 'Denied'])->default('Pending');
             $table->enum('delivery_payment_status', ['Pending', 'Received'])->nullable();
             $table->enum('pick_up_type', ['Walkin', 'Pickup', 'Delivery'])->default('Pickup');

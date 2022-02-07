@@ -233,6 +233,8 @@ function editOrderStatus() {
             pick_up_type = null;
             order_status = null;
             admin_message = null;
+
+            window.location.reload(true);
         },
         error: function (xhr, status, error) {
             var err = JSON.parse(xhr.responseText);
