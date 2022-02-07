@@ -346,7 +346,7 @@
         <div class="col-md-8 col-sm-8">
 
             @if ($order->application_status == 'Approved')
-  <a type="button" class="btn btn-outline-primary btn-sm btn-block m-2" id="printReceipt" href="{{ route('admin.orders.receipt', $order->id) }}" target="_blank">Print Receipt</a>
+                <a type="button" class="btn btn-outline-primary btn-sm btn-block m-2" id="printReceipt" href="{{ route('admin.orders.receipt', $order->id) }}" target="_blank">Print Receipt</a>
             @endif
 
             <div class="row">

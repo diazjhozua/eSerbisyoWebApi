@@ -89,6 +89,7 @@ Route::group([
     Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);
 
     Route::get('orders/create/{pickupType}', [OrderController::class, 'create']);
+    Route::post('orders/submitReport/{order}', [OrderController::class, 'submitReport']);
     Route::get('orders/certificates', [OrderController::class, 'certificates']);
     Route::resource('orders', OrderController::class)->except(['create']);
 });

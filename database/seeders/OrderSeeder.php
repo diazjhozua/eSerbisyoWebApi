@@ -219,6 +219,8 @@ class OrderSeeder extends Seeder
         }
 
 
+
+
         // foreach ($users as $user) {
         //     $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
         //     $userForms = CertificateForm::with('certificate')->where('user_id', $user->id)->get();

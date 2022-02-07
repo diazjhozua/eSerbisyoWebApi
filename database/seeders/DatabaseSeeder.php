@@ -76,6 +76,7 @@ class DatabaseSeeder extends Seeder
             CertificateSeeder::class,
             UserRequirementSeeder::class,
             OrderSeeder::class,
+            OrderReportSeeder::class,
         ]);
     }
 }

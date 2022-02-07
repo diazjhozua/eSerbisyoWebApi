@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\OrderReportRequest;
 use App\Http\Requests\Api\OrderRequest;
 use App\Http\Resources\CertificateResource;
 use App\Http\Resources\OrderResource;
@@ -10,6 +11,7 @@ use App\Models\Certificate;
 use App\Models\CertificateForm;
 use App\Models\CertificateOrder;
 use App\Models\Order;
+use App\Models\OrderReport;
 use App\Models\UserRequirement;
 use DB;
 use Helper;
@@ -272,19 +274,29 @@ class OrderController extends Controller
         if ($order->ordered_by != auth('api')->user()->id) {
             return response()->json(["message" => "You can only view your submitted order."], 403);
         }
-        return response()->json(["data" => $order->load('contact', 'biker', 'certificateForms')], 200);
-    }
-
-    public function edit(Order $order)
-    {
-        //
+        return response()->json(["data" => $order->load('contact', 'biker', 'certificateForms', 'orderReports')], 200);
     }
 
 
-    public function update(Request $request, Order $order)
-    {
-        //
+    public function submitReport(OrderReportRequest $request, Order $order) {
+        if ($order->ordered_by != auth('api')->user()->id && $order->delivered_by != auth('api')->user()->id) {
+            return response()->json(["message" => "You can only submit report in your transaction."], 403);
+        }
+
+        if (OrderReport::where('order_id', $order->id)->where('user_id', auth('api')->user()->id)->exists()) {
+            return response()->json(["message" => "You have already submitted in this report."], 403);
+        }
+
+        OrderReport::create([
+            'user_id' => auth('api')->user()->id,
+            'order_id' => $order->id,
+            'body' => $request->body,
+            'status' => "Pending",
+        ]);
+
+        return response()->json(["message" => "Report submitted successfully."], 200);
     }
+
 
     public function destroy(Order $order)
     {

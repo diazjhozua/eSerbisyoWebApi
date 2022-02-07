@@ -314,7 +314,7 @@ class OrderController extends Controller
             Log::debug('Application Status');
 
             if ($request->application_status == 'Denied' || $request->application_status == 'Cancelled') {
-                $order->fill(['order_status' => '', 'application_status' => $request->application_status])->save();
+                $order->fill(['order_status' => 'Pending', 'application_status' => $request->application_status])->save();
             } else {
                 $order->fill(['application_status' => $request->application_status])->save();
             }
@@ -336,9 +336,15 @@ class OrderController extends Controller
             } else {
                 $order->fill(['pick_up_type' => $request->pick_up_type])->save();
             }
+
         } elseif(isset($request->order_status)) {
             $subject = 'Order\'s Status Notification';
             $changeValue =  'order_status';
+
+            if ($request->order_status == 'Received') {
+                $order->fill(['order_status' => $request->order_status, 'received_at' => now()])->save();
+            }
+
             $order->fill(['order_status' => $request->order_status])->save();
         } elseif(isset($request->pickup_date)) {
             $subject = 'Order\'s Pickup Date Notification';

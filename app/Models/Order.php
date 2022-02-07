@@ -40,4 +40,8 @@ class Order extends Model
         return $this->belongsTo(User::class, 'delivered_by', 'id');
     }
 
+    public function orderReports(){
+        return $this->hasMany(OrderReport::class);
+    }
+
 }
