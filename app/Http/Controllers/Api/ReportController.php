@@ -33,9 +33,9 @@ class ReportController extends Controller
     {
         $authReportCount = Report::whereDate('created_at', Carbon::today())->where('user_id', auth('api')->user()->id)->count();
 
-        // if ($authReportCount > 3) {
-        //     return response()->json(["message" => "You have already submitted to many report within this day, please comeback tommorow to submit another report"], 403);
-        // }
+        if ($authReportCount > 3) {
+            return response()->json(["message" => "You have already submitted to many report within this day, please comeback tommorow to submit another report"], 403);
+        }
 
         if($request->picture != ''){
             $fileName = uniqid().time().'.jpg';
