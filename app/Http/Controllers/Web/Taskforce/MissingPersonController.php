@@ -106,7 +106,6 @@ class MissingPersonController extends Controller
             $subject = 'Missing Person Report Change Status Notification';
             $reportName = 'missing person report';
             dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject));
-
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
     }

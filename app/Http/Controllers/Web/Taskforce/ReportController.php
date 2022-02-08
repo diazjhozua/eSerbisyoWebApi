@@ -16,7 +16,6 @@ class ReportController extends Controller
 
     public function index()
     {
-
         $reportsData =  DB::table('reports')
         ->selectRaw('count(*) as reports_count')
         ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")

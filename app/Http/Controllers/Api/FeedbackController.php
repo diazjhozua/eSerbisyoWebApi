@@ -32,6 +32,7 @@ class FeedbackController extends Controller
         if (Feedback::whereDate('created_at', Carbon::today())->where('user_id', auth('api')->user()->id)->exists()) {
             return response()->json(["message" => "You have already submitted feedback within this day, please comeback tommorow to submit another feedback"], 403);
         }
+
         $feedback = Feedback::create(array_merge($request->validated(), ['status' => 'Pending','user_id' => auth('api')->user()->id]));
         event(new FeedbackEvent($feedback->load('type')));
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->storeSuccess('feedback'));
