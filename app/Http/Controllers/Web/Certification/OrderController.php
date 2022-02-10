@@ -289,16 +289,27 @@ class OrderController extends Controller
             (object)[ "id" => 1, "type" => "Pickup"], (object) ["id" => 2, "type" => "Delivery"],
         ];
 
-        $orderType = [
-            (object)[ "id" => 1, "type" => "Waiting"], (object) ["id" => 2, "type" => "Received"],
-            (object) ["id" => 2, "type" => "DNR"]
-        ];
+        if ($order->pick_up_type == "Delivery") {
+            $orderType = [
+                (object)[ "id" => 1, "type" => "Waiting"], (object) ["id" => 2, "type" => "On-Going"]
+            ];
+
+        } else {
+            $orderType = [
+                (object)[ "id" => 1, "type" => "Waiting"], (object) ["id" => 2, "type" => "Received"],
+                (object) ["id" => 2, "type" => "DNR"]
+            ];
+        }
 
         $deliveryPayments = [
             (object)[ "id" => 1, "type" => "Pending"], (object) ["id" => 2, "type" => "Received"],
         ];
 
-        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements', 'deliveryPayments'));
+        $isReturns = [
+            (object)[ "id" => 1, "type" => "No"], (object) ["id" => 2, "type" => "Yes"],
+        ];
+
+        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements', 'deliveryPayments', 'isReturns'));
     }
 
     public function edit(Order $order)
@@ -345,6 +356,10 @@ class OrderController extends Controller
                 $order->fill(['order_status' => $request->order_status, 'received_at' => now()])->save();
             }
 
+            if ($request->order_status == 'DNR') {
+                $order->fill(['order_status' => $request->order_status, 'received_at' => now(), 'received_at' => now(), 'is_returned', "No"])->save();
+            }
+
             $order->fill(['order_status' => $request->order_status])->save();
         } elseif(isset($request->pickup_date)) {
             $subject = 'Order\'s Pickup Date Notification';
@@ -354,11 +369,16 @@ class OrderController extends Controller
             $subject = 'Order\'s Admin Message Notification';
             $changeValue =  'admin_message';
             $order->fill(['admin_message' => $request->admin_message])->save();
-        } else {
-            $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
         }
-        if (!isset($request->delivery_payment_status)) {
-            dispatch(new OrderStatusJob($order, $subject, $changeValue));
+
+        if(isset($request->delivery_payment_status)) {
+            $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
+        } elseif(isset($request->is_returned)) {
+            $order->fill(['is_returned' => $request->is_returned])->save();
+        } else {
+            if (!isset($request->delivery_payment_status)) {
+                dispatch(new OrderStatusJob($order, $subject, $changeValue));
+            }
         }
 
         return response()->json(['message' => 'Order status has been updated' ], 200);

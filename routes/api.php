@@ -97,12 +97,14 @@ Route::group([
     // bikers routes
     Route::get('bikers/latestVerification', [BikerController::class, 'latestVerification']);
     Route::post('bikers/postVerification', [BikerController::class, 'postVerification']);
+    Route::get('bikers/getAuthAnalytics', [BikerController::class, 'getAuthAnalytics']);
     Route::get('bikers/getAuthTransaction', [BikerController::class, 'getAuthTransaction']);
     Route::get('bikers/getListOrders', [BikerController::class, 'getListOrders']);
     Route::get('bikers/getOrderDetails/{order}', [BikerController::class, 'getOrderDetails']);
     Route::put('bikers/bookedOrder/{order}', [BikerController::class, 'bookedOrder']);
     Route::put('bikers/startRiding/{order}', [BikerController::class, 'startRiding']);
     Route::put('bikers/confirmReceiveOrder/{order}', [BikerController::class, 'confirmReceiveOrder']);
+    Route::put('bikers/confirmDNROrder/{order}', [BikerController::class, 'confirmDNROrder']);
 });
 
 // Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);

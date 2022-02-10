@@ -107,52 +107,41 @@
                             <textarea class="form-control" name="inputOrderLocation" id="inputOrderLocation" rows="2" disabled>{{ $order->location_address }}</textarea>
                         </div>
 
-                        @if ($order->pick_up_type == 'Walkin')
-                            {{-- Pickup Type for walkin  --}}
-                            <div class="form-group">
-                                <label for="inputOrderName">Pickup Type</label>
-                                <input type="text" class="form-control" name="inputOrderName" id="inputOrderName" value="{{ $order->pick_up_type }}" disabled>
-                                <small class="form-text text-muted">Name of the specified customer</small>
-                            </div>
+                        {{-- Pickup Type for walkin  --}}
+                        <div class="form-group">
+                            <label for="inputOrderName">Pickup Type</label>
+                            <input type="text" class="form-control" name="inputOrderName" id="inputOrderName" value="{{ $order->pick_up_type }}" disabled>
+                            <small class="form-text text-muted">Name of the specified customer</small>
+                        </div>
 
+                        @if ($order->pick_up_type == 'Walkin')
                             {{-- Pickup Date --}}
                             <div class="form-group">
                                 <label for="inputPickupDate">Pickup Date</label>
-                                 <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->pickup_date }}" aria-label="Select Pickup Date" disabled>
+                                <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->pickup_date }}" aria-label="Select Pickup Date" disabled>
                             </div>
                         @else
-                            {{-- Pickup type for not walkin --}}
-                            <label>Pickup Type</label>
-                            <div class="input-group mb-2">
-                                <select class="custom-select" id="inputSelPickupStatus" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' ? 'disabled' : '' }}>
-                                    <option value="{{ $order->pick_up_type }}" selected>{{ $order->pick_up_type }}</option>
-                                    @forelse ($pickupType as $pickup)
-                                        @if ($order->pick_up_type != $pickup->type)
-                                            <option value="{{ $pickup->type }}">{{ $pickup->type }} </option>
-                                        @endif
-                                    @empty
-                                        <option value="">Error! Please refresh the page</option>
-                                    @endforelse
-                                </select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="btnChangePickupStatus" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' ? 'disabled' : '' }}>Change</button>
-                                </div>
-                            </div>
-
                             {{-- Pickup date for not walkin --}}
                             <label>Pickup Date</label>
                             <div class="input-group mb-2">
-                                <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->pickup_date }}" aria-label="Select Pickup Date" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' ? 'disabled' : '' }}>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="btnChangePickupDate"  {{ $order->order_status == 'Received' || $order->application_status == 'Denied' ? 'disabled' : '' }}>Change</button>
-                                </div>
+                                <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->pickup_date }}" aria-label="Select Pickup Date" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->order_status == 'DNR' ? 'disabled' : '' }}>
+                                @if ($order->order_status != 'Received' && $order->application_status != 'Denied' && $order->order_status != 'DNR')
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="btnChangePickupDate">Change</button>
+                                    </div>
+                                @endif
+
                             </div>
 
                             {{-- Latest Admin Message --}}
                             <div class="form-group">
                                 <label for="inputAdminMessage">Latest Admin Message</label>
-                                <textarea class="form-control" name="inputAdminMessage" id="inputAdminMessage" rows="2" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' ? 'disabled' : '' }}>{{ $order->admin_message }}</textarea>
-                                <button class="btn btn-outline-primary mt-2" type="button" id="btnChangeAdminMessage" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' ? 'disabled' : '' }}>Send Message</button>
+                                <textarea class="form-control" name="inputAdminMessage" id="inputAdminMessage" rows="2" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->order_status == 'DNR' ? 'disabled' : '' }}>{{ $order->admin_message }}</textarea>
+                                @if ($order->order_status != 'Received' && $order->application_status != 'Denied' && $order->order_status != 'DNR')
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary mt-2" type="button" id="btnChangeAdminMessage" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->order_status == 'DNR' ? 'disabled' : '' }}>Send Message</button>
+                                    </div>
+                                @endif
                             </div>
                         @endif
 
@@ -407,6 +396,26 @@
                     </select>
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button" id="btnDeliveryPayment" {{ $order->application_status == 'Denied' || $order->delivery_payment_status == 'Received'  ? 'disabled' : ''}}>Change</button>
+                    </div>
+                </div>
+            @endif
+
+            @if ($order->order_status == 'DNR')
+                {{-- Biker returned delivery --}}
+                <label class="ml-2">Biker returned the delivery item</label>
+                <div class="input-group mb-3 ml-2">
+                    <select class="custom-select" id="inputReturnItem">
+                        <option value="{{ $order->is_returned }}" selected>{{ $order->is_returned }}</option>
+                        @forelse ($isReturns as $isReturn)
+                            @if ($order->is_returned != $isReturn->type)
+                                <option value="{{ $isReturn->type }}">{{ $isReturn->type }} </option>
+                            @endif
+                        @empty
+                            <option value="">Error! Please refresh the page</option>
+                        @endforelse
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="btnReturnItem">Change</button>
                     </div>
                 </div>
             @endif

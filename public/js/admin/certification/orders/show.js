@@ -7,6 +7,7 @@ const BTN_ADMIN_MESSAGE = $('#btnChangeAdminMessage');
 const BTN_APPLICATION_STATUS = $('#btnChangeApplicationStatus');
 const BTN_ORDER_STATUS = $('#btnChangeOrderStatus');
 const BTN_DELIVERY_PAYMENT = $('#btnDeliveryPayment');
+const BTN_RETURN_ITEM = $('#btnReturnItem');
 
 const INPUT_SEL_PICKUP_STATUS = $('#inputSelPickupStatus');
 const INPUT_PICKUP_DATE = $('#inputPickupDate');
@@ -14,6 +15,7 @@ const INPUT_ADMIN_MESSAGE = $('#inputAdminMessage');
 const INPUT_SEL_APPLICATION_STATUS = $('#inputSelApplicationStatus');
 const INPUT_SEL_ORDER_STATUS = $('#inputSelOrderStatus');
 const INPUT_SEL_DELIVERY_PAYMENT = $('#inputDeliveryPayment');
+const INPUT_RETURN_ITEM = $('#inputReturnItem');
 const INPUT_ORDER_ID = $('#inputOrderID');
 
 
@@ -66,6 +68,7 @@ var application_status = null;
 var pick_up_type = null;
 var order_status = null;
 var admin_message = null;
+var return_item = null;
 
 var certificateFormID = null;
 var certificateID = null;
@@ -210,6 +213,8 @@ function editOrderStatus() {
         formData.append('admin_message', admin_message);
     } else if (delivery_payment_status != null) {
         formData.append('delivery_payment_status', delivery_payment_status);
+    } else if (return_item != null) {
+        formData.append('is_returned', return_item);
     }
 
 
@@ -316,7 +321,7 @@ $(document).ready(function () {
     });
 
     BTN_ORDER_STATUS.click(function () {
-        orderStat = ['Waiting', 'Received', 'DNR'];
+        orderStat = ['Waiting', 'Received', 'DNR', 'On-Going'];
 
         if (!orderStat.includes(INPUT_SEL_ORDER_STATUS.val())) {
             toastr.error('Order status value is incorrect. Do not manipulate DOM elements');
@@ -337,6 +342,18 @@ $(document).ready(function () {
             editOrderStatus();
         }
     });
+
+    BTN_RETURN_ITEM.click(function () {
+        returnedItem = ['No', 'Yes'];
+
+        if (!returnedItem.includes(INPUT_RETURN_ITEM.val())) {
+            toastr.error('Returned item value is incorrect. Do not manipulate DOM elements');
+        } else {
+            return_item = INPUT_RETURN_ITEM.val();
+            editOrderStatus();
+        }
+    });
+
 
     // CERTIFICATE FORM
     FORM_CERTIFICATE.validate({
