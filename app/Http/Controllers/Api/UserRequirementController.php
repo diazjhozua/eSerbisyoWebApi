@@ -35,6 +35,7 @@ class UserRequirementController extends Controller
 
     public function store(UserRequirementRequest $request)
     {
+        activity()->disableLogging();
         $fileName = uniqid().time().'.jpg';
         $filePath = 'requirements/'.$fileName;
         Storage::disk('public')->put($filePath, base64_decode($request->picture));
@@ -50,6 +51,7 @@ class UserRequirementController extends Controller
 
     public function destroy(UserRequirement $userRequirement)
     {
+        activity()->disableLogging();
         if ($userRequirement->user_id == auth('api')->user()->id) {
             $userRequirement = $userRequirement->load('requirement');
             $name = $userRequirement->requirement->name;

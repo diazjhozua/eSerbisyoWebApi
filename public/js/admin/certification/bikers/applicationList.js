@@ -23,7 +23,12 @@ function viewRequest(applicationID) {
             $('#reviewRequestModal').modal('show') //show bootstrap modal
 
             $('#profileHead').text(data.user.first_name + ' ' + data.user.last_name + ' Profile');
-            $('#profilePicture').prop('src', window.location.origin + '/storage/' + data.user.file_path); //add the src attribute
+            if (data.user.file_path == null) {
+                $('#profilePicture').prop('src', "https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg"); //add the src attribute
+            } else {
+                $('#profilePicture').prop('src', window.location.origin + '/storage/' + data.user.file_path); //add the src attribute
+            }
+
             $("#profilePicture").prop("alt", data.user.first_name + ' ' + data.user.last_name); //add the alt text
             $('#firstName').text(data.user.first_name);
             $('#middleName').text(data.user.middle_name);

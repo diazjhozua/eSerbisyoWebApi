@@ -111,6 +111,13 @@
         </div>
     </li>
 
+    <li id="orderReport" class="nav-item">
+        <a class="nav-link" href="{{ route('admin.orderReports.index') }}">
+            <img src="{{ asset('assets/img/report.png') }}" alt="orderReport">
+            <span>Order Report</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

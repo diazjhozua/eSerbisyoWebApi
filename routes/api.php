@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\ {
     AnnouncementTypeController,
     AnnouncementController,
     AnnouncementPictureController,
+    BikerController,
     ProjectController,
     CommentController,
     CertificateController,
@@ -45,7 +46,7 @@ Route::post('/register', [JwtAuthCtrl::class, 'register']);
 Route::post('/login', [JwtAuthCtrl::class, 'login']);
 
 Route::post('/token-refresh', [JwtAuthCtrl::class, 'refresh']);
-Route::post('/signout', [JwtAuthCtrl::class, 'signout']);
+Route::get('/logout', [JwtAuthCtrl::class, 'logout']);
 
 Route::group([
     'middleware' => 'jwtAuth',
@@ -92,6 +93,18 @@ Route::group([
     Route::post('orders/submitReport/{order}', [OrderController::class, 'submitReport']);
     Route::get('orders/certificates', [OrderController::class, 'certificates']);
     Route::resource('orders', OrderController::class)->except(['create']);
+
+    // bikers routes
+    Route::get('bikers/latestVerification', [BikerController::class, 'latestVerification']);
+    Route::post('bikers/postVerification', [BikerController::class, 'postVerification']);
+    Route::get('bikers/getAuthAnalytics', [BikerController::class, 'getAuthAnalytics']);
+    Route::get('bikers/getAuthTransaction', [BikerController::class, 'getAuthTransaction']);
+    Route::get('bikers/getListOrders', [BikerController::class, 'getListOrders']);
+    Route::get('bikers/getOrderDetails/{order}', [BikerController::class, 'getOrderDetails']);
+    Route::put('bikers/bookedOrder/{order}', [BikerController::class, 'bookedOrder']);
+    Route::put('bikers/startRiding/{order}', [BikerController::class, 'startRiding']);
+    Route::put('bikers/confirmReceiveOrder/{order}', [BikerController::class, 'confirmReceiveOrder']);
+    Route::put('bikers/confirmDNROrder/{order}', [BikerController::class, 'confirmDNROrder']);
 });
 
 // Route::resource('feedback-types', FeedbackTypeController::class)->except(['create']);

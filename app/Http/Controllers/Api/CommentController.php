@@ -22,6 +22,7 @@ class CommentController extends Controller
 
     public function update(CommentRequest $request, Comment $comment)
     {
+        activity()->disableLogging();
         if ($comment->user_id == auth('api')->user()->id) {
             $comment->fill($request->validated())->save();
             return (new CommentResource($comment))->additional(Helper::instance()->updateSuccess('comment'));
@@ -32,6 +33,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
+        activity()->disableLogging();
         if ($comment->user_id == auth('api')->user()->id) {
             $comment->delete();
             return response()->json(Helper::instance()->destroySuccess('comment'));

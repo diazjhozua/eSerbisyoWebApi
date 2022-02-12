@@ -46,6 +46,7 @@ class AnnouncementController extends Controller
     }
 
     public function comment(CommentRequest $request, Announcement $announcement) {
+        activity()->disableLogging();
         $comment = $announcement->comments()->create(array_merge($request->validated(), ['user_id' => auth('api')->user()->id]));
         return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }

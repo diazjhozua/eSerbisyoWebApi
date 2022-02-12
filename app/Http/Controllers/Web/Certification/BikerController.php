@@ -11,6 +11,7 @@ use App\Models\BikerRequest;
 use App\Models\Order;
 use App\Models\User;
 use Helper;
+use Log;
 use Response;
 
 class BikerController extends Controller
@@ -54,6 +55,7 @@ class BikerController extends Controller
 
         if ($request->status == 'Approved') {
             $user->fill([
+                'user_role_id' => 8,
                 'bike_type' => $bikerRequest->bike_type,
                 'bike_color' => $bikerRequest->bike_color,
                 'bike_size' => $bikerRequest->bike_size,
@@ -61,9 +63,7 @@ class BikerController extends Controller
         }
 
         $subject = $request->status == 'Approved' ? 'Verified Bikers Account' : 'Failed Biker Application Verification Account';
-
         dispatch(new VerifyUserJob($user, $subject, $request->all()));
-
         return (new BikerRequestResource($bikerRequest))->additional(Helper::instance()->updateSuccess($user->getFullNameAttribute().' verification request - '. strtolower($request->status)));
     }
 

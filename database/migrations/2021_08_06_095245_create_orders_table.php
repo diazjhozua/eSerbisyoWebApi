@@ -23,6 +23,7 @@ class CreateOrdersTable extends Migration
             $table->date('received_at')->nullable();
             $table->enum('application_status', ['Pending', 'Cancelled', 'Approved', 'Denied'])->default('Pending');
             $table->enum('delivery_payment_status', ['Pending', 'Received'])->nullable();
+            $table->enum('is_returned', ['No', 'Yes'])->nullable();
             $table->enum('pick_up_type', ['Walkin', 'Pickup', 'Delivery'])->default('Pickup');
             $table->enum('order_status', ['Pending', 'Waiting', 'Accepted', 'On-Going', 'Received', 'DNR'])->default('Waiting')->nullable();
             $table->string('admin_message')->nullable();

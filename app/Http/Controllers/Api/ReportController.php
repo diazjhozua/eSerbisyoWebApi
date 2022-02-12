@@ -31,6 +31,7 @@ class ReportController extends Controller
 
     public function store(ReportRequest $request)
     {
+        activity()->disableLogging();
         $authReportCount = Report::whereDate('created_at', Carbon::today())->where('user_id', auth('api')->user()->id)->count();
 
         if ($authReportCount > 3) {

@@ -55,7 +55,8 @@ class OrderAdminRequest extends FormRequest
             return [
                 'application_status' => [Rule::in(['Pending', 'Cancelled', 'Approved', 'Denied'])],
                 'pick_up_type' => [Rule::in(['Walkin', 'Pickup', 'Delivery'])],
-                'order_status' => [Rule::in(['Waiting', 'Received', 'DNR'])],
+                'order_status' => [Rule::in(['Waiting', 'Received', 'DNR', 'On-Going'])],
+                'is_returned' => [Rule::in(['Yes', 'No'])],
                 'delivery_payment_status' => [Rule::in(['Pending', 'Received'])],
                 'pickup_date' => ['date', 'date_format:Y-m-d'],
                 'admin_message' => ['string', 'min:4', 'max:250'],

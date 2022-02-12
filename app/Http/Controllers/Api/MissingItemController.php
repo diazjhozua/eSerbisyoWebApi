@@ -36,12 +36,14 @@ class MissingItemController extends Controller
     }
 
     public function comment(CommentRequest $request, MissingItem $missingItem) {
+        activity()->disableLogging();
         $comment = $missingItem->comments()->create(array_merge($request->validated(), ['user_id' => auth('api')->user()->id]));
         return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 
     public function store(MissingItemRequest $request)
     {
+        activity()->disableLogging();
         $missingFileName = uniqid().time().'.jpg';
         $missingFilePath = 'missing-pictures/'.$missingFileName;
         Storage::disk('public')->put($missingFilePath, base64_decode($request->picture));
@@ -64,12 +66,6 @@ class MissingItemController extends Controller
 
     }
 
-
-    // public function show(MissingItem $missingItem)
-    // {
-    //     //
-    // }
-
     public function edit(MissingItem $missingItem)
     {
         // $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
@@ -87,6 +83,7 @@ class MissingItemController extends Controller
     public function update(MissingItemRequest $request, MissingItem $missingItem)
     {
 
+        activity()->disableLogging();
         if ($missingItem->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only update your reports."], 403);
         }
@@ -126,6 +123,7 @@ class MissingItemController extends Controller
 
     public function destroy(MissingItem $missingItem)
     {
+        activity()->disableLogging();
         if ($missingItem->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only delete your reports."], 403);
         }

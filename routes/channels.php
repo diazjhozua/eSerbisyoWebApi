@@ -53,3 +53,7 @@ Broadcast::channel('userVerification-channel', function ($user) {
     return true;
 });
 
+Broadcast::channel('order-channel', function ($user) {
+    // if you get here, you've been authenticated (within a custom middleware)
+    return true;
+});

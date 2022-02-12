@@ -26,6 +26,7 @@ class JwtAuthController extends Controller
 {
 
     public function login(LoginRequest $request){
+
         $credentials = $request->validated();
 
         if (! $token = auth('api')->attempt($credentials)) {
@@ -35,6 +36,7 @@ class JwtAuthController extends Controller
     }
 
     public function register(RegistrationRequest $request) {
+        activity()->disableLogging();
         User::create(array_merge($request->validated(), ['password' => Hash::make($request->password), 'user_role_id' => 9]));
         $credentials = $request->validated();
         $token = auth('api')->attempt($credentials);
@@ -43,17 +45,20 @@ class JwtAuthController extends Controller
 
     // change password
     public function changePassword(ChangePasswordRequest $request) {
+        activity()->disableLogging();
         User::find(auth('api')->user()->id)->update(['password'=> Hash::make($request->new_password)]);
         return response()->json(Helper::instance()->updateSuccess('user password'));
     }
 
     // change email
     public function changeEmail(ChangeEmailRequest $request) {
+        activity()->disableLogging();
         User::find(auth('api')->user()->id)->update(['email'=> $request->new_email]);
         return response()->json(array_merge(['email' => $request->new_email ], Helper::instance()->updateSuccess('user email')));
     }
 
     public function updateUserInfo(UserInfoRequest $request) {
+        activity()->disableLogging();
         $user = User::findOrFail(auth('api')->user()->id);
         if($request->picture != ''){
             if($user->picture_name != '') {
@@ -89,6 +94,7 @@ class JwtAuthController extends Controller
     }
 
     public function submitVerificationRequest(UserVerificationRequest $request) {
+        activity()->disableLogging();
         $userVerification = UserVerification::with('user')->where('user_id', auth('api')->user()->id)->where('status', 'Pending')->orderBy('created_at','DESC')->first();
 
         if ($userVerification != null) {
