@@ -33,6 +33,7 @@ class ComplaintController extends Controller
 
     public function store(ApiComplaintRequest $request)
     {
+        activity()->disableLogging();
         return DB::transaction(function() use ($request) {
             $complaint = Complaint::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => auth('api')->user()->id, 'contact_user_id' => auth('api')->user()->id]));
             $complainantCount = 0;
@@ -61,6 +62,7 @@ class ComplaintController extends Controller
     }
     public function show(Complaint $complaint)
     {
+        activity()->disableLogging();
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only view your submitted complaint."], 403);
         }
@@ -76,6 +78,7 @@ class ComplaintController extends Controller
 
     public function update(ComplaintRequest $request, Complaint $complaint)
     {
+        activity()->disableLogging();
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only update your submitted complaint."], 403);
         }
@@ -90,6 +93,7 @@ class ComplaintController extends Controller
 
     public function destroy(Complaint $complaint)
     {
+        activity()->disableLogging();
         return DB::transaction(function() use ($complaint) {
 
             if ($complaint->contact_user_id != auth('api')->user()->id) {

@@ -45,8 +45,8 @@
 
         </h1>
 
-        <a href="" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
-            <i class="fas fa-download fa-sm text-white-50"></i> Download Report</a>
+        {{-- <a href="" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
+            <i class="fas fa-download fa-sm text-white-50"></i> Download Report</a> --}}
     </div>
 
 

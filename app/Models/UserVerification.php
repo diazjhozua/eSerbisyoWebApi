@@ -18,7 +18,7 @@ class UserVerification extends Model
     {
         return LogOptions::defaults()
         ->useLogName('information')
-        ->logOnly(['user.first_name', 'user.last_name',  'credential_name', 'credential_file_path','status', 'admin_message'])
+        ->logOnly(['credential_name', 'credential_file_path','status', 'admin_message'])
         ->setDescriptionForEvent(fn(string $eventName) => "This model has been {$eventName}");
     }
 

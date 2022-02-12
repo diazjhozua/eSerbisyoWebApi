@@ -36,12 +36,14 @@ class MissingPersonController extends Controller
     }
 
     public function comment(CommentRequest $request, MissingPerson $missingPerson) {
+        activity()->disableLogging();
         $comment = $missingPerson->comments()->create(array_merge($request->validated(), ['user_id' => auth('api')->user()->id]));
         return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 
     public function store(MissingPersonRequest $request)
     {
+        activity()->disableLogging();
         $missingFileName = uniqid().time().'.jpg';
         $missingFilePath = 'missing-pictures/'.$missingFileName;
         Storage::disk('public')->put($missingFilePath, base64_decode($request->picture));

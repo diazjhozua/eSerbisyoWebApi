@@ -20,6 +20,8 @@ class BikerController extends Controller
 
     // post the verification
     public function postVerification(BikerApplicationRequest $request) {
+        activity()->disableLogging();
+
         $fileName = uniqid().time().'.jpg';
         $filePath = 'bikers/'.$fileName;
         Storage::disk('public')->put($filePath, base64_decode($request->picture));
@@ -103,6 +105,7 @@ class BikerController extends Controller
 
     // put booked the order
     public function bookedOrder(Order $order) {
+        activity()->disableLogging();
         if ($order->application_status != 'Approved' || $order->pick_up_type != 'Delivery' || $order->delivered_by != null) {
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }
@@ -126,6 +129,7 @@ class BikerController extends Controller
 
     // start riding biker
     public function startRiding(Order $order) {
+        activity()->disableLogging();
         if ($order->application_status != 'Approved' || $order->pick_up_type != 'Delivery' || $order->delivered_by != auth('api')->user()->id) {
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }
@@ -140,6 +144,7 @@ class BikerController extends Controller
 
     // put confirm receive order
     public function confirmReceiveOrder(PictureRequest $request, Order $order) {
+        activity()->disableLogging();
         if ($order->application_status != 'Approved' && $order->pick_up_type != 'Delivery' && $order->delivered_by != auth('api')->user()->id) {
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }
@@ -167,6 +172,7 @@ class BikerController extends Controller
 
     // put mark as did not receive
     public function confirmDNROrder(Order $order) {
+        activity()->disableLogging();
         if ($order->application_status != 'Approved' && $order->pick_up_type != 'Delivery' && $order->delivered_by != auth('api')->user()->id) {
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }

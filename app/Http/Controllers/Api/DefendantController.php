@@ -14,6 +14,7 @@ class DefendantController extends Controller
 {
     public function store(DefendantRequest $request)
     {
+        activity()->disableLogging();
         $complaint = Complaint::find($request->complaint_id);
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only add defendant to your submitted complaint."], 403);
@@ -29,6 +30,7 @@ class DefendantController extends Controller
 
     public function edit(Defendant $defendant)
     {
+        activity()->disableLogging();
         $complaint = Complaint::find($defendant->complaint_id);
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only edit defendant to your submitted complaint."], 403);
@@ -43,6 +45,7 @@ class DefendantController extends Controller
 
     public function update(DefendantRequest $request, Defendant $defendant)
     {
+        activity()->disableLogging();
         $complaint = Complaint::find($defendant->complaint_id);
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only update defendant to your submitted complaint."], 403);
@@ -57,6 +60,7 @@ class DefendantController extends Controller
 
     public function destroy(Defendant $defendant)
     {
+        activity()->disableLogging();
         $complaint = Complaint::find($defendant->complaint_id);
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only delete defendant to your submitted complaint."], 403);

@@ -8,6 +8,7 @@ class Helper
         return new Helper();
     }
 
+
     function likeStatus($model, $isLike) {
         $message = $isLike ? 'liked': 'unliked';
         return [

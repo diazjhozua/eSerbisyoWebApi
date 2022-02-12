@@ -46,7 +46,7 @@ Route::post('/register', [JwtAuthCtrl::class, 'register']);
 Route::post('/login', [JwtAuthCtrl::class, 'login']);
 
 Route::post('/token-refresh', [JwtAuthCtrl::class, 'refresh']);
-Route::post('/signout', [JwtAuthCtrl::class, 'signout']);
+Route::get('/logout', [JwtAuthCtrl::class, 'logout']);
 
 Route::group([
     'middleware' => 'jwtAuth',

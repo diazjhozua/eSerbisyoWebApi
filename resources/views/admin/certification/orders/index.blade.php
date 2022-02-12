@@ -3,6 +3,7 @@
 
 @section('page-js')
     {{-- Custom Scripts for this blade --}}
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script src="{{ asset('js/admin/certification/orders/index.js')}}"></script>
 @endsection
 
@@ -113,7 +114,7 @@
                                         <strong> {{ $order->pick_up_type }} </strong>
                                     </p>
 
-                                    <p>Order: <br>
+                                    <p>Order Status: <br>
                                         <strong> {{ $order->order_status }} </strong>
                                     </p>
                                 </td>

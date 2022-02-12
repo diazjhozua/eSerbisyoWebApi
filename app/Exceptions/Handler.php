@@ -71,7 +71,7 @@ class Handler extends ExceptionHandler
                 return response()->json([
                     'success' => false,
                     'message' => 'Resource not found'
-                ]);
+                ], 404);
             }
         }
 
@@ -79,7 +79,7 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'success' => false,
                 'message' => 'Resource not found'
-            ]);
+            ], 404);
         }
 
 

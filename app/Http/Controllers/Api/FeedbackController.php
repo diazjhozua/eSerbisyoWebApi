@@ -29,6 +29,7 @@ class FeedbackController extends Controller
 
     public function store(FeedbackRequest $request)
     {
+        activity()->disableLogging();
         if (Feedback::whereDate('created_at', Carbon::today())->where('user_id', auth('api')->user()->id)->exists()) {
             return response()->json(["message" => "You have already submitted feedback within this day, please comeback tommorow to submit another feedback"], 403);
         }

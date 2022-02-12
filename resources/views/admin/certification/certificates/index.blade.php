@@ -1,9 +1,6 @@
 @extends('layouts.admin')
 
 @section('page-js')
-    {{-- Custom Scripts for this blade
-    <script src="{{ asset('js/admin/information/announcement-types/index.js')}}"></script> --}}
-
     <script>
         $('#certificate').addClass('active')
     </script>

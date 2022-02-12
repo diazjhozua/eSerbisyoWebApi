@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Report\FeedbackReportRequest;
 use App\Http\Requests\RespondFeedbackRequest;
 use App\Http\Resources\FeedbackResource;
+use App\Jobs\FeedbackJob;
 use App\Models\Feedback;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,9 @@ class FeedbackController extends Controller
     }
 
     public function respondReport(RespondFeedbackRequest $request, Feedback $feedback) {
-        if ($feedback->status === 'Noted' || $feedback->status === 'Ignored') { return response()->json(Helper::instance()->alreadyNoted('feedback')); }
+        if ($feedback->status === 'Noted' || $feedback->status === 'Ignored') { return response()->json(Helper::instance()->alreadyNoted('feedback'), 403); }
         $feedback->fill(['admin_respond' => $request->admin_respond,'status' => 'Noted'])->save();
+        dispatch(new FeedbackJob($feedback));
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->noted('feedback'));
     }
 

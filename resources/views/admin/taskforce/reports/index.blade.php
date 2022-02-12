@@ -175,6 +175,7 @@
                                 </td>
 
                                 <td>{{ $report->created_at }}</td>
+
                                 <td>
                                     <ul class="list-inline m-0">
                                         <li class="list-inline-item mb-1">

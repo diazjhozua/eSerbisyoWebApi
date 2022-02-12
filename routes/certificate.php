@@ -7,7 +7,8 @@ use App\Http\Controllers\Web\Certification\ {
     RequirementController as RequirementCtrl,
     BikerController as BikerCtrl,
     OrderController as OrderCtrl,
-    CertificateFormController as CertificateFormCtrl
+    CertificateFormController as CertificateFormCtrl,
+    OrderReportController as OrderReportCtrl
 };
 
 // For taskforce admin
@@ -39,6 +40,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificate
     Route::get('orders/receipt/{order}', [OrderCtrl::class, 'printReceipt'])->name('orders.receipt');
     Route::resource('orders', OrderCtrl::class);
     Route::resource('certificateForms', CertificateFormCtrl::class)->only(['edit', 'update']);
+
+    Route::get('orderReports/', [OrderReportCtrl::class, 'index'])->name('orderReports.index');
+    Route::put('orderReports/respond/{orderReport}', [OrderReportCtrl::class, 'respond']);
 
     Route::get('view-requirement/{fileName}', function ($fileName) {
         if(file_exists(Storage::disk('public')->path('requirements/'.$fileName))){

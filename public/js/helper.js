@@ -17,6 +17,7 @@ toastr.options = {
 }
 
 
+
 function ajaxErrorMessage(error) {
     if (error.message != null) {
         toastr.error(error.message)

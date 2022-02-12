@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OrderEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrderReportRequest;
 use App\Http\Requests\Api\OrderRequest;
@@ -115,6 +116,7 @@ class OrderController extends Controller
 
     public function store(OrderRequest $request)
     {
+        activity()->disableLogging();
         $isCompleteFormFields = $this->checkCertificateFormFields($request);
 
         if ($isCompleteFormFields != true) {
@@ -261,7 +263,7 @@ class OrderController extends Controller
                 }
 
                 $order->fill(['total_price' => $totalPrice])->save();
-
+                event(new OrderEvent($order->loadCount('certificateForms')));
                 return response()->json(["data" => $order], 200);
 
                 // return (new OrderResource($order))->additional(Helper::instance()->storeSuccess('order'));
@@ -271,6 +273,7 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        activity()->disableLogging();
         if ($order->ordered_by != auth('api')->user()->id) {
             return response()->json(["message" => "You can only view your submitted order."], 403);
         }
@@ -279,6 +282,7 @@ class OrderController extends Controller
 
 
     public function submitReport(OrderReportRequest $request, Order $order) {
+        activity()->disableLogging();
         if ($order->ordered_by != auth('api')->user()->id && $order->delivered_by != auth('api')->user()->id) {
             return response()->json(["message" => "You can only submit report in your transaction."], 403);
         }
@@ -296,7 +300,6 @@ class OrderController extends Controller
 
         return response()->json(["message" => "Report submitted successfully."], 200);
     }
-
 
     public function destroy(Order $order)
     {
