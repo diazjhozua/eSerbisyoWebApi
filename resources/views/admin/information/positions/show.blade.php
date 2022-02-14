@@ -22,8 +22,8 @@
         <h1 class="h3 mb-0 text-gray-800"><button class="btn btn-primary" onclick="window.location=document.referrer;" type="submit"><i class="fas fa-caret-square-left"></i></button> Position: {{ $position->name }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
-        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-download fa-sm text-white-50"></i> Download Report</a>
+        {{-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-download fa-sm text-white-50"></i> Download Report</a> --}}
     </div>
 
     <p class="font-weight-light">Created at: {{ $position->created_at }} -- Updated at: {{ $position->updated_at }}</p>

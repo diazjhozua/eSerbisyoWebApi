@@ -145,6 +145,17 @@ class OrderController extends Controller
                     $certificateID = $value['certificate_id'];
                     $certificate = Certificate::with('requirements')->findOrFail($certificateID);
 
+                    // check if the certificate is available
+                    if ($certificate->status == 'Unavailable') {
+                        return response()->json(['message' => 'The certificate '. $certificate->name. ' that you are requesting is currently unavailable right now'], 403);
+                    }
+
+                    if ($request->pick_up_type == "Delivery") {
+                        if ($certificate->is_open_delivery == 0) {
+                            return response()->json(['message' => 'The certificate '. $certificate->name. ' that you are requesting not available for delivery'], 403);
+                        }
+                    }
+
                     // check first if the auth user have complete requirements in the system
                     $user_requirements = UserRequirement::where('user_id', $order->ordered_by)->get();
 

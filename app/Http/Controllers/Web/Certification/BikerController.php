@@ -56,6 +56,7 @@ class BikerController extends Controller
         if ($request->status == 'Approved') {
             $user->fill([
                 'user_role_id' => 8,
+                'phone_no' => $bikerRequest->phone_no,
                 'bike_type' => $bikerRequest->bike_type,
                 'bike_color' => $bikerRequest->bike_color,
                 'bike_size' => $bikerRequest->bike_size,

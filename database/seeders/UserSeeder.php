@@ -194,6 +194,7 @@ class UserSeeder extends Seeder
             $credentials_file_path = 'bikers/'.$credentials_name;
             DB::table('biker_requests')->insert([
                 'user_id' => $faker->numberBetween(20, 500),
+                'phone_no' => $faker->phoneNumber,
                 'bike_type' => $faker->realText($maxNbChars = 20, $indexSize = 2),
                 'bike_color' => $faker->realText($maxNbChars = 20, $indexSize = 2),
                 'bike_size' => $faker->realText($maxNbChars = 20, $indexSize = 2),

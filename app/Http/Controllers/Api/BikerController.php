@@ -159,6 +159,7 @@ class BikerController extends Controller
 
         $order->fill([
             'order_status' => 'Received',
+            'delivery_payment_status' => 'Pending',
             'file_name' => $fileName,
             'file_path' => $filePath
         ])->save();

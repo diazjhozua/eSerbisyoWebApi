@@ -48,7 +48,7 @@
             data: {
                 labels: [
                     @foreach ($certificates as $certificate)
-                        "{{ $certificate->name }}: {{$certificate->certificate_forms_count}}",
+                        "{{ $certificate->name }}",
                     @endforeach
                 ],
                 datasets: [{
@@ -109,6 +109,94 @@
                 }
             }
         });
+
+        var orderTypeComparationCanvas = document.getElementById('orderTypeComparationChart');
+        var orderTypeComparationChart = new Chart(orderTypeComparationCanvas, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [
+                    {
+                    label: 'Walk-in',
+                    type: 'bar',
+                    data: [{{ $walkinOrderOverview[1]}}, {{ $walkinOrderOverview[2]}}, {{ $walkinOrderOverview[3]}},
+                        {{ $walkinOrderOverview[4]}}, {{ $walkinOrderOverview[5]}}, {{ $walkinOrderOverview[6]}},
+                        {{ $walkinOrderOverview[7]}}, {{ $walkinOrderOverview[8]}}, {{ $walkinOrderOverview[9]}},
+                        {{ $walkinOrderOverview[10]}}, {{ $walkinOrderOverview[11]}}, {{ $walkinOrderOverview[12]}}],
+                    borderColor: '#05445E',
+                    backgroundColor: '#05445E',
+                    borderWidth: 2
+                    },
+
+                    {
+                    label: 'Pickup',
+                    type: 'bar',
+                    data: [{{ $pickupOrderOverview[1]}}, {{ $pickupOrderOverview[2]}}, {{ $pickupOrderOverview[3]}},
+                        {{ $pickupOrderOverview[4]}}, {{ $pickupOrderOverview[5]}}, {{ $pickupOrderOverview[6]}},
+                        {{ $pickupOrderOverview[7]}}, {{ $pickupOrderOverview[8]}}, {{ $pickupOrderOverview[9]}},
+                        {{ $pickupOrderOverview[10]}}, {{ $pickupOrderOverview[11]}}, {{ $pickupOrderOverview[12]}}],
+                    borderColor: '#189AB4',
+                    backgroundColor: '#189AB4',
+                    borderWidth: 2
+                    },
+
+                    {
+                    label: 'Delivery',
+                    type: 'bar',
+                    data: [{{ $deliveryOrderOverview[1]}}, {{ $deliveryOrderOverview[2]}}, {{ $deliveryOrderOverview[3]}},
+                        {{ $deliveryOrderOverview[4]}}, {{ $deliveryOrderOverview[5]}}, {{ $deliveryOrderOverview[6]}},
+                        {{ $deliveryOrderOverview[7]}}, {{ $deliveryOrderOverview[8]}}, {{ $deliveryOrderOverview[9]}},
+                        {{ $deliveryOrderOverview[10]}}, {{ $deliveryOrderOverview[11]}}, {{ $deliveryOrderOverview[12]}}],
+
+                    borderColor: '#75E6DA',
+                    backgroundColor: '#75E6DA',
+                    borderWidth: 2
+                    },
+
+
+            ]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var orderRatioCanvas = document.getElementById('orderRatioChart');
+        var orderRatioChart = new Chart(orderRatioCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: ["Received", "DNR (Did Not Received)"],
+                datasets: [{
+                    label: 'Reports',
+                    data: [ {{ $orderRatioPercentage[0]}}, {{ $orderRatioPercentage[1]}}
+                    ],
+                    backgroundColor: [
+                    '#5CB85C',
+                    '#D9534F',
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    }
+                },
+            }
+        });
+
 
     </script>
 @endsection
@@ -317,7 +405,7 @@
             <!-- Content Column -->
             <div class="col-lg-8 mb-4">
 
-                <!-- Earnings this year Chart Card Example -->
+                <!-- Earnings this year Chart Card -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><a href="{{ route('admin.orders.index') }}">Earnings within this year</a></h6>
@@ -325,6 +413,18 @@
                     <div class="card-body">
                             <div class="graph">
                             <canvas id="earningsThisYearChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Earnings this year Chart Card -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><a href="{{ route('admin.orders.index') }}">Walk-in, Pickup, and Delivery Comparison (Average of user who orders in different order type)</a></h6>
+                    </div>
+                    <div class="card-body">
+                            <div class="graph">
+                            <canvas id="orderTypeComparationChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -363,6 +463,20 @@
                                     NO DATA
                                 </div>
                         @endforelse
+                    </div>
+                </div>
+
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div
+                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Received vs DNR (Did Not Receive) Order Ratio Percentage</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="graph">
+                            <canvas id="orderRatioChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
