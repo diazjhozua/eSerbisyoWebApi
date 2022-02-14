@@ -26,7 +26,7 @@ $(document).ready(function () {
     channel.bind('order-channel', function (data) {
         let order = data.order;
         toastr.warning('User ' + order.name + ' an order submitted a order request. Please repond to the specific order.')
-        col0 = '<td>' + order.id + '</td>';
+        col0 = '<td> Order #' + order.id + '</td>';
         col1 = '<td>' + '(#' + order.ordered_by + ')' + order.name + '</td>';
         col2 = '<td>' + order.location_address + '</td>';
         col3 = '<td>' + order.certificate_forms_count + '</td>';

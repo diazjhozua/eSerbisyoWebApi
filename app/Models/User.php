@@ -36,6 +36,7 @@ class User extends Authenticatable implements JWTSubject
         'purok_id',
         'email',
         'password',
+        'phone_no',
         'bike_type',
         'bike_color',
         'bike_size',

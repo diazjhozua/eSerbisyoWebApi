@@ -19,6 +19,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Log;
 use PhpParser\Node\Expr\Cast\Double;
 
 class DashboardController extends Controller
@@ -174,6 +175,119 @@ class DashboardController extends Controller
             }
         }
 
+        // getting the average number of user who prefers order type walkin
+        $walkinOrders = Order::select('id',  'created_at')
+            // ->where('application_status', 'Approved')
+            ->where('pick_up_type', 'Walkin')
+            // ->where('order_status', 'Received')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('m'); // grouping by years
+        });
+
+        $unfilteredWalkinOrderData = [];
+        $walkinOrderOverview = [];
+
+        foreach ($walkinOrders as $key => $value) {
+            $yearList = [];
+            $yearOrderCount = 0;
+
+            foreach ($value as $walkinOrder) {
+                $yearOrderCount = $yearOrderCount + 1 ;
+                $year = Carbon::parse($walkinOrder->created_at)->format('Y');
+                if (!in_array($year, $yearList)) {
+                    array_push($yearList, $year);
+                }
+            }
+
+            $unfilteredWalkinOrderData[(int)$key] = round($yearOrderCount / count($yearList), 2);
+        }
+
+        for($i = 1; $i <= 12; $i++){
+            if(!empty($unfilteredWalkinOrderData[$i])){
+                $walkinOrderOverview[$i] = $unfilteredWalkinOrderData[$i];
+            }else{
+                $walkinOrderOverview[$i] = 0;
+            }
+        }
+        // end of
+
+        // getting the average number of user who prefers order type pickup
+        $pickupOrders = Order::select('id', 'delivery_fee', 'total_price', 'created_at')
+            ->where('application_status', 'Approved')
+            ->where('pick_up_type', 'Pickup')
+            ->where('order_status', 'Received')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('m'); // grouping by years
+        });
+
+        $unfilteredPickupOrderData = [];
+        $pickupOrderOverview = [];
+
+        foreach ($pickupOrders as $key => $value) {
+            $yearList = [];
+            $yearOrderCount = 0;
+
+            foreach ($value as $pickupOrder) {
+                $yearOrderCount = $yearOrderCount + 1 ;
+                $year = Carbon::parse($pickupOrder->created_at)->format('Y');
+                if (!in_array($year, $yearList)) {
+                    array_push($yearList, $year);
+                }
+            }
+
+            $unfilteredPickupOrderData[(int)$key] = round($yearOrderCount / count($yearList), 2);
+        }
+
+        for($i = 1; $i <= 12; $i++){
+            if(!empty($unfilteredPickupOrderData[$i])){
+                $pickupOrderOverview[$i] = $unfilteredPickupOrderData[$i];
+            }else{
+                $pickupOrderOverview[$i] = 0;
+            }
+        }
+        // end of
+
+        // getting the average number of user who prefers order type delivery
+        $deliveryOrders = Order::select('id', 'delivery_fee', 'total_price', 'created_at')
+            ->where('application_status', 'Approved')
+            ->where('pick_up_type', 'Delivery')
+            ->where('delivery_payment_status', 'Received')
+            ->where('order_status', 'Received')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('m'); // grouping by years
+        });
+
+        $unfilteredDeliveryOrderData = [];
+        $deliveryOrderOverview = [];
+
+        foreach ($deliveryOrders as $key => $value) {
+            $yearList = [];
+            $yearOrderCount = 0;
+
+            foreach ($value as $deliveryOrder) {
+                $yearOrderCount = $yearOrderCount + 1 ;
+                $year = Carbon::parse($deliveryOrder->created_at)->format('Y');
+                if (!in_array($year, $yearList)) {
+                    array_push($yearList, $year);
+                }
+            }
+
+            $unfilteredDeliveryOrderData[(int)$key] = round($yearOrderCount / count($yearList), 2);
+        }
+
+        for($i = 1; $i <= 12; $i++){
+            if(!empty($unfilteredDeliveryOrderData[$i])){
+                $deliveryOrderOverview[$i] = $unfilteredDeliveryOrderData[$i];
+            }else{
+                $deliveryOrderOverview[$i] = 0;
+            }
+        }
+        // end of
+
+
         // Most requested Certificate this month
         $certificates = Certificate::withCount(['certificateForms' => function($query){
             // $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
@@ -219,11 +333,29 @@ class DashboardController extends Controller
         // Top 5 bikers
         $bikers = User::with('delivers')->withCount('delivers')->orderBy('delivers_count', 'DESC')->where('user_role_id', 8)->limit(5)->get();
 
+        // getting the received and dnr ratio
+
+        // get the overall number of orders
+        $orders = Order::where('pick_up_type','!=', 'Walkin')->where('application_status', 'Approved')->count();
+        $received = Order::where('pick_up_type','!=', 'Walkin')->where('application_status', 'Approved')->where('order_status', 'Received')->count();
+        $dnr = Order::where('pick_up_type','!=', 'Walkin')->where('application_status', 'Approved')->where('order_status', 'DNR')->count();
+
+        $orderRatioPercentage = [];
+
+        $orderRatioPercentage[0] = $orders > 0 ? round($received * 100 / $orders) : 0 ;
+        $orderRatioPercentage[1] = $orders > 0 ? round($dnr * 100 / $orders) : 0 ;
+
+
+
+        // end of getting the received and dnr ratio
+
         return view('admin.dashboards.certification',
             compact(
                 'thisDayEarning', 'thisMonthEarning', 'thisYearEarning',
                 'pendingOrderCount', 'bikerCount', 'bikerApplicationCount',
-                'earningsOverview', 'earningsThisYear', 'certificates', 'bikers'
+                'earningsOverview', 'earningsThisYear', 'certificates', 'bikers',
+                'walkinOrderOverview', 'pickupOrderOverview', 'deliveryOrderOverview',
+                'orderRatioPercentage'
             )
         );
     }

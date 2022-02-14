@@ -22,13 +22,13 @@ class OrderSeeder extends Seeder
         $faker = \Faker\Factory::create();
 
         $users = User::where('is_verified', '=', 1)->get();
-        $pick_up_type = ['Pickup', 'Delivery'];
+        $pick_up_type = ['Walkin','Pickup', 'Delivery'];
         $application_status = ['Approved', 'Denied'];
 
         foreach ($users as $user) {
 
             // random number of orders
-            for($i = 0; $i <= $faker->numberBetween(1, 3); $i++) {
+            for($i = 0; $i <= $faker->numberBetween(1, 5); $i++) {
                 $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
                 $application = $application_status[array_rand($application_status)];
                 $pickup = $pick_up_type[array_rand($pick_up_type)];
@@ -49,44 +49,18 @@ class OrderSeeder extends Seeder
                 }
 
                 $pickupDate = $faker->date($format = 'Y-m-d', $max = 'now');
-                // $order = Order::create([
-                //     'ordered_by' => $user->id,
-                //     'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
-                //     // 'total_price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
-                //     'name' => $faker->name,
-                //     'pick_up_type' => $pickup,
-                //     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
-                //     'pickup_date' => $pickupDate,
-                //     'received_at' => $pickup === 'Delivery' ? $faker->date($format = 'Y-m-d', $max = 'now') : $pickupDate,
-                //     'application_status' => $application,
-                //     'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
-                //     'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',
-                //     'location_address' => $faker->address(),
-                //     'email' => $faker->lastName.$faker->email,
-                //     'phone_no' => $faker->phoneNumber,
-                //     'user_long' => $pickup === 'Delivery' ? $long : NULL,
-                //     'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                //     'rider_long' => $pickup === 'Delivery' ? $long : NULL,
-                //     'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                //     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
-                //     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
-                //     'admin_message' => $admin_message,
-                //     'created_at' => $date,
-                //     'updated_at' => $date,
-                // ]);
-
                 $order = Order::create([
                     'ordered_by' => $user->id,
-                    'delivered_by' => NULL,
+                    'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
                     // 'total_price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
                     'name' => $faker->name,
                     'pick_up_type' => $pickup,
                     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
                     'pickup_date' => $pickupDate,
                     'received_at' => $pickup === 'Delivery' ? $faker->date($format = 'Y-m-d', $max = 'now') : $pickupDate,
-                    'application_status' => 'Approved',
-                    'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
-                    'order_status' => 'Waiting',
+                    'application_status' => $application,
+                    'delivery_payment_status' => $pickup === 'Delivery' ? 'Received' : NULL,
+                    'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',
                     'location_address' => $faker->address(),
                     'email' => $faker->lastName.$faker->email,
                     'phone_no' => $faker->phoneNumber,
@@ -100,6 +74,32 @@ class OrderSeeder extends Seeder
                     'created_at' => $date,
                     'updated_at' => $date,
                 ]);
+
+                // $order = Order::create([
+                //     'ordered_by' => $user->id,
+                //     'delivered_by' => NULL,
+                //     // 'total_price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
+                //     'name' => $faker->name,
+                //     'pick_up_type' => $pickup,
+                //     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
+                //     'pickup_date' => $pickupDate,
+                //     'received_at' => $pickup === 'Delivery' ? $faker->date($format = 'Y-m-d', $max = 'now') : $pickupDate,
+                //     'application_status' => 'Approved',
+                //     'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
+                //     'order_status' => 'Waiting',
+                //     'location_address' => $faker->address(),
+                //     'email' => $faker->lastName.$faker->email,
+                //     'phone_no' => $faker->phoneNumber,
+                //     'user_long' => $pickup === 'Delivery' ? $long : NULL,
+                //     'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                //     'rider_long' => $pickup === 'Delivery' ? $long : NULL,
+                //     'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                //     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
+                //     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
+                //     'admin_message' => $admin_message,
+                //     'created_at' => $date,
+                //     'updated_at' => $date,
+                // ]);
 
 
                 $totalPrice = 0;

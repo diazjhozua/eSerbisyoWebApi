@@ -17,6 +17,10 @@
     {{-- Delete Modal Confirmation --}}
     @include('inc.delete')
     @include('admin.certification.orders.reportSelectModal')
+    @include('admin.certification.orders.modals.pendingOrder')
+    @include('admin.certification.orders.modals.returnableOrder')
+    @include('admin.certification.orders.modals.unprocessedOrder')
+
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -35,6 +39,69 @@
         Record
     </a>
 
+    <p class="mt-4 mb-0">Feedbacks statistic within this month</p>
+
+    <div class="row mb-2">
+        {{-- Pending Card --}}
+        <div class="col-sm mt-2">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body" data-toggle="modal" data-target="#pendingOrderModal">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Pending Order (Click this to show list)
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="pendingOrderCount">{{ $pendingOrders->count() }}</div>
+                        </div>
+                        <div class="col-auto">
+                             <img src="{{ asset('assets/img/requests.png') }}" alt="Order">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Unprocessed Delivery --}}
+        <div class="col-sm mt-2">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body" data-toggle="modal" data-target="#unprocessedOrderModal">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Unprocessed Delivery (Click this to show list)</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ $unprocessedOrders->count() }}
+                                </div>
+
+                        </div>
+                        <div class="col-auto">
+                            <img src="{{ asset('assets/img/bicycle.png') }}" alt="Biker">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Returnable Card --}}
+        <div class="col-sm mt-2">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body" data-toggle="modal" data-target="#returnableOrderModal">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Returnable Orders (Click this to show list)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $returnableOrders->count() }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <img src="{{ asset('assets/img/requirement.png') }}" alt="Biker Application">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
         <div class="card-header py-3">
@@ -48,13 +115,11 @@
                             <th>ID</th>
                             <th>Ordered by</th>
                             <th>Location</th>
-                            {{-- <th>Contact Info</th> --}}
-                            <th>Certificate Requested Count</th>
+                            <th>Certificate Count</th>
                             <th>Total Price</th>
                             <th>Delivery Fee</th>
                             <th>Pickup Date</th>
                             <th>Status</th>
-                            {{-- <th>Latest Admin Message</th> --}}
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
@@ -65,13 +130,11 @@
                             <th>ID</th>
                             <th>Ordered by</th>
                             <th>Location</th>
-                            {{-- <th>Contact Info</th> --}}
-                            <th>Certificate Requested Count</th>
+                            <th>Certificate Count</th>
                             <th>Total Price</th>
                             <th>Delivery Fee</th>
                             <th>Pickup Date</th>
                             <th>Status</th>
-                            {{-- <th>Latest Admin Message</th> --}}
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
@@ -79,7 +142,7 @@
                     <tbody>
                         @forelse ($orders as $order)
                             <tr>
-                                <td>{{ $order->id }}</td>
+                                <td>Order #{{ $order->id }}</td>
 
                                 <td>
                                     @if ($order->ordered_by != null)

@@ -22,8 +22,6 @@ class OrderRequest extends FormRequest
             'phone_no' => 'required|numeric',
             'location_address' => 'required|string|min:3|max:200',
             'pick_up_type' => ['required', Rule::in(['Pickup', 'Delivery'])],
-            'latitude' => 'required_if:pick_up_type,==,Delivery|numeric',
-            'longitude' => 'required_if:pick_up_type,==,Delivery|numeric',
             'certificate_forms' => 'required|array|between:1,5',
             'certificate_forms.*.first_name' => 'required|string|min:4|max:150',
             'certificate_forms.*.middle_name' => 'required|string|min:4|max:150',

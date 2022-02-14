@@ -15,6 +15,7 @@ class BikerApplicationRequest extends FormRequest
     public function rules()
     {
         return [
+            'phone_no' => 'required|numeric',
             'bike_type' => 'required:string|min:4|max:30',
             'bike_size' => 'required:string|min:4|max:30',
             'bike_color' => 'required:string|min:4|max:30',
@@ -25,7 +26,7 @@ class BikerApplicationRequest extends FormRequest
 
 
     public function getData() {
-        $data = $this->only(['bike_type', 'bike_size', 'bike_color', 'reason']);
+        $data = $this->only(['bike_type', 'bike_size', 'bike_color', 'reason', 'phone_no']);
         return $data;
     }
 }
