@@ -11,7 +11,7 @@
 @section('content')
 
     @include('admin.certification.orders.formModal')
-
+    @include('admin.certification.orders.modals.verifyApplication')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">
@@ -55,15 +55,31 @@
             color: black;
         }
 
+        .orderInfo {
+            margin-left: 10px;
+            color: black;
+        }
+
+        .orderLabel {
+            padding: 0;
+            margin-bottom: 5px;
+            color: rgb(110, 110, 110);
+        }
+
 
     </style>
-
 
     <p class="text-justify">
         These are the following details of this order which includes what the information of the resident who made this order, type of order, and other information
         related to this order. When proccessing order, make sure to check the credentials for each certificate they requested and modify the possible error in all certificates before
-        making changes in any order status. See credentials -> Modify Certificate Forms (To see any mistakes and add additional fields (specially in Cedula)) -> Change Status -> Submit Message
+        making changes in any order status. See credentials -> Modify Certificate Forms (To see any mistakes and add additional fields (specially in Cedula)) -> Verify Requirements -> Change Status.
     </p>
+
+    {{-- <p class="text-justify">
+        If the application status is marked as Cancelled, it is either the the resident who request the following certificate does not get
+        picked by our biker 3 days prior to specified received date (Delivery Mode) or the resident didn't get the requested certificate in the barangay
+        office (Pickup Mode).
+    </p> --}}
 
     <div class="row">
 
@@ -71,85 +87,111 @@
             {{-- Order Form --}}
             <div class="card text-black mb-3">
                 <div class="card-body">
+                    @if ($order->application_status == 'Approved')
+                        <a type="button" class="btn btn-outline-primary btn-sm btn-block m-2" id="printReceipt" href="{{ route('admin.orders.receipt', $order->id) }}" target="_blank">Print Receipt</a>
+                    @endif
+
                     <form name="orderForm" id="orderForm" enctype="multipart/form-data" novalidate>
                         {{-- Contact User ID / Name --}}
-                        <div class="form-group">
-                            <label for="inputOrderName">Name</label>
-                            @if ($order->ordered_by == null)
-                                <input type="text" class="form-control" name="inputOrderName" id="inputOrderName" value="{{ $order->name }}" disabled>
-                            @else
-                                <input type="text" class="form-control" name="inputOrderName" id="inputOrderName" value="(#{{$order->ordered_by}}) {{ $order->contact->getFullNameAttribute() }}" disabled>
-                            @endif
-                            <small class="form-text text-muted">Name of the specified customer</small>
-                        </div>
+                        <p class="orderLabel">Name of the specified customer</p>
+                        @if ($order->ordered_by == null)
+                            <p class="orderInfo" name="inputOrderName" id="inputOrderName">{{ $order->name }}</p>
+                            {{-- <input type="text" class="form-control" name="inputOrderName" id="inputOrderName" value="{{ $order->name }}" disabled> --}}
+                        @else
+                            <p class="orderInfo" >(#{{$order->ordered_by}}) {{ $order->contact->getFullNameAttribute() }}</p>
+                        @endif
 
                         {{-- Contact Information --}}
                         <div class="row mt-3 mt-lg-0">
                             <div class="col-12">
                                 {{-- Email --}}
-                                <div class="form-group">
-                                    <label for="inputOrderEmail">Email</label>
-                                    <input type="text" class="form-control" name="inputOrderEmail" id="inputOrderEmail" value="{{ $order->email }}" disabled>
-                                </div>
+                                <p class="orderLabel">Email</p>
+                                <p class="orderInfo" >{{ $order->email }}</p>
                             </div>
+
                             <div class="col-12">
                                 {{-- Phone No --}}
-                                <div class="form-group">
-                                    <label for="inputOrderPhone">Phone No</label>
-                                    <input type="text" class="form-control" name="inputOrderPhone" id="inputOrderPhone"  value="{{ $order->phone_no }}" disabled>
-                                </div>
+                                <p class="orderLabel">Phone No</p>
+                                <p class="orderInfo" >{{ $order->phone_no }}</p>
                             </div>
                         </div>
 
                         {{-- Location Address --}}
-                        <div class="form-group">
-                            <label for="inputOrderLocation">Location Address</label>
-                            <textarea class="form-control" name="inputOrderLocation" id="inputOrderLocation" rows="2" disabled>{{ $order->location_address }}</textarea>
-                        </div>
+                        <p class="orderLabel">Location Address</p>
+                        <p class="orderInfo" >{{ $order->location_address }}</p>
 
-                        {{-- Pickup Type for walkin  --}}
-                        <div class="form-group">
-                            <label for="inputOrderName">Pickup Type</label>
-                            <input type="text" class="form-control" name="inputOrderName" id="inputOrderName" value="{{ $order->pick_up_type }}" disabled>
-                            <small class="form-text text-muted">Name of the specified customer</small>
-                        </div>
+                        {{-- Order Type  --}}
+                        <p class="orderLabel">Order Type</p>
+                        <p class="orderInfo" >{{ $order->pick_up_type }}</p>
 
-                        @if ($order->pick_up_type == 'Walkin')
-                            {{-- Pickup Date --}}
-                            <div class="form-group">
-                                <label for="inputPickupDate">Pickup Date</label>
-                                <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->pickup_date }}" aria-label="Select Pickup Date" disabled>
-                            </div>
+
+                        @if ($order->pick_up_type == "Walkin")
+                            {{-- Since it is walkin the pickup date and received date is the same :) --}}
+                            <p class="orderLabel">Requested/Received Date:</p>
+                            <p class="orderInfo">{{ \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</p>
+                            <p class="orderLabel text-center">Recorded: {{ \Carbon\Carbon::parse($order->created_at)->format('F d, Y') }}</p>
                         @else
-                            {{-- Pickup date for not walkin --}}
-                            <label>Pickup Date</label>
-                            <div class="input-group mb-2">
-                                <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->pickup_date }}" aria-label="Select Pickup Date" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->order_status == 'DNR' ? 'disabled' : '' }}>
-                                @if ($order->order_status != 'Received' && $order->application_status != 'Denied' && $order->order_status != 'DNR')
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="btnChangePickupDate">Change</button>
-                                    </div>
-                                @endif
 
-                            </div>
+                            @if ($order->application_status != "Denied")
+                                {{-- Pickup Date --}}
+                                <p class="orderLabel">Assigned Pickup Date:</p>
+                                <p class="orderInfo {{ $order->pickup_date == null ? 'text-primary' : '' }}" >{{ $order->pickup_date == null ? 'Not been set' : \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</p>
 
-                            {{-- Latest Admin Message --}}
-                            <div class="form-group">
-                                <label for="inputAdminMessage">Latest Admin Message</label>
-                                <textarea class="form-control" name="inputAdminMessage" id="inputAdminMessage" rows="2" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->order_status == 'DNR' ? 'disabled' : '' }}>{{ $order->admin_message }}</textarea>
-                                @if ($order->order_status != 'Received' && $order->application_status != 'Denied' && $order->order_status != 'DNR')
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-primary mt-2" type="button" id="btnChangeAdminMessage" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->order_status == 'DNR' ? 'disabled' : '' }}>Send Message</button>
-                                    </div>
+                                {{-- Received Date --}}
+                                <p class="orderLabel">Received Date:</p>
+                                <p class="orderInfo {{ $order->received_at == null ? 'text-primary' : '' }}" >{{ $order->received_at == null ? 'Not been received' : \Carbon\Carbon::parse($order->received_at)->format('F d, Y') }}</p>
+                            @endif
+
+                            {{-- Application Status --}}
+                            <p class="orderLabel">Application Status:</p>
+                            @if ($order->application_status == 'Pending')
+                                <p class="orderInfo text-primary">{{ $order->application_status }}</p>
+                            @elseif ($order->application_status == 'Cancelled')
+                                <p class="orderInfo text-warning">{{ $order->application_status }}</p>
+                            @elseif ($order->application_status == 'Approved')
+                                <p class="orderInfo text-success">{{ $order->application_status }}</p>
+                            @elseif ($order->application_status == 'Denied')
+                                <p class="orderInfo text-danger">{{ $order->application_status }}</p>
+                            @endif
+
+
+                            @if ($order->application_status != "Denied")
+                                {{-- Order Status --}}
+                                <p class="orderLabel">Order Status</p>
+                                @if ($order->order_status == 'Pending' || $order->order_status == 'Waiting')
+                                    <p class="orderInfo text-primary">{{ $order->order_status }}</p>
+                                @elseif ($order->order_status == 'Accepted' || $order->order_status == 'On-Going')
+                                    <p class="orderInfo text-info">{{ $order->order_status }}</p>
+                                @elseif ($order->order_status == 'Received')
+                                    <p class="orderInfo text-success">{{ $order->order_status }}</p>
+                                @elseif ($order->order_status == 'DNR')
+                                    <p class="orderInfo text-danger">{{ $order->order_status }} (Did Not Received) </p>
                                 @endif
-                            </div>
+                            @endif
+
+                            {{-- If the order is in delivery mode and the order is booked by the biker --}}
+                            @if ($order->pick_up_type == 'Delivery')
+                                @if ($order->order_status == 'Received')
+                                    <p class="orderLabel">Order payment status </p>
+                                    @if ($order->delivery_payment_status == 'Pending')
+                                        <p class="orderInfo text-primary">The biker does not yet give the payment to the barangay</p>
+                                    @else
+                                        <p class="orderInfo text-success">The order has been processed</p>
+                                    @endif
+                                @elseif ($order->order_status == 'DNR')
+                                    <p class="orderLabel">Biker returnable item</p>
+                                    @if ($order->is_returned == 'No')
+                                        <p class="orderInfo text-warning">The biker does not give back the item</p>
+                                    @elseif($order->is_returned == 'Yes')
+                                        <p class="orderInfo text-success">The order has been returned</p>
+                                    @endif
+                                @endif
+                            @endif
+
+                            {{-- Admin Message  --}}
+                            <p class="orderLabel">Admin Respond</p>
+                            <p class="orderInfo" >{{ $order->admin_message == null ? 'Not yet been submitted' : $order->admin_message }}</p>
                         @endif
-
-                            {{-- Received Date --}}
-                            <div class="form-group">
-                                <label for="inputPickupDate">Received Date</label>
-                                 <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="inputPickupDate" name="inputPickupDate" value="{{ $order->received_at }}" aria-label="Select Pickup Date" disabled>
-                            </div>
                     </form>
                 </div>
             </div>
@@ -208,55 +250,6 @@
                     </div>
                 </div>
             </div>
-            @if ($order->pick_up_type != 'Walkin')
-                <div class="bikerContent">
-                    <h5 class="mt-3 text-left">User Requirements</h5>
-
-                    <div class="userProfile">
-                        <div class="row">
-                            <div class="col type">
-                                Requirement:
-                            </div>
-
-                            <div class="col description">
-
-                                @foreach ($passedRequirements as $passedRequirement)
-                                    <p class="font-weight-bold p-0 m-0 text-left">
-                                        <a href="{{route('admin.viewRequirement', ['fileName' => $passedRequirement['file_name']]) }}" target="_blank">
-                                            {{ $passedRequirement['name'] }}
-                                        </a>
-                                    </p>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        <div class="row mt-2">
-                            <div class="col type">
-                                Requirement Status:
-                            </div>
-
-                            <div class="col description">
-                                @if ($isCompleteRequirements)
-                                    <p class="font-weight-bold p-0 m-0 text-left text-success">
-                                        Complete
-                                    </p>
-                                @else
-                                    <p class="font-weight-bold p-0 m-0 text-left text-warning">
-                                        Incomplete
-                                    </p>
-                                @endif
-
-                                @foreach ($noRequirements as $requirement)
-                                    <p class="font-weight-bold p-0 m-0 text-left text-danger">
-                                        {{ $requirement['name'] }}
-                                    </p>
-                                @endforeach
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            @endif
 
             @if ($order->pick_up_type == 'Delivery')
                 <div class="bikerContent">
@@ -333,83 +326,90 @@
         </div>
 
         <div class="col-md-8 col-sm-8">
-
-            @if ($order->application_status == 'Approved')
-                <a type="button" class="btn btn-outline-primary btn-sm btn-block m-2" id="printReceipt" href="{{ route('admin.orders.receipt', $order->id) }}" target="_blank">Print Receipt</a>
+            {{-- @if ($order->application_status == 'Approved') --}}
+            @if ($order->application_status != 'Approved' && $order->application_status != 'Denied' &&  $order->application_status != 'Cancelled' && $order->pick_up_type != 'Walkin')
+                <button type="button" class="btn btn-outline-success btn-sm btn-block m-2" id="verifyApplication" data-toggle="modal" data-target="#verifyApplicationModal">Verify Application</button>
             @endif
 
-            <div class="row">
-                <div class="col-md-6 col-sm-6">
-                    {{-- APPLICATION STATUS --}}
-                    <label class="ml-2">Application Status</label>
-                    <div class="input-group mb-3 ml-2">
-                        <select class="custom-select" id="inputSelApplicationStatus" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->pick_up_type == 'Walkin'  ? 'disabled' : ''}} >
-                            <option value="{{ $order->application_status }}" selected>{{ $order->application_status }}</option>
-                            @forelse ($applicationType as $application)
-                                @if ($order->application_status != $application->type)
-                                    <option value="{{ $application->type }}">{{ $application->type }} </option>
-                                @endif
-                            @empty
-                                <option value="">Error! Please refresh the page</option>
-                            @endforelse
-                        </select>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="btnChangeApplicationStatus" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->pick_up_type == 'Walkin'  ? 'disabled' : ''}}>Change</button>
-                        </div>
-                    </div>
-                </div>
+            {{-- if the application status is approved then they can modify order status --}}
 
-                <div class="col-md-6 col-sm-6">
-                    {{-- APPLICATION STATUS --}}
-                    <label class="ml-2">Order Status</label>
-                    <div class="input-group mb-3 ml-2">
-                        <select class="custom-select" id="inputSelOrderStatus" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->pick_up_type == 'Walkin'  ? 'disabled' : ''}}>
-                            <option value="{{ $order->order_status }}" selected>{{ $order->order_status }}</option>
-                            @forelse ($orderType as $orderStats)
-                                @if ($order->order_status != $orderStats->type)
-                                    <option value="{{ $orderStats->type }}">{{ $orderStats->type }} </option>
-                                @endif
-                            @empty
-                                <option value="">Error! Please refresh the page</option>
-                            @endforelse
-                        </select>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="btnChangeOrderStatus" {{ $order->order_status == 'Received' || $order->application_status == 'Denied' || $order->pick_up_type == 'Walkin'  ? 'disabled' : ''}}>Change</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @if ($order->pick_up_type == 'Delivery')
-                {{-- Payment --}}
-                <label class="ml-2">Biker Payment Status</label>
+            {{-- for pickup --}}
+            @if ($order->pick_up_type == 'Pickup' && $order->application_status == 'Approved')
+                {{-- Order Status --}}
+                <label class="ml-2">Order Status</label>
                 <div class="input-group mb-3 ml-2">
-                    <select class="custom-select" id="inputDeliveryPayment" {{ $order->application_status == 'Denied' || $order->delivery_payment_status == 'Received'  ? 'disabled' : ''}}>
-                        <option value="{{ $order->delivery_payment_status }}" selected>{{ $order->delivery_payment_status }}</option>
-                        @forelse ($deliveryPayments as $deliveryPayment)
-                            @if ($order->delivery_payment_status != $deliveryPayment->type)
-                                <option value="{{ $deliveryPayment->type }}">{{ $deliveryPayment->type }} </option>
-                            @endif
+                    <select class="custom-select" id="inputSelOrderStatus">
+                        <option value="" selected>Select order status</option>
+                        @forelse ($orderType as $orderStats)
+                            <option value="{{ $orderStats->type }}">{{ $orderStats->type }} </option>
                         @empty
                             <option value="">Error! Please refresh the page</option>
                         @endforelse
                     </select>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="btnDeliveryPayment" {{ $order->application_status == 'Denied' || $order->delivery_payment_status == 'Received'  ? 'disabled' : ''}}>Change</button>
+                        <button class="btn btn-outline-secondary" type="button" id="btnChangeOrderStatus">Change</button>
                     </div>
                 </div>
             @endif
 
-            @if ($order->order_status == 'DNR')
+            {{-- For delivery --}}
+            @if ($order->pick_up_type == 'Delivery' && $order->application_status == 'Approved'  && $order->order_status != 'Received' && $order->order_status != 'DNR')
+                {{-- Order Status --}}
+                <label class="ml-2">Order Status</label>
+                <div class="input-group mb-3 ml-2">
+                    <select class="custom-select" id="inputSelOrderStatus">
+                        <option value="" selected>Select order status</option>
+                        @forelse ($orderType as $orderStats)
+                            <option value="{{ $orderStats->type }}">{{ $orderStats->type }} </option>
+                        @empty
+                            <option value="">Error! Please refresh the page</option>
+                        @endforelse
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="btnChangeOrderStatus">Change</button>
+                    </div>
+                </div>
+            @endif
+
+            @if ($order->pick_up_type == 'Delivery' && $order->delivered_by != null && $order->order_status == "Received")
+                {{-- Payment --}}
+                <label class="ml-2">Biker Payment Status</label>
+                <div class="input-group mb-3 ml-2">
+                    <select class="custom-select" id="inputDeliveryPayment">
+                        <option value="" selected>
+                            @if ($order->delivery_payment_status == 'Pending')
+                                The biker does not yet give the payment to the barangay
+                            @else
+                                The order has been processed
+                            @endif
+
+                        </option>
+                        @forelse ($deliveryPayments as $deliveryPayment)
+                            <option value="{{ $deliveryPayment->type }}">{{ $deliveryPayment->type }} </option>
+                        @empty
+                            <option value="">Error! Please refresh the page</option>
+                        @endforelse
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="btnDeliveryPayment">Change</button>
+                    </div>
+                </div>
+            @endif
+
+            @if ($order->pick_up_type == 'Delivery' && $order->order_status == 'DNR')
                 {{-- Biker returned delivery --}}
                 <label class="ml-2">Biker returned the delivery item</label>
                 <div class="input-group mb-3 ml-2">
                     <select class="custom-select" id="inputReturnItem">
-                        <option value="{{ $order->is_returned }}" selected>{{ $order->is_returned }}</option>
-                        @forelse ($isReturns as $isReturn)
-                            @if ($order->is_returned != $isReturn->type)
-                                <option value="{{ $isReturn->type }}">{{ $isReturn->type }} </option>
+                        <option value="" selected>
+                            @if ($order->is_returned == 'No')
+                                <div class="orderInfo text-warning">The biker does not give back the item</div>
+                            @elseif($order->is_returned == 'Yes')
+                                <div class="orderInfo text-success">The order has been returned</div>
                             @endif
+                        </option>
+                        @forelse ($isReturns as $isReturn)
+                            <option value="{{ $isReturn->type }}">{{ $isReturn->type }} </option>
                         @empty
                             <option value="">Error! Please refresh the page</option>
                         @endforelse
@@ -420,7 +420,7 @@
                 </div>
             @endif
 
-             {{-- Order List--}}
+            {{-- Order List--}}
             <div class="card shadow mb-4">
                 <div class="card-header d-flex justify-content-between align-items:center py-3">
                     <h6 class="font-weight-bold text-primary">Form List (Total: <span id="ordersCount">{{ $order->certificateForms->count() }}</span> forms) </h6>

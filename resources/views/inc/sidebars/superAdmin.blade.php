@@ -167,7 +167,7 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Certification
+        Certification Models
     </div>
 
     <!-- Request Nav Item - Tables -->
@@ -207,6 +207,13 @@
 
             </div>
         </div>
+    </li>
+
+    <li id="orderReport" class="nav-item">
+        <a class="nav-link" href="{{ route('admin.orderReports.index') }}">
+            <img src="{{ asset('assets/img/report.png') }}" alt="orderReport">
+            <span>Order Report</span>
+        </a>
     </li>
 
     <!-- Divider -->

@@ -167,7 +167,12 @@
                                 <td>{{ $order->certificate_forms_count }}</td>
                                 <td>{{ '₱'.$order->total_price }}</td>
                                 <td>{{ '₱'.$order->delivery_fee }}</td>
-                                <td>{{ \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</td>
+                                @if ($order == null)
+                                    <td>{{ \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</td>
+                                @else
+                                    <td>Not been set</td>
+                                @endif
+
                                 <td>
                                     <p>Application: <br>
                                         <strong> {{ $order->application_status }} </strong>

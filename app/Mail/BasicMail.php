@@ -11,11 +11,13 @@ class BasicMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $feedback;
+    public $subject;
+    public $message;
 
-    public function __construct($feedback)
+    public function __construct($subject, $message)
     {
-        $this->feedback = $feedback;
+        $this->subject = $subject;
+        $this->message = $message;
     }
 
 

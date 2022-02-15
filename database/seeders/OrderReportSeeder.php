@@ -15,7 +15,7 @@ class OrderReportSeeder extends Seeder
      */
     public function run()
     {
-        $orders = Order::where('application_status', 'Approved')->where('pick_up_type', 'Delivery')->get();
+        $orders = Order::where('pick_up_type', 'Delivery')->get();
 
         $faker = \Faker\Factory::create();
 

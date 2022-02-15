@@ -20,7 +20,7 @@ class UserRequirementSeeder extends Seeder
         foreach ($users as $user) {
             foreach ($requirements as $requirement) {
                 $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-                $file_name = $faker->file($sourceDir = 'C:\Project Assets\AppSignatures', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\requirements', false);
+                $file_name = $faker->file($sourceDir = 'C:\Project Assets\AppRequirements', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\requirements', false);
                 $file_path = 'requirements/'.$file_name;
 
                 UserRequirement::create([
