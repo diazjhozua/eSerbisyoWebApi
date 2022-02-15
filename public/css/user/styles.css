@@ -1986,7 +1986,8 @@ a:hover.back-to-top {
 	}
 
 	.header .image-container .img-wrapper {
-		width: 630px;
+		width: 450px;
+		margin-left: 125px;
 	}
 
 	.header-frame {
