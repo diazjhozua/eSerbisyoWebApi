@@ -35,11 +35,11 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" src="assets/img/user/features-1.png" alt="alternative">
+                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:220px;"src="assets/img/user/centralize.gif" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">
-                                    <div class="text-container">
+                                    <div class="text-container" >
                                         <h3>Compacted Centralized Data</h3>
                                         <p style="text-align: justify;">The system makes it simple to utilize the application by providing a single centralized application for all data that meets all of the system's needs.Find out and submit the <a class="blue page-scroll" href="/login">Sign Up Form</a> and you will receive access to the app with full experience of Barangay Cupang E-Serbisyo.</p>
                                         <ul class="list-unstyled li-space-lg">
@@ -68,7 +68,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" src="assets/img/user/features-2.png" alt="alternative">
+                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:220px;" src="assets/img/user/report.jpg" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">
@@ -101,7 +101,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" src="assets/img/user/features-3.png" alt="alternative">
+                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:220px;" src="assets/img/user/request.jpg" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">

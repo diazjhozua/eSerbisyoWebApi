@@ -138,7 +138,7 @@
                                         <img class="img-fluid" src="assets/img/user/diaz.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text">Lord Ipsum nulla ipsum mi, ornare nec orci ac, blandit vehicula eros. Duis enim lacus, rhoncus et sollicitudin ultricies, auctor ac diam. Quisque arcu eros, hendrerit vitae interdum ac, commodo id orci. Sed ligula erat, interdum nec diam in, malesuada cursus ligula. Integer est augue, finibus a elit nec, commodo malesuada sapien. In vitae mollis urna, sit amet molestie ex. Integer nec nibh malesuada, luctus sem vitae, faucibus libero.</div>
+                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque. </div>
                                         <div class="testimonial-author">Jhozua M. Diaz -  Lead Researcher, Full stack Web Developer, & Android Developer</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
@@ -150,8 +150,8 @@
                                         <img class="img-fluid" src="assets/img/user/gongob.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text">Awesome features for the money. I never thought such a low ammount of money would bring me so many leads per month. Before Tivo I used the services of an agency which cost 10x more and delivered far less. Highly recommended to marketers focused on results.</div>
-                                        <div class="testimonial-author">Lou Diamond T. Gongob- Front-End Developer</div>
+                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
+                                        <div class="testimonial-author">Lou Diamond T. Gongob - Front-End Developer</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
@@ -159,10 +159,23 @@
                                 <!-- Slide -->
                                 <div class="swiper-slide">
                                     <div class="image-wrapper">
+                                        <img class="img-fluid" src="assets/img/user/cabs.png" alt="alternative">
+                                    </div> <!-- end of image-wrapper -->
+                                    <div class="text-wrapper">
+                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
+                                        <div class="testimonial-author">Christine Caryl Cabrera - Researcher</div>
+                                    </div> <!-- end of text-wrapper -->
+                                </div> <!-- end of swiper-slide -->
+                                <!-- end of slide -->
+
+
+                                <!-- Slide -->
+                                <div class="swiper-slide">
+                                    <div class="image-wrapper">
                                         <img class="img-fluid" src="assets/img/user/sasa.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text">Tivo is the best marketing automation app for small and medium sized business. It understands the mindset of young entrepreneurs and provides the necessary data for wise marketing decisions. Just give it a try and you will definitely not regret spending your time.</div>
+                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque. </div>
                                         <div class="testimonial-author">Trisha Jean S. Sevilleno - Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
@@ -174,7 +187,7 @@
                                         <img class="img-fluid" src="assets/img/user/youz.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text">Tivo is one of the greatest marketing automation apps out there. I especially love the Reporting Tools module because it gives me such a great amount of information based on little amounts of input gathered in just few weeks of light weight usage. Recommended!</div>
+                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
                                         <div class="testimonial-author">Youzrah A. Hudda - Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->

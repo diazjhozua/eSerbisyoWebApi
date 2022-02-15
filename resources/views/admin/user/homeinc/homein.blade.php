@@ -12,9 +12,9 @@
                     </div> <!-- end of col -->
                     <div class="col-lg-6 col-xl-7">
                         <div class="image-container">
-                            <i class="fas fa-check"></i>
+                            
                             <div class="img-wrapper">
-                                <img class="img-fluid" src="assets/img/user/header-software-app.png" alt="alternative">
+                                <img class="img-fluid" src="assets/img/user/headerimg.png" alt="alternative">
                             </div> <!-- end of img-wrapper -->
                         </div> <!-- end of image-container -->
                     </div> <!-- end of col -->
@@ -46,9 +46,9 @@
                                 <div class="swiper-slide">
                                         <img class="img-fluid" src="assets/img/user/muntilogo.png" style="width:100%; height: 40px;"alt="alternative">
                                 </div>
-                                <div class="swiper-slide">
+                                <!-- <div class="swiper-slide">
                                         <img class="img-fluid" src="assets/img/user/jdiazz.png" style="width:100%; height: 40px; "alt="alternative">
-                                </div>
+                                </div> -->
                                 <div class="swiper-slide">
                                         <img class="img-fluid" src="assets/img/user/mtics.png"  style="width:100%; height: 40px;"alt="alternative">
                                 </div>
