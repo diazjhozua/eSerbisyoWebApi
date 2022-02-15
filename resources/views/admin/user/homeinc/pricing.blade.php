@@ -139,7 +139,7 @@
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
                                         <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque. </div>
-                                        <div class="testimonial-author">Jhozua M. Diaz -  Lead Researcher, Full stack Web Developer, & Android Developer</div>
+                                        <div class="testimonial-author">Jhozua M. Diaz- Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
@@ -151,7 +151,7 @@
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
                                         <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
-                                        <div class="testimonial-author">Lou Diamond T. Gongob - Front-End Developer</div>
+                                        <div class="testimonial-author">Lou Diamond T. Gongob - Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
