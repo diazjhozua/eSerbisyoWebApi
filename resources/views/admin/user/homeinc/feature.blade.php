@@ -35,7 +35,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:220px;"src="assets/img/user/centralize.gif" alt="alternative">
+                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:150px;"src="assets/img/user/centralize.gif" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">
@@ -68,7 +68,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:220px;" src="assets/img/user/report.jpg" alt="alternative">
+                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:150px;" src="assets/img/user/report.jpg" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
                                 <div class="col-lg-6">
@@ -101,13 +101,13 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="image-container">
-                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:220px;" src="assets/img/user/request.jpg" alt="alternative">
+                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:150px;" src="assets/img/user/request.jpg" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
-                                <div class="col-lg-6">
-                                    <div class="text-container">
+                                <div class="col-lg-6" >
+                                    <div class="text-container" >
                                         <h3>Faceless Request Experience</h3>
-                                        <p style="text-align: justify;">You may use this application to communicate and request necessary documents with the officials of Barangay Cupang without having to go to the barangay. With the added bonus of documents you requested being delivered directly to your house or if you want to go into the barangay to collect it by yourself.</p>
+                                        <p style="text-align: justify; ">You may use this application to communicate and request necessary documents with the officials of Barangay Cupang without having to go to the barangay. With the added bonus of documents you requested being delivered directly to your house or if you want to go into the barangay to collect it by yourself.</p>
                                         <ul class="list-unstyled li-space-lg">
                                             <li class="media">
                                                 <i class="fas fa-square"></i>
@@ -145,7 +145,7 @@
                 <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
                 <div class="col-lg-8">
                     <div class="image-container">
-                        <img class="img-fluid" src="assets/img/user/details-lightbox.png" alt="alternative">
+                        <img class="img-fluid" style="height:800px; margin-left:100px;"src="assets/img/user/centralize.gif" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
                 <div class="col-lg-4">
@@ -187,7 +187,7 @@
                 <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
                 <div class="col-lg-8">
                     <div class="image-container">
-                        <img class="img-fluid" src="assets/img/user/details-lightbox.png" alt="alternative">
+                        <img class="img-fluid" style="height:800px; margin-left:100px;"src="assets/img/user/report.jpg" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
                 <div class="col-lg-4">
@@ -226,7 +226,7 @@
                 <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
                 <div class="col-lg-8">
                     <div class="image-container">
-                        <img class="img-fluid" src="assets/img/user/details-lightbox.png" alt="alternative">
+                        <img class="img-fluid" style="height:800px; margin-left:100px;"src="assets/img/user/request.jpg" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
                 <div class="col-lg-4">
