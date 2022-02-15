@@ -143,7 +143,6 @@
                     <div class="form-group">
                         <label for="description">Admin Message</label>
                         <textarea class="form-control" name="admin_message" id="txtAreaAdminMessage" rows="3"></textarea>
-
                         <div id="message_caption" class="form-text text-justify">Insert here the message on why the user verification request is approved or denied</div>
                     </div>
 

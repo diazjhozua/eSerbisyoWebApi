@@ -193,6 +193,88 @@ function editForm(certFormID) {
     });
 }
 
+function validate() {
+    if (INPUT_SEL_APPLICATION_STATUS.val() == "Approved") {
+        if (!isDate(INPUT_PICKUP_DATE.val()) || INPUT_PICKUP_DATE.val() == null) {
+            toastr.error('Incorrect Date format');
+            return false
+        } else {
+            pickup_date = INPUT_PICKUP_DATE.val();
+        }
+    }
+
+    if (INPUT_ADMIN_MESSAGE.val().trim() == '') {
+        toastr.error('Please input message');
+        return false;
+    } else {
+        admin_message = INPUT_ADMIN_MESSAGE.val();
+    }
+
+    return true;
+}
+
+
+function editApplicationStatus() {
+    var formUrl = window.location.origin + `/admin/orders/updateApplicationStatus/${INPUT_ORDER_ID.val()}`;
+    console.log(`formUrl`, formUrl);
+
+    var formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('application_status', application_status);
+
+    if (pickup_date != null) {
+        formData.append('pickup_date', pickup_date);
+    }
+
+    formData.append('admin_message', admin_message);
+
+    $.ajax({
+        type: 'POST',
+        url: formUrl,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        beforeSend: function () {
+            toastr.info('Submitting');
+            $('#btnApplicationFormSubmit').attr("disabled", true); //disabled login
+            $('.btnTxt').text('Updating') //set the text of the submit btn
+            $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+        },
+        success: function (response) {
+            toastr.success(response.message);
+            pickup_date = null;
+            application_status = null;
+            pick_up_type = null;
+            order_status = null;
+            admin_message = null;
+
+            window.location.reload(true);
+        },
+        error: function (xhr, status, error) {
+            var err = JSON.parse(xhr.responseText);
+
+            if (err.message != null) {
+                toastr.error(err.message)
+
+            } else {
+                $.each(err.errors, function (key, value) {
+                    toastr.error(value)
+                });
+            }
+        },
+        complete: function () {
+            toastr.info('Request Complete');
+            $('#btnApplicationFormSubmit').attr("disabled", false);
+            $('.btnTxt').text('Update') //set the text of the submit btn
+            $('.loadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
+        }
+    });
+}
+
 function editOrderStatus() {
 
     var formUrl = window.location.origin + `/admin/orders/${INPUT_ORDER_ID.val()}`;
@@ -201,22 +283,13 @@ function editOrderStatus() {
 
     var formData = new FormData();
     formData.append('_method', 'PUT');
-    if (pickup_date != null) {
-        formData.append('pickup_date', pickup_date);
-    } else if (application_status != null) {
-        formData.append('application_status', application_status);
-    } else if (pick_up_type != null) {
-        formData.append('pick_up_type', pick_up_type);
-    } else if (order_status != null) {
+    if (order_status != null) {
         formData.append('order_status', order_status);
-    } else if (admin_message != null) {
-        formData.append('admin_message', admin_message);
     } else if (delivery_payment_status != null) {
         formData.append('delivery_payment_status', delivery_payment_status);
     } else if (return_item != null) {
         formData.append('is_returned', return_item);
     }
-
 
     $.ajax({
         type: 'POST',
@@ -258,6 +331,7 @@ function editOrderStatus() {
         }
     });
 }
+
 $(document).ready(function () {
     NAV_ORDER.addClass('active');
 
@@ -279,64 +353,53 @@ $(document).ready(function () {
     });
 
 
-    BTN_ADMIN_MESSAGE.click(function () {
-        if (INPUT_ADMIN_MESSAGE.val().trim() == '') {
-            toastr.error('Please input message');
-        } else {
-            admin_message = INPUT_ADMIN_MESSAGE.val();
-
-            editOrderStatus();
-        }
-    });
-
-    BTN_PICKUP_DATE.click(function () {
-        if (!isDate(INPUT_PICKUP_DATE.val()) || INPUT_PICKUP_DATE.val() == null) {
-            toastr.error('Incorrect Date format');
-        } else {
-            pickup_date = INPUT_PICKUP_DATE.val();
-            editOrderStatus();
-        }
-    });
-
-    BTN_PICKUP_STATUS.click(function () {
-        pickupStat = ["Pickup", "Delivery"];
-
-        if (!pickupStat.includes(INPUT_SEL_PICKUP_STATUS.val())) {
-            toastr.error('Pickup status value is incorrect. Do not manipulate DOM elements');
-        } else {
-            pick_up_type = INPUT_SEL_PICKUP_STATUS.val();
-            editOrderStatus();
-        }
-    });
 
     BTN_APPLICATION_STATUS.click(function () {
-        applicationStat = ['Pending', 'Cancelled', 'Approved', 'Denied'];
+        applicationStat = ['Approved', 'Denied'];
 
         if (!applicationStat.includes(INPUT_SEL_APPLICATION_STATUS.val())) {
-            toastr.error('Application status value is incorrect. Do not manipulate DOM elements');
+            toastr.error('Please select application status');
         } else {
+
+            $('.pickupDateForm').hide();
+            $('.adminRespondForm').hide();
+            if (INPUT_SEL_APPLICATION_STATUS.val() == "Approved") {
+                $('.adminRespondLabel').text("Add message to the request");
+                $('.pickupDateForm').show();
+                $('.adminRespondForm').show();
+                $('#btnApplicationFormSubmit').show();
+            } else if (INPUT_SEL_APPLICATION_STATUS.val() == "Denied") {
+                $('.adminRespondLabel').text("Add reason why it is declined");
+                $('.adminRespondForm').show();
+                $('#btnApplicationFormSubmit').show();
+            }
             application_status = INPUT_SEL_APPLICATION_STATUS.val();
-            editOrderStatus();
+
+        }
+    });
+
+    $('#btnApplicationFormSubmit').click(function () {
+        if (validate()) {
+            editApplicationStatus();
         }
     });
 
     BTN_ORDER_STATUS.click(function () {
-        orderStat = ['Waiting', 'Received', 'DNR', 'On-Going'];
+        orderStat = ['Received', 'DNR', 'On-Going'];
 
         if (!orderStat.includes(INPUT_SEL_ORDER_STATUS.val())) {
-            toastr.error('Order status value is incorrect. Do not manipulate DOM elements');
+            toastr.warning('Please select order status value is incorrect');
         } else {
             order_status = INPUT_SEL_ORDER_STATUS.val();
             editOrderStatus();
         }
     });
 
-
     BTN_DELIVERY_PAYMENT.click(function () {
         deliveryPayStat = ['Pending', 'Received'];
 
         if (!deliveryPayStat.includes(INPUT_SEL_DELIVERY_PAYMENT.val())) {
-            toastr.error('Biker payment status value is incorrect. Do not manipulate DOM elements');
+            toastr.warning('Please select biker payment status value ');
         } else {
             delivery_payment_status = INPUT_SEL_DELIVERY_PAYMENT.val();
             editOrderStatus();
@@ -347,13 +410,12 @@ $(document).ready(function () {
         returnedItem = ['No', 'Yes'];
 
         if (!returnedItem.includes(INPUT_RETURN_ITEM.val())) {
-            toastr.error('Returned item value is incorrect. Do not manipulate DOM elements');
+            toastr.warning('Please select returned item value is incorrect.');
         } else {
             return_item = INPUT_RETURN_ITEM.val();
             editOrderStatus();
         }
     });
-
 
     // CERTIFICATE FORM
     FORM_CERTIFICATE.validate({

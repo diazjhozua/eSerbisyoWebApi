@@ -145,7 +145,7 @@ class UserSeeder extends Seeder
 
         $unverifiedUsers = User::where('is_verified', 0)->get();
         foreach ($unverifiedUsers as $user) {
-            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\credentials', false);
+            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppID', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\credentials', false);
             $credentials_file_path = 'credentials/'.$credentials_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
@@ -190,7 +190,7 @@ class UserSeeder extends Seeder
         foreach (range(1,30) as $index)
         {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\bikers', false);
+            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppBikers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\bikers', false);
             $credentials_file_path = 'bikers/'.$credentials_name;
             DB::table('biker_requests')->insert([
                 'user_id' => $faker->numberBetween(20, 500),

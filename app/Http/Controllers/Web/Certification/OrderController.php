@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Web\Certification;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderAdminRequest;
+use App\Http\Requests\OrderApplicationAdminRequest;
 use App\Http\Resources\OrderResource;
+use App\Jobs\OrderJob;
 use App\Jobs\OrderStatusJob;
+use App\Jobs\SendMailJob;
 use App\Models\Certificate;
 use App\Models\CertificateForm;
 use App\Models\CertificateOrder;
@@ -283,22 +286,16 @@ class OrderController extends Controller
         }
 
         $applicationType = [
-            (object)[ "id" => 1, "type" => "Pending"], (object) ["id" => 2, "type" => "Cancelled"],
             (object) ["id" => 2, "type" => "Approved"], (object) ["id" => 2, "type" => "Denied"],
-        ];
-
-        $pickupType = [
-            (object)[ "id" => 1, "type" => "Pickup"], (object) ["id" => 2, "type" => "Delivery"],
         ];
 
         if ($order->pick_up_type == "Delivery") {
             $orderType = [
-                (object)[ "id" => 1, "type" => "Waiting"], (object) ["id" => 2, "type" => "On-Going"]
+                (object) ["id" => 2, "type" => "On-Going"]
             ];
-
         } else {
             $orderType = [
-                (object)[ "id" => 1, "type" => "Waiting"], (object) ["id" => 2, "type" => "Received"],
+                (object) ["id" => 2, "type" => "Received"],
                 (object) ["id" => 2, "type" => "DNR"]
             ];
         }
@@ -311,7 +308,7 @@ class OrderController extends Controller
             (object)[ "id" => 1, "type" => "No"], (object) ["id" => 2, "type" => "Yes"],
         ];
 
-        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'pickupType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements', 'deliveryPayments', 'isReturns'));
+        return view('admin.certification.orders.show', compact('order', 'applicationType', 'orderType', 'noRequirements', 'isCompleteRequirements', 'passedRequirements', 'deliveryPayments', 'isReturns'));
     }
 
     public function edit(Order $order)
@@ -321,70 +318,102 @@ class OrderController extends Controller
 
     public function update(OrderAdminRequest $request, Order $order)
     {
-        if(isset($request->application_status)) {
-            $subject = 'Order\'s Application Status Notification';
-            $changeValue =  'application_status';
-            Log::debug('Application Status');
+        $subject = 'Certificate Order Notification';
+        $message = null;
+        $ids = $order->certificateForms()->pluck('id');
+        if (isset($request->order_status)) {
+            if ($order->pick_up_type == 'Delivery') {
+                if ($request->order_status != 'On-Going') {
+                    return response()->json(['message' => 'Invalid order status'], 403);
+                }
+                $order->fill(['order_status' => $request->order_status])->save();
+                $message = 'Your order #'.$order->id. ' has been pickup by our biker delivery Please prepare the exact payment.';
 
-            if ($request->application_status == 'Denied' || $request->application_status == 'Cancelled') {
-                $order->fill(['order_status' => 'Pending', 'application_status' => $request->application_status])->save();
+
             } else {
-                $order->fill(['application_status' => $request->application_status])->save();
-            }
+                if ($request->order_status == 'Received') {
+                    $order->fill(['order_status' => $request->order_status, 'received_at' => now()])->save();
+                    $message = 'Your order #'.$order->id. ' has been marked by our administrator that you received your requested certificates.';
 
-            $order = $order->load('certificateForms');
-            $ids = $order->certificateForms()->pluck('id');
-            foreach($ids as $id) {
-                CertificateForm::where('id', $id )
-                    ->update(['status' => $request->application_status]);
-            }
-        } elseif(isset($request->pick_up_type)) {
-            $subject = 'Order\'s Pickup type Notification';
-            $changeValue =  'pick_up_type';
+                    foreach($ids as $id) {
+                        CertificateForm::where('id', $id )
+                            ->update(['status' => 'Approved']);
+                    }
 
-            if ($request->pick_up_type == 'Pickup') {
-                $order->fill(['pick_up_type' => $request->pick_up_type, 'delivery_fee' => 0, 'delivered_by' => null])->save();
-            } else if ($request->pick_up_type == 'Delivery') {
-                $order->fill(['pick_up_type' => $request->pick_up_type, 'delivery_fee' => 50])->save();
+                } elseif ($request->order_status == 'DNR') {
+                    $order->fill(['order_status' => $request->order_status])->save();
+                    $message = 'Your order #'.$order->id. ' has been marked by our administrator that you did not receive your requested certificates.';
+
+                    foreach($ids as $id) {
+                        CertificateForm::where('id', $id )
+                            ->update(['status' => 'Cancelled']);
+                    }
+                }
+            }
+            dispatch(new OrderJob($order, $subject, $message));
+        } elseif (isset($request->delivery_payment_status)) {
+            $subject = 'Certificate Biker Order Notification';
+            if ($request->delivery_payment_status == 'Pending') {
+                $message = 'Your delivery order #'.$order->id. ' has been marked as Pending in delivery payment. Go to the barangay to process the payment.';
+
             } else {
-                $order->fill(['pick_up_type' => $request->pick_up_type])->save();
+                $message = 'Your delivery order #'.$order->id. ' has been marked as Processed. It means that the transaction is completed. Thankyou for your service!';
+
             }
-
-        } elseif(isset($request->order_status)) {
-            $subject = 'Order\'s Status Notification';
-            $changeValue =  'order_status';
-
-            if ($request->order_status == 'Received') {
-                $order->fill(['order_status' => $request->order_status, 'received_at' => now()])->save();
-            }
-
-            if ($request->order_status == 'DNR') {
-                $order->fill(['order_status' => $request->order_status, 'received_at' => now(), 'received_at' => now(), 'is_returned', "No"])->save();
-            }
-
-            $order->fill(['order_status' => $request->order_status])->save();
-        } elseif(isset($request->pickup_date)) {
-            $subject = 'Order\'s Pickup Date Notification';
-            $changeValue =  'pickup_date';
-            $order->fill(['pickup_date' => $request->pickup_date])->save();
-        } elseif(isset($request->admin_message)) {
-            $subject = 'Order\'s Admin Message Notification';
-            $changeValue =  'admin_message';
-            $order->fill(['admin_message' => $request->admin_message])->save();
-        }
-
-        if(isset($request->delivery_payment_status)) {
             $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
+
+            dispatch(new SendMailJob($order->biker->email, $subject, $message));
         } elseif(isset($request->is_returned)) {
-            $order->fill(['is_returned' => $request->is_returned])->save();
-        } else {
-            if (!isset($request->delivery_payment_status)) {
-                dispatch(new OrderStatusJob($order, $subject, $changeValue));
+            $subject = 'Certificate Biker Order Notification';
+            if ($request->is_returned == 'No') {
+                $message = 'Your delivery order #'.$order->id. ' has been marked that you still not  returned the delivery item. Go to the barangay to process the payment.';
+            } else {
+                $message = 'Your delivery order #'.$order->id. ' has been marked that you have returned the item properly. It means that the transaction is completed. Thankyou for your service!';
             }
+            $order->fill(['is_returned' => $request->is_returned])->save();
+            dispatch(new SendMailJob($order->biker->email, $subject, $message));
         }
 
         return response()->json(['message' => 'Order status has been updated' ], 200);
     }
+
+    // update order application
+    public function updateApplicationStatus(OrderApplicationAdminRequest $request, Order $order)
+    {
+        if ($order->application_status != 'Pending') {
+            return response()->json(['message' => 'You can only verify pending request'], 403);
+        }
+
+        // update order
+        $order->fill($request->getData())->save();
+
+        // also update certificate forms in specified order.
+        $ids = $order->certificateForms()->pluck('id');
+        foreach($ids as $id) {
+            CertificateForm::where('id', $id )
+                ->update(['status' => $request->application_status]);
+        }
+
+        $subject = 'Certificate Order Notification';
+        $message = null;
+        if ($request->application_status == "Approved") {
+            $order->fill(['order_status' => 'Waiting'])->save();
+            $label1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document at '. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
+            $label2 = 'If the order has not been selected by the biker or delivers after 3 days prior to the delivery. It will marked as Cancelled. <br> <br> ';
+            $label3 = '<strong>Admin Message:</strong> '. $order->admin_message;
+            $message = $label1.$label2.$label3;
+        } else {
+            $label1 = 'Your order #'.$order->id. ' has been denied by the administrator. Please see below the reason message why it is not approved. <br> <br> ';
+            $label2 = '<strong>Reason:</strong> '. $order->admin_message;
+            $message = $label1.$label2;
+        }
+
+        // send sms and email notification to the person who orders it
+        dispatch(new OrderJob($order, $subject, $message));
+
+        return response()->json(['message' => 'Order status has been updated' ], 200);
+    }
+
 
     public function destroy(Order $order)
     {

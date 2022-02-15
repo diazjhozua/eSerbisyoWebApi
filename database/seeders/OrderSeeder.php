@@ -24,6 +24,12 @@ class OrderSeeder extends Seeder
         $users = User::where('is_verified', '=', 1)->get();
         $pick_up_type = ['Walkin','Pickup', 'Delivery'];
         $application_status = ['Approved', 'Denied'];
+        $fake_address = [
+            '46 Millionaire Street Purok 3 Cupang Muntinlupa City',
+            '633 Purok 5 Cupang Muntinlupa City',
+            '568 San Simon Purok 4 Cupang Muntinlupa City',
+            '554 Purok 4 Cupang Muntinlupa City'
+        ];
 
         foreach ($users as $user) {
 
@@ -32,6 +38,7 @@ class OrderSeeder extends Seeder
                 $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
                 $application = $application_status[array_rand($application_status)];
                 $pickup = $pick_up_type[array_rand($pick_up_type)];
+                $address = $fake_address[array_rand($fake_address)];
                 $long = $faker->longitude();
                 $lat = $faker->latitude();
 
@@ -39,7 +46,7 @@ class OrderSeeder extends Seeder
                 $filePath = null;
 
                 if ($pickup == "Delivery") {
-                    $fileName = $faker->file($sourceDir = 'C:\Project Assets\AppMissingPersons', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\orders', false);
+                    $fileName = $faker->file($sourceDir = 'C:\Project Assets\AppOrders', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\orders', false);
                     $filePath = 'orders/'.$fileName;
                 }
 
@@ -61,19 +68,40 @@ class OrderSeeder extends Seeder
                     'application_status' => $application,
                     'delivery_payment_status' => $pickup === 'Delivery' ? 'Received' : NULL,
                     'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',
-                    'location_address' => $faker->address(),
+                    'location_address' => $address,
                     'email' => $faker->lastName.$faker->email,
                     'phone_no' => $faker->phoneNumber,
-                    'user_long' => $pickup === 'Delivery' ? $long : NULL,
-                    'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                    'rider_long' => $pickup === 'Delivery' ? $long : NULL,
-                    'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
                     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
                     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
                     'admin_message' => $admin_message,
                     'created_at' => $date,
                     'updated_at' => $date,
                 ]);
+
+                // $order = Order::create([
+                //     'ordered_by' => $pickup === 'Walkin' ? null : $user->id,
+                //     'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
+                //     'name' => $faker->name,
+                //     'pick_up_type' => $pickup,
+                //     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
+                //     'pickup_date' => $pickup === 'Walkin' ? $pickupDate : null,
+                //     'received_at' => $pickup === 'Walkin' ? $pickupDate : null,
+                //     'application_status' => $pickup == 'Walkin' ? 'Approved' : 'Pending',
+                //     'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
+                //     'order_status' => $pickup === 'Walkin' ? 'Received' :'Pending',
+                //     'location_address' => $faker->address(),
+                //     'email' => $faker->lastName.$faker->email,
+                //     'phone_no' => $faker->phoneNumber,
+                //     // 'user_long' => $pickup === 'Delivery' ? $long : NULL,
+                //     // 'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                //     // 'rider_long' => $pickup === 'Delivery' ? $long : NULL,
+                //     // 'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
+                //     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
+                //     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
+                //     'admin_message' => $admin_message,
+                //     'created_at' => $date,
+                //     'updated_at' => $date,
+                // ]);
 
                 // $order = Order::create([
                 //     'ordered_by' => $user->id,
