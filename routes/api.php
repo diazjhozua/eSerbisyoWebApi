@@ -42,8 +42,9 @@ Route::group([
     Route::get('/myVerificationRequest', [JwtAuthCtrl::class, 'myVerificationRequest']);
     Route::post('/submitVerificationRequest', [JwtAuthCtrl::class, 'submitVerificationRequest']);
 
-
+    Route::get('feedbacks/getAnalytics', [FeedbackController::class, 'getAnalytics']);
     Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update', 'show', 'delete']);
+    Route::get('reports/getAnalytics', [ReportController::class, 'getAnalytics']);
     Route::resource('reports', ReportController::class)->except(['edit', 'update', 'delete']);
     Route::resource('userRequirements', UserRequirementController::class)->except(['show', 'edit', 'update','delete']);
 
@@ -51,6 +52,7 @@ Route::group([
     Route::get('announcements/comment/{announcement}',  [AnnouncementController::class, 'getCommentList']);
     Route::post('announcements/like/{announcement}',  [AnnouncementController::class, 'like']);
     Route::post('announcements/comment/{announcement}',  [AnnouncementController::class, 'comment']);
+
     Route::resource('announcements', AnnouncementController::class)->only(['index']);
     Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
 
@@ -69,6 +71,7 @@ Route::group([
     Route::get('missingItems/authReports', [MissingItemController::class, 'authReports']);
     Route::resource('missingItems', MissingItemController::class);
 
+    Route::get('complaints/getAnalytics', [ComplaintController::class, 'getAnalytics']);
     Route::resource('complaints', ComplaintController::class);
     Route::resource('complainants', ComplainantController::class)->except(['index', 'create', 'show']);
     Route::resource('defendants', DefendantController::class)->except(['index', 'create', 'show']);

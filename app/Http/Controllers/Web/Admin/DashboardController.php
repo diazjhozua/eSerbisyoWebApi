@@ -341,11 +341,8 @@ class DashboardController extends Controller
         $dnr = Order::where('pick_up_type','!=', 'Walkin')->where('application_status', 'Approved')->where('order_status', 'DNR')->count();
 
         $orderRatioPercentage = [];
-
         $orderRatioPercentage[0] = $orders > 0 ? round($received * 100 / $orders) : 0 ;
         $orderRatioPercentage[1] = $orders > 0 ? round($dnr * 100 / $orders) : 0 ;
-
-
 
         // end of getting the received and dnr ratio
 
@@ -402,7 +399,7 @@ class DashboardController extends Controller
         $complaintRawData = [];
         $complaintChart = [];
 
-        $complaints = Project::select('id', 'created_at')
+        $complaints = Complaint::select('id', 'created_at')
             ->whereYear('created_at', '=', date("Y") )
             ->get()
             ->groupBy(function($date) {

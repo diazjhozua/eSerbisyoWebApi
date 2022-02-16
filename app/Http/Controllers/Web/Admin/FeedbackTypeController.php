@@ -264,7 +264,6 @@ class FeedbackTypeController extends Controller
             })
             ->first();
 
-
         $type = Type::find($type_id);
         $title = 'Feedback Type Reports';
         $modelName =  $type_id == 0 ? 'Others/Deleted' : $type->name;

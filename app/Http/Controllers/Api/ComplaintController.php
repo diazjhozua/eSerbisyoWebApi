@@ -14,6 +14,7 @@ use App\Models\Complainant;
 use App\Models\Complaint;
 use App\Models\Defendant;
 use App\Models\Type;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -114,10 +115,53 @@ class ComplaintController extends Controller
         });
     }
 
-    // public function changeStatus(ChangeStatusRequest $request, Complaint $complaint) {
-    //     if ($request->status == $complaint->status) { return response()->json(Helper::instance()->sameStatusMessage($request->status, 'complaint')); }
-    //     $oldStatus = $complaint->status;
-    //     $complaint->fill($request->validated())->save();
-    //     return (new ComplaintResource($complaint))->additional(Helper::instance()->statusMessage($oldStatus, $complaint->status, 'complaint'));
-    // }
+    // get short analytics about the overall overview.
+    public function getAnalytics()
+    {
+        $complaintTypes = Type::withCount(['complaints' => function($query){
+            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this year')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')));
+        }])
+        ->where('model_type', 'Complaint')->orderBy('complaints_count', 'DESC')->get();
+
+        $trendingComplaints = Type::where('model_type', 'Complaint')->withCount('complaints')->orderBy('complaints_count', 'DESC')->limit(5)->get();
+
+        $complaints = Complaint::select('id', 'created_at')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('m'); // grouping by years
+        });
+
+        $userAverageComplaint = [];
+        $userComplaint = [];
+
+        foreach ($complaints as $key => $value) {
+            $yearList = [];
+            $userComplaintCount = 0;
+
+            foreach ($value as $userComplaintData) {
+                $userComplaintCount ++;
+                $year = Carbon::parse($userComplaintData->created_at)->format('Y');
+                if (!in_array($year, $yearList)) {
+                    array_push($yearList, $year);
+                }
+            }
+
+            $userAverageComplaint[(int)$key] = round($userComplaintCount / count($yearList), 2);
+        }
+
+        for($i = 1; $i <= 12; $i++){
+            if(!empty($userAverageComplaint[$i])){
+                $userComplaint[$i] = $userAverageComplaint[$i];
+            }else{
+                $userComplaint[$i] = 0;
+            }
+        }
+        return response()->json([
+            'complaintTypes' => $complaintTypes,
+            'userComplaint' => $userComplaint,
+            'trendingComplaints' => $trendingComplaints,
+        ], 200);
+    }
+
 }
