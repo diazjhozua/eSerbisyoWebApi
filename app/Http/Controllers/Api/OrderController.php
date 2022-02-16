@@ -119,6 +119,10 @@ class OrderController extends Controller
         activity()->disableLogging();
         $isCompleteFormFields = $this->checkCertificateFormFields($request);
 
+        if (Order::where('ordered_by', auth('api')->user()->id)->where('application_status', 'Pending')->count() >= 1) {
+            return response()->json(['message' => 'You have an existing request, please wait for the transaction to be complete to request another orders'], 403);
+        }
+
         if ($isCompleteFormFields != true) {
             return response()->json([
                 'message' => 'Please fill all the fields in certificate forms',
