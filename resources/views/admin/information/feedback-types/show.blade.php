@@ -12,7 +12,6 @@
 
     @include('admin.information.feedbacks.respond')
 
-    @section('reportRoute', route('admin.feedback-types.report.show', $type->id))
     @include('admin.information.feedbacks.reportSelectModal')
 
     <!-- Page Heading -->
@@ -28,6 +27,8 @@
 
     <p class="font-weight-light">Created at: {{ $type->created_at }} -- Updated at: {{ $type->updated_at }}</p>
     <p class="font-weight-light"></p>
+
+    <input type="hidden" id="type_id" value="{{$type->id}}"/>
 
     <div class="row">
         {{-- Pending Card --}}

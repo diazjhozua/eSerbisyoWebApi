@@ -507,9 +507,10 @@ class OrderController extends Controller
                 }
             })
             ->first();
+
+
         $title = 'Order Reports';
         $modelName = 'Order';
-
 
         return view('admin.certification.pdf.orders', compact('title', 'modelName', 'orders', 'reportsData',
             'date_start', 'date_end', 'sort_column', 'sort_option', 'pick_up_type', 'order_status', 'application_status',

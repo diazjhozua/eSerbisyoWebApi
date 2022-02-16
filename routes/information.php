@@ -25,10 +25,11 @@ use App\Http\Controllers\Web\Admin\ {
 
 // For taskforce admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoAdmin'])->group(function () {
-    Route::post('feedback-types/report', [AdminFeedbackType::class, 'report'])->name('feedback-types.report'); //report type
-    Route::post('feedback-types/report/{id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show'); //report type show
+    Route::get('feedback-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminFeedbackType::class, 'report'])->name('feedback-types.report');
+    // Route::post('feedback-types/report', [AdminFeedbackType::class, 'report'])->name('feedback-types.report'); //report type
+    Route::get('feedback-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{polarity_option}/{status_option}/{type_id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show');
+    // Route::post('feedback-types/report/{id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show'); //report type show
 
-    Route::put('feedbacks/respond/{feedback}', [AdminFeedback::class, 'respondReport']);
     Route::post('feedbacks/report', [AdminFeedback::class, 'report'])->name('feedbacks.report');
 
     Route::post('document-types/report', [AdminDocumentType::class, 'report'])->name('document-types.report');
@@ -60,6 +61,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoAdmin']
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoStaff'])->group(function () {
 
     Route::resource('feedback-types', AdminFeedbackType::class)->except(['create']); //resource except create method
+    Route::put('feedbacks/respond/{feedback}', [AdminFeedback::class, 'respondReport']);
     Route::get('feedbacks', [AdminFeedback::class, 'index'])->name('feedbacks.index');
 
     Route::resource('document-types', AdminDocumentType::class)->except(['create']);

@@ -7,34 +7,17 @@ use App\Http\Controllers\Api\ {
     FeedbackController,
     ReportController,
     UserRequirementController,
-
-    FeedbackTypeController,
-
-    DocumentTypeController,
     DocumentController,
-    TermController,
-    PositionController,
     EmployeeController,
-    OrdinanceTypeController,
     OrdinanceController,
     MissingPersonController,
-    LostAndFoundController,
-    ComplaintTypeController,
     ComplaintController,
     ComplainantController,
     DefendantController,
-    ReportTypeController,
-
-    AnnouncementTypeController,
     AnnouncementController,
-    AnnouncementPictureController,
     BikerController,
     ProjectController,
     CommentController,
-    CertificateController,
-    RequirementController,
-    CertificateFormController,
-
     JwtAuthController as JwtAuthCtrl,
     MissingItemController,
     OrderController
@@ -58,6 +41,7 @@ Route::group([
     Route::get('/myProfile', [JwtAuthCtrl::class, 'user']);
     Route::get('/myVerificationRequest', [JwtAuthCtrl::class, 'myVerificationRequest']);
     Route::post('/submitVerificationRequest', [JwtAuthCtrl::class, 'submitVerificationRequest']);
+
 
     Route::resource('feedbacks', FeedbackController::class)->except(['edit', 'update', 'show', 'delete']);
     Route::resource('reports', ReportController::class)->except(['edit', 'update', 'delete']);

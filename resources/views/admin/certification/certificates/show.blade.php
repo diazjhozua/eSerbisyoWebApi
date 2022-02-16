@@ -64,7 +64,7 @@
                             <div class="form-group">
                                 <label for="delivery_option">Received Option</label>
                                 <select class="form-control" id="selectReceivedOption" name="selectReceivedOption" disabled>
-                                    <option value="{{ $certificate->is_open_delivery }}" selected>{{ $certificate->is_open_delivery == 1 ? 'Available for delivery and walkin' : 'Walkin Only' }}</option>
+                                    <option value="{{ $certificate->is_open_delivery }}" selected>{{ $certificate->is_open_delivery == 1 ? 'Available for delivery and pickup' : 'Pickup Only' }}</option>
                                 </select>
                             </div>
 

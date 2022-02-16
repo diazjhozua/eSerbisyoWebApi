@@ -17,7 +17,6 @@
         <b>Date Generated:</b><i>{{ date('Y-m-d H:i:s') }}</i>
     </div>
 
-
     <hr style="width:45%; margin-left: 0.1rem; background-color:gray; height: 2px;" >
     <div class = "timef">
         <h6>
@@ -130,6 +129,7 @@
             </div>
         </div>
     </div>
+
     <div class="regiz">
         <div class="regi">
             <pre> <b>{{ $modelName }} count:</b> {{ $orders->count() }}</pre>

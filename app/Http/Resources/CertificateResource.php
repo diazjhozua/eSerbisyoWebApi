@@ -14,7 +14,7 @@ class CertificateResource extends JsonResource
             'name' => $this->name,
             'price' => $this->price,
             'status' => $this->status,
-            'delivery_option' => $this->is_open_delivery == 1 ? 'Open for delivery' : 'Pickup only',
+            'delivery_option' => $this->is_open_delivery == 1 ? 'Open for Delivery and Pickup' : 'Pickup only',
             'delivery_fee' => $this->delivery_fee,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),

@@ -89,7 +89,7 @@ class CertificateController extends Controller
             $certificate = $certificate->load('requirements');
 
             $status = [ (object)[ "id" => 1, "type" => "Available"],(object) ["id" => 2, "type" => "Unavailable"] ];
-            $receivedOption = [ (object)[ "id" => 1, "type" => "Available for delivery and walkin"],(object) ["id" => 0, "type" => "Walkin Only"] ];
+            $receivedOption = [ (object)[ "id" => 1, "type" => "Available for delivery and pickuo"],(object) ["id" => 0, "type" => "Pickup Only"] ];
 
             return response()->json([
                 'data' => $certificate,

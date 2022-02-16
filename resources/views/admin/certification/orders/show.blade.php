@@ -320,7 +320,6 @@
                             </div>
                         </div>
                     @endif
-
                 </div>
             @endif
         </div>
@@ -332,7 +331,6 @@
             @endif
 
             {{-- if the application status is approved then they can modify order status --}}
-
             {{-- for pickup --}}
             @if ($order->pick_up_type == 'Pickup' && $order->application_status == 'Approved')
                 {{-- Order Status --}}

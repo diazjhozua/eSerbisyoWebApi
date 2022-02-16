@@ -71,7 +71,7 @@ function populateAllFields(data, statusList, receivedOptionList) {
     INPUT_CERTIFICATE_PRICE.val(data.price);
 
     SELECT_STATUS.append($("<option selected/>").val(data.status).text(data.status))
-    SELECT_RECEIVED_OPTION.append($("<option selected/>").val(data.is_open_delivery).text(data.is_open_delivery == 1 ? 'Available for delivery and walkin' : 'Walkin Only'))
+    SELECT_RECEIVED_OPTION.append($("<option selected/>").val(data.is_open_delivery).text(data.is_open_delivery == 1 ? 'Available for delivery and pickup' : 'Pickup Only'))
 
     // status dropdown list
     if (statusList != null) {
