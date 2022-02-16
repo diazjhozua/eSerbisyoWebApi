@@ -16,7 +16,7 @@ class OrderApplicationAdminRequest extends FormRequest
     {
         return [
             'application_status' => ['required', Rule::in(['Approved', 'Denied'])],
-            'pickup_date' => ['date', 'date_format:Y-m-d'],
+            'pickup_date' => ['date', 'date_format:Y-m-d', 'after:today'],
             'admin_message' => ['string', 'min:4', 'max:250'],
         ];
     }
