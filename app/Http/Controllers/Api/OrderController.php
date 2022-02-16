@@ -318,6 +318,19 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-        //
+        if ($order->ordered_by != auth('api')->user()->id) {
+            return response()->json(["message" => "You can only delete your submitted order."], 403);
+        }
+
+        if ($order->application_status != 'Pending') {
+            return response()->json(["message" => "You can only delete your order when the application is still Pending in your transaction."], 403);
+        }
+
+        $order = $order->load('certificateForms.certificate.requirements', 'contact.user_requirements');
+        $ids = $order->certificateForms()->pluck('id');
+        CertificateForm::whereIn('id',$ids)->delete();
+        $order->delete();
+
+        return response()->json(["message" => "Order deleted successfully."], 200);
     }
 }
