@@ -27,10 +27,10 @@ use App\Http\Controllers\Web\Admin\ {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoAdmin'])->group(function () {
     Route::get('feedback-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminFeedbackType::class, 'report'])->name('feedback-types.report');
     // Route::post('feedback-types/report', [AdminFeedbackType::class, 'report'])->name('feedback-types.report'); //report type
-    Route::get('feedback-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{polarity_option}/{status_option}/{type_id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show');
+    Route::get('feedback-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{status_option}/{type_id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show');
     // Route::post('feedback-types/report/{id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show'); //report type show
 
-    Route::get('feedbacks/report/{date_start}/{date_end}/{sort_column}/{sort_option}/${polarity_option}/${status_option}/', [AdminFeedback::class, 'report'])->name('feedbacks.report');
+    Route::get('feedbacks/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{status_option}/', [AdminFeedback::class, 'report'])->name('feedbacks.report');
     // Route::post('feedbacks/report', [AdminFeedback::class, 'report'])->name('feedbacks.report');
 
     Route::get('document-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminDocumentType::class, 'report'])->name('document-types.report');

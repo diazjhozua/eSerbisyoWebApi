@@ -21,15 +21,7 @@ class FeedbackTypeResource extends JsonResource
             $this->mergeWhen(isset($this->feedbacks_count), [
                 'feedbacks_count' => $this->feedbacks_count,
             ]),
-            $this->mergeWhen(isset($this->positive_count), [
-                'positive' => $this->feedbacks_count ? number_format(round($this->positive_count * 100 / $this->feedbacks_count),0,'.','') . '%' : '0%',
-            ]),
-            $this->mergeWhen(isset($this->neutral_count), [
-                'neutral' => $this->feedbacks_count ? number_format(round($this->neutral_count * 100 / $this->feedbacks_count),0,'.','') . '%' : '0%',
-            ]),
-            $this->mergeWhen(isset($this->negative_count), [
-                'negative' => $this->feedbacks_count ? number_format(round($this->negative_count * 100 / $this->feedbacks_count),0,'.','') . '%' : '0%',
-            ]),
+            'ratings' => $this->ratings,
             'feedbacks' => FeedbackResource::collection($feedbacks),
         ];
 

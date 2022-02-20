@@ -13,7 +13,10 @@ function addOrReplaceRow(data, isReplaceBool) {
     } else {
         col2 = '<td><a href="' + window.location.origin + '/admin/feedback-types/' + data.type_id + '">' + data.type + '</a></td>'
     }
-    col3 = '<td>' + data.polarity + '</td>'
+    col3 = `<td class="text-center"> <div class="Stars"
+                            style="--rating: ${data.rating}; --star-size:50px"
+                            aria-label="Rating of this product is ${data.rating} out of 5."></div>
+                            <p>${data.rating}/5</p></td>`;
     col4 = '<td>' + data.message + '</td>'
     col5 = '<td>' + data.admin_respond + '</td>'
     col6 = '<td>' + data.status + '</td>'
@@ -208,16 +211,13 @@ $(document).ready(function () {
         submitHandler: function (form, event) {
             event.preventDefault()
 
-
             let date_start = $('#date_start').val();
             let date_end = $('#date_end').val();
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
-            let polarity_option = $('#polarity_option').val();
             let status_option = $('#status_option').val();
-           
 
-            var url = `${window.location.origin}/admin/feedbacks/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${polarity_option}/${status_option}/`;
+            var url = `${window.location.origin}/admin/feedbacks/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status_option}/`;
             window.open(url, '_blank');
         }
     });

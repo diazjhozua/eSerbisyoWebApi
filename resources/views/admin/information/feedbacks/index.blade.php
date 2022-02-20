@@ -5,6 +5,10 @@
     <script src="{{ asset('js/admin/information/feedbacks/index.js')}}"></script>
 @endsection
 
+@section('page-css')
+   <link href="{{ asset('admin/css/star.css')}}" rel="stylesheet">
+@endsection
+
 {{-- Title Page --}}
 @section('title', 'Feedbacks')
 
@@ -12,7 +16,7 @@
 
     {{-- Included Modals --}}
     @include('admin.information.feedbacks.respond')
-   
+
     @include('admin.information.feedbacks.reportSelectModal')
 
     <!-- Page Heading -->
@@ -25,7 +29,6 @@
                 class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
         @endif
     </div>
-
 
     <span>Feedbacks statistic within this month</span>
     <div class="row">
@@ -84,63 +87,29 @@
             </div>
         </div>
 
-        {{-- Positive Card --}}
+        {{-- Ratings Card --}}
         <div class="col-sm mt-2">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Positive Feedback</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->feedbacks_count ? number_format(round($feedbacksData->positive_count * 100 / $feedbacksData->feedbacks_count),0,'.','') . '%' : '0%' }}</div>
+                                Ratings</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <div class="Stars" style="--rating: {{ number_format($feedbacksData->this_month_rating, 2, '.', '') }};
+                                --star-size:45px; --star-background:#5cb85c"
+                                    aria-label="Rating of this product is {{ number_format($feedbacksData->this_month_rating, 2, '.', '') }} out of 5."></div>
+                                <span>{{ number_format($feedbacksData->this_month_rating, 2, '.', '') }}/5</span>
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-smile-beam fa-2x text-success"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Neutral Card --}}
-        <div class="col-sm mt-2">
-            <div class="card border-left-secondary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                Neutral Feedback</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->feedbacks_count ? number_format(round($feedbacksData->neutral_count * 100 / $feedbacksData->feedbacks_count),0,'.','') . '%' : '0%' }} </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-meh fa-2x text-secondary-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Negative Card --}}
-        <div class="col-sm mt-2">
-            <div class="card border-left-danger shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Negative Feedback</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->feedbacks_count ? number_format(round($feedbacksData->negative_count * 100 / $feedbacksData->feedbacks_count),0,'.','') . '%' : '0%' }} </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-angry fa-2x text-danger"></i>
+                            <i class="fas fa-star fa-2x text-success"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
 
     <p class="mt-3">These are the list of feedbacks sent by the residents of barangay Cupang. Please respond to the following pending reports.</p>
 
@@ -157,7 +126,7 @@
                             <th>ID</th>
                             <th>Submitted by</th>
                             <th>Type</th>
-                            <th>Polarity</th>
+                            <th>Rating</th>
                             <th>Message</th>
                             <th>Admin Respond</th>
                             <th>Status</th>
@@ -170,7 +139,7 @@
                             <th>ID</th>
                             <th>Submitted by</th>
                             <th>Type</th>
-                            <th>Polarity</th>
+                            <th>Rating</th>
                             <th>Message</th>
                             <th>Admin Respond</th>
                             <th>Status</th>
@@ -189,7 +158,11 @@
                                     <td>Others/Deleted- {{ $feedback->custom_type }}</td>
                                 @endif
 
-                                <td>{{ $feedback->polarity}}</td>
+                                <td class="text-center">
+                                    <div class="Stars" style="--rating: {{ $feedback->rating }}; --star-size:50px"
+                                        aria-label="Rating of this product is {{ $feedback->rating }} out of 5."></div>
+                                    <p>{{ $feedback->rating }}/5</p>
+                                </td>
                                 <td>{{ $feedback->message}}</td>
                                 @if (!empty($feedback->admin_respond))
                                     <td>{{ $feedback->admin_respond }}</td>

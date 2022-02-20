@@ -56,6 +56,8 @@ function deleteType(id) {
 }
 
 $(document).ready(function () {
+    // https://raw.githack.com/peet86/Ratyli/master/jquery.ratyli.min.js
+    // Configure with Datasets
 
     // Set class row selected when any button was click in the selected
     $('#dataTable').on('click', 'tr', function () {
@@ -118,10 +120,16 @@ $(document).ready(function () {
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.name + '</td>'
                     col2 = '<td>' + data.feedbacks_count + '</td>'
-                    col3 = '<td>' + data.positive + '</td>'
-                    col4 = '<td>' + data.neutral + '</td>'
-                    col5 = '<td>' + data.negative + '</td>'
-                    col6 = '<td>' + data.updated_at + '</td>'
+
+                    if (data.feedbacks_count > 0) {
+                        col3 = `<td class="text-center"> <div class="Stars" style="--rating: ${Number(data.ratings).toFixed(2)}; --star-size:50px"
+                                            aria-label="Rating of this product is ${Number(data.ratings).toFixed(2)} out of 5."></div>
+                                        <p>${Number(data.ratings).toFixed(2)}/5</p></td>`;
+                    } else {
+                        col3 = '<td class="text-center">No feedbacks submitted in this type</td>'
+                    }
+
+                    col4 = '<td>' + data.updated_at + '</td>'
 
                     viewBtn =
                         '<li class="list-inline-item mb-1">' +
@@ -140,14 +148,14 @@ $(document).ready(function () {
                         '</button>' +
                         '</li>'
 
-                    col7 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
+                    col5 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
 
                     // Get table reference - note: dataTable() not DataTable()
                     var table = $('#dataTable').DataTable();
 
                     if (formMethod.toString() == 'POST') {
                         var currentPage = table.page();
-                        table.row.add([col0, col1, col2, col3, col4, col5, col6, col7]).draw()
+                        table.row.add([col0, col1, col2, col3, col4, col5]).draw()
 
                         selectedRow = 0
                         var index = table.row(selectedRow).index(),
@@ -168,7 +176,7 @@ $(document).ready(function () {
                         $("#typeCount").text(parseInt($("#typeCount").text()) + 1);
 
                     } else {
-                        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7]).draw(false);
+                        table.row('.selected').data([col0, col1, col2, col3, col4, col5]).draw(false);
                     }
 
                 },

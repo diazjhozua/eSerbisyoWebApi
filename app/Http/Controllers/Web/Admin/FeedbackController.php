@@ -24,9 +24,7 @@ class FeedbackController extends Controller
         ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
         ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
         ->selectRaw("count(case when status = 'Ignored' then 1 end) as ignored_count")
-        ->selectRaw("count(case when polarity = 'Positive' then 1 end) as positive_count")
-        ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as neutral_count")
-        ->selectRaw("count(case when polarity = 'Negative' then 1 end) as negative_count")
+        ->selectRaw("avg(rating) as this_month_rating")
         ->where('created_at', '>=', $first_date)
         ->where('created_at', '<=', $last_date)
         ->first();
@@ -42,25 +40,20 @@ class FeedbackController extends Controller
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->noted('feedback'));
     }
 
-    public function report($date_start,  $date_end, $sort_column, $sort_option, $polarity_option, $status_option) {
+    public function report($date_start,  $date_end, $sort_column, $sort_option, $status_option) {
 
         $title = 'Report - No data';
         $description = 'No data';
-        try {
 
+        try {
          $feedbacks = Feedback::with('type')
             ->whereBetween('created_at', [$date_start, $date_end])
             ->orderBy($sort_column, $sort_option)
-            ->where(function($query) use ($polarity_option, $status_option) {
-                if($polarity_option == 'all' && $status_option == 'all') {
+            ->where(function($query) use ($status_option) {
+                if($status_option == 'all') {
                     return null;
-                } elseif ($polarity_option == 'all' && $status_option != 'all') {
-                    return $query->where('status', '=', ucwords($status_option));
-                } elseif ($polarity_option != 'all' && $status_option == 'all') {
-                    return $query->where('polarity', '=', ucwords($polarity_option));
                 } else {
-                    return $query->where('status', '=', ucwords($status_option))
-                    ->where('polarity', '=', ucwords($polarity_option));
+                    return $query->where('status', '=', ucwords($status_option));
                 }
             })->get();
 
@@ -68,11 +61,6 @@ class FeedbackController extends Controller
             return view('errors.404Report', compact('title', 'description'));
         }
 
-        if ($feedbacks->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
-
-        $feedbacks = null;
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
 
@@ -82,21 +70,14 @@ class FeedbackController extends Controller
             ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
             ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
             ->selectRaw("count(case when status = 'Ignored' then 1 end) as ignored_count")
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as negative_count")
+            ->selectRaw("avg(rating) as this_month_rating")
             ->where('created_at', '>=', $date_start)
             ->where('created_at', '<=', $date_end)
-            ->where(function($query) use ($polarity_option, $status_option) {
-                if($polarity_option == 'all' && $status_option == 'all') {
+            ->where(function($query) use ($status_option) {
+                if($status_option == 'all') {
                     return null;
-                } elseif ($polarity_option == 'all' && $status_option != 'all') {
-                    return $query->where('status', '=', ucwords($status_option));
-                } elseif ($polarity_option != 'all' && $status_option == 'all') {
-                    return $query->where('polarity', '=', ucwords($polarity_option));
                 } else {
-                    return $query->where('status', '=', ucwords($status_option))
-                    ->where('polarity', '=', ucwords($polarity_option));
+                    return $query->where('status', '=', ucwords($status_option));
                 }
             })->first();
 
@@ -104,9 +85,8 @@ class FeedbackController extends Controller
             $title = 'Feedback Reports';
             $modelName = 'Feedback';
 
-
          return view('admin.information.pdf.feedbackreport', compact('title', 'modelName', 'feedbacks', 'feedbacksData',
-            'date_start', 'date_end', 'sort_column', 'sort_option', 'polarity_option', 'status_option'
+            'date_start', 'date_end', 'sort_column', 'sort_option', 'status_option'
         ));
 
     }

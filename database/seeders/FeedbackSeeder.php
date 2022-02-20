@@ -17,7 +17,7 @@ class FeedbackSeeder extends Seeder
         activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
-        $polarity = ['Positive', 'Neutral', 'Negative'];
+        // $polarity = ['Positive', 'Neutral', 'Negative'];
         $status = ['Pending', 'Ignored', 'Noted'];
 
 
@@ -45,7 +45,7 @@ class FeedbackSeeder extends Seeder
                 'user_id' =>  $userRandomID,
                 'type_id' => $typeID,
                 'custom_type' => $customType,
-                'polarity' => $polarity[array_rand($polarity)],
+                'rating' => $faker->numberBetween(1, 5),
                 'message' =>  $faker->paragraph($nbSentences = 2, $variableNbSentences = true),
                 'status' => $status_name,
                 'admin_respond' => $admin_message,
