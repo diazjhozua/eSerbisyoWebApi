@@ -7,6 +7,7 @@ use App\Models\Announcement;
 use App\Models\BikerRequest;
 use App\Models\Certificate;
 use App\Models\Complaint;
+use App\Models\Feedback;
 use App\Models\MissingItem;
 use App\Models\MissingPerson;
 use App\Models\Order;
@@ -90,21 +91,20 @@ class DashboardController extends Controller
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->count();
         $verificationCount = UserVerification::where('status', 'Pending')->count();
         $announcementCount = Announcement::where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->count();
 
-        $feedbacksData = DB::table('feedbacks')
-            ->selectRaw("count(*) as this_month_total_feedbacks ")
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as this_month_positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as this_month_neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as this_month_negative_count")
-            ->whereRaw("created_at >= '". date('Y-m-d',strtotime('first day of this month')) ."' AND created_at <='".date('Y-m-d',strtotime('last day of this month'))."'")
-            ->first();
+        $feedbacksDataThisMonth = Feedback::where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->get();
 
-        $feedbacksData->this_month_positive_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 : round(($feedbacksData->this_month_positive_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
-        $feedbacksData->this_month_neutral_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_month_neutral_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
-        $feedbacksData->this_month_negative_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_month_negative_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
+        $feedbacksDataThisYear = Feedback::where('created_at', '>=', date('Y-m-d',strtotime('first day of this year')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')))->get();
 
-        return view('admin.dashboards.information', compact('userChart', 'projectChart', 'usersData', 'feedbacksData', 'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
+        $feedbacksDataOverall = Feedback::get();
+
+        return view('admin.dashboards.information', compact('userChart', 'projectChart', 'usersData',
+        'feedbacksDataThisMonth', 'feedbacksDataThisYear', 'feedbacksDataOverall',
+        'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
     }
 
     public function certificationAdmin()
