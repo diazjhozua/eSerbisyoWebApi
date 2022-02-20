@@ -21,6 +21,7 @@ class AnnouncementSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
         $announcements = [];
         $pictures = [];
@@ -29,8 +30,9 @@ class AnnouncementSeeder extends Seeder
         $types = collect(Type::where('model_type', 'Announcement')->get()->modelKeys());
         $users = collect(User::all()->modelKeys());
 
+
         foreach (range(1,100) as $id) {
-            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
             //announcements
             $announcements[] = [
                 'type_id' => $types->random(),

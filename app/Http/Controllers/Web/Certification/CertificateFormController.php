@@ -15,8 +15,10 @@ class CertificateFormController extends Controller
 {
     public function edit(CertificateForm $certificateForm)
     {
+
         return (new CertificateFormResource($certificateForm->load('certificate')))->additional(array_merge(Helper::instance()->itemFound('certificate form')));
     }
+
 
     public function update(CertificateFormRequest $request, CertificateForm $certificateForm)
     {

@@ -10,7 +10,7 @@ class ComplaintTypeSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create();
-
+        activity()->disableLogging();
         //id 31-35
         // foreach (range(1,5) as $index) {
         //     $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);

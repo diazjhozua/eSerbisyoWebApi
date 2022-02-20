@@ -16,6 +16,7 @@ class CertificateSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         $status = ['Available', 'Unavailable'];

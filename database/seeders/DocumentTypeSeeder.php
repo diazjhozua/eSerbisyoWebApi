@@ -14,6 +14,7 @@ class DocumentTypeSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
         $dateTime = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 

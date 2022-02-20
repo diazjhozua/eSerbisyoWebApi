@@ -14,22 +14,23 @@ class TermSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         DB::table('terms')->insert([
             'name' => "Celso Dioko Term",
             'year_start' => 2018,
             'year_end' => 2022,
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null),
+            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null)
         ]);
 
         DB::table('terms')->insert([
             'name' => "Reiner Bulos Term",
             'year_start' => 2022,
             'year_end' => 2026,
-            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
-            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null),
+            'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null),
+            'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null)
         ]);
     }
 }

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
         // Delete all files
         $files = Storage::allFiles('public/signatures/');
         Storage::delete($files);

@@ -14,6 +14,7 @@ class DocumentSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         foreach (range(4,12) as $id) {

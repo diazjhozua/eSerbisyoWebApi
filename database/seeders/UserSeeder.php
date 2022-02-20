@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         $firstName = array('Jayson', 'Jose', 'Cassidy', 'Mark Joseph', 'Marlou',

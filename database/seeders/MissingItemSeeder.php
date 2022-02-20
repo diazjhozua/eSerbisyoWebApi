@@ -14,6 +14,7 @@ class MissingItemSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
 
@@ -53,8 +54,8 @@ class MissingItemSeeder extends Seeder
                 'file_path' => $file_path,
                 'credential_name' => $credentials_name,
                 'credential_file_path' => $credentials_file_path,
-                'created_at' => $date,
-                'updated_at' => $date,
+                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null),
+                'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null)
             ]);
 
             $commentCount = $faker->numberBetween(1,20);

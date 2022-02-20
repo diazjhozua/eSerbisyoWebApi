@@ -10,6 +10,7 @@ class ProjectSeeder extends Seeder
 
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
         $boolean = [true, false];
         foreach(range(1,100) as $index) {

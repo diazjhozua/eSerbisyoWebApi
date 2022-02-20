@@ -14,6 +14,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         foreach(range(1,2) as $term) {

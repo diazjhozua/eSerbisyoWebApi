@@ -16,6 +16,7 @@ class AndroidSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
         foreach (range(1,5) as $index) {
+            activity()->disableLogging();
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\androids', false);
             $file_path = 'androids/'.$picture_name;
@@ -25,8 +26,8 @@ class AndroidSeeder extends Seeder
                 'description' => $faker->realText($maxNbChars = 10, $indexSize = 2),
                 'file_name' => $picture_name,
                 'file_path' => $file_path,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp,
+                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null),
+                'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null)
             ]);
         }
     }

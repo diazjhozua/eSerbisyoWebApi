@@ -14,6 +14,7 @@ class FeedbackSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         $polarity = ['Positive', 'Neutral', 'Negative'];
@@ -31,7 +32,7 @@ class FeedbackSeeder extends Seeder
                 $customType = $faker->realText($maxNbChars = 30, $indexSize = 3);
             }
 
-            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
 
             $admin_message = NULL;
             $status_name =  $status[array_rand($status)];
