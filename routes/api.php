@@ -73,12 +73,8 @@ Route::group([
 
     Route::get('complaints/getAnalytics', [ComplaintController::class, 'getAnalytics']);
     Route::get('complaints/', [ComplaintController::class, 'index']);
-
     Route::get('orders/', [OrderController::class, 'index']);
-
-
 });
-
 
 Route::group([
     'middleware' => 'jwtAuth:isVerified',

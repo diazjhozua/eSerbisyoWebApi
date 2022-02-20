@@ -43,22 +43,27 @@ class FeedbackController extends Controller
     // get short analytics about the overall overview.
     public function getAnalytics()
     {
-        $feedbacksData = DB::table('feedbacks')
-            ->selectRaw("count(*) as this_year_total_feedbacks ")
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as this_year_positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as this_year_neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as this_year_negative_count")
-            ->whereRaw("created_at >= '". date('Y-m-d',strtotime('first day of this year')) ."' AND created_at <='".date('Y-m-d',strtotime('last day of this year'))."'")
-            ->first();
+        $monthAvg = number_format(Feedback::where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->avg('rating'), 2, '.', '');
 
-        $feedbacksData->this_year_positive_count = $feedbacksData->this_year_total_feedbacks == 0  ? 0 : round(($feedbacksData->this_year_positive_count / $feedbacksData->this_year_total_feedbacks) * 100, 2);
-        $feedbacksData->this_year_neutral_count = $feedbacksData->this_year_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_year_neutral_count / $feedbacksData->this_year_total_feedbacks) * 100, 2);
-        $feedbacksData->this_year_negative_count = $feedbacksData->this_year_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_year_negative_count / $feedbacksData->this_year_total_feedbacks) * 100, 2);
+        $yearAvg = number_format(Feedback::where('created_at', '>=', date('Y-m-d',strtotime('first day of this year')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')))->avg('rating'), 2, '.', '');
+        $overall = number_format(Feedback::avg('rating'), 2, '.', '');
 
-        $trendingFeedbacks = Type::where('model_type', 'Feedback')->withCount('feedbacks')->orderBy('feedbacks_count', 'DESC')->limit(5)->get();
+        $reportTypes = Type::withCount(['feedbacks' => function($query){
+            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')));
+        }])->where('model_type', 'Feedback')->orderBy('feedbacks_count', 'DESC')->get();
+
+        $trendingFeedbacks = Type::where('model_type', 'Feedback')->withAvg('feedbacks', 'rating')->withCount('feedbacks')->orderBy('feedbacks_count', 'DESC')->limit(5)->get();
+
         return response()->json([
-            'feedbacksThisYearOverview' => $feedbacksData,
+            'monthAvg' => $monthAvg,
+            'yearAvg' => $yearAvg,
+            'overall' => $overall,
+            'reportTypes' => $reportTypes,
             'trendingFeedbacks' => $trendingFeedbacks
         ], 200);
+
     }
 }

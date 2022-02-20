@@ -66,8 +66,8 @@ class ReportController extends Controller
     public function getAnalytics()
     {
         $reportTypes = Type::withCount(['reports' => function($query){
-            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this year')))
-            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')));
+            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')));
         }])
         ->where('model_type', 'Report')->orderBy('reports_count', 'DESC')->get();
 

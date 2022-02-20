@@ -119,8 +119,8 @@ class ComplaintController extends Controller
     public function getAnalytics()
     {
         $complaintTypes = Type::withCount(['complaints' => function($query){
-            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this year')))
-            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')));
+            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')));
         }])
         ->where('model_type', 'Complaint')->orderBy('complaints_count', 'DESC')->get();
 
