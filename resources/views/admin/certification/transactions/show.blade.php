@@ -2,24 +2,39 @@
 
 
 @section('page-js')
-    {{-- Custom Scripts for this blade --}}
-    <script src="{{ asset('js/admin/certification/bikers/profile.js')}}"></script>
+    {{-- Custom Scripts for this blade --}}\
+    <script>
+        $(document).ready(function () {
+            $('#userTransaction').addClass('active');
+
+            $('#dataTableRecord').DataTable({
+                scrollY: "400px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: true,
+            });
+
+            $('#dataTableRecord').wrap('<div id="scrooll_div"></div >');
+            $('#scrooll_div').doubleScroll({
+                resetOnWindowResize: true
+            });
+        });
+
+    </script>
 @endsection
 
+
 {{-- Title Page --}}
-@section('title', 'Biker Profile')
+@section('title', $user->getFullNameAttribute().' Transaction List')
 
 @section('content')
-
-
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"><button class="btn btn-primary" onclick="window.location=document.referrer;" type="submit"><i class="fas fa-caret-square-left"></i></button>
-            Biker:  (#{{ $user->id }}) {{ $user->getFullNameAttribute() }}
+            User:  (#{{ $user->id }}) {{ $user->getFullNameAttribute() }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
     </div>
-
     <style>
 
         .bikerContent {
@@ -54,7 +69,6 @@
 
 
     </style>
-
 
     <div class="row">
         {{-- Biker's Profile --}}
@@ -118,52 +132,6 @@
                                 <span class="font-weight-bold">{{ $user->address }}</span>
                             </div>
                         </div>
-
-                        <h5 class="mt-3">Bike Information</h5>
-
-                        <div class="row">
-                            <div class="col">
-                                <img class="bikeImg" src="{{ isset($user->latest_biker_request) ? asset('storage/'.$user->latest_biker_request->credential_file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
-                            </div>
-
-                            <div class="col mt-5">
-                                <div class="row">
-                                    <div class="col">
-                                        Bike Type:
-                                    </div>
-
-                                    <div id="bike_type" class="col text-left">
-                                        {{-- Bike Type --}}
-                                        <span class="font-weight-bold">{{ $user->bike_type }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col">
-                                        Bike Color:
-                                    </div>
-
-                                    <div id="bike_color" class="col text-left">
-                                        {{-- Bike Color --}}
-                                        <span class="font-weight-bold">{{ $user->bike_color }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col">
-                                        Bike Size:
-                                    </div>
-
-                                    <div id="bike_size" class="col text-left">
-                                        {{-- Bike Size --}}
-                                        <span class="font-weight-bold">{{ $user->bike_size }}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-
                     </div>
             </div>
         </div>
@@ -174,11 +142,11 @@
                 <!-- DataTales Example -->
             <div class="card shadow mt-2 mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Delivered History (Total: <span id="typeCount">
+                    <h6 class="m-0 font-weight-bold text-primary">Transaction History (Total: <span id="typeCount">
                         {{ $orders->count() }}
                     </span>)</h6>
-                    <h6 class="mt-2 mb-0 font-weight-bold text-primary">Total Earnings:
-                        ₱ {{ floatval($orders->sum('delivery_fee')) }}
+                    <h6 class="mt-2 mb-0 font-weight-bold text-primary">Total Order Cost (Received):
+                        ₱ {{ floatval($receivedOrders->sum('delivery_fee') + $receivedOrders->sum('total_price')) }}
                     </h6>
                 </div>
                 <div class="card-body">
@@ -187,11 +155,11 @@
                             <thead>
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Ordered by</th>
                                     <th>Location</th>
                                     <th>Total Price</th>
                                     <th>Delivery Fee</th>
                                     <th>Pickup Date</th>
+                                    <th>Status</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -199,11 +167,11 @@
                             <tfoot>
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Ordered by</th>
                                     <th>Location</th>
                                     <th>Total Price</th>
                                     <th>Delivery Fee</th>
                                     <th>Pickup Date</th>
+                                    <th>Status</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -212,17 +180,27 @@
                                 @forelse ($orders as $order)
                                     <tr>
                                         <td>{{ $order->id }}</td>
-                                        <td>
-                                            @if ($order->ordered_by != null)
-                                                (#{{$order->delivered_by}}){{ $order->contact->getFullNameAttribute() }}
-                                            @else
-                                                {{ $order->name }}
-                                            @endif
-                                        </td>
                                         <td>{{ $order->location_address }}</td>
                                         <td>{{ '₱'.$order->total_price }}</td>
                                         <td>{{ '₱'.$order->delivery_fee }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</td>
+                                        @if ($order == null)
+                                            <td>{{ \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</td>
+                                        @else
+                                            <td>Not been set</td>
+                                        @endif
+                                        <td>
+                                            <p>Application: <br>
+                                                <strong> {{ $order->application_status }} </strong>
+                                            </p>
+
+                                            <p>Pick up: <br>
+                                                <strong> {{ $order->pick_up_type }} </strong>
+                                            </p>
+
+                                            <p>Order Status: <br>
+                                                <strong> {{ $order->order_status }} </strong>
+                                            </p>
+                                        </td>
                                         <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F d, Y') }}</td>
 
                                         <td>
@@ -246,3 +224,4 @@
         </div>
     </div>
 @endsection
+

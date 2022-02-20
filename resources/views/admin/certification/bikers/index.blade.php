@@ -7,14 +7,13 @@
 
 @section('page-css')
     <style>
-.picture-box img {
-        text-align: center;
-        width: 200px;
-        height: 150px;
-        border-radius: 50%;
-        margin-bottom: 0px;
-    }
-
+        .picture-box img {
+            text-align: center;
+            width: 200px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 0px;
+        }
     </style>
 @endsection
 
