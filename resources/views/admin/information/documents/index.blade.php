@@ -14,7 +14,7 @@
     {{-- Included Modals --}}
     @include('admin.information.documents.formModal')
     {{-- Report Route to the modal --}}
-    @section('reportRoute', route('admin.documents.report'))
+    
     @include('admin.information.documents.reportSelectModal')
     {{-- Delete Modal Confirmation --}}
     @include('inc.delete')

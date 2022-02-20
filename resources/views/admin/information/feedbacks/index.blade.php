@@ -12,7 +12,7 @@
 
     {{-- Included Modals --}}
     @include('admin.information.feedbacks.respond')
-    @section('reportRoute', route('admin.feedbacks.report'))
+   
     @include('admin.information.feedbacks.reportSelectModal')
 
     <!-- Page Heading -->

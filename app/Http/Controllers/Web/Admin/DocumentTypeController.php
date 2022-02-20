@@ -66,46 +66,79 @@ class DocumentTypeController extends Controller
         return response()->json(Helper::instance()->destroySuccess('document_type'));
     }
 
-    public function report(TypeReportRequest $request) {
-        $types = Type::withCount('documents as count')
-            ->where('model_type', 'Document')->orderBy('created_at','DESC')
-            ->whereBetween('created_at', [$request->date_start, $request->date_end])
-            ->orderBy($request->sort_column, $request->sort_option)
-            ->get();
+    public function report($date_start, $date_end, $sort_column, $sort_option) {
 
-        if ($types->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
+        $title = 'Report - No data';
+        $description = 'No data';
+        try {
+           
+        $types = Type::withCount('documents as count')
+        ->where('model_type', 'Document')->orderBy('created_at','DESC')
+        ->whereBetween('created_at', [$date_start, $date_end])
+        ->orderBy($sort_column, $sort_option)
+        ->get();
+
 
         $types->add(new Type([ 'id' => 0, 'name' => 'Others (Document w/o document type)', 'model_type' => 'Document', 'created_at' => now(), 'updated_at' => now(),
             'count' => Document::where('type_id', NULL)->count() ]));
 
+        } catch(\Illuminate\Database\QueryException $ex){
+            return view('errors.404Report', compact('title', 'description'));
+        }
+        if ($types->isEmpty()) {
+            return view('errors.404Report', compact('title', 'description'));
+        }
+
+    
         $title = 'Document Type Publish Report';
         $modelName = 'Document';
+        
 
-        $pdf = PDF::loadView('admin.information.reports.type', compact('types', 'request', 'title', 'modelName'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+        return view('admin.information.pdf.documentTypes', compact('title', 'modelName', 'types',
+        'date_start', 'date_end', 'sort_column', 'sort_option'
+    ));
     }
 
-    public function reportShow(DocumentReportRequest $request, $typeID) {
-        $documents = Document::with('type')
-            ->whereBetween('created_at', [$request->date_start, $request->date_end])
-            ->orderBy($request->sort_column, $request->sort_option)
-            ->where(function($query) use ($typeID) {
-                if ($typeID == 0) {
+    public function reportShow($date_start, $date_end, $sort_column, $sort_option, $type_id) {
+
+        $title = 'Report - No data';
+        $description = 'No data';
+
+        try {
+           
+            $documents = Document::with('type')
+            ->whereBetween('created_at', [$date_start, $date_end])
+            ->orderBy($sort_column, $sort_option)
+            ->where(function($query) use ($type_id) {
+                if ($type_id == 0) {
                     return $query->where('type_id', NULL);
                 }else {
-                    return $query->where('type_id', $typeID);
+                    return $query->where('type_id', $type_id);
                 }
             })
             ->get();
+    
+            } catch(\Illuminate\Database\QueryException $ex){
+                return view('errors.404Report', compact('title', 'description'));
+            }
+            if ($documents->isEmpty()) {
+                return view('errors.404Report', compact('title', 'description'));
+            }
+       
 
-        if ($documents->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
+        $type = Type::find($type_id);
+        $title = 'Document Type Reports';
+        $modelName =  $type_id == 0 ? 'Others/Deleted' : $type->name;
 
-        $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+        return view('admin.information.pdf.documents', compact('title', 'modelName','documents',
+        'date_start', 'date_end', 'sort_column', 'sort_option'
+    ));
+        // if ($documents->isEmpty()) {
+        //     return response()->json(['No data'], 404);
+        // }
+
+        // $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
     }
 
 }

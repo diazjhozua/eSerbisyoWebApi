@@ -16,7 +16,7 @@
     @include('admin.types.form')
 
     {{-- Report Route to the modal --}}
-    @section('reportRoute', route('admin.project-types.report'))
+    <!-- section('reportRoute', route('admin.project-types.report')) -->
     {{-- Report Modal --}}
     @include('admin.types.report')
 
