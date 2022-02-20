@@ -13,7 +13,7 @@
     @include('admin.information.documents.formModal')
 
     {{-- Report Route to the modal --}}
-    @section('reportRoute', route('admin.document-types.report.show', $type->id))
+    
     @include('admin.information.documents.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}
@@ -32,14 +32,14 @@
 
     <p class="font-weight-light">Created at: {{ $type->created_at }} -- Updated at: {{ $type->updated_at }}</p>
     <p class="font-weight-light"></p>
-
+    <input type="hidden" id="type_id" value="{{$type->id}}"/>
     @if ($type->id != 0)
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" onclick="createDocument()">
             Create
         </button>
     @endif
-
+    
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
         <div class="card-header py-3">

@@ -30,26 +30,41 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoAdmin']
     Route::get('feedback-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{polarity_option}/{status_option}/{type_id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show');
     // Route::post('feedback-types/report/{id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show'); //report type show
 
-    Route::post('feedbacks/report', [AdminFeedback::class, 'report'])->name('feedbacks.report');
+    Route::get('feedbacks/report/{date_start}/{date_end}/{sort_column}/{sort_option}/${polarity_option}/${status_option}/', [AdminFeedback::class, 'report'])->name('feedbacks.report');
+    // Route::post('feedbacks/report', [AdminFeedback::class, 'report'])->name('feedbacks.report');
 
-    Route::post('document-types/report', [AdminDocumentType::class, 'report'])->name('document-types.report');
-    Route::post('document-types/report/{id}', [AdminDocumentType::class, 'reportShow'])->name('document-types.report.show');
+    Route::get('document-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminDocumentType::class, 'report'])->name('document-types.report');
+    // Route::post('document-types/report', [AdminDocumentType::class, 'report'])->name('document-types.report');
+    Route::get('document-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{type_id}', [AdminDocumentType::class, 'reportShow'])->name('document-types.report.show');
+    // Route::post('document-types/report/{id}', [AdminDocumentType::class, 'reportShow'])->name('document-types.report.show');
 
-    Route::post('documents/report', [AdminDocument::class, 'report'])->name('documents.report');
+    // Route::post('documents/report', [AdminDocument::class, 'report'])->name('documents.report');
+    Route::get('documents/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminDocument::class, 'report'])->name('documents.report');
 
-    Route::post('ordinance-types/report', [AdminOrdinanceType::class, 'report'])->name('ordinance-types.report');
-    Route::post('ordinance-types/report/{id}', [AdminOrdinanceType::class, 'reportShow'])->name('ordinance-types.report.show');
+    Route::get('ordinance-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminOrdinanceType::class, 'report'])->name('ordinance-types.report');
+    // Route::post('ordinance-types/report', [AdminOrdinanceType::class, 'report'])->name('ordinance-types.report');
+    Route::get('ordinance-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{type_id}', [AdminOrdinanceType::class, 'reportShow'])->name('ordinance-types.report.show');
+    // Route::post('ordinance-types/report/{id}', [AdminOrdinanceType::class, 'reportShow'])->name('ordinance-types.report.show');
 
-    Route::post('ordinances/report', [AdminOrdinance::class, 'report'])->name('ordinances.report');
+    // Route::post('ordinances/report', [AdminOrdinance::class, 'report'])->name('ordinances.report');
+    Route::get('ordinances/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminOrdinance::class, 'report'])->name('ordinances.report');
 
-    Route::post('project-types/report', [AdminProjectType::class, 'report'])->name('project-types.report');
-    Route::post('project-types/report/{id}', [AdminProjectType::class, 'reportShow'])->name('project-types.report.show');
-    Route::post('projects/report', [AdminProject::class, 'report'])->name('projects.report');
+    Route::get('project-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminProjectType::class, 'report'])->name('project-types.report');
+    // Route::post('project-types/report', [AdminProjectType::class, 'report'])->name('project-types.report');
+    Route::get('project-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{type_id}', [AdminProjectType::class, 'reportShow'])->name('project-types.report.show');
+    // Route::post('project-types/report/{id}', [AdminProjectType::class, 'reportShow'])->name('project-types.report.show');
 
-    Route::post('announcement-types/report', [AdminAnnouncementType::class, 'report'])->name('announcement-types.report');
-    Route::post('announcement-types/report/{id}', [AdminAnnouncementType::class, 'reportShow'])->name('announcement-types.report.show');
+    // Route::post('projects/report', [AdminProject::class, 'report'])->name('projects.report');
+    Route::get('projects/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminProject::class, 'report'])->name('projects.report');
 
-    Route::post('announcements/report', [AdminAnnouncement::class, 'report'])->name('announcements.report');
+    Route::get('announcement-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminAnnouncementType::class, 'report'])->name('announcement-types.report');
+    // Route::post('announcement-types/report', [AdminAnnouncementType::class, 'report'])->name('announcement-types.report');
+    Route::get('announcement-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{type_id}', [AdminAnnouncementType::class, 'reportShow'])->name('announcement-types.report.show');
+    // Route::post('announcement-types/report/{id}', [AdminAnnouncementType::class, 'reportShow'])->name('announcement-types.report.show');
+
+    // Route::post('announcements/report', [AdminAnnouncement::class, 'report'])->name('announcements.report');
+    Route::get('announcements/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminAnnouncement::class, 'report'])->name('announcements.report');
+
     Route::get('announcements/report/{announcement}', [AdminAnnouncement::class, 'reportProfile'])->name('announcements.reportProfile');
 
     Route::post('users/report', [AdminUser::class, 'report'])->name('users.report');

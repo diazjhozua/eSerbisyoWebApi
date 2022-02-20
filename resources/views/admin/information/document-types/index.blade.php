@@ -17,7 +17,7 @@
     @include('admin.types.form')
 
     {{-- Report Route to the modal --}}
-    @section('reportRoute', route('admin.document-types.report'))
+   
     {{-- Report Modal --}}
     @include('admin.types.report')
 

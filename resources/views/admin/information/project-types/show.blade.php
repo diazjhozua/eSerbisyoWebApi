@@ -15,7 +15,7 @@
     @include('admin.information.projects.formModal')
 
     {{-- Report Route to the modal --}}
-    @section('reportRoute', route('admin.project-types.report.show', $type->id))
+    <!-- section('reportRoute', route('admin.project-types.report.show', $type->id)) -->
     @include('admin.information.projects.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}
@@ -33,7 +33,7 @@
 
     <p class="font-weight-light">Created at: {{ $type->created_at }} -- Updated at: {{ $type->updated_at }}</p>
     <p class="font-weight-light"></p>
-
+    <input type="hidden" id="type_id" value="{{$type->id}}"/>
     @if ($type->id != 0)
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" onclick="createProject()">

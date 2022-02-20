@@ -69,47 +69,80 @@ class AnnouncementTypeController extends Controller
         return response()->json(Helper::instance()->destroySuccess('announcement_type'));
     }
 
-    public function report(TypeReportRequest $request) {
-        $types = Type::withCount('announcements as count')
+    public function report($date_start, $date_end, $sort_column, $sort_option) {
+        $title = 'Report - No data';
+        $description = 'No data';
+        try {
+           
+            $types = Type::withCount('announcements as count')
             ->where('model_type', 'Announcement')->orderBy('created_at','DESC')
-            ->whereBetween('created_at', [$request->date_start, $request->date_end])
-            ->orderBy($request->sort_column, $request->sort_option)
+            ->whereBetween('created_at', [$date_start, $date_end])
+            ->orderBy($sort_column, $sort_option)
             ->get();
-
-        if ($types->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
-
-        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Announcement w/o announcement type)', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
+    
+    
+            $types->add(new Type([ 'id' => 0, 'name' => 'Others (Announcement w/o announcement type)', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
             'count' => Announcement::where('type_id', NULL)->count() ]));
 
+            } catch(\Illuminate\Database\QueryException $ex){
+                return view('errors.404Report', compact('title', 'description'));
+            }
+            if ($types->isEmpty()) {
+                return view('errors.404Report', compact('title', 'description'));
+            }
+        
+        // if ($types->isEmpty()) {
+        //     return response()->json(['No data'], 404);
+        // }
+            
+       
         $title = 'Announcement Type Publish Report';
         $modelName = 'Announcement';
 
-        $pdf = PDF::loadView('admin.information.reports.type', compact('types', 'request', 'title', 'modelName'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+        return view('admin.information.pdf.announcementTypes', compact('title', 'modelName', 'types',
+        'date_start', 'date_end', 'sort_column', 'sort_option'
+        // $pdf = PDF::loadView('admin.information.reports.type', compact('types', 'request', 'title', 'modelName'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
+    ));
     }
 
-    public function reportShow(AnnouncementReportRequest $request, $typeID) {
-        $announcements = Announcement::with('type')
+    public function reportShow($date_start, $date_end, $sort_column, $sort_option, $type_id) {
+        $title = 'Report - No data';
+        $description = 'No data';
+        try {
+           
+            $announcements = Announcement::with('type')
             ->withCount('comments', 'likes', 'announcement_pictures')
-            ->whereBetween('created_at', [$request->date_start, $request->date_end])
-            ->orderBy($request->sort_column, $request->sort_option)
-            ->where(function($query) use ($typeID) {
-                if ($typeID == 0) {
+            ->whereBetween('created_at', [$date_start, $date_end])
+            ->orderBy($sort_column, $sort_option)
+            ->where(function($query) use ($type_id) {
+                if ($type_id == 0) {
                     return $query->where('type_id', NULL);
                 }else {
-                    return $query->where('type_id', $typeID);
+                    return $query->where('type_id', $type_id);
                 }
             })
             ->get();
 
-        if ($announcements->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
+            } catch(\Illuminate\Database\QueryException $ex){
+                return view('errors.404Report', compact('title', 'description'));
+            }
+            
+            
+            if ($announcements->isEmpty()) {
+                return view('errors.404Report', compact('title', 'description'));
+            }
 
-        $pdf = PDF::loadView('admin.information.reports.announcement', compact('announcements', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+            $type = Type::find($type_id);
+            $title = 'Announcement Type Reports';
+            $modelName =  $type_id == 0 ? 'Others/Deleted' : $type->name;
+
+            return view('admin.information.pdf.announcements', compact('title', 'modelName','announcements',
+            'date_start', 'date_end', 'sort_column', 'sort_option'
+        ));
+
+        // $pdf = PDF::loadView('admin.information.reports.announcement', compact('announcements', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
     }
 }
 

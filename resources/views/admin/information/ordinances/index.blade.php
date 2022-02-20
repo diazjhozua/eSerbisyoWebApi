@@ -14,7 +14,7 @@
     {{-- Included Modals --}}
     @include('admin.information.ordinances.formModal')
 
-    @section('reportRoute', route('admin.ordinances.report'))
+  
     @include('admin.information.ordinances.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}

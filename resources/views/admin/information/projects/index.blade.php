@@ -13,7 +13,7 @@
     {{-- Included Modals --}}
     @include('admin.information.projects.formModal')
 
-    @section('reportRoute', route('admin.projects.report'))
+   
     @include('admin.information.projects.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}

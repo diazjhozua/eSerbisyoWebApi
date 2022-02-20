@@ -71,17 +71,55 @@ class OrdinanceController extends Controller
         return response()->json(Helper::instance()->destroySuccess('ordinance'));
     }
 
-    public function report(OrdinanceReportRequest $request) {
+    public function report($date_start, $date_end, $sort_column, $sort_option) {
+
+        $title = 'Report - No data';
+        $description = 'No data';
+
+
+
+        try {
+
+
         $ordinances = Ordinance::with('type')
-            ->whereBetween('created_at', [$request->date_start, $request->date_end])
-            ->orderBy($request->sort_column, $request->sort_option)
+            ->whereBetween('created_at', [$date_start, $date_end])
+            ->orderBy($sort_column, $sort_option)
             ->get();
+
+
+        } catch(\Illuminate\Database\QueryException $ex){
+            return view('errors.404Report', compact('title', 'description'));
+        }
+
+
 
         if ($ordinances->isEmpty()) {
             return response()->json(['No data'], 404);
         }
 
-        $pdf = PDF::loadView('admin.information.reports.ordinance', compact('ordinances', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+        $ordinancesData = null;
+
+        $firstDayYear = date('Y-m-d', strtotime('first day of january this year'));
+        $lastDateYear = date('Y-m-d', strtotime('first day of december this year'));
+        $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
+        $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
+
+        $ordinancesData =  DB::table('ordinances')
+        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+        ->first();
+
+
+        $title = 'Ordinance Publish Report';
+        $modelName = 'Ordinance';
+
+       
+        return view('admin.information.pdf.ordinancereport', compact('title', 'modelName', 'ordinances' ,'ordinancesData',
+        'date_start', 'date_end', 'sort_column', 'sort_option'
+
+    ));
+        // $pdf = PDF::loadView('admin.information.reports.ordinance', compact('ordinances', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
     }
 }
