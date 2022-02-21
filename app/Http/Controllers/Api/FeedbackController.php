@@ -50,7 +50,7 @@ class FeedbackController extends Controller
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')))->avg('rating'), 2, '.', '');
         $overall = number_format(Feedback::avg('rating'), 2, '.', '');
 
-        $reportTypes = Type::withCount(['feedbacks' => function($query){
+        $feedbackTypes = Type::withCount(['feedbacks' => function($query){
             $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')));
         }])->where('model_type', 'Feedback')->orderBy('feedbacks_count', 'DESC')->get();
@@ -61,7 +61,7 @@ class FeedbackController extends Controller
             'monthAvg' => $monthAvg,
             'yearAvg' => $yearAvg,
             'overall' => $overall,
-            'reportTypes' => $reportTypes,
+            'feedbackTypes' => $feedbackTypes,
             'trendingFeedbacks' => $trendingFeedbacks
         ], 200);
 
