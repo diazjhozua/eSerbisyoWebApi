@@ -100,7 +100,7 @@ class MissingItemController extends Controller
 
         $subject = 'Missing Item Report Change Status Notification';
         $reportName = 'missing item report';
-        dispatch(new ChangeStatusReportJob($missing_item->user->email, $missing_item->id, $reportName, $missing_item->status, $missing_item->admin_message, $subject));
+        dispatch(new ChangeStatusReportJob($missing_item->user->email, $missing_item->id, $reportName, $missing_item->status, $missing_item->admin_message, $subject, $missing_item->phone_no));
 
         return (new MissingItemResource($missing_item))->additional(Helper::instance()->statusMessage($oldStatus, $missing_item->status, 'missing-item'));
     }

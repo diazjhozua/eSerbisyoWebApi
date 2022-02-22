@@ -7,6 +7,11 @@ use App\Http\Controllers\Web\User\HomeController;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
+use SMSGatewayMe\Client\ApiClient;
+use SMSGatewayMe\Client\Configuration;
+use SMSGatewayMe\Client\Api\MessageApi;
+use SMSGatewayMe\Client\Model\SendMessageRequest;
+
 use App\Http\Controllers\Web\Admin\ {
     UserController as AdminUser,
     StaffController as AdminStaff,
@@ -53,6 +58,32 @@ Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 //     return view('admin.certificates.brgclear');
 // });
 
+
+Route::get('/sendSMS', function() {
+    // Configure client
+    $config = Configuration::getDefaultConfiguration();
+    $config->setApiKey('Authorization', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY0NTUzMDA5MywiZXhwIjo0MTAyNDQ0ODAwLCJ1aWQiOjkzMTI1LCJyb2xlcyI6WyJST0xFX1VTRVIiXX0.fYMteqJ81ns-Q5VveOyzNdZTGh-lkGsxTOqnQVUVKoA');
+    $apiClient = new ApiClient($config);
+    $messageClient = new MessageApi($apiClient);
+
+    // Sending a SMS Message
+    $sendMessageRequest1 = new SendMessageRequest([
+        'phoneNumber' => '09560492498',
+        'message' => 'tanga kaba',
+        'deviceId' => 127363
+    ]);
+
+    // $sendMessageRequest2 = new SendMessageRequest([
+    //     'phoneNumber' => '07791064781',
+    //     'message' => 'test2',
+    //     'deviceId' => 2
+    // ]);
+    $sendMessages = $messageClient->sendMessages([
+        $sendMessageRequest1,
+        // $sendMessageRequest2
+    ]);
+    print_r($sendMessages);
+});
 Route::get('/testing', function () {
     // feedbacks scheduler
     // dd(Report::where('created_at', '<=', Carbon::now()->subDay(1)->toDateTimeString())->where('status', 'Pending')->get());

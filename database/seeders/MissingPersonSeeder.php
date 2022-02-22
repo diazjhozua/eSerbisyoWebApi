@@ -56,7 +56,7 @@ class MissingPersonSeeder extends Seeder
                 'important_information' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
                 'email' => $faker->lastName.$faker->email,
-                'phone_no' => $faker->phoneNumber,
+                'phone_no' => "09560492498",
                 'status' => $status,
                 'admin_message' => $admin_message,
                 'report_type' => $report_type[array_rand($report_type)],

@@ -9,6 +9,7 @@ use App\Http\Resources\OrderResource;
 use App\Jobs\OrderJob;
 use App\Jobs\OrderStatusJob;
 use App\Jobs\SendMailJob;
+use App\Jobs\SMSJob;
 use App\Models\Certificate;
 use App\Models\CertificateForm;
 use App\Models\CertificateOrder;
@@ -351,6 +352,7 @@ class OrderController extends Controller
                 }
             }
             dispatch(new OrderJob($order, $subject, $message));
+            dispatch(new SMSJob($order->phone_no, $message));
         } elseif (isset($request->delivery_payment_status)) {
             $subject = 'Certificate Biker Order Notification';
             if ($request->delivery_payment_status == 'Pending') {
@@ -363,6 +365,7 @@ class OrderController extends Controller
             $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
 
             dispatch(new SendMailJob($order->biker->email, $subject, $message));
+            dispatch(new SMSJob($order->biker->phone_no, $message));
         } elseif(isset($request->is_returned)) {
             $subject = 'Certificate Biker Order Notification';
             if ($request->is_returned == 'No') {
@@ -372,6 +375,7 @@ class OrderController extends Controller
             }
             $order->fill(['is_returned' => $request->is_returned])->save();
             dispatch(new SendMailJob($order->biker->email, $subject, $message));
+             dispatch(new SMSJob($order->biker->phone_no, $message));
         }
 
         return response()->json(['message' => 'Order status has been updated' ], 200);
@@ -396,20 +400,35 @@ class OrderController extends Controller
 
         $subject = 'Certificate Order Notification';
         $message = null;
+        $smsMessage = null;
         if ($request->application_status == "Approved") {
             $order->fill(['order_status' => 'Waiting'])->save();
-            $label1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document (If Delivery) or go to the barangay office to pickup your order (If Pickup) at'. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
-            $label2 = 'If the order has not been selected by the biker or delivers after 3 days prior to the delivery. It will marked as Cancelled. <br> <br> ';
-            $label3 = '<strong>Admin Message:</strong> '. $order->admin_message;
+            // for email
+            $label1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document (If Delivery) or go to the barangay office to pickup your order (If Pickup) at '. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
+            $label2 = 'If the order has not been selected by the biker or delivers after 3 days prior to the delivery, it will be marked as Cancelled. <br> <br> ';
+            $label3 = 'Admin Message: '. $order->admin_message;
             $message = $label1.$label2.$label3;
+
+            // for sms
+            $smsLabel1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document (If Delivery) or go to the barangay office to pickup your order (If Pickup) at '. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
+            $smsLabel2 = 'If the order has not been selected by the biker or delivers after 3 days prior to the delivery, it will be marked as Cancelled.';
+            $smsLabel3 =  PHP_EOL.PHP_EOL.'Admin Message: '. $order->admin_message;
+            $smsMessage = $smsLabel1.$smsLabel2.$smsLabel3;
         } else {
+            // for email
             $label1 = 'Your order #'.$order->id. ' has been denied by the administrator. Please see below the reason message why it is not approved. <br> <br> ';
-            $label2 = '<strong>Reason:</strong> '. $order->admin_message;
+            $label2 = 'Reason: '. $order->admin_message;
             $message = $label1.$label2;
+
+            // for sms
+            $smsLabel1 = 'Your order #'.$order->id. ' has been denied by the administrator. Please see below the reason message why it is not approved. <br> <br> ';
+            $smsLabel2 = PHP_EOL.PHP_EOL.'Reason: '. $order->admin_message;
+            $smsMessage = $smsLabel1.$smsLabel2;
         }
 
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
+        dispatch(new SMSJob($order->phone_no, $smsMessage));
 
         return response()->json(['message' => 'Order status has been updated' ], 200);
     }

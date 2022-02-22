@@ -95,17 +95,12 @@ class MissingPersonController extends Controller
     public function changeStatus(ChangeStatusRequest $request, MissingPerson $missing_person)
     {
         if(request()->ajax()) {
-
-            // if ($request->status == $missing_person->status) {
-            //     return response()->json(Helper::instance()->sameStatusMessage($request->status, 'missing-person report'));
-            // }
-
             $oldStatus = $missing_person->status;
             $missing_person->fill($request->validated())->save();
 
             $subject = 'Missing Person Report Change Status Notification';
             $reportName = 'missing person report';
-            dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject));
+            dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject, $missing_person->phone_no));
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
     }
