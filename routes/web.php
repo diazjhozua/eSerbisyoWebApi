@@ -17,7 +17,10 @@ use App\Http\Controllers\Web\Admin\ {
 use App\Models\Announcement;
 use App\Models\Document;
 use App\Models\Feedback;
+use App\Models\Order;
+use App\Models\Report;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Pusher\Pusher;
 
@@ -41,39 +44,54 @@ Route::get('/downloads', [HomeController::class, 'downloads'])->name('download')
 Route::get('/terms', [HomeController::class, 'terms'])->name('term');
 Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 
-Route::get('/brgindigency', function () {
-    // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
-    // return $pdf->stream();
-    return view('admin.certificates.brgindigency');
-});
-Route::get('/brgclear', function () {
-    return view('admin.certificates.brgclear');
+// Route::get('/brgindigency', function () {
+//     // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
+//     // return $pdf->stream();
+//     return view('admin.certificates.brgindigency');
+// });
+// Route::get('/brgclear', function () {
+//     return view('admin.certificates.brgclear');
+// });
+
+Route::get('/testing', function () {
+    // feedbacks scheduler
+    // dd(Report::where('created_at', '<=', Carbon::now()->subDay(1)->toDateTimeString())->where('status', 'Pending')->get());
+    // dd(Report::where([['created_at', '<=', Carbon::now()->subDay(1)->toDateTimeString()], ['status', '=', 'Pending']])->get());
+    // dd(Feedback::where([['created_at', '<=', Carbon::now()->subDay(10)->toDateTimeString()], ['status', '=', 'Pending']])->get());
+        // dd(Order::find(5));
+    dd(
+        Order::where('pickup_date', '<=', Carbon::now()->subDays(3)->toDateTimeString())
+            ->where('application_status', 'Approved')
+            ->where('pick_up_type', 'Delivery')
+            ->where('order_status', 'Accepted')
+        ->get()
+    );
+    dd( Order::where([
+            ['pickup_date', '=', Carbon::today()], ['application_status', '==', 'Approved'],
+            ['pick_up_type', '==', 'Pickup'], ['order_status', '==', 'Waiting']
+        ])->get());
+    // return view('admin.certificates.cedula');
 });
 
-Route::get('/cedula', function () {
-    return view('admin.certificates.cedula');
-});
+// Route::get('/brgid', function () {
+//     return view('admin.certificates.brgid');
+// });
+// Route::get('/busclear', function () {
+//     return view('admin.certificates.busclear');
+// });
+// Route::get('/brgcedula', function () {
+//     return view('admin.certificates.brgcedula');
+// });
 
-Route::get('/brgid', function () {
-    return view('admin.certificates.brgid');
-});
-Route::get('/busclear', function () {
-    return view('admin.certificates.busclear');
-});
-Route::get('/brgcedula', function () {
-    return view('admin.certificates.brgcedula');
-});
+// Route::get('/checkout', function () {
+//     // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
+//     // return $pdf->stream();
+//     return view('admin.certification.orders.show');
+// });
 
-
-Route::get('/checkout', function () {
-    // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
-    // return $pdf->stream();
-    return view('admin.certification.orders.show');
-});
-
-Route::get('/event', function () {
-    event(new ReportNotification('This is our first broadcast message'));
-});
+// Route::get('/event', function () {
+//     event(new ReportNotification('This is our first broadcast message'));
+// });
 
 // Route::post('/pusher/auth', function (Request $request) {
 //         $user = auth()->user();
