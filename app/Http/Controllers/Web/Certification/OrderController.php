@@ -398,7 +398,7 @@ class OrderController extends Controller
         $message = null;
         if ($request->application_status == "Approved") {
             $order->fill(['order_status' => 'Waiting'])->save();
-            $label1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document at '. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
+            $label1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document (If Delivery) or go to the barangay office to pickup your order (If Pickup) at'. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
             $label2 = 'If the order has not been selected by the biker or delivers after 3 days prior to the delivery. It will marked as Cancelled. <br> <br> ';
             $label3 = '<strong>Admin Message:</strong> '. $order->admin_message;
             $message = $label1.$label2.$label3;

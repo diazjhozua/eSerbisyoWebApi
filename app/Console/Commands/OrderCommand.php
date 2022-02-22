@@ -106,7 +106,6 @@ class OrderCommand extends Command
                 dispatch(new SendMailJob($order->email, $subject, $message));
             });
 
-
         Order::where('pickup_date', '<=', Carbon::now()->subDays(3)->toDateTimeString())
             ->where('application_status', 'Approved')
             ->where('pick_up_type', 'Delivery')
