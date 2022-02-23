@@ -113,6 +113,7 @@ class DashboardController extends Controller
         $thisDayEarning =  DB::table('orders')
             ->selectRaw('sum(total_price) as total_price')
             ->selectRaw('sum(delivery_fee) as delivery_fee')
+            ->where('order_status', 'Received')
             ->where('created_at', '==', date('Y-m-d'))
             ->first();
 
@@ -122,6 +123,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(delivery_fee) as delivery_fee')
             ->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))
+            ->where('order_status', 'Received')
             ->first();
 
         // this year earning
@@ -129,6 +131,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(total_price) as total_price')
             ->selectRaw('sum(delivery_fee) as delivery_fee')
             ->whereYear('created_at', '=', date("Y") )
+            ->where('order_status', 'Received')
             ->first();
 
         // pending order
@@ -331,7 +334,7 @@ class DashboardController extends Controller
         }
 
         // Top 5 bikers
-        $bikers = User::with('delivers')->withCount('delivers')->orderBy('delivers_count', 'DESC')->where('user_role_id', 8)->limit(5)->get();
+        $bikers = User::with('deliverySuccess')->withCount('deliverySuccess')->orderBy('delivery_success_count', 'DESC')->where('user_role_id', 8)->limit(5)->get();
 
         // getting the received and dnr ratio
 

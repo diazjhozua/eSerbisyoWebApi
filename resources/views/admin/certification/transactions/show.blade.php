@@ -18,6 +18,62 @@
             $('#scrooll_div').doubleScroll({
                 resetOnWindowResize: true
             });
+
+            // Initialize Year picker in form
+            $(".datepicker").datepicker({
+                format: "yyyy-mm-dd", // Notice the Extra space at the beginning
+            });
+
+        });
+
+        // Validation for report form
+        $("form[name='reportForm']").validate({
+            // Specify validation rules
+            rules: {
+                date_start: {
+                    required: true,
+                },
+                date_end: {
+                    required: true,
+                    greaterThan: "#date_start"
+                },
+                sort_column: {
+                    required: true,
+                },
+                sort_option: {
+                    required: true,
+                },
+                pick_up_type: {
+                    required: true,
+                },
+                order_status: {
+                    required: true,
+                },
+                application_status: {
+                    required: true,
+                },
+            },
+            messages: {
+                date_end: {
+                    greaterThan: "Date end must be greater than selected date start"
+                },
+            },
+
+            submitHandler: function (form, event) {
+                event.preventDefault();
+
+                let user_id = $('#user_id').val();
+                let date_start = $('#date_start').val();
+                let date_end = $('#date_end').val();
+                let sort_column = $('#sort_column').val();
+                let sort_option = $('#sort_option').val();
+                let pick_up_type = $('#pick_up_type').val();
+                let order_status = $('#order_status').val();
+                let application_status = $('#application_status').val();
+
+                var url = `${window.location.origin}/admin/transactions/report/${user_id}/${date_start}/${date_end}/${sort_column}/${sort_option}/${pick_up_type}/${order_status}/${application_status}`;
+                window.open(url, '_blank');
+            }
         });
 
     </script>
@@ -28,12 +84,19 @@
 @section('title', $user->getFullNameAttribute().' Transaction List')
 
 @section('content')
+
+    @include('admin.certification.transactions.reportSelectModal')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"><button class="btn btn-primary" onclick="window.location=document.referrer;" type="submit"><i class="fas fa-caret-square-left"></i></button>
             User:  (#{{ $user->id }}) {{ $user->getFullNameAttribute() }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
+
+        @if (Auth::user()->user_role_id < 5)
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal">
+                <i class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @endif
     </div>
     <style>
 

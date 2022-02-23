@@ -11,6 +11,7 @@
 
 @section('content')
 
+    @include('admin.certification.bikers.reportSelectModal')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -18,6 +19,11 @@
             Biker:  (#{{ $user->id }}) {{ $user->getFullNameAttribute() }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
+
+        @if (Auth::user()->user_role_id < 5)
+            <button type="button" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal">
+                <i class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @endif
     </div>
 
     <style>
@@ -175,10 +181,10 @@
             <div class="card shadow mt-2 mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Delivered History (Total: <span id="typeCount">
-                        {{ $orders->count() }}
+                        {{ $user->deliverySuccess->count() }}
                     </span>)</h6>
                     <h6 class="mt-2 mb-0 font-weight-bold text-primary">Total Earnings:
-                        ₱ {{ floatval($orders->sum('delivery_fee')) }}
+                        ₱ {{ floatval($user->deliverySuccess->sum('delivery_fee')) }}
                     </h6>
                 </div>
                 <div class="card-body">
@@ -192,6 +198,8 @@
                                     <th>Total Price</th>
                                     <th>Delivery Fee</th>
                                     <th>Pickup Date</th>
+                                    <th>Delivered Date</th>
+                                    <th>Status</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -204,6 +212,8 @@
                                     <th>Total Price</th>
                                     <th>Delivery Fee</th>
                                     <th>Pickup Date</th>
+                                    <th>Delivered Date</th>
+                                    <th>Status</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -223,6 +233,24 @@
                                         <td>{{ '₱'.$order->total_price }}</td>
                                         <td>{{ '₱'.$order->delivery_fee }}</td>
                                         <td>{{ \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y') }}</td>
+                                        @if ($order->received_at != null)
+                                            <td>{{ \Carbon\Carbon::parse($order->received_at)->format('F d, Y') }}</td>
+                                        @else
+                                            <td>Not Delivered</td>
+                                        @endif
+                                        <td>
+                                            <p>Application: <br>
+                                                <strong> {{ $order->application_status }} </strong>
+                                            </p>
+
+                                            <p>Pick up: <br>
+                                                <strong> {{ $order->pick_up_type }} </strong>
+                                            </p>
+
+                                            <p>Order Status: <br>
+                                                <strong> {{ $order->order_status }} </strong>
+                                            </p>
+                                        </td>
                                         <td>{{ \Carbon\Carbon::parse($order->created_at)->format('F d, Y') }}</td>
 
                                         <td>

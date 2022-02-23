@@ -449,10 +449,10 @@
                                             </div>
                                             <div class="col-auto">
                                                 <div class="mb-0 font-weight-bold text-gray-800">
-                                                    Earnings: ₱ {{ floatval($biker->delivers->sum('delivery_fee')) }}
+                                                    Earnings: ₱ {{ floatval($biker->deliverySuccess->sum('delivery_fee')) }}
                                                 </div>
                                                 <div class="mb-0 font-weight-bold text-gray-800">
-                                                    Delivered Order Count: {{ $biker->delivers->count() }}
+                                                    Delivered Order Count: {{ $biker->deliverySuccess->count() }}
                                                 </div>
                                             </div>
                                         </div>

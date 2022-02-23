@@ -16,6 +16,8 @@ use App\Http\Controllers\Web\Certification\ {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificateAdmin'])->group(function () {
     Route::get('certificates/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{certificate_id}', [CertificateCtrl::class, 'report'])->name('certificates.report');
     Route::get('orders/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{pick_up_type}/{order_status}/{application_status}', [OrderCtrl::class, 'report'])->name('orders.report');
+    Route::get('bikers/report/{biker_id}/{date_start}/{date_end}/{sort_column}/{sort_option}/{order_status}/', [BikerCtrl::class, 'report']);
+    Route::get('transactions/report/{user_id}/{date_start}/{date_end}/{sort_column}/{sort_option}/{pick_up_type}/{order_status}/{application_status}', [TransactionCtrl::class, 'report']);
 });
 
 // For certificate admin/staff

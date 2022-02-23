@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\SendMailJob;
+use App\Jobs\SMSJob;
 use App\Models\CertificateForm;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -61,6 +62,7 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' has been cancelled by the system since you did not received the specified order within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
+                dispatch(new SMSJob($order->phone_no, $message));
                 dispatch(new SendMailJob($order->email, $subject, $message));
             });
 
@@ -72,6 +74,7 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' assigned pickup date is today. Please go to the barangay office to pickup your requested certificate (If pickup) or Expect the biker to pickup the delivery item (If delivery and booked by the biker). Take note of your order ID and prepare credentials.';
                 $label2 = 'Be aware that if you did not received (Pickup) or it did not booked by the biker, the order within 3 days after the assigned pickup date, your order will be marked as cancelled. Thankyou for using this application.';
                 $message = $label1.$label2;
+                dispatch(new SMSJob($order->phone_no, $message));
                 dispatch(new SendMailJob($order->email, $subject, $message));
 
                 if ($order->delivered_by != NULL) {
@@ -79,6 +82,7 @@ class OrderCommand extends Command
                     $label1 = 'Please take note that your booked order #'.$order->id.' assigned pickup date is today. Please go to the barangay office to pickup the specified order to deliver.';
                     $label2 = 'Be aware that if you did not deliver this item 3 days after the assigned pickup date, your order will be marked as cancelled. Thankyou for using this application.';
                     $message = $label1.$label2;
+                    dispatch(new SMSJob($order->biker->phone_no, $message));
                     dispatch(new SendMailJob($order->biker->email, $subject, $message));
                 }
             });
@@ -103,6 +107,7 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' has been cancelled by the system since the order has not been picked by the biker to deliver within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
+                dispatch(new SMSJob($order->phone_no, $message));
                 dispatch(new SendMailJob($order->email, $subject, $message));
             });
 
@@ -124,12 +129,14 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' has been cancelled by the system since the designated biker has not been picked your order to deliver within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
+                dispatch(new SMSJob($order->phone_no, $message));
                 dispatch(new SendMailJob($order->email, $subject, $message));
 
                 $subject = 'Certificate Delivery Cancellation Notification!';
                 $label1 = 'Please take note that your booked order #'.$order->id.' has been cancelled by the system since you did not receive pickup the order to deliver within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
+                dispatch(new SMSJob($order->biker->phone_no, $message));
                 dispatch(new SendMailJob($order->biker->email, $subject, $message));
             });
 

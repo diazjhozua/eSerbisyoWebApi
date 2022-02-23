@@ -99,12 +99,20 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Order::class, 'ordered_by', 'id');
     }
 
+    public function orderSuccess(){
+        return $this->hasMany(Order::class, 'ordered_by', 'id')->where('order_status', 'Received');
+    }
+
     public function orderReports(){
         return $this->hasMany(OrderReport::class);
     }
 
     public function delivers(){
         return $this->hasMany(Order::class, 'delivered_by', 'id');
+    }
+
+    public function deliverySuccess(){
+        return $this->hasMany(Order::class, 'delivered_by', 'id')->where('order_status', 'Received')->where('delivery_payment_status', 'Received');
     }
 
     public function missing_persons(){
