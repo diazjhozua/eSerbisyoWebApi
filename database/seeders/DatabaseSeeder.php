@@ -17,33 +17,33 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        // Delete all files
-        $files = Storage::allFiles('public/signatures/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/documents/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/employees/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/missing-pictures/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/ordinances/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/users/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/projects/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/reports/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/announcements/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/androids/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/bikers/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/requirements/');
-        Storage::delete($files);
-        $files = Storage::allFiles('public/orders/');
-        Storage::delete($files);
+        // // Delete all files
+        // $files = Storage::allFiles('public/signatures/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/documents/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/employees/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/missing-pictures/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/ordinances/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/users/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/projects/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/reports/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/announcements/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/androids/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/bikers/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/requirements/');
+        // Storage::delete($files);
+        // $files = Storage::allFiles('public/orders/');
+        // Storage::delete($files);
 
         $this->call([
             PurokSeeder::class,

@@ -69,8 +69,6 @@ class UserSeeder extends Seeder
         // For biker
         foreach (range(1,20) as $index)
         {
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
-            $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 	        DB::table('users')->insert([
                 'first_name' =>  $faker->firstName,
@@ -97,8 +95,6 @@ class UserSeeder extends Seeder
 
         foreach (range(6,19) as $index)
         {
-            // $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
-            // $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 	        DB::table('users')->insert([
                 'first_name' =>  $faker->firstName,
@@ -121,8 +117,6 @@ class UserSeeder extends Seeder
 
         foreach (range(20,30) as $index)
         {
-            // $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\users', false);
-            // $file_path = 'users/'.$picture_name;
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
 	        DB::table('users')->insert([
