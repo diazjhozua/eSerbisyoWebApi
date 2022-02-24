@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-// use Faker\Factory as Faker;
+use Faker\Factory as Faker;
 
 class PurokSeeder extends Seeder
 {
@@ -20,27 +20,27 @@ class PurokSeeder extends Seeder
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 1",
-            'created_at' => now(),
+            'created_at' => $this->faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 2",
-            'created_at' => now(),
+            'created_at' => $this->faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 3",
-            'created_at' => now(),
+            'created_at' => $this->faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 4",
-            'created_at' => now(),
+            'created_at' => $this->faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 5",
-            'created_at' => now(),
+            'created_at' => $this->faker->dateTime,
         ]);
     }
 }
