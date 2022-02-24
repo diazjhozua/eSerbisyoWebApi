@@ -41,7 +41,7 @@
             </button>
 
             {{-- View Credentials --}}
-            <a id="currentCredential" href="{{ route('admin.viewFiles', [ 'folderName' => 'credentials', 'fileName' => $missing_item->credential_name ]) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
+            <a id="currentCredential" href="{{ $missing_item->credential_file_path }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank">
                 View Credentials
             </a>
 
@@ -57,9 +57,8 @@
             <div class="col-md-6 col-sm-6 mt-3">
                 {{-- Missing Report Information --}}
                 <div class="card text-black mb-3">
-                    <img class="mt-2 mx-auto d-block" style="height:200px; max-height: 200px; max-width:200px; width: 200px;" id="currentImage" src="{{ asset('storage/'.$missing_item->file_path) }}" alt="Card image cap">
+                    <img class="mt-2 mx-auto d-block" style="height:200px; max-height: 200px; max-width:200px; width: 200px;" id="currentImage" src="{{ $missing_item->file_path }}" alt="Card image cap">
                     <div class="card-body">
-
                         <p class="card-text"><strong>Submitted By: {{ $missing_item->user->getFullNameAttribute() }} #{{ $missing_item->user->id }} - ({{ $missing_item->user->user_role->role }}) </strong></p>
                         <p class="card-text"><strong>Contact User: <span id="currentContactName">{{ $missing_item->contact->getFullNameAttribute() }}</span> #<span id="currentContactID">{{ $missing_item->contact->id }}</span> - (<span id="currentContactRole">{{ $missing_item->contact->user_role->role }}</span>) </strong></p>
                         <p class="card-text"><strong>Latest Admin Message: </strong></p>
@@ -207,7 +206,7 @@
                                         <tr>
                                             <td>
                                                  <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                                src="{{ isset($comment->user->file_path) ? asset('storage/'.$comment->user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$comment->user->getFullNameAttribute()}} image">
+                                                src="{{ isset($comment->user->file_path) ? $comment->user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$comment->user->getFullNameAttribute()}} image">
                                             </td>
 
                                             <td>{{$comment->user->getFullNameAttribute()}} #{{ $comment->user->id }}</td>

@@ -4,7 +4,7 @@ var selectedBtnVerify;
 
 function replaceData(data) {
     if (data.file_path) {
-        col1 = '<td> <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%;" src="' + window.location.origin + '/storage/' + data.file_path + '" class="rounded" alt="' + data.name + ' image"></td>'
+        col1 = '<td> <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%;" src="' + data.file_path + '" class="rounded" alt="' + data.name + ' image"></td>'
     } else {
         col1 = '<td> <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%;" src="https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg" class="rounded" alt="' + data.name + ' image"></td>'
     }

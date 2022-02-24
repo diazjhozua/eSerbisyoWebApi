@@ -13,6 +13,7 @@ use App\Models\Type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade as PDF;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class OrdinanceController extends Controller
 {
@@ -41,9 +42,9 @@ class OrdinanceController extends Controller
 
     public function store(OrdinanceRequest $request)
     {
-        $fileName = time().'_'.$request->pdf->getClientOriginalName();
-        $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
-        $ordinance = Ordinance::create(array_merge($request->getData(), ['title' => strtoupper($request->title), 'pdf_name' => $fileName,'file_path' => $filePath]));
+        $fileName = uniqid().'-'.time();
+        $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+        $ordinance = Ordinance::create(array_merge($request->getData(), ['title' => strtoupper($request->title), 'pdf_name' => $result->getPublicId(),'file_path' => $result->getPath()]));
         return (new OrdinanceResource($ordinance->load('type')))->additional(Helper::instance()->storeSuccess('ordinance'));
     }
 
@@ -56,17 +57,18 @@ class OrdinanceController extends Controller
     public function update(OrdinanceRequest $request, Ordinance $ordinance)
     {
         if($request->hasFile('pdf')) {
-            Storage::delete('public/ordinances/'. $ordinance->pdf_name);
-            $fileName = time().'_'.$request->pdf->getClientOriginalName();
-            $filePath = $request->file('pdf')->storeAs('ordinances', $fileName, 'public');
-            $ordinance->fill(array_merge($request->getData(), ['title' => strtoupper($request->title), 'pdf_name' => $fileName,'file_path' => $filePath]))->save();
+            Cloudinary::destroy($ordinance->pdf_name);
+            $fileName = uniqid().'-'.time();
+            $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+
+            $ordinance->fill(array_merge($request->getData(), ['title' => strtoupper($request->title), 'pdf_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else { $ordinance->fill(array_merge($request->getData(), ['title' => strtoupper($request->title), 'custom_type' => NULL]))->save(); }
         return (new OrdinanceResource($ordinance->load('type')))->additional(Helper::instance()->updateSuccess('ordinance'));
     }
 
     public function destroy(Ordinance $ordinance)
     {
-        Storage::delete('public/ordinances/'. $ordinance->pdf_name);
+        Cloudinary::destroy($ordinance->pdf_name);
         $ordinance->delete();
         return response()->json(Helper::instance()->destroySuccess('ordinance'));
     }
@@ -114,7 +116,7 @@ class OrdinanceController extends Controller
         $title = 'Ordinance Publish Report';
         $modelName = 'Ordinance';
 
-       
+
         return view('admin.information.pdf.ordinancereport', compact('title', 'modelName', 'ordinances' ,'ordinancesData',
         'date_start', 'date_end', 'sort_column', 'sort_option'
 

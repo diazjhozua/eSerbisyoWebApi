@@ -9,6 +9,7 @@ use App\Http\Requests\Api\MissingItemRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\MissingItemResource;
 use App\Models\MissingItem;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Helper;
 use Illuminate\Http\Request;
 use Storage;
@@ -44,19 +45,19 @@ class MissingItemController extends Controller
     public function store(MissingItemRequest $request)
     {
         activity()->disableLogging();
-        $missingFileName = uniqid().time().'.jpg';
-        $missingFilePath = 'missing-pictures/'.$missingFileName;
-        Storage::disk('public')->put($missingFilePath, base64_decode($request->picture));
+        $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+        $missingFileName = $picture->getPublicId();
+        $missingFilePath = $picture->getPath();
 
-        $credentialFileName = uniqid().time().'.jpg';
-        $credentialFilePath = 'credentials/'.$credentialFileName;
-        Storage::disk('public')->put($credentialFilePath, base64_decode($request->credential));
+        $credential = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->credential, ['folder' => 'barangay']);
+        $credentialFileName = $credential->getPublicId();
+        $credentialFilePath = $credential->getPath();
 
         $missingItem = MissingItem::create(array_merge($request->getData(),
             [
             'user_id' => auth('api')->user()->id, 'contact_user_id' => auth('api')->user()->id, 'status' => 'Pending',
             'picture_name' => $missingFileName, 'file_path' => $missingFilePath,
-            'credential_name' => $credentialFileName, 'credential_file_path' => $credentialFilePath
+            'credential_name' => $credentialFileName, 'credential_file_path' => $credentialFilePath,
             ]
         ));
 
@@ -68,16 +69,11 @@ class MissingItemController extends Controller
 
     public function edit(MissingItem $missingItem)
     {
-        // $reportTypes = [ (object)[ "id" => 1, "type" => "Missing"],(object) ["id" => 2,"type" => "Found"] ];
-        // $heightUnits = [ (object)[ "id" => 1, "unit" => "feet(ft)"],(object) ["id" => 2, "unit" => "centimeter(cm)"] ];
-        // $weightUnits = [ (object)[ "id" => 1, "unit" => "kilogram(kg)"],(object) ["id" => 2, "unit" => "kilogram(kg)"] ];
-
         if ($missingItem->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only edit your reports."], 403);
         }
 
         return (new MissingItemResource($missingItem->loadCount('comments')));
-        // return (new MissingPersonResource($missingPerson))->additional(array_merge(['reportTypes' => $reportTypes, 'heightUnits' => $heightUnits,  'weightUnits' => $weightUnits], Helper::instance()->itemFound('missing-person report')));
     }
 
     public function update(MissingItemRequest $request, MissingItem $missingItem)
@@ -95,21 +91,21 @@ class MissingItemController extends Controller
 
         if ($request->picture != '') {
             if($missingItem->picture_name != '') {
-                Storage::delete('public/missing-pictures/'. $missingItem->picture_name);
+                Cloudinary::destroy($missingItem->picture_name);
             }
 
-            $missingFileName = uniqid().time().'.jpg';
-            $missingFilePath = 'missing-pictures/'.$missingFileName;
-            Storage::disk('public')->put($missingFilePath, base64_decode($request->picture));
+            $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $missingFileName = $picture->getPublicId();
+            $missingFilePath = $picture->getPath();
         }
 
         if ($request->credential != '') {
             if($missingItem->credential_name != '') {
-                Storage::delete('public/credentials/'. $missingItem->credential_name);
+                Cloudinary::destroy($missingItem->credential_name);
             }
-            $credentialFileName = uniqid().time().'.jpg';
-            $credentialFilePath = 'credentials/'.$credentialFileName;
-            Storage::disk('public')->put($credentialFilePath, base64_decode($request->credential));
+            $credential = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->credential, ['folder' => 'barangay']);
+            $credentialFileName = $credential->getPublicId();
+            $credentialFilePath = $credential->getPath();
         }
 
         $missingItem->fill(array_merge($request->getData(),             [
@@ -127,20 +123,10 @@ class MissingItemController extends Controller
         if ($missingItem->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only delete your reports."], 403);
         }
-
-        Storage::delete('public/missing-pictures/'. $missingItem->picture_name);
-        Storage::delete('public/credentials/'. $missingItem->credential_name);
+        Cloudinary::destroy($missingItem->picture_name);
+        Cloudinary::destroy($missingItem->credential_name);
         $missingItem->delete();
         return response()->json(Helper::instance()->destroySuccess('missing item report'));
     }
 
-
-    public function getCredentialFile(MissingItem $missingItem) {
-        if ($missingItem->contact_user_id != auth('api')->user()->id) {
-            return response()->json(["message" => "You can do not have the rights to view this credential."], 403);
-
-            $url = Storage::disk('public')->path('credentials/'.$missingItem->credential_name);
-            return response()->file($url);
-        }
-    }
 }

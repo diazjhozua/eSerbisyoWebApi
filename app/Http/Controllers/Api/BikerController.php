@@ -23,15 +23,12 @@ class BikerController extends Controller
     public function postVerification(BikerApplicationRequest $request) {
         activity()->disableLogging();
 
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'bikers/'.$fileName;
-        Storage::disk('public')->put($filePath, base64_decode($request->picture));
-
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
         $bikerVerification = BikerRequest::create(array_merge($request->getData(),
             [
             'status' => 'Pending',
             'user_id' => auth('api')->user()->id,
-            'credential_name' => $fileName, 'credential_file_path' => $filePath
+            'credential_name' => $result->getPublicId(), 'credential_file_path' => $result->getPath()
             ]
         ));
 
@@ -156,15 +153,13 @@ class BikerController extends Controller
             return response()->json(['message' => 'Already marked as received'], 403);
         }
 
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'orders/'.$fileName;
-        Storage::disk('public')->put($filePath, base64_decode($request->picture));
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
 
         $order->fill([
             'order_status' => 'Received',
             'delivery_payment_status' => 'Pending',
-            'file_name' => $fileName,
-            'file_path' => $filePath
+            'file_name' => $result->getPublicId(),
+            'file_path' => $result->getPath()
         ])->save();
 
         $subject = 'Certificate Order Notification';

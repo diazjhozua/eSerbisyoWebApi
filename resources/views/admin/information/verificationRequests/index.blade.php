@@ -62,7 +62,7 @@
                             <tr>
                                 <td>
                                     <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                    src="{{ isset($userVerification->user->file_path) ? asset('storage/'.$userVerification->user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$userVerification->user->getFullNameAttribute()}}">
+                                    src="{{ isset($userVerification->user->file_path) ? $userVerification->user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$userVerification->user->getFullNameAttribute()}}">
                                 </td>
                                 <td>{{$userVerification->user->getFullNameAttribute()}}</td>
                                 <td>{{$userVerification->user->email}}</td>

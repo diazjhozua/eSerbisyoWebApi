@@ -102,7 +102,7 @@ function editReport(id) {
             // populate and show the current picture of missing person data
             $('.custom-file-label').html(data.picture_name);
             $("#currentPictureDiv").show(); // show the current picture div
-            $('#imgCurrentPicture').prop('src', data.picture_src); //add the src attribute
+            $('#imgCurrentPicture').prop('src', data.file_path); //add the src attribute
             $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
 
             // populate fields of missing person data
@@ -141,8 +141,8 @@ function addOrReplaceData(data, addOrReplace) {
     col2 = '<p class="' + className + '"><strong>' + data.report_type + '</strong></p>';
 
     col3 = '<td>' +
-        '<a href="' + data.picture_link + '" target="_blank">' +
-        '<img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.picture_src + '" class="rounded" alt="' + data.name + ' image">' +
+        '<a href="' + data.file_path + '" target="_blank">' +
+        '<img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.file_path + '" class="rounded" alt="' + data.name + ' image">' +
         '</a>' +
         '</td>';
 
@@ -206,7 +206,7 @@ function addOrReplaceData(data, addOrReplace) {
 
     deleteBtn =
         '<li class="list-inline-item mb-1">' +
-        '<button class="btn btn-danger btn-sm" onclick="editReport(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+        '<button class="btn btn-danger btn-sm" onclick="deleteReport(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
         '<i class="fas fa-trash-alt"></i>' +
         '</button>' +
         '</li>'

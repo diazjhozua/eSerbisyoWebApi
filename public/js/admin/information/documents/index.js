@@ -205,7 +205,7 @@ $(document).ready(function () {
                     col1 = '<td>' + data.description + '</td>'
                     col2 = '<td><a href="' + window.location.origin + '/admin/document-types/' + data.type_id + '">' + data.document_type + '</a></td>'
                     col3 = '<td>' + data.year + '</td>'
-                    col4 = '<td><a href="' + data.pdf_src + '" target="_blank">' + data.pdf_name + '</a></td>'
+                    col4 = '<td><a href="' + data.file_path + '" target="_blank">' + data.pdf_name + '</a></td>'
                     col5 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =

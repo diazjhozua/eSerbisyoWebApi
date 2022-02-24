@@ -12,8 +12,7 @@ use App\Models\Announcement;
 use App\Models\AnnouncementPicture;
 use App\Models\Type;
 use Barryvdh\DomPDF\Facade as PDF;
-
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Log;
@@ -46,14 +45,13 @@ class AnnouncementController extends Controller
     public function store(AnnouncementRequest $request)
     {
         $announcement = Announcement::create($request->getData());
-        Log::debug($announcement->id);
         $announcement->comments_count = 0;
         $announcement->likes_count = 0;
         if (isset($request->picture_list)) {
             foreach ($request->picture_list as $file) {
-                $fileName = time().'_'.$file->getClientOriginalName();
-                $filePath =   $file->storeAs('announcements', $fileName, 'public');
-                AnnouncementPicture::create(['announcement_id' => $announcement->id, 'picture_name' => $fileName,'file_path' => $filePath]);
+                $fileName = uniqid().'-'.time();
+                $result = $file->storeOnCloudinaryAs('barangay', $fileName);
+                AnnouncementPicture::create(['announcement_id' => $announcement->id, 'picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]);
             }
         }
         return (new AnnouncementResource($announcement->load('type')->loadCount('announcement_pictures')))->additional(Helper::instance()->storeSuccess('announcement'));
@@ -81,7 +79,10 @@ class AnnouncementController extends Controller
     {
         return DB::transaction(function() use ($announcement) {
             $announcement->load('announcement_pictures');
-            foreach ($announcement->announcement_pictures as $picture) { Storage::delete('public/announcements/'. $picture->picture_name); }
+            foreach ($announcement->announcement_pictures as $picture) {
+                Cloudinary::destroy($picture->picture_name);
+                // Storage::delete('public/announcements/'. $picture->picture_name);
+            }
             AnnouncementPicture::where('announcement_id', $announcement->id)->delete();
             $announcement->comments()->delete();
             $announcement->delete();
@@ -90,8 +91,6 @@ class AnnouncementController extends Controller
     }
 
     public function report($date_start, $date_end, $sort_column, $sort_option) {
-
-
 
         $title = 'Report - No data';
         $description = 'No data';
@@ -104,7 +103,7 @@ class AnnouncementController extends Controller
             ->whereBetween('created_at', [$date_start, $date_end])
             ->orderBy($sort_column, $sort_option)
             ->get();
-        
+
         } catch(\Illuminate\Database\QueryException $ex){
             return view('errors.404Report', compact('title', 'description'));
         }
@@ -129,7 +128,7 @@ class AnnouncementController extends Controller
         $title = 'Announcement Publish Report';
         $modelName = 'Announcement';
 
-       
+
         return view('admin.information.pdf.announcementreport', compact('title', 'modelName', 'announcements' ,'announcementsData',
         'date_start', 'date_end', 'sort_column', 'sort_option'
 

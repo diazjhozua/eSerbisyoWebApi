@@ -39,13 +39,13 @@ function viewReport(reportID) {
             if (data.picture_name == null) {
                 $('#picture').text('No picture provided')
             } else {
-                $('#picture').html('<a href="' + window.location.origin + '/admin/files/reports/' + data.picture_name + '" target="_blank">' + data.picture_name + '</a></a>')
+                $('#picture').html('<a href="' + data.file_path + '" target="_blank">' + data.picture_name + '</a></a>')
             }
 
             $('#profileHead').text(data.submitted_by + ' (#' + data.user_id + ')');
 
             // set picture
-            $('#profilePicture').prop('src', data.user_file_path != null ? window.location.origin + '/storage/' + data.user_file_path : 'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'); //add the src attribute
+            $('#profilePicture').prop('src', data.user_file_path != null ? data.user_file_path : 'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'); //add the src attribute
             $("#profilePicture").prop("alt", data.submitted_by + ' picture'); //add the alt text
 
             if (data.status == 'Pending') {

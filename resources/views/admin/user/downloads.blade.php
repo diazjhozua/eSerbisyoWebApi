@@ -54,7 +54,7 @@
                                     <tr>
 
                                         <td data-label="Version">
-                                            <a href="{{route('downloadFiles', [ 'folderName' => 'androids', 'fileName' => $android->file_name])}}" target="_blank">
+                                            <a href="{{ $android->file_path }}" target="_blank">
                                                {{ $android->version }}
                                             </a>
                                         </td>

@@ -29,7 +29,7 @@
 
                                     @foreach ($passedRequirements as $passedRequirement)
                                         <p class="font-weight-bold p-0 m-0 text-left">
-                                            <a href="{{route('admin.viewRequirement', ['fileName' => $passedRequirement['file_name']]) }}" target="_blank">
+                                            <a href="{{ $passedRequirement['file_path']}}" target="_blank">
                                                 {{ $passedRequirement['name'] }}
                                             </a>
                                         </p>

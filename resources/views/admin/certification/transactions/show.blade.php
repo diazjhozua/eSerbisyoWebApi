@@ -139,9 +139,8 @@
             <div class="bikerContent">
                 {{-- Biker's Profile --}}
                 <div class="picture-box">
-                    <img id="profilePicture" src="{{ isset($user->file_path) ? asset('storage/'.$user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
+                    <img id="profilePicture" src="{{ isset($user->file_path) ? $user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
                 </div>
-
                     <div class="userProfile">
                         <div class="row">
                             <div class="col type">

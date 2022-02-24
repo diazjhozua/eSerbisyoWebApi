@@ -9,6 +9,7 @@ use App\Http\Resources\ComplainantResource;
 use App\Models\Complainant;
 use App\Models\Complaint;
 use Barryvdh\Debugbar\Twig\Extension\Debug;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Storage;
 use Log;
 
@@ -26,16 +27,14 @@ class ComplainantController extends Controller
             return response()->json(["message" => "You can only add complainant to your complaint when the status is Pending or Denied"], 403);
         }
 
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'signatures/'.$fileName;
-        Storage::disk('public')->put($filePath, base64_decode($request->signature));
-        $complainant = Complainant::create(array_merge($request->getData(), ['signature_picture' => $fileName,'file_path' => $filePath]));
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->signature, ['folder' => 'barangay']);
+
+        $complainant = Complainant::create(array_merge($request->getData(), ['signature_picture' => $result->getPublicId(),'file_path' => $result->getPath()]));
         return (new ComplainantResource($complainant->load('complaint')))->additional(Helper::instance()->storeSuccess('complainant'));
     }
 
     public function edit(Complainant $complainant)
     {
-
         $complaint = Complaint::find($complainant->complaint_id);
         if ($complaint->contact_user_id != auth('api')->user()->id) {
             return response()->json(["message" => "You can only edit complainant to your submitted complaint."], 403);
@@ -60,13 +59,12 @@ class ComplainantController extends Controller
         }
 
         if($request->signature != ''){
-            Storage::delete('public/signatures/'. $complainant->signature_picture);
+            Cloudinary::destroy($complainant->signature_picture);
 
-            Log::debug($request->signature);
-            $fileName = uniqid().time().'.jpg';
-            $filePath = 'signature/'.$fileName;
-            Storage::disk('public')->put($filePath, base64_decode($request->signature));
-            $complainant->fill(array_merge($request->getPutData(), ['signature_picture' => $fileName,'file_path' => $filePath]))->save();
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->signature, ['folder' => 'barangay']);
+
+            $complainant->fill(array_merge($request->getPutData(), ['signature_picture' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
+
         } else {
             $complainant->fill($request->getPutData())->save();
         }
@@ -86,7 +84,7 @@ class ComplainantController extends Controller
             return response()->json(["message" => "You can only delete complainant to your complaint when the status is Pending or Denied"], 403);
         }
 
-        Storage::delete('public/signatures/'. $complainant->signature_picture);
+        Cloudinary::destroy($complainant->signature_picture);
         $complainant->delete();
         return response()->json(Helper::instance()->destroySuccess('complainant'));
     }

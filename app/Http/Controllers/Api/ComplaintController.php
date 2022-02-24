@@ -15,6 +15,7 @@ use App\Models\Complaint;
 use App\Models\Defendant;
 use App\Models\Type;
 use Carbon\Carbon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,11 +42,9 @@ class ComplaintController extends Controller
             $defendantCount = 0;
 
             foreach ($request->complainant_list as $key => $value) {
-                $fileName = uniqid().time().'.jpg';
-                $filePath = 'signatures/'.$fileName;
-                Storage::disk('public')->put($filePath, base64_decode($value['signature']));
+                $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => 'barangay']);
 
-                Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' => $fileName,'file_path' => $filePath]);
+                Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' =>  $picture->getPublicId(),'file_path' => $picture->getPath()]);
                 $complainantCount++;
             }
 
@@ -106,7 +105,9 @@ class ComplaintController extends Controller
             }
 
             $complaint->load('complainants');
-            foreach ($complaint->complainants as $complainant) { Storage::delete('public/signatures/'. $complainant->signature_picture); }
+            foreach ($complaint->complainants as $complainant) {
+                Cloudinary::destroy($complainant->signature_picture);
+            }
             Complainant::where('complaint_id', $complaint->id)->delete();
             Defendant::where('complaint_id', $complaint->id)->delete();
             $complaint->delete();

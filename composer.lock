@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3eb0c66f32418381b679eaf6a37c0ec",
+    "content-hash": "78b7a90eb266e741e912a43e832715f5",
     "packages": [
         {
             "name": "askedio/laravel5-profanity-filter",
@@ -3240,6 +3240,76 @@
                 "source": "https://github.com/Propaganistas/Laravel-Phone/tree/4.3.5"
             },
             "time": "2021-12-09T07:14:29+00:00"
+        },
+        {
+            "name": "protonemedia/laravel-mixins",
+            "version": "3.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/protonemedia/laravel-mixins.git",
+                "reference": "66028715b214d0ccbac0c6aefd6377e5bb220c74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/protonemedia/laravel-mixins/zipball/66028715b214d0ccbac0c6aefd6377e5bb220c74",
+                "reference": "66028715b214d0ccbac0c6aefd6377e5bb220c74",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.67 || ^9.0",
+                "php": "^7.4 || ^8.0 || ^8.1"
+            },
+            "require-dev": {
+                "html2text/html2text": "^4.3",
+                "jeremykendall/php-domain-parser": "^6.0",
+                "laravel/ui": "^2.0 || ^3.0",
+                "mockery/mockery": "^1.3.3",
+                "moneyphp/money": "^3.3",
+                "orchestra/testbench": "^6.23 || ^7.0",
+                "phpunit/phpunit": "^9.4",
+                "spatie/laravel-sitemap": "^5.7 || ^6.0",
+                "symfony/process": "^5.1 || ^6.0"
+            },
+            "suggest": {
+                "html2text/html2text": "To convert HTML to formatted plain text",
+                "moneyphp/money": "Blade directives to represent money",
+                "spatie/laravel-sitemap": "To generate sitemaps",
+                "symfony/process": "To run Ghostscript"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ProtoneMedia\\LaravelMixins\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pascal Baljet",
+                    "email": "pascal@protone.media",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Mixins",
+            "homepage": "https://github.com/protonemedia/laravel-mixins",
+            "keywords": [
+                "laravel-mixins",
+                "protonemedia"
+            ],
+            "support": {
+                "issues": "https://github.com/protonemedia/laravel-mixins/issues",
+                "source": "https://github.com/protonemedia/laravel-mixins/tree/3.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/pascalbaljet",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-02-22T14:52:57+00:00"
         },
         {
             "name": "psr/container",

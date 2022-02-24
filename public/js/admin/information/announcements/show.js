@@ -98,7 +98,7 @@ function editPicture(announcementPicture_id) {
             $('#announcement_id').val(data.announcement_id)
             $('.custom-file-label').html(data.picture_name)
             $("#currentPictureDiv").show(); // show the current picture div
-            $('#imgCurrentPicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
+            $('#imgCurrentPicture').prop('src', data.file_path); //add the src attribute
             $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
             $('#announcementPictureForm').attr('action', actionURL) //set the method of the form
         },
@@ -276,23 +276,23 @@ $(document).ready(function () {
                     const data = response.data
 
                     col0 = '<td>' + data.id + '</td>'
-                    col1 = '<td><img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="' + window.location.origin + '/storage/' + data.file_path + '" class="rounded" alt="' + data.picture_name + ' image"></td>'
+                    col1 = '<td><img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="' + data.file_path + '" class="rounded" alt="' + data.picture_name + ' image"></td>'
 
                     viewBtn =
                         '<li class="list-inline-item mb-1">' +
-                        '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="' + window.location.origin + '/admin/files/announcements/' + data.picture_name + '" target="_blank"><i class="fas fa-eye"></i>' +
+                        '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="' + data.file_path + '" target="_blank"><i class="fas fa-eye"></i>' +
                         '</a></li>'
 
                     editBtn =
                         '<li class="list-inline-item mb-1">' +
-                        '<button class="btn btn-primary btn-sm" onclick="editType(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
+                        '<button class="btn btn-primary btn-sm" onclick="editPicture(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
                         '<i class="fas fa-edit"></i>' +
                         '</button>' +
                         '</li>'
 
                     deleteBtn =
                         '<li class="list-inline-item mb-1">' +
-                        '<button class="btn btn-danger btn-sm" onclick="deleteType(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+                        '<button class="btn btn-danger btn-sm" onclick="deletePicture(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
                         '<i class="fas fa-trash-alt"></i>' +
                         '</button>' +
                         '</li>'

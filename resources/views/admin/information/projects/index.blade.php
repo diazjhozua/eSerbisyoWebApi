@@ -13,7 +13,7 @@
     {{-- Included Modals --}}
     @include('admin.information.projects.formModal')
 
-   
+
     @include('admin.information.projects.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}
@@ -145,7 +145,7 @@
                                 <td>{{ $project->project_start}}</td>
                                 <td>{{ $project->project_end}}</td>
                                 <td>{{ $project->location}}</td>
-                                <td><a href="{{route('admin.viewFiles', [ 'folderName' => 'projects', 'fileName' => $project->pdf_name])}}" target="_blank">{{ $project->pdf_name}}</a></td>
+                                <td><a href="{{ $project->file_path }}" target="_blank">{{ $project->pdf_name}}</a></td>
                                 <td>{{ $project->updated_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">

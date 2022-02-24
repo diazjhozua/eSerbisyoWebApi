@@ -184,8 +184,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->g
 
 Route::get('view/{folderName}/{fileName}', function ($folderName, $fileName) {
 
-    if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
-        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+    if(file_exists(Storage::disk('cloudinary')->path($folderName.'/'.$fileName))){
+        $url = Storage::disk('cloudinary')->path($folderName.'/'.$fileName);
         return response()->download($url);
     }else{
         return view('errors.NOFILE');
@@ -194,8 +194,8 @@ Route::get('view/{folderName}/{fileName}', function ($folderName, $fileName) {
 
 Route::get('download/{folderName}/{fileName}', function ($folderName, $fileName) {
 
-    if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
-        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+    if(file_exists(Storage::disk('cloudinary')->path($folderName.'/'.$fileName))){
+        $url = Storage::disk('cloudinary')->path($folderName.'/'.$fileName);
         return response()->download($url);
     }else{
         return view('errors.NOFILE');

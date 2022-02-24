@@ -32,7 +32,6 @@ class ComplaintResource extends JsonResource
                 'complaint_type'  => !$type instanceof MissingValue && isset($this->type->name) ? $this->type->name : NULL,
             ]),
 
-
             'contact_id' => $this->contact_user_id,
             'contact_name' => $this->contact->getFullNameAttribute(),
             'contact_role' => $this->contact->user_role->role,

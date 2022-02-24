@@ -80,7 +80,7 @@
                                 <td>{{ $employee->id }}</td>
                                 <td>{{ $employee->name }}</td>
                                 <td>
-                                    <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ asset('storage/'.$employee->file_path) }}" class="rounded" alt="{{$employee->name}} image">
+                                    <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ $employee->file_path }}" class="rounded" alt="{{$employee->name}} image">
                                 </td>
                                 @if (isset($employee->custom_term))
                                     <td>{{ $employee->custom_term }}</td>

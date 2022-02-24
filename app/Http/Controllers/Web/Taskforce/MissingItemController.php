@@ -9,9 +9,11 @@ use App\Http\Resources\MissingItemResource;
 use App\Jobs\ChangeStatusReportJob;
 use App\Models\MissingItem;
 use Auth;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use DB;
 use Helper;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Null_;
 use Storage;
 
 class MissingItemController extends Controller
@@ -46,9 +48,9 @@ class MissingItemController extends Controller
     public function store(MissingItemRequest $request)
     {
         if(request()->ajax()) {
-            $fileName = time().'_'.$request->picture->getClientOriginalName();
-            $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-            $lost_and_found = MissingItem::create(array_merge($request->getData(), ['user_id' => Auth::id(), 'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
+            $fileName = uniqid().'-'.time();
+            $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+            $lost_and_found = MissingItem::create(array_merge($request->getData(), ['user_id' => Auth::id(), 'status' => 'Approved', 'picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
             return (new MissingItemResource($lost_and_found))->additional(Helper::instance()->storeSuccess('missing-item report'));
         }
     }
@@ -71,11 +73,11 @@ class MissingItemController extends Controller
     {
         if(request()->ajax()) {
             if($request->hasFile('picture')) {
-                Storage::delete('public/missing-pictures/'. $missing_item->picture_name);
-                $fileName = time().'_'.$request->picture->getClientOriginalName();
-                $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-                $missing_item->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
-            } else { $missing_item->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
+                Cloudinary::destroy($missing_item->picture_name);
+                $fileName = uniqid().'-'.time();
+                $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+                $missing_item->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]))->save();
+            } else { $missing_item->fill(array_merge($request->getData()))->save(); }
             return (new MissingItemResource($missing_item->load('comments', 'contact')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-item report'));
         }
     }
@@ -83,7 +85,10 @@ class MissingItemController extends Controller
     public function destroy(MissingItem $missing_item)
     {
         if(request()->ajax()) {
-            Storage::delete('public/missing-pictures/'. $missing_item->picture_name);
+            Cloudinary::destroy($missing_item->picture_name);
+            if ($missing_item->credential_name != Null) {
+                Cloudinary::destroy($missing_item->credential_name);
+            }
             $missing_item->comments()->delete();
             $missing_item->delete();
             return response()->json(Helper::instance()->destroySuccess('missing-item report'));
@@ -91,10 +96,6 @@ class MissingItemController extends Controller
     }
 
     public function changeStatus(ChangeStatusRequest $request, MissingItem $missing_item) {
-        // if ($request->status == $lost_and_found->status) {
-        //     return response()->json(Helper::instance()->sameStatusMessage($request->status, 'lost-and-found report'));
-        // }
-
         $oldStatus = $missing_item->status;
         $missing_item->fill($request->validated())->save();
 

@@ -9,9 +9,11 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UserProfileRequest;
 use App\Http\Resources\UserProfileResource;
 use App\Models\User;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use phpDocumentor\Reflection\Types\Null_;
 use Storage;
 
 class ProfileController extends Controller
@@ -35,10 +37,12 @@ class ProfileController extends Controller
         if(request()->ajax()) {
             $user = User::with('user_role')->findOrFail(Auth::id());
             if($request->hasFile('picture')) {
-                Storage::delete('public/users/'. $user->picture_name);
-                $fileName = time().'_'.$request->picture->getClientOriginalName();
-                $filePath = $request->file('picture')->storeAs('users', $fileName, 'public');
-                $user->fill(array_merge($request->getData(), ['picture_name' => $fileName,'file_path' => $filePath]))->save();
+                if ($user->file_path != Null) {
+                    Cloudinary::destroy($user->picture_name);
+                }
+                $fileName = uniqid().'-'.time();
+                $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+                $user->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
             } else {  $user->fill($request->getData())->save(); }
 
             return (new UserProfileResource($user))->additional(Helper::instance()->updateSuccess('user profile'));

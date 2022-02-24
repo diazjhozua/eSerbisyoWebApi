@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use App\Http\Requests\Api\FormRequest;
 use Illuminate\Validation\Rule;
+use ProtoneMedia\LaravelMixins\Request\ConvertsBase64ToFiles;
 
 class UserInfoRequest extends FormRequest
 {
@@ -11,6 +12,7 @@ class UserInfoRequest extends FormRequest
     {
         return true;
     }
+
 
     public function rules()
     {
@@ -20,7 +22,7 @@ class UserInfoRequest extends FormRequest
             'last_name' => 'required|string|min:4|max:150',
             'purok_id' => ['required', Rule::exists('puroks', 'id')],
             'address' => 'required|string|min:4|max:250',
-            'picture' => 'base64image'
+            'picture' => 'required|base64image'
         ];
     }
 

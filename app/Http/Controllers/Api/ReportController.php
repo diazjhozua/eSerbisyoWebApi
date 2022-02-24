@@ -39,10 +39,12 @@ class ReportController extends Controller
         }
 
         if($request->picture != ''){
-            $fileName = uniqid().time().'.jpg';
-            $filePath = 'reports/'.$fileName;
-            Storage::disk('public')->put($filePath, base64_decode($request->picture));
-            $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => auth('api')->user()->id,'picture_name' => $fileName,'file_path' => $filePath]));
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $report = Report::create(array_merge($request->getData(), ['status' => 'Pending',
+                'user_id' => auth('api')->user()->id,
+                'picture_name' => $result->getPublicId(),
+                'file_path' => $result->getPath(),
+            ]));
 
         } else {
             $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => auth('api')->user()->id]));

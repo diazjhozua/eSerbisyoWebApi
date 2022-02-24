@@ -19,7 +19,7 @@ function editProfile() {
             // if there is picture
             if (data.file_path) {
                 $('#imgCurrentPicture').prop('src',
-                    window.location.origin + '/storage/' + data.file_path);
+                    data.file_path);
             } else {
                 $('#imgCurrentPicture').prop('src',
                     'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg');
@@ -112,7 +112,7 @@ $(document).ready(function () {
                     // if there is picture
                     if (data.file_path) {
                         $('#userProfileImg').prop('src',
-                            window.location.origin + '/storage/' + data.file_path);
+                            data.file_path);
                     } else {
                         $('#userProfileImg').prop('src',
                             'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg');

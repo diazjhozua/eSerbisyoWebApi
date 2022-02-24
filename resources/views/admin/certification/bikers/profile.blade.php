@@ -68,7 +68,7 @@
             <div class="bikerContent">
                 {{-- Biker's Profile --}}
                 <div class="picture-box">
-                    <img id="profilePicture" src="{{ isset($user->file_path) ? asset('storage/'.$user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
+                    <img id="profilePicture" src="{{ isset($user->file_path) ? $user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
                 </div>
 
                     <div class="userProfile">
@@ -129,7 +129,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <img class="bikeImg" src="{{ isset($user->latest_biker_request) ? asset('storage/'.$user->latest_biker_request->credential_file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
+                                <img class="bikeImg" src="{{ isset($user->latest_biker_request) ? $user->latest_biker_request->credential_file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" alt="Ezekiel Lacbayen">
                             </div>
 
                             <div class="col mt-5">

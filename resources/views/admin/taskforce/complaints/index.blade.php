@@ -158,7 +158,7 @@
                                 @if (isset($complaint->custom_type))
                                     <td>{{ $complaint->custom_type }}</td>
                                 @else
-                                    <td><a href="{{route('admin.complaints.show', $complaint->type_id)}}">{{ $complaint->type->name }}</a></td>
+                                    <td><a href="{{route('admin.complaint-types.show', $complaint->type_id)}}">{{ $complaint->type->name }}</a></td>
                                 @endif
 
                                 <td>{{ $complaint->reason }}</td>

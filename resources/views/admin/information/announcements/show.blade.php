@@ -104,7 +104,7 @@
                                         <tr>
                                             <td>{{ $picture->id }}</td>
                                             <td>
-                                                <img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="{{ asset('storage/'.$picture->file_path) }}" class="rounded" alt="{{$picture->picture_name}} image">
+                                                <img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="{{ $picture->file_path }}" class="rounded" alt="{{$picture->picture_name}} image">
                                             </td>
 
                                             <td>
@@ -185,7 +185,7 @@
                                         <tr>
                                             <td>
                                                 <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                                src="{{ isset($like->user->file_path) ? asset('storage/'.$like->user->file_path)
+                                                src="{{ isset($like->user->file_path) ? $like->user->file_path
                                                 :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}"
                                                 class="rounded" alt="{{$like->user->getFullNameAttribute()}} image">
 
@@ -250,7 +250,7 @@
                                         <tr>
                                             <td>
                                                  <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                                src="{{ isset($comment->user->file_path) ? asset('storage/'.$comment->user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$comment->user->getFullNameAttribute()}} image">
+                                                src="{{ isset($comment->user->file_path) ? $comment->user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$comment->user->getFullNameAttribute()}} image">
                                             </td>
 
                                             <td>{{$comment->user->getFullNameAttribute()}}</td>

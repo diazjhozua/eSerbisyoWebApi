@@ -15,7 +15,7 @@
     @include('admin.information.announcements.formModal')
 
     {{-- Report Route to the modal --}}
-    
+
     @include('admin.information.announcements.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}
@@ -61,9 +61,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" id="thisMonthCount">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Announcement publish this month</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $announcementsData->this_month_count }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisMonthCount">{{ $announcementsData->this_month_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar-alt fa-2x text-primary"></i>
@@ -79,9 +79,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1" id="thisYearCount">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Announcement publish this year</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $announcementsData->this_year_count }}</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="thisYearCount">{{ $announcementsData->this_year_count }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-success"></i>

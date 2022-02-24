@@ -354,8 +354,6 @@ $(document).ready(function () {
                     btnComplainantFormLoadingIcon.prop("hidden", true);
                 }, 1000);
 
-                complainantFormModal.modal('hide');
-                toastr.success(formMethod == 'POST' ? 'Complainant Added' : 'Complainant Updated');
 
                 // get the name and image in the complainant form
                 let complainantName = inputComplainantName.val();
@@ -363,6 +361,10 @@ $(document).ready(function () {
                 console.log(`Signature : ${signature}`)
 
                 addOrReplaceComplainant(complainantName, signature, formMethod == 'POST' ? 'Add' : 'Replace')
+
+                complainantFormModal.modal('hide');
+                toastr.success(formMethod == 'POST' ? 'Complainant Added' : 'Complainant Updated');
+
             }
         }
     });
@@ -411,8 +413,6 @@ $(document).ready(function () {
             let data;
 
 
-
-
             // get the values for each row in defendant table
             table = defendantDataTbl.dataTable().DataTable();
             data = table.rows().data();
@@ -441,10 +441,10 @@ $(document).ready(function () {
 
                 var childs = td1.childNodes; //get the image document from td1
                 console.log();
-
+                //
                 complainantObj = {
                     "name": td.textContent,
-                    "signature": childs[0].src,
+                    "signature": childs[0].src.replace("data:image/jpeg;base64,", ""),
                 };
 
                 complainant_list.push(complainantObj);
@@ -461,11 +461,13 @@ $(document).ready(function () {
             formData.append('action', inputTxtAction.val());
 
             for (var i = 0; i < complainant_list.length; i++) {
-                formData.append('complainant_list[]', JSON.stringify(complainant_list[i]));
+
+                formData.append(`complainant_list[${i}][name]`, complainant_list[i]["name"]);
+                formData.append(`complainant_list[${i}][signature]`, complainant_list[i]["signature"]);
             }
 
             for (var i = 0; i < defendant_list.length; i++) {
-                formData.append('defendant_list[]', JSON.stringify(defendant_list[i]));
+                formData.append(`defendant_list[${i}][name]`, defendant_list[i]["name"]);
             }
 
             let formAction = $("#reportForm").attr('action')
@@ -487,7 +489,6 @@ $(document).ready(function () {
                 console.log(valueArr.indexOf(item) != idx)
                 return valueArr.indexOf(item) != idx;
             });
-
 
             if (isDuplicateDefendant) {
                 toastr.error('Duplicate entry name of defendant list');

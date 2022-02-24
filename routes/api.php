@@ -83,6 +83,7 @@ Route::group([
     Route::post('feedbacks/', [FeedbackController::class, 'store']);
 
     Route::get('reports/create', [ReportController::class, 'create']);
+    Route::get('reports/{report}', [ReportController::class, 'show']);
     Route::post('reports/', [ReportController::class, 'store']);
 
     Route::resource('missingPersons', MissingPersonController::class)->except('index');
