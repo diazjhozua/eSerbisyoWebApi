@@ -43,6 +43,10 @@ use Spatie\Activitylog\Models\Activity;
 |
 */
 
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
+
 // LANDING PAGE
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/downloads', [HomeController::class, 'downloads'])->name('download');

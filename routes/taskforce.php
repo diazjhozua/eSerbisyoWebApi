@@ -14,6 +14,10 @@ use App\Http\Controllers\Web\Taskforce\ {
 };
 
 
+if (App::environment('production')) {
+    URL::forceScheme('https');
+}
+
 // For taskforce admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:taskForceAdmin'])->group(function () {
 
