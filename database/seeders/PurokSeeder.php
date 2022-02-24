@@ -16,7 +16,7 @@ class PurokSeeder extends Seeder
     {
         activity()->disableLogging();
 
-        // $faker = Faker::create();
+        $faker = Faker::create();
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 1",
