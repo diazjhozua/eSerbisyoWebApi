@@ -15,6 +15,7 @@ class OrderReportSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $orders = Order::where('pick_up_type', 'Delivery')->get();
 
         $faker = \Faker\Factory::create();

@@ -190,7 +190,7 @@
                                     <tr>
                                         <td>{{ $complainant->name }}</td>
 
-                                        <td><img src="{{ asset('storage/'. $complainant->file_path) }}" class="rounded" alt="Jhozua Manguera Diaz signature" style="height: 100px; width: 100%;"></td>
+                                        <td><img src="{{ $complainant->file_path }}" class="rounded" alt="Jhozua Manguera Diaz signature" style="height: 100px; width: 100%;"></td>
 
                                         <td>
                                             <ul class="list-inline m-0">

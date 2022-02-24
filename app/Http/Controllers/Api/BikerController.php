@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BikerApplicationRequest;
 use App\Http\Requests\Api\PictureRequest;
 use App\Jobs\OrderJob;
+use App\Jobs\SMSJob;
 use App\Models\BikerRequest;
 use App\Models\Order;
 use Storage;
@@ -22,15 +23,12 @@ class BikerController extends Controller
     public function postVerification(BikerApplicationRequest $request) {
         activity()->disableLogging();
 
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'bikers/'.$fileName;
-        Storage::disk('public')->put($filePath, base64_decode($request->picture));
-
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
         $bikerVerification = BikerRequest::create(array_merge($request->getData(),
             [
             'status' => 'Pending',
             'user_id' => auth('api')->user()->id,
-            'credential_name' => $fileName, 'credential_file_path' => $filePath
+            'credential_name' => $result->getPublicId(), 'credential_file_path' => $result->getPath()
             ]
         ));
 
@@ -123,6 +121,7 @@ class BikerController extends Controller
         $message = 'Your order #'.$order->id. ' has been booked by our biker delivery Please prepare the exact payment.';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
+        dispatch(new SMSJob($order->phone_no, $message));
 
         return response()->json(['message' => 'Order has been selected successfully'], 200);
     }
@@ -138,6 +137,7 @@ class BikerController extends Controller
         $message = 'Your order #'.$order->id. ' has been start delivering your requested order by the biker. Please prepare the exact payment.';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
+        dispatch(new SMSJob($order->phone_no, $message));
 
         return response()->json(['message' => 'Notification has been set to the user.'], 200);
     }
@@ -153,21 +153,20 @@ class BikerController extends Controller
             return response()->json(['message' => 'Already marked as received'], 403);
         }
 
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'orders/'.$fileName;
-        Storage::disk('public')->put($filePath, base64_decode($request->picture));
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
 
         $order->fill([
             'order_status' => 'Received',
             'delivery_payment_status' => 'Pending',
-            'file_name' => $fileName,
-            'file_path' => $filePath
+            'file_name' => $result->getPublicId(),
+            'file_path' => $result->getPath()
         ])->save();
 
         $subject = 'Certificate Order Notification';
         $message = 'Your order #'.$order->id. ' has been successfully delivered by our biker.';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
+        dispatch(new SMSJob($order->phone_no, $message));
         return response()->json(['message' => 'Order marked as received.'], 200);
     }
 
@@ -191,6 +190,7 @@ class BikerController extends Controller
         $message = 'Your order #'.$order->id. ' has been marked as DNR (Did not receive by specified person on the order). It means that you didn\'t receive the order.';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
+        dispatch(new SMSJob($order->phone_no, $message));
         return response()->json(['message' => 'Order marked as DNR.'], 200);
 
     }

@@ -98,7 +98,7 @@ function editPicture(announcementPicture_id) {
             $('#announcement_id').val(data.announcement_id)
             $('.custom-file-label').html(data.picture_name)
             $("#currentPictureDiv").show(); // show the current picture div
-            $('#imgCurrentPicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
+            $('#imgCurrentPicture').prop('src', data.file_path); //add the src attribute
             $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
             $('#announcementPictureForm').attr('action', actionURL) //set the method of the form
         },
@@ -249,104 +249,92 @@ $(document).ready(function () {
 
         submitHandler: function (form, event) {
             event.preventDefault()
+            $.ajax({
+                type: 'POST',
+                url: formAction,
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#btnFormSubmit').attr("disabled", true); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
+                },
+                success: function (response) {
+                    toastr.success(response.message);
+                    $('#announcementPictureModal').modal('hide') //hide the modal
 
-            let announcement = $('#announcement').val();
-          
+                    const data = response.data
 
+                    col0 = '<td>' + data.id + '</td>'
+                    col1 = '   <td><img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="' + data.file_path + '" class="rounded" alt="' + data.picture_name + ' image"></td>'
 
-            var url = `${window.location.origin}/admin/announcement/${announcement}//`;
-            window.open(url, '_blank');
-            // let formAction = $("#announcementPictureForm").attr('action')
-            // let formMethod = $('#pictureMethod').val()
-            // let formData = new FormData(form)
+                    viewBtn =
+                        '<li class="list-inline-item mb-1">' +
+                        '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="' + data.file_path + '" target="_blank"><i class="fas fa-eye"></i>' +
+                        '</a></li>'
 
+                    editBtn =
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-primary btn-sm" onclick="editPicture(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
+                        '<i class="fas fa-edit"></i>' +
+                        '</button>' +
+                        '</li>'
 
-            // $.ajax({
-            //     type: 'POST',
-            //     url: formAction,
-            //     data: formData,
-            //     headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            //     },
-            //     cache: false,
-            //     processData: false,
-            //     contentType: false,
-            //     beforeSend: function () {
-            //         $('#btnFormSubmit').attr("disabled", true); //disabled login
-            //         $('.btnTxt').text(formMethod == 'POST' ? 'Storing' : 'Updating') //set the text of the submit btn
-            //         $('.loadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-            //     },
-            //     success: function (response) {
-            //         toastr.success(response.message);
-            //         $('#announcementPictureModal').modal('hide') //hide the modal
+                    deleteBtn =
+                        '<li class="list-inline-item mb-1">' +
+                        '<button class="btn btn-danger btn-sm" onclick="deletePicture(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
+                        '<i class="fas fa-trash-alt"></i>' +
+                        '</button>' +
+                        '</li>'
 
-            //         const data = response.data
+                    col2 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
 
-            //         col0 = '<td>' + data.id + '</td>'
-            //         col1 = '<td><img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="' + window.location.origin + '/storage/' + data.file_path + '" class="rounded" alt="' + data.picture_name + ' image"></td>'
+                    // Get table reference - note: dataTable() not DataTable()
+                    var table = $('#dataTablePicture').DataTable();
 
-            //         viewBtn =
-            //             '<li class="list-inline-item mb-1">' +
-            //             '<a class="btn btn-info btn-sm" type="button" data-toggle="tooltip" data-placement="top" title="View" href="' + window.location.origin + '/admin/files/announcements/' + data.picture_name + '" target="_blank"><i class="fas fa-eye"></i>' +
-            //             '</a></li>'
+                    if (formMethod == 'POST') {
+                        var currentPage = table.page();
+                        table.row.add([col0, col1, col2]).draw()
 
-            //         editBtn =
-            //             '<li class="list-inline-item mb-1">' +
-            //             '<button class="btn btn-primary btn-sm" onclick="editType(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit">' +
-            //             '<i class="fas fa-edit"></i>' +
-            //             '</button>' +
-            //             '</li>'
+                        selectedRow = 0
+                        var index = table.row(selectedRow).index(),
+                            rowCount = table.data().length - 1,
+                            insertedRow = table.row(rowCount).data(),
+                            tempRow
 
-            //         deleteBtn =
-            //             '<li class="list-inline-item mb-1">' +
-            //             '<button class="btn btn-danger btn-sm" onclick="deleteType(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Delete">' +
-            //             '<i class="fas fa-trash-alt"></i>' +
-            //             '</button>' +
-            //             '</li>'
+                        for (var i = rowCount; i > index; i--) {
+                            tempRow = table.row(i - 1).data()
+                            table.row(i).data(tempRow)
+                            table.row(i - 1).data(insertedRow)
+                        }
 
-            //         col2 = '<td><ul class="list-inline m-0">' + viewBtn + editBtn + deleteBtn + '</td></ul>'
+                        //refresh the page
+                        table.page(currentPage).draw(false)
 
-            //         // Get table reference - note: dataTable() not DataTable()
-            //         var table = $('#dataTablePicture').DataTable();
+                        // increment employeeCount
+                        $("#announcementPicturesCount").text(parseInt($("#announcementPicturesCount").text()) + 1);
 
-            //         if (formMethod == 'POST') {
-            //             var currentPage = table.page();
-            //             table.row.add([col0, col1, col2]).draw()
+                    } else {
+                        table.row('.selected').data([col0, col1, col2]).draw(false);
+                    }
+                },
+                error: function (xhr) {
+                    var error = JSON.parse(xhr.responseText);
 
-            //             selectedRow = 0
-            //             var index = table.row(selectedRow).index(),
-            //                 rowCount = table.data().length - 1,
-            //                 insertedRow = table.row(rowCount).data(),
-            //                 tempRow
-
-            //             for (var i = rowCount; i > index; i--) {
-            //                 tempRow = table.row(i - 1).data()
-            //                 table.row(i).data(tempRow)
-            //                 table.row(i - 1).data(insertedRow)
-            //             }
-
-            //             //refresh the page
-            //             table.page(currentPage).draw(false)
-
-            //             // increment employeeCount
-            //             $("#announcementPicturesCount").text(parseInt($("#announcementPicturesCount").text()) + 1);
-
-            //         } else {
-            //             table.row('.selected').data([col0, col1, col2]).draw(false);
-            //         }
-            //     },
-            //     error: function (xhr) {
-            //         var error = JSON.parse(xhr.responseText);
-
-            //         // show error message from helper.js
-            //         ajaxErrorMessage(error);
-            //     },
-            //     complete: function () {
-            //         $('#btnFormSubmit').attr("disabled", false); //disabled login
-            //         $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
-            //         $('.loadingIcon').prop("hidden", true) //show the fa loading icon from submit btn
-            //     }
-            // });
+                    // show error message from helper.js
+                    ajaxErrorMessage(error);
+                },
+                complete: function () {
+                    $('#btnFormSubmit').attr("disabled", false); //disabled login
+                    $('.btnTxt').text(formMethod == 'POST' ? 'Store' : 'Update') //set the text of the submit btn
+                    $('.loadingIcon').prop("hidden", true) //show the fa loading icon from submit btn
+                }
+            });
         }
     })
 

@@ -14,6 +14,7 @@ class AnnouncementTypeSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         //26-30

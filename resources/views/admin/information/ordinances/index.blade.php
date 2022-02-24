@@ -14,7 +14,7 @@
     {{-- Included Modals --}}
     @include('admin.information.ordinances.formModal')
 
-  
+
     @include('admin.information.ordinances.reportSelectModal')
 
     {{-- Delete Modal Confirmation --}}
@@ -138,7 +138,7 @@
                                     <td><a href="{{route('admin.ordinance-types.show', $ordinance->type_id)}}">{{ $ordinance->type->name }}</a></td>
                                 @endif
                                 <td>{{ $ordinance->date_approved}}</td>
-                                <td><a href="{{route('admin.viewFiles', [ 'folderName' => 'ordinances', 'fileName' => $ordinance->pdf_name])}}" target="_blank">{{ $ordinance->pdf_name}}</a></td>
+                                <td><a href="{{ $ordinance->file_path }}" target="_blank">{{ $ordinance->pdf_name}}</a></td>
                                 <td>{{ $ordinance->updated_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">

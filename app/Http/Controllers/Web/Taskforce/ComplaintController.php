@@ -13,6 +13,7 @@ use App\Models\Complainant;
 use App\Models\Complaint;
 use App\Models\Defendant;
 use App\Models\Type;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use DB;
 use File;
 use Helper;
@@ -55,23 +56,8 @@ class ComplaintController extends Controller
 
             foreach ($request->complainant_list as $key => $value) {
 
-                // $name = preg_replace('/\s+/', '', $request->title);
-
-                // $fileName = time().'-signature'.'.jpg';
-
-                $image_parts = explode(";base64,", $value['signature']);
-                $image_type_aux = explode("image/", $image_parts[0]);
-                $image_type = $image_type_aux[1];
-
-                $image_base64 = base64_decode($image_parts[1]);
-                $fileName = uniqid().time().'.'.$image_type;
-                $filePath = 'signatures/'.$fileName;
-                // save to storage/app/photos as the new $filename
-                Storage::disk('public')->put($filePath, $image_base64);
-
-                // $filePath =   $value['signature']->storeAs('signatures', $fileName, 'public');
-
-                Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' => $fileName,'file_path' => $filePath]);
+                $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => 'barangay']);
+                Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' => $result->getPublicId(),'file_path' =>$result->getPath()]);
                 $complainantCount++;
             }
 
@@ -116,7 +102,9 @@ class ComplaintController extends Controller
         if(request()->ajax()) {
             return DB::transaction(function() use ($complaint) {
                 $complaint->load('complainants');
-                foreach ($complaint->complainants as $complainant) { Storage::delete('public/signatures/'. $complainant->signature_picture); }
+                foreach ($complaint->complainants as $complainant) {
+                    Cloudinary::destroy($complainant->signature_picture);
+                }
                 Complainant::where('complaint_id', $complaint->id)->delete();
                 Defendant::where('complaint_id', $complaint->id)->delete();
                 $complaint->delete();
@@ -134,7 +122,7 @@ class ComplaintController extends Controller
 
             $subject = 'Complaint Change Status Notification';
             $reportName = 'complaint report';
-            dispatch(new ChangeStatusReportJob($complaint->email, $complaint->id, $reportName, $complaint->status, $complaint->admin_message, $subject));
+            dispatch(new ChangeStatusReportJob($complaint->email, $complaint->id, $reportName, $complaint->status, $complaint->admin_message, $subject, $complaint->phone_no));
 
             return (new ComplaintResource($complaint->load('type')))->additional(Helper::instance()->statusMessage($oldStatus, $complaint->status, 'complaint'));
         }

@@ -17,14 +17,14 @@ function viewVerificationRequest(requestID) {
 
             $('#reviewRequestModal').modal('show') //show bootstrap modal
             $('#profileHead').text(data.first_name + ' ' + data.last_name + ' Profile');
-            $('#profilePicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
+            $('#profilePicture').prop('src', data.file_path); //add the src attribute
             $("#profilePicture").prop("alt", data.first_name + ' ' + data.last_name + ' picture'); //add the alt text
             $('#firstName').text(data.first_name)
             $('#middleName').text(data.middle_name)
             $('#lastName').text(data.last_name)
             $('#purok').text(data.purok.purok)
             $('#address').text(data.address)
-            $('#credentials').html('<a href="' + window.location.origin + '/admin/files/credentials/' + data.credential_name + '" target="_blank">' + data.credential_name + '</a></a>')
+            $('#credentials').html('<a href="' + data.credential_file_path + '" target="_blank">' + data.credential_name + '</a></a>')
 
             $('#verifyRequestForm').trigger("reset")
             let actionURL = `${window.location.origin}/admin/user-verifications/${data.id}`;
@@ -43,7 +43,7 @@ function viewVerificationRequest(requestID) {
 
 function replaceData(data, addOrReplace) {
     if (data.file_path) {
-        col1 = '<td> <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%;" src="' + window.location.origin + '/storage/' + data.file_path + '" class="rounded" alt="' + data.first_name + ' ' + data.last_name + ' image"></td>'
+        col1 = '<td> <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%;" src="' + data.file_path + '" class="rounded" alt="' + data.first_name + ' ' + data.last_name + ' image"></td>'
     } else {
         col1 = '<td> <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%;" src="https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg" class="rounded" alt="' + data.first_name + ' ' + data.last_name + ' image"></td>'
     }

@@ -42,35 +42,7 @@
             }
         });
 
-        var feedbackCanvas = document.getElementById('feedbackChart');
-        var feedbackChart = new Chart(feedbackCanvas, {
-            type: 'doughnut',
-            data: {
-                labels: [
-                    'Positive {{ $feedbacksData->this_month_positive_count.'%'}}' ,
-                    'Neutral {{ $feedbacksData->this_month_neutral_count.'%'}}' ,
-                    'Negative {{ $feedbacksData->this_month_negative_count.'%'}}' ,
-                ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [{{ $feedbacksData->this_month_positive_count }}, {{ $feedbacksData->this_month_neutral_count }}, {{ $feedbacksData->this_month_negative_count }}],
-                    backgroundColor: [
-                    '#5cb85c',
-                    '#5bc0de',
-                    '#d9534f'
-                    ],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                    }
-                },
-            }
-        });
+
 
         var projectCanvas = document.getElementById('projectChart');
         var projectChart = new Chart(projectCanvas, {
@@ -112,7 +84,7 @@
 @endsection
 
 @section('page-css')
-
+    <link href="{{ asset('admin/css/star.css')}}" rel="stylesheet">
     <style>
         .graph{
             position: relative;
@@ -129,7 +101,6 @@
 
 {{-- Title Page --}}
 @section('title', 'Barangay Cupang - Information Dashboard')
-
 
 @section('content')
 <!-- Begin Page Content -->
@@ -245,13 +216,24 @@
                 <!-- Card Header - Dropdown -->
                 <div
                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary"><a href="{{ route('admin.feedbacks.index') }}">Feedbacks Summary (This month)</a> </h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><a href="{{ route('admin.feedbacks.index') }}">Feedbacks Summary</a> </h6>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                    <div class="graph">
-                        <canvas id="feedbackChart"></canvas>
-                    </div>
+                <div class="card-body text-center">
+                    <h5 class="mt-2">This month</h5>
+                    <div class="Stars" style="--rating: {{ number_format($feedbacksDataThisMonth->avg('rating'), 2, '.', '') }}; --star-size:50px"
+                        aria-label="Rating of this product is {{ number_format($feedbacksDataThisMonth->avg('rating'), 2, '.', '') }} out of 5."></div>
+                    <p>{{ number_format($feedbacksDataThisMonth->avg('rating'), 2, '.', '') }}/5</p>
+                    <hr/>
+                    <h5 class="mt-4">This year</h5>
+                    <div class="Stars" style="--rating: {{ number_format($feedbacksDataThisYear->avg('rating'), 2, '.', '') }}; --star-size:50px"
+                        aria-label="Rating of this product is {{ number_format($feedbacksDataThisYear->avg('rating'), 2, '.', '') }} out of 5."></div>
+                    <p>{{ number_format($feedbacksDataThisYear->avg('rating'), 2, '.', '') }}/5</p>
+                    <hr/>
+                    <h5 class="mt-4">Overall</h5>
+                    <div class="Stars" style="--rating: {{ number_format($feedbacksDataOverall->avg('rating'), 2, '.', '') }}; --star-size:50px"
+                        aria-label="Rating of this product is {{ number_format($feedbacksDataOverall->avg('rating'), 2, '.', '') }} out of 5."></div>
+                    <p>{{ number_format($feedbacksDataOverall->avg('rating'), 2, '.', '') }}/5</p>
                 </div>
             </div>
         </div>
@@ -293,7 +275,7 @@
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> <a href="{{ route('admin.feedbacks.index') }}"> Feedbacks Recieved </a>
                                        </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksData->this_month_total_feedbacks }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $feedbacksDataThisMonth->count() }}</div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="far fa-comment-alt fa-2x text-black-300"></i>

@@ -14,6 +14,7 @@ class ReportTypeSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         // 36-40

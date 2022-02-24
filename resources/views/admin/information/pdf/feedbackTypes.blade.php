@@ -52,9 +52,7 @@
                 <th>ID</th>
                 <th>Name</th>
                 <th>Feedbacks Count</th>
-                <th>Positive</th>
-                <th>Neutral</th>
-                <th>Negative</th>
+                <th>Ratings</th>
                 <th>Created At</th>
                 <th>Updated At</th>
             </tr>
@@ -65,9 +63,7 @@
                     <td>{{ $type->id }}</td>
                     <td>{{ $type->name }}</td>
                     <td>{{ $type->feedbacks_count}}</td>
-                    <td>{{ $type->feedbacks_count ? number_format(round($type->positive_count * 100 / $type->feedbacks_count),0,'.','') . '%' : '0%' }}</td>
-                    <td>{{ $type->feedbacks_count ? number_format(round($type->neutral_count * 100 / $type->feedbacks_count),0,'.','') . '%' : '0%' }}</td>
-                    <td>{{ $type->feedbacks_count ? number_format(round($type->negative_count * 100 / $type->feedbacks_count),0,'.','') . '%' : '0%' }}</td>
+                    <td>{{ number_format($type->feedbacks_avg_rating, 2, '.', '') }}/5</td>
                     <td>{{ $type->created_at }}</td>
                     <td>{{ $type->updated_at }}</td>
                 </tr>

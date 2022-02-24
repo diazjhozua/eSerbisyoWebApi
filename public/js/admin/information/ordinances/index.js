@@ -212,7 +212,7 @@ $(document).ready(function () {
                     col2 = '<td>' + data.title + '</td>'
                     col3 = '<td><a href="' + window.location.origin + '/admin/ordinance-types/' + data.type_id + '">' + data.ordinance_type + '</a></td>'
                     col4 = '<td>' + data.date_approved + '</td>'
-                    col5 = '<td><a href="' + data.pdf_src + '" target="_blank">' + data.pdf_name + '</a></td>'
+                    col5 = '<td><a href="' + data.file_path + '" target="_blank">' + data.pdf_name + '</a></td>'
                     col6 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =

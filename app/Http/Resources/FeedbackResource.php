@@ -19,7 +19,7 @@ class FeedbackResource extends JsonResource
                 'type' => !$type instanceof MissingValue && isset($type) ? $this->type->name : NULL,
             ]),
             'custom_type' => $this->custom_type,
-            'polarity' => $this->polarity,
+            'rating' => $this->rating,
             'message' => $this->message,
             'admin_respond' => $this->admin_respond == null ? 'Not yet responded' : $this->admin_respond,
             'status' => $this->status,

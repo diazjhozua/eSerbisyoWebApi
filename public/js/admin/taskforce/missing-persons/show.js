@@ -28,11 +28,10 @@ function populateAllFields(data, reportTypes, heightUnits, weightUnits) {
     $('#currentName').text(data.name);
     $('#currentCreatedAt').text(data.created_at);
     $('#currentUpdatedAt').text(data.updated_at);
-    $('#currentImage').prop('src', data.picture_src); //add the src attribute
+    $('#currentImage').prop('src', data.file_path); //add the src attribute
     $("#currentImage").prop("alt", data.name + ' picture'); //add the alt text
     $('#currentAdminMessage').text(data.admin_message);
     $('#currentCredential').prop('href', data.credential_link); //add the src attribute
-
 
     //empty dropdown list
     $('#report_type').empty();
@@ -40,7 +39,7 @@ function populateAllFields(data, reportTypes, heightUnits, weightUnits) {
     $('#weight_unit').empty();
 
     $('.custom-file-label').html(data.picture_name); // set picture name
-    $('#imgCurrentPicture').prop('src', data.picture_src); //add the src attribute
+    $('#imgCurrentPicture').prop('src', data.file_path); //add the src attribute
     $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
 
     //change the contact id span

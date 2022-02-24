@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
         // Delete all files
         $files = Storage::allFiles('public/signatures/');
         Storage::delete($files);
@@ -58,25 +59,25 @@ class DatabaseSeeder extends Seeder
             ComplaintTypeSeeder::class,
             ReportTypeSeeder::class,
 
-            FeedbackSeeder::class,
-            DocumentSeeder::class,
-            OrdinanceSeeder::class,
-            ProjectSeeder::class,
-            TermSeeder::class,
-            PositionSeeder::class,
-            EmployeeSeeder::class,
-            AnnouncementSeeder::class,
-            AndroidSeeder::class,
+            // FeedbackSeeder::class,
+            // DocumentSeeder::class,
+            // OrdinanceSeeder::class,
+            // ProjectSeeder::class,
+            // TermSeeder::class,
+            // PositionSeeder::class,
+            // EmployeeSeeder::class,
+            // AnnouncementSeeder::class,
+            // AndroidSeeder::class,
 
-            MissingPersonSeeder::class,
-            MissingItemSeeder::class,
-            ComplaintSeeder::class,
-            ReportSeeder::class,
+            // MissingPersonSeeder::class,
+            // MissingItemSeeder::class,
+            // ComplaintSeeder::class,
+            // ReportSeeder::class,
 
             CertificateSeeder::class,
-            UserRequirementSeeder::class,
-            OrderSeeder::class,
-            OrderReportSeeder::class,
+            // UserRequirementSeeder::class,
+            // OrderSeeder::class,
+            // OrderReportSeeder::class,
         ]);
     }
 }

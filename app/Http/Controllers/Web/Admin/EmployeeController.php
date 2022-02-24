@@ -11,6 +11,7 @@ use App\Http\Resources\TermResource;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\Term;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,9 +44,13 @@ class EmployeeController extends Controller
 
     public function store(EmployeeRequest $request)
     {
-        $fileName = time().'_'.$request->picture->getClientOriginalName();
-        $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
-        $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $fileName,'file_path' => $filePath]));
+        $fileName = uniqid().'-'.time();
+        $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+        $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]));
+
+        // $fileName = time().'_'.$request->picture->getClientOriginalName();
+        // $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
+        // $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $fileName,'file_path' => $filePath]));
 
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->storeSuccess('employee'));
     }
@@ -63,17 +68,23 @@ class EmployeeController extends Controller
     public function update(EmployeeRequest $request, Employee $employee)
     {
         if($request->hasFile('picture')) {
-            Storage::delete('public/employees/'. $employee->picture_name);
-            $fileName = time().'_'.$request->picture->getClientOriginalName();
-            $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
-            $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL,'picture_name' => $fileName,'file_path' => $filePath]))->save();
+            Cloudinary::destroy($employee->picture_name);
+            $fileName = uniqid().'-'.time();
+            $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+            $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL, 'picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
+
+            // Storage::delete('public/employees/'. $employee->picture_name);
+            // $fileName = time().'_'.$request->picture->getClientOriginalName();
+            // $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
+            // $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL,'picture_name' => $fileName,'file_path' => $filePath]))->save();
         } else {  $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL]))->save(); }
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->updateSuccess('employee'));
     }
 
     public function destroy(Employee $employee)
     {
-        Storage::delete('public/employees/'. $employee->picture_name);
+        Cloudinary::destroy($employee->picture_name);
+        // Storage::delete('public/employees/'. $employee->picture_name);
         $employee->delete();
         return response()->json(Helper::instance()->destroySuccess('employee'));
     }

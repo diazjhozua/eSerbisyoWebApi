@@ -12,7 +12,7 @@ class CertificateFormSeeder extends Seeder
 {
     public function run()
     {
-
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
         $certificates = collect(Certificate::all()->modelKeys());
         $civil_status = ['Single', 'Married', 'Divorced', 'Widowed'];

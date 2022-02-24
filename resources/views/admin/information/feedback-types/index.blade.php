@@ -6,6 +6,10 @@
     <script src="{{ asset('js/admin/information/feedback-types/index.js')}}"></script>
 @endsection
 
+@section('page-css')
+   <link href="{{ asset('admin/css/star.css')}}" rel="stylesheet">
+@endsection
+
 {{-- Title Page --}}
 @section('title', 'Feedback Types')
 
@@ -56,9 +60,7 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Feedbacks Count</th>
-                            <th>Positive</th>
-                            <th>Neutral</th>
-                            <th>Negative</th>
+                            <th>Ratings</th>
                             <th>Date Modified</th>
                             <th>Action</th>
                         </tr>
@@ -68,9 +70,7 @@
                             <th>ID</th>
                             <th>Name</th>
                             <th>Feedbacks Count</th>
-                            <th>Positive</th>
-                            <th>Neutral</th>
-                            <th>Negative</th>
+                            <th>Ratings</th>
                             <th>Date Modified</th>
                             <th>Action</th>
                         </tr>
@@ -82,9 +82,17 @@
                                 <td>{{ $type->id }}</td>
                                 <td>{{ $type->name }}</td>
                                 <td>{{ $type->feedbacks_count}}</td>
-                                <td>{{ $type->feedbacks_count ? number_format(round($type->positive_count * 100 / $type->feedbacks_count),0,'.','') . '%' : '0%' }}</td>
-                                <td>{{ $type->feedbacks_count ? number_format(round($type->neutral_count * 100 / $type->feedbacks_count),0,'.','') . '%' : '0%' }}</td>
-                                <td>{{ $type->feedbacks_count ? number_format(round($type->negative_count * 100 / $type->feedbacks_count),0,'.','') . '%' : '0%' }}</td>
+                                <td class="text-center">
+                                    @if ($type->feedbacks->count() > 0)
+                                        <div class="Stars" style="--rating: {{ number_format($type->feedbacks->avg('rating'), 2, '.', '') }}; --star-size:50px"
+                                            aria-label="Rating of this product is {{ number_format($type->feedbacks->avg('rating'), 2, '.', '') }} out of 5."></div>
+                                        <p>{{ number_format($type->feedbacks->avg('rating'), 2, '.', '') }}/5</p>
+                                    @else
+                                        <p>No feedbacks submitted in this type</p>
+                                    @endif
+
+                                </td>
+
                                 <td>{{ $type->updated_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">

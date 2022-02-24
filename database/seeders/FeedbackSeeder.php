@@ -14,13 +14,14 @@ class FeedbackSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
-        $polarity = ['Positive', 'Neutral', 'Negative'];
+        // $polarity = ['Positive', 'Neutral', 'Negative'];
         $status = ['Pending', 'Ignored', 'Noted'];
 
 
-        foreach (range(1,1560) as $index)
+        foreach (range(1,200) as $index)
         {
             $userRandomID = $faker->numberBetween(1, 548);
             $typeID = $faker->numberBetween(0, 3);
@@ -31,7 +32,7 @@ class FeedbackSeeder extends Seeder
                 $customType = $faker->realText($maxNbChars = 30, $indexSize = 3);
             }
 
-            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
 
             $admin_message = NULL;
             $status_name =  $status[array_rand($status)];
@@ -44,7 +45,7 @@ class FeedbackSeeder extends Seeder
                 'user_id' =>  $userRandomID,
                 'type_id' => $typeID,
                 'custom_type' => $customType,
-                'polarity' => $polarity[array_rand($polarity)],
+                'rating' => $faker->numberBetween(1, 5),
                 'message' =>  $faker->paragraph($nbSentences = 2, $variableNbSentences = true),
                 'status' => $status_name,
                 'admin_respond' => $admin_message,

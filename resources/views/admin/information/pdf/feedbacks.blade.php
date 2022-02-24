@@ -30,7 +30,6 @@
                 <p class="font-weight-bold">Date Start:</p>
                 <p class="font-weight-bold">Date End:</p>
                 <p class="font-weight-bold">Sort by:</p>
-                <p class="font-weight-bold">Polarity Filter:</p>
                 <p class="font-weight-bold">Status:</p>
                 <p class="font-weight-bold">Feedback Type:</p>
             </div>
@@ -38,7 +37,6 @@
                 <p class="text-right"> {{$date_start}} </p>
                 <p class="text-right"> {{ $date_end  }} </p>
                 <p class="text-right">  {{ str_replace(array("types."),"",$sort_column ); }} ({{{ $sort_option }}}) </p>
-                <p class="text-right"> {{ $polarity_option  }} </p>
                 <p class="text-right"> {{ $status_option  }} </p>
                 <p class="text-right"> {{ $modelName  }} </p>
             </div>
@@ -51,30 +49,6 @@
         <h4 class="text-center">Overall Statistics</h4>
         <hr/>
         <div class="row">
-            <div class="col-sm">
-                <div class="row">
-                    <div class="col-sm-6">
-                        Positive:
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="font-weight-bold">{{ $feedbacksData->positive_count }} ({{ $feedbacksData->feedbacks_count ? number_format(round($feedbacksData->positive_count * 100 / $feedbacksData->feedbacks_count),0,'.','') . '%' : '0%' }})</div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        Neutral:
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="font-weight-bold">{{ $feedbacksData->neutral_count }} ({{ $feedbacksData->feedbacks_count ? number_format(round($feedbacksData->neutral_count * 100 / $feedbacksData->feedbacks_count),0,'.','') . '%' : '0%' }})</div>
-                    </div>
-                    <div class="col-sm-6">
-                        Negative:
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="font-weight-bold">{{ $feedbacksData->negative_count }} ({{ $feedbacksData->feedbacks_count ? number_format(round($feedbacksData->negative_count * 100 / $feedbacksData->feedbacks_count),0,'.','') . '%' : '0%' }})</div>
-                    </div>
-                </div>
-            </div>
-
             <div class="col-sm">
                 <div class="row">
                     <div class="col-sm-6">
@@ -105,16 +79,16 @@
     <div class="regiz">
         <div class="regi">
             <pre> <b>Feedbacks count:</b> {{ $feedbacks->count() }}</pre>
+            <pre> <b>Average rating:</b> {{ number_format($feedbacks->avg('rating'), 2, '.', '') }}/5</pre>
         </div>
     </div>
-
         <table class="tableContent mb-4">
         <thead style="background: #F5F5F5;">
             <tr>
                 <th>ID</th>
                 <th>Submitted by</th>
                 <th>Feedback Type</th>
-                <th>Polarity</th>
+                <th>Rating</th>
                 <th>Message</th>
                 <th>Admin Respond</th>
                 <th>Status</th>
@@ -132,7 +106,7 @@
                     @else
                         <td>Others/Deleted- {{ $feedback->custom_type }}</td>
                     @endif
-                    <td>{{ $feedback->polarity}}</td>
+                    <td>{{ $feedback->rating}}/5</td>
                     <td>{{ $feedback->message}}</td>
                     @if (!empty($feedback->admin_respond))
                         <td>{{ $feedback->admin_respond }}</td>

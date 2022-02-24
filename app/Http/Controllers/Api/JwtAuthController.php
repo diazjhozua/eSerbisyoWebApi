@@ -16,6 +16,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\UserVerificationResource;
 use App\Models\User;
 use App\Models\UserVerification;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Hash;
 use Helper;
 use Illuminate\Http\Request;
@@ -62,15 +63,10 @@ class JwtAuthController extends Controller
         $user = User::findOrFail(auth('api')->user()->id);
         if($request->picture != ''){
             if($user->picture_name != '') {
-                Storage::delete('public/users/'. $user->picture_name);
+                Cloudinary::destroy($user->picture_name);
             }
-
-            $fileName = uniqid().time().'.jpg';
-            $filePath = 'users/'.$fileName;
-
-            Storage::disk('public')->put($filePath, base64_decode($request->picture));
-            $user->fill(array_merge($request->getData(), ['picture_name' => $fileName,'file_path' => $filePath]))->save();
-
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $user->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else {
             $user->fill($request->getData())->save();
         }
@@ -101,15 +97,12 @@ class JwtAuthController extends Controller
             return response()->json(['message' => 'You have already submitted a request. Please wait for the administrator to respond to your current request' ], 406);
         }
 
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'credentials/'.$fileName;
-
-        Storage::disk('public')->put($filePath, base64_decode($request->picture));
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
 
         $userVerification = UserVerification::create([
             'user_id' =>  auth('api')->user()->id,
-            'credential_name' => $fileName,
-            'credential_file_path' => $filePath,
+            'credential_name' => $result->getPublicId(),
+            'credential_file_path' => $result->getPath(),
             'status' => 'Pending'
         ]);
 

@@ -59,7 +59,10 @@ $(document).ready(function () {
 
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.submitted_by + '</td>'
-                    col2 = '<td>' + data.polarity + '</td>'
+                    col2 = `<td class="text-center"> <div class="Stars"
+                            style="--rating: ${data.rating}; --star-size:50px"
+                            aria-label="Rating of this product is ${data.rating} out of 5."></div>
+                            <p>${data.rating}/5</p></td>`;
                     col3 = '<td>' + data.message + '</td>'
                     col4 = '<td>' + data.admin_respond + '</td>'
                     col5 = '<td>' + data.status + '</td>'
@@ -140,57 +143,15 @@ $(document).ready(function () {
         submitHandler: function (form, event) {
             event.preventDefault()
 
-
             let date_start = $('#date_start').val();
             let date_end = $('#date_end').val();
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
-            let polarity_option = $('#polarity_option').val();
             let status_option = $('#status_option').val();
             let type_id = $('#type_id').val();
 
-            var url = `${window.location.origin}/admin/feedback-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${polarity_option}/${status_option}/${type_id}`;
+            var url = `${window.location.origin}/admin/feedback-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status_option}/${type_id}`;
             window.open(url, '_blank');
-
-            // let formAction = $("#reportForm").attr('action')
-            // let formData = new FormData(form)
-
-            // $('.btnReportFormSubmit').attr("disabled", true); //disabled login
-            // $('.btnReportFormTxt').text('Generating') //set the text of the submit btn
-            // $('.btnReportFormLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            // $.ajax({
-            //     type: 'POST',
-            //     url: formAction,
-            //     headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            //     },
-            //     data: formData,
-            //     xhrFields: {
-            //         responseType: 'blob'
-            //     },
-            //     cache: false,
-            //     processData: false,
-            //     contentType: false,
-
-            //     success: function (response) {
-            //         toastr.success('Report successfully downloaded')
-            //         var blob = new Blob([response]);
-            //         var link = document.createElement('a');
-            //         link.href = window.URL.createObjectURL(blob);
-            //         link.download = "FeedbackTypeProfileReport-" + Date.now() + ".pdf";
-            //         link.click();
-
-            //     },
-            //     error: function (response) {
-            //         toastr.error('Something went wrong :( (It could be the selected option produces no data)')
-            //     },
-            //     complete: function () {
-            //         $('.btnReportFormSubmit').attr("disabled", false); //enable the button
-            //         $('.btnReportFormTxt').text('Generate') //set the text of the submit btn
-            //         $('.btnReportFormLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            //     }
-            // });
         }
     });
 

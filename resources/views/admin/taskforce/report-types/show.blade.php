@@ -13,8 +13,7 @@
     @include('admin.taskforce.reports.reportSelectModal')
 
     {{-- Report Modal --}}
-    @include('admin.types.report')
-
+    @include('admin.taskforce.reports.reportFormModal')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">

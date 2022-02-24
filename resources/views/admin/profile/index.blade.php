@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="text-center">
                             <img class="img-profile rounded-circle m-0 text-center" id="userProfileImg" width="200px" height="200px"
-                                src="{{ isset(Auth::user()->file_path) ? asset('storage/'.Auth::user()->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}"
+                                src="{{ isset(Auth::user()->file_path) ? Auth::user()->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}"
                                 class="rounded" alt="{{Auth::user()->first_name}}  {{Auth::user()->last_name}} image">
                         </div>
                 </div>

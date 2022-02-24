@@ -118,6 +118,13 @@
         </a>
     </li>
 
+    <li id="userTransaction" class="nav-item">
+        <a class="nav-link" href="{{ route('admin.transactions.index') }}">
+            <img src="{{ asset('assets/img/moneyTransaction.png') }}" alt="User Transaction">
+            <span>User Transaction</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

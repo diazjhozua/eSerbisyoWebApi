@@ -16,7 +16,7 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"> <strong>{{ Auth::user()->user_role->role}}</strong> -  {{Auth::user()->first_name}}  {{Auth::user()->last_name}}</span>
                 <img class="img-profile rounded-circle"
-                 src="{{ isset(Auth::user()->file_path) ? asset('storage/'.Auth::user()->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{Auth::user()->first_name}}  {{Auth::user()->last_name}} image">
+                 src="{{ isset(Auth::user()->file_path) ? Auth::user()->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{Auth::user()->first_name}}  {{Auth::user()->last_name}} image">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

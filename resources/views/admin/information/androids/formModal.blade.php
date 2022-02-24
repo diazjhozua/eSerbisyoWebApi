@@ -31,7 +31,7 @@
                         <label>Select apk file</label>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="apk" name="apk">
-                            <label class="custom-file-label" for="pdf">Choose file (apk only)</label>
+                            <label class="custom-file-label" for="pdf">Choose file (zip only)</label>
                         </div>
                     </div>
                 </div>

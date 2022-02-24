@@ -16,6 +16,7 @@ class CertificateSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         $status = ['Available', 'Unavailable'];
@@ -81,7 +82,7 @@ class CertificateSeeder extends Seeder
 
         foreach (range(1,5) as $certID) {
             // certificate_requirements
-            $requirementsCount = $faker->numberBetween(1,4);
+            $requirementsCount = $faker->numberBetween(1,2);
             foreach (range(1,$requirementsCount) as $reqCertID) {
                 $certificateRequirement = CertificateRequirement::insert([
                     'certificate_id' => $certID,

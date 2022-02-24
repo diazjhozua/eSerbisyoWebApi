@@ -39,10 +39,12 @@ class ReportController extends Controller
         }
 
         if($request->picture != ''){
-            $fileName = uniqid().time().'.jpg';
-            $filePath = 'reports/'.$fileName;
-            Storage::disk('public')->put($filePath, base64_decode($request->picture));
-            $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => auth('api')->user()->id,'picture_name' => $fileName,'file_path' => $filePath]));
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $report = Report::create(array_merge($request->getData(), ['status' => 'Pending',
+                'user_id' => auth('api')->user()->id,
+                'picture_name' => $result->getPublicId(),
+                'file_path' => $result->getPath(),
+            ]));
 
         } else {
             $report = Report::create(array_merge($request->getData(), ['status' => 'Pending', 'user_id' => auth('api')->user()->id]));
@@ -60,5 +62,54 @@ class ReportController extends Controller
         } else {
             return response()->json(["message" => "You can only view your reports."], 403);
         }
+    }
+
+    // get short analytics about the overall overview.
+    public function getAnalytics()
+    {
+        $reportTypes = Type::withCount(['reports' => function($query){
+            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')));
+        }])
+        ->where('model_type', 'Report')->orderBy('reports_count', 'DESC')->get();
+
+        $trendingReports = Type::where('model_type', 'Report')->withCount('reports')->orderBy('reports_count', 'DESC')->limit(5)->get();
+
+        $reports = Report::select('id', 'created_at')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('m'); // grouping by years
+        });
+
+        $userAverageReport = [];
+        $userReport = [];
+
+        foreach ($reports as $key => $value) {
+            $yearList = [];
+            $userReportCount = 0;
+
+            foreach ($value as $userReportData) {
+                $userReportCount ++;
+                $year = Carbon::parse($userReportData->created_at)->format('Y');
+                if (!in_array($year, $yearList)) {
+                    array_push($yearList, $year);
+                }
+            }
+
+            $userAverageReport[(int)$key] = round($userReportCount / count($yearList), 2);
+        }
+
+        for($i = 1; $i <= 12; $i++){
+            if(!empty($userAverageReport[$i])){
+                $userReport[$i] = $userAverageReport[$i];
+            }else{
+                $userReport[$i] = 0;
+            }
+        }
+        return response()->json([
+            'reportTypes' => $reportTypes,
+            'userReport' => $userReport,
+            'trendingReports' => $trendingReports,
+        ], 200);
     }
 }

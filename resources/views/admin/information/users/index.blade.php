@@ -161,7 +161,7 @@
                             <tr>
                                 <td>
                                     <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                    src="{{ isset($user->file_path) ? asset('storage/'.$user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$user->getFullNameAttribute()}} image">
+                                    src="{{ isset($user->file_path) ? $user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$user->getFullNameAttribute()}} image">
                                 </td>
                                 <td>{{$user->getFullNameAttribute()}}</td>
                                 <td>{{$user->email}}</td>

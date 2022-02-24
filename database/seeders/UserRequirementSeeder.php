@@ -13,13 +13,14 @@ class UserRequirementSeeder extends Seeder
 
     public function run()
     {
+        activity()->disableLogging();
         $users = User::where('is_verified', '=', 1)->get();
         $faker = \Faker\Factory::create();
 
         $requirements = Requirement::get();
         foreach ($users as $user) {
             foreach ($requirements as $requirement) {
-                $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+                $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
                 $file_name = $faker->file($sourceDir = 'C:\Project Assets\AppRequirements', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\requirements', false);
                 $file_path = 'requirements/'.$file_name;
 

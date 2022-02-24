@@ -14,13 +14,14 @@ class OrdinanceSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         foreach (range(13,20) as $typeID) {
             $ordinanceCount = $faker->numberBetween(5,10);
 
             foreach (range(1,$ordinanceCount) as $index) {
-                $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+                $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
                 $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppOrdinances', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\ordinances', false);
                 $file_path = 'ordinances/'.$pdf_name;
 

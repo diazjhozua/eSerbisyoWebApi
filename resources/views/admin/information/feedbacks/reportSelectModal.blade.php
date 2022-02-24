@@ -33,7 +33,7 @@
                             <div class="input-group mb-3">
                                 <select class="custom-select" id="sort_column" name="sort_column">
                                     <option value="id" selected>ID</option>
-                                    <option value="polarity">Polarity</option>
+                                    <option value="rating">Rating</option>
                                     <option value="message">Message</option>
                                     <option value="status">Status</option>
                                     <option value="created_at">Created At</option>
@@ -54,19 +54,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-6">
-                            {{-- Sort by column option --}}
-                            <label for="project_start" class="form-label">Show Only (Polarity):</label>
-                            <div class="input-group mb-3">
-                                <select class="custom-select" id="polarity_option" name="polarity_option">
-                                    <option value="all" selected>All</option>
-                                    <option value="positive">Positive</option>
-                                    <option value="neutral">Neutral</option>
-                                    <option value="negative">Negative</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
+                        <div class="col">
                             {{-- Sort by option --}}
                             <label for="project_start" class="form-label">Show only (Status)</label>
                             <div class="input-group mb-3">

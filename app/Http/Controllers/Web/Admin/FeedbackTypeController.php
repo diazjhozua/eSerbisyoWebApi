@@ -18,23 +18,13 @@ class FeedbackTypeController extends Controller
 {
     public function index()
     {
-        $types = Type::withCount(['feedbacks','feedbacks as positive_count' => function ($query) { $query->where('polarity', 'Positive');
-        }, 'feedbacks as neutral_count' => function ($query) {
-            $query->where('polarity', 'Neutral');
-        }, 'feedbacks as negative_count' => function ($query) {
-            $query->where('polarity', 'Negative');
-        }])->where('model_type', 'Feedback')->orderBy('feedbacks_count', 'DESC')->get();
+        $types = Type::with('feedbacks')->withCount(['feedbacks'])->where('model_type', 'Feedback')->orderBy('feedbacks_count', 'DESC')->get();
 
-        $otherTotals = DB::table('feedbacks')->selectRaw('count(*) as feedbacks_count')
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as negative_count")
-            ->where('type_id', '=', NULL)->first();
+        $otherFeedbacks = Feedback::where('type_id', '=', NULL)->get();
 
         $types->add(new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Feedback',
-            'created_at' => now(), 'updated_at' => now(),
-            'feedbacks_count' => $otherTotals->feedbacks_count, 'positive_count' => $otherTotals->positive_count,
-            'neutral_count' => $otherTotals->neutral_count, 'negative_count' => $otherTotals->negative_count,
+            'created_at' => now(), 'updated_at' => now(), 'feedbacks' => $otherFeedbacks,
+            'feedbacks_count' => $otherFeedbacks->count(),
         ]));
 
         return view('admin.information.feedback-types.index')->with('types', $types);
@@ -43,10 +33,8 @@ class FeedbackTypeController extends Controller
     public function store(FeedbackTypeRequest $request)
     {
         $type = Type::create(array_merge($request->validated(), ['model_type' => 'Feedback']));
+        $type->ratings = 0;
         $type->feedbacks_count = 0;
-        $type->positive_count = 0;
-        $type->neutral_count = 0;
-        $type->negative_count = 0;
 
         return (new FeedbackTypeResource($type))->additional(Helper::instance()->storeSuccess('feedback_type'));
     }
@@ -59,9 +47,6 @@ class FeedbackTypeController extends Controller
             ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
             ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
             ->selectRaw("count(case when status = 'Ignored' then 1 end) as ignored_count")
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as negative_count")
             ->where('type_id', '=', NULL)
             ->first();
 
@@ -74,10 +59,6 @@ class FeedbackTypeController extends Controller
                 'pending_count' => $otherTotals->pending_count,
                 'noted_count' => $otherTotals->noted_count,
                 'ignored_count' => $otherTotals->ignored_count,
-                'feedbacks_count' => $otherTotals->feedbacks_count,
-                'positive_count' => $otherTotals->positive_count,
-                'neutral_count' => $otherTotals->neutral_count,
-                'negative_count' => $otherTotals->negative_count,
                 'feedbacks' => Feedback::where('type_id', '=', NULL)
                     ->orderBy('created_at', 'DESC')->get()
             ]);
@@ -86,13 +67,7 @@ class FeedbackTypeController extends Controller
 
             $type = Type::with(['feedbacks' => function ($query) {
                 $query->orderBy('created_at', 'DESC');
-            }])->withCount(['feedbacks','feedbacks as positive_count' => function ($query) {
-                $query->where('polarity', 'Positive');
-            }, 'feedbacks as neutral_count' => function ($query) {
-                $query->where('polarity', 'Neutral');
-            }, 'feedbacks as negative_count' => function ($query) {
-                $query->where('polarity', 'Negative');
-            }, 'feedbacks as pending_count' => function ($query) {
+            }])->withCount(['feedbacks', 'feedbacks as pending_count' => function ($query) {
                 $query->where('status', 'Pending');
             }, 'feedbacks as noted_count' => function ($query) {
                 $query->where('status', 'Noted');
@@ -114,25 +89,9 @@ class FeedbackTypeController extends Controller
     public function update(FeedbackTypeRequest $request, $id)
     {
         if ($id == 0) { return response()->json(Helper::instance()->noUpdateAccess()); }
-        $type = Type::with(['feedbacks' => function ($query) {
-            $query->orderBy('created_at', 'DESC');
-        }])->withCount(['feedbacks','feedbacks as positive_count' => function ($query) {
-            $query->where('polarity', 'Positive');
-        }, 'feedbacks as neutral_count' => function ($query) {
-            $query->where('polarity', 'Neutral');
-        }, 'feedbacks as negative_count' => function ($query) {
-            $query->where('polarity', 'Negative');
-        }, 'feedbacks as pending_count' => function ($query) {
-            $query->where('status', 'Pending');
-        }, 'feedbacks as noted_count' => function ($query) {
-            $query->where('status', 'Noted');
-        }, 'feedbacks as ignored_count' => function ($query) {
-            $query->where('status', 'Ignored');
-        }])->where('model_type', 'Feedback')->findOrFail($id);
-
+        $type = Type::with(['feedbacks'])->withCount(['feedbacks'])->where('model_type', 'Feedback')->findOrFail($id);
         $type->fill($request->validated())->save();
-
-
+        $type->ratings = number_format($type->feedbacks->avg('rating'), 2, '.', '');
         return (new FeedbackTypeResource($type))->additional(Helper::instance()->updateSuccess('feedback_type'));
     }
 
@@ -151,31 +110,18 @@ class FeedbackTypeController extends Controller
         $description = 'No data';
 
         try {
-            $types = Type::withCount(['feedbacks','feedbacks as positive_count' => function ($query) { $query->where('polarity', 'Positive');
-                }, 'feedbacks as neutral_count' => function ($query) {
-                    $query->where('polarity', 'Neutral');
-                }, 'feedbacks as negative_count' => function ($query) {
-                    $query->where('polarity', 'Negative');
-                }])->whereBetween('created_at', [$date_start, $date_end])
+            $types = Type::withCount(['feedbacks'])->whereBetween('created_at', [$date_start, $date_end])
+                    ->withAvg('feedbacks', 'rating')
                     ->where('model_type', 'Feedback')
                     ->orderBy($sort_column, $sort_option)
                     ->get();
 
-                $otherTotals = null;
+                $otherFeedbacks = Feedback::where('type_id', '=', NULL)->whereBetween('created_at', [$date_start, $date_end])->get();
 
-                $otherTotals = DB::table('feedbacks')->selectRaw('count(*) as feedbacks_count')
-                    ->selectRaw("count(case when polarity = 'Positive' then 1 end) as positive_count")
-                    ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as neutral_count")
-                    ->selectRaw("count(case when polarity = 'Negative' then 1 end) as negative_count")
-                    ->where('type_id', '=', NULL)
-                    ->whereBetween('created_at', [$date_start, $date_end])
-                    ->first();
-
-                if ($otherTotals->feedbacks_count != 0) {
-                    $types->add(new Type([ 'id' => 0, 'name' => 'Others', 'model_type' => 'Feedback',
+                if ($otherFeedbacks->count() != 0) {
+                    $types->add(new Type([ 'id' => 0, 'name' => 'Others/Deleted Type', 'model_type' => 'Feedback',
                         'created_at' => now(), 'updated_at' => now(),
-                        'feedbacks_count' => $otherTotals->feedbacks_count, 'positive_count' => $otherTotals->positive_count,
-                        'neutral_count' => $otherTotals->neutral_count, 'negative_count' => $otherTotals->negative_count,
+                        'feedbacks_count' => $otherFeedbacks->count(), 'feedbacks_avg_rating' => number_format($otherFeedbacks->avg('rating'), 2, '.', ''),
                     ]));
                 }
 
@@ -190,12 +136,12 @@ class FeedbackTypeController extends Controller
         $title = 'Feedback Type Reports';
         $modelName = 'Feedback Type';
 
-        return view('admin.information.pdf.feedbackTypes', compact('title', 'modelName', 'types', 'otherTotals',
+        return view('admin.information.pdf.feedbackTypes', compact('title', 'modelName', 'types',
             'date_start', 'date_end', 'sort_column', 'sort_option'
         ));
     }
 
-    public function reportShow($date_start,  $date_end, $sort_column, $sort_option, $polarity_option, $status_option, $type_id) {
+    public function reportShow($date_start,  $date_end, $sort_column, $sort_option, $status_option, $type_id) {
 
         $title = 'Report - No data';
         $description = 'No data';
@@ -203,16 +149,11 @@ class FeedbackTypeController extends Controller
             $feedbacks = Feedback::with('type')
                 ->whereBetween('created_at', [$date_start, $date_end])
                 ->orderBy($sort_column, $sort_option)
-                ->where(function($query) use ($polarity_option, $status_option) {
-                    if($polarity_option == 'all' && $status_option == 'all') {
+                ->where(function($query) use ($status_option) {
+                    if($status_option == 'all') {
                         return null;
-                    } elseif ($polarity_option == 'all' && $status_option != 'all') {
-                        return $query->where('status', '=', ucwords($status_option));
-                    } elseif ($polarity_option != 'all' && $status_option == 'all') {
-                        return $query->where('polarity', '=', ucwords($polarity_option));
                     } else {
-                        return $query->where('status', '=', ucwords($status_option))
-                        ->where('polarity', '=', ucwords($polarity_option));
+                        return $query->where('status', '=', ucwords($status_option));
                     }
                 })
                 ->where(function($query) use ($type_id) {
@@ -238,21 +179,13 @@ class FeedbackTypeController extends Controller
             ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
             ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
             ->selectRaw("count(case when status = 'Ignored' then 1 end) as ignored_count")
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as negative_count")
             ->where('created_at', '>=', $date_start)
             ->where('created_at', '<=', $date_end)
-            ->where(function($query) use ($polarity_option, $status_option) {
-                if($polarity_option == 'all' && $status_option == 'all') {
+            ->where(function($query) use ($status_option) {
+                if($status_option == 'all') {
                     return null;
-                } elseif ($polarity_option == 'all' && $status_option != 'all') {
-                    return $query->where('status', '=', ucwords($status_option));
-                } elseif ($polarity_option != 'all' && $status_option == 'all') {
-                    return $query->where('polarity', '=', ucwords($polarity_option));
                 } else {
-                    return $query->where('status', '=', ucwords($status_option))
-                    ->where('polarity', '=', ucwords($polarity_option));
+                    return $query->where('status', '=', ucwords($status_option));
                 }
             })
             ->where(function($query) use ($type_id) {
@@ -264,18 +197,12 @@ class FeedbackTypeController extends Controller
             })
             ->first();
 
-
         $type = Type::find($type_id);
         $title = 'Feedback Type Reports';
-        $modelName =  $type_id == 0 ? 'Others/Deleted' : $type->name;
+        $modelName =  $type_id == 0 ? 'Others/Deleted Type' : $type->name;
 
         return view('admin.information.pdf.feedbacks', compact('title', 'modelName', 'feedbacks', 'feedbacksData',
-            'date_start', 'date_end', 'sort_column', 'sort_option', 'polarity_option', 'status_option'
+            'date_start', 'date_end', 'sort_column', 'sort_option', 'status_option'
         ));
-
-        // $pdf = PDF::loadView('admin.information.reports.feedback', compact('feedbacks', 'request', 'feedbacksData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        // return $pdf->stream();
-
-
     }
 }

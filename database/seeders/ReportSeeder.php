@@ -14,13 +14,14 @@ class ReportSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         $status = ['Pending', 'Ignored', 'Invalid', 'Noted'];
         $urgency_classification = ['Nonurgent', 'Urgent'];
 
         foreach (range(1,900) as $index) {
-            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
+            $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
             $type = $faker->numberBetween(36, 40);
             $custom_type = NULL;
             $isNull = $faker->numberBetween(0,1);

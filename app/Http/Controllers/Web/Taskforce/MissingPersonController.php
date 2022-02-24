@@ -11,6 +11,7 @@ use App\Http\Resources\MissingPersonResource;
 use App\Jobs\ChangeStatusReportJob;
 use App\Models\MissingPerson;
 use Auth;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use DB;
 use Helper;
 use Illuminate\Support\Facades\Storage;
@@ -47,9 +48,9 @@ class MissingPersonController extends Controller
     public function store(MissingPersonRequest $request)
     {
         if(request()->ajax()) {
-            $fileName = time().'_'.$request->picture->getClientOriginalName();
-            $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-            $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => Auth::id(),'status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]));
+            $fileName = uniqid().'-'.time();
+            $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+            $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => Auth::id(), 'status' => 'Approved', 'picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->storeSuccess('missing-person report'));
         }
     }
@@ -74,11 +75,11 @@ class MissingPersonController extends Controller
     {
         if(request()->ajax()) {
             if($request->hasFile('picture')) {
-                Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
-                $fileName = time().'_'.$request->picture->getClientOriginalName();
-                $filePath = $request->file('picture')->storeAs('missing-pictures', $fileName, 'public');
-                $missing_person->fill(array_merge($request->getData(), ['status' => 'Pending', 'picture_name' => $fileName,'file_path' => $filePath]))->save();
-            } else {   $missing_person->fill(array_merge($request->getData(), ['status' => 'Pending']))->save(); }
+                Cloudinary::destroy($missing_person->picture_name);
+                $fileName = uniqid().'-'.time();
+                $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+                $missing_person->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]))->save();
+            } else {   $missing_person->fill(array_merge($request->getData()))->save(); }
             return (new MissingPersonResource($missing_person->load('comments', 'contact')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-person report'));
         }
     }
@@ -86,7 +87,10 @@ class MissingPersonController extends Controller
     public function destroy(MissingPerson $missing_person)
     {
         if(request()->ajax()) {
-            Storage::delete('public/missing-pictures/'. $missing_person->picture_name);
+            Cloudinary::destroy($missing_person->picture_name);
+            if ($missing_person->credential_name != Null) {
+                Cloudinary::destroy($missing_person->credential_name);
+            }
             $missing_person->delete();
             return response()->json(Helper::instance()->destroySuccess('missing-person report'));
         }
@@ -96,16 +100,12 @@ class MissingPersonController extends Controller
     {
         if(request()->ajax()) {
 
-            // if ($request->status == $missing_person->status) {
-            //     return response()->json(Helper::instance()->sameStatusMessage($request->status, 'missing-person report'));
-            // }
-
             $oldStatus = $missing_person->status;
             $missing_person->fill($request->validated())->save();
 
             $subject = 'Missing Person Report Change Status Notification';
             $reportName = 'missing person report';
-            dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject));
+            dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject, $missing_person->phone_no));
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }
     }

@@ -63,7 +63,7 @@
                                 <td>{{ $android->id }}</td>
                                 <td>{{ $android->version }}</td>
                                 <td>{{ $android->description }}</td>
-                                <td><a href="{{route('admin.viewFiles', [ 'folderName' => 'androids', 'fileName' => $android->file_name])}}" target="_blank">{{ $android->file_name}}</a></td>
+                                <td><a href="{{ $android->file_name }}" target="_blank">{{ $android->file_name}}</a></td>
                                 <td>{{ $android->updated_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">

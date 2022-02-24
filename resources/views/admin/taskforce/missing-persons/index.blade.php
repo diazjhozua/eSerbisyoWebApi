@@ -175,8 +175,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="{{route('admin.viewFiles', [ 'folderName' => 'missing-pictures', 'fileName' => $missing_person->picture_name])}}" target="_blank">
-                                         <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ asset('storage/'.$missing_person->file_path) }}" class="rounded" alt="{{$missing_person->missing_name}} image">
+                                    <a href="{{$missing_person->file_path}}" target="_blank">
+                                         <img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="{{ $missing_person->file_path }}" class="rounded" alt="{{$missing_person->missing_name}} image">
                                     </a>
                                 </td>
 

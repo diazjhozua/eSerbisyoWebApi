@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UserRequirementRequest;
 use App\Models\Requirement;
 use App\Models\UserRequirement;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -24,10 +25,14 @@ class UserRequirementController extends Controller
         $noRequirements = collect();
 
         foreach ($requirements as $requirement) {
-            if (!$userRequirements->contains('requirement_id', $requirement->id)) {
-                if(!$noRequirements->contains('requirement_id', $requirement->id)) {
-                    $noRequirements->push(['id' => $requirement->id, 'name' => $requirement->name]);
+            if ($userRequirements->count() > 0) {
+                if (!$userRequirements->contains('requirement_id', $requirement->id)) {
+                    if(!$noRequirements->contains('requirement_id', $requirement->id)) {
+
+                    }
                 }
+            } else {
+                $noRequirements->push(['id' => $requirement->id, 'name' => $requirement->name]);
             }
         }
         return response()->json(["data" => $noRequirements], 201);
@@ -36,15 +41,13 @@ class UserRequirementController extends Controller
     public function store(UserRequirementRequest $request)
     {
         activity()->disableLogging();
-        $fileName = uniqid().time().'.jpg';
-        $filePath = 'requirements/'.$fileName;
-        Storage::disk('public')->put($filePath, base64_decode($request->picture));
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
 
         $userRequirement =  UserRequirement::create([
             'user_id' => auth('api')->user()->id,
             'requirement_id' => $request->requirement_id,
-            'file_name' => $fileName,
-            'file_path' => $filePath,
+            'file_name' => $result->getPublicId(),
+            'file_path' => $result->getPath(),
         ]);
         return response()->json(["data" => $userRequirement->load('requirement')], 200);
     }
@@ -55,7 +58,7 @@ class UserRequirementController extends Controller
         if ($userRequirement->user_id == auth('api')->user()->id) {
             $userRequirement = $userRequirement->load('requirement');
             $name = $userRequirement->requirement->name;
-            Storage::delete('public/requirements/'. $userRequirement->file_name);
+            Cloudinary::destroy($userRequirement->file_name);
             $userRequirement->delete();
             return response()->json(["message" => "Your requirement: ".$name." has been deleted in our data"], 200);
         } else {

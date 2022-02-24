@@ -26,7 +26,7 @@ function viewRequest(applicationID) {
             if (data.user.file_path == null) {
                 $('#profilePicture').prop('src', "https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg"); //add the src attribute
             } else {
-                $('#profilePicture').prop('src', window.location.origin + '/storage/' + data.user.file_path); //add the src attribute
+                $('#profilePicture').prop('src', data.user.file_path); //add the src attribute
             }
 
             $("#profilePicture").prop("alt", data.user.first_name + ' ' + data.user.last_name); //add the alt text
@@ -35,7 +35,7 @@ function viewRequest(applicationID) {
             $('#lastName').text(data.user.last_name);
             $('#purok').text(data.user.purok.purok);
             $('#address').text(data.user.address);
-            $('#credentials').html('<a href="' + window.location.origin + '/admin/files/bikers/' + data.credential_name + '" target="_blank">' + data.credential_name + '</a></a>')
+            $('#credentials').html('<a href="' + data.credential_file_path + '" target="_blank">' + data.credential_name + '</a></a>')
             $('#bike_type').text(data.bike_type);
             $('#bike_color').text(data.bike_color);
             $('#bike_size').text(data.bike_size);

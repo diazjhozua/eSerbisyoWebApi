@@ -10,6 +10,7 @@ class ProjectTypeSeeder extends Seeder
 
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
         //id 21-25

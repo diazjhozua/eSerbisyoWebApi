@@ -231,7 +231,7 @@ $(document).ready(function () {
                     col5 = '<td>' + data.project_start + '</td>'
                     col6 = '<td>' + data.project_end + '</td>'
                     col7 = '<td>' + data.location + '</td>'
-                    col8 = '<td><a href="' + data.pdf_src + '" target="_blank">' + data.pdf_name + '</a></td>'
+                    col8 = '<td><a href="' + data.file_path + '" target="_blank">' + data.pdf_name + '</a></td>'
                     col9 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =

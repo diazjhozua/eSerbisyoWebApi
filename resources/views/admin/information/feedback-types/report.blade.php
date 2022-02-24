@@ -34,10 +34,7 @@
                                 <select class="custom-select" id="sort_column" name="sort_column">
                                     <option value="id" selected>ID</option>
                                     <option value="name">Name</option>
-                                    <option value="feedbacks_count">Feedbacks Count</option>
-                                    <option value="positive_count">Positive Count</option>
-                                    <option value="neutral_count">Neutral Count</option>
-                                    <option value="negative_count">Negative Count</option>
+                                    <option value="feedbacks_avg_rating">Ratings</option>
                                     <option value="created_at">Created At</option>
                                     <option value="updated_at">Updated At</option>
                                 </select>

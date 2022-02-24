@@ -14,7 +14,7 @@
     {{-- Included Modals --}}
     @include('admin.information.documents.formModal')
     {{-- Report Route to the modal --}}
-    
+
     @include('admin.information.documents.reportSelectModal')
     {{-- Delete Modal Confirmation --}}
     @include('inc.delete')
@@ -133,7 +133,7 @@
                                     <td><a href="{{route('admin.document-types.show', $document->type_id)}}">{{ $document->type->name }}</a></td>
                                 @endif
                                 <td>{{ $document->year}}</td>
-                                <td><a href="{{route('admin.viewFiles', [ 'folderName' => 'documents', 'fileName' => $document->pdf_name])}}" target="_blank">{{ $document->pdf_name}}</a></td>
+                                <td><a href="{{ $document->file_path }}" target="_blank">{{ $document->pdf_name}}</a></td>
                                 <td>{{ $document->updated_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">

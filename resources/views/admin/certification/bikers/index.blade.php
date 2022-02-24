@@ -7,14 +7,13 @@
 
 @section('page-css')
     <style>
-.picture-box img {
-        text-align: center;
-        width: 200px;
-        height: 150px;
-        border-radius: 50%;
-        margin-bottom: 0px;
-    }
-
+        .picture-box img {
+            text-align: center;
+            width: 200px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 0px;
+        }
     </style>
 @endsection
 
@@ -70,7 +69,7 @@
                                 <td>{{$biker->id}}</td>
                                 <td>
                                     <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                    src="{{ isset($biker->file_path) ? asset('storage/'.$biker->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$biker->getFullNameAttribute()}} image">
+                                    src="{{ isset($biker->file_path) ? $biker->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$biker->getFullNameAttribute()}} image">
                                 </td>
 
                                 <td>{{$biker->getFullNameAttribute()}}</td>
@@ -78,7 +77,7 @@
 
                                 <td>
                                     <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                    src="{{ isset($biker->latest_biker_request->credential_file_path) ? asset('storage/'.$biker->latest_biker_request->credential_file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$biker->getFullNameAttribute()}}'s bike">
+                                    src="{{ isset($biker->latest_biker_request->credential_file_path) ? $biker->latest_biker_request->credential_file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$biker->getFullNameAttribute()}}'s bike">
                                 </td>
 
                                 <td>

@@ -257,10 +257,10 @@ function addOrReplaceToTable(table, colList, addOrReplace) {
 
 function addOrReplaceComplainant(data, addOrReplace) {
 
-    console.log(`Table signature: ${data.signature_src}`);
+    console.log(`Table signature: ${data.file_path}`);
     col0 = '<td>' + data.name + '</td>';
     var image = new Image();
-    image.src = data.signature_src;
+    image.src = data.file_path;
     image.style = "height:100px; width: 100%;";
     image.className = 'rounded';
     image.alt = data.name + ' signature';
@@ -548,7 +548,7 @@ $(document).ready(function () {
                 }
                 formData.append('complaint_id', COMPLAINT_ID[1]);
                 formData.append('name', INPUT_COMPLAINANT_NAME.val());
-                formData.append('signature', signature);
+                formData.append('signature', signature.replace("data:image/jpeg;base64,", ""));
 
                 $.ajax({
                     type: 'POST',

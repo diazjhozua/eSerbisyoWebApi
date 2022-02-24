@@ -13,6 +13,7 @@ use App\Models\Type;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade as PDF;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProjectController extends Controller
 {
@@ -42,9 +43,9 @@ class ProjectController extends Controller
 
     public function store(ProjectRequest $request)
     {
-        $fileName = time().'_'.$request->pdf->getClientOriginalName();
-        $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
-        $project = Project::create(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]));
+        $fileName = uniqid().'-'.time();
+        $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+        $project = Project::create(array_merge($request->getData(), ['pdf_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
         return (new ProjectResource($project->load('type')))->additional(Helper::instance()->storeSuccess('project'));
     }
 
@@ -57,31 +58,26 @@ class ProjectController extends Controller
     public function update(ProjectRequest $request, Project $project)
     {
         if($request->hasFile('pdf')) {
-            Storage::delete('public/projects/'. $project->pdf_name);
-            $fileName = time().'_'.$request->pdf->getClientOriginalName();
-            $filePath = $request->file('pdf')->storeAs('projects', $fileName, 'public');
-            $project->fill(array_merge($request->getData(), ['pdf_name' => $fileName,'file_path' => $filePath]))->save();
+            Cloudinary::destroy($project->pdf_name);
+            $fileName = uniqid().'-'.time();
+            $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+            $project->fill(array_merge($request->getData(), ['pdf_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else { $project->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save(); }
         return (new ProjectResource($project->load('type')))->additional(Helper::instance()->updateSuccess('project'));
     }
 
     public function destroy(Project $project)
     {
-        Storage::delete('public/projects/'. $project->pdf_name);
+        Cloudinary::destroy($project->pdf_name);
         $project->delete();
         return response()->json(Helper::instance()->destroySuccess('project'));
     }
 
     public function report($date_start, $date_end, $sort_column, $sort_option) {
-
-        
         $title = 'Report - No data';
         $description = 'No data';
 
-
-
         try {
-
 
         $projects = Project::with('type')
             ->whereBetween('created_at', [$date_start, $date_end])
@@ -110,11 +106,11 @@ class ProjectController extends Controller
         ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
         ->first();
 
-        
+
         $title = 'Project Publish Report';
         $modelName = 'Project';
 
-       
+
         return view('admin.information.pdf.projectreport', compact('title', 'modelName', 'projects' ,'projectsData',
         'date_start', 'date_end', 'sort_column', 'sort_option'
 

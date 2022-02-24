@@ -15,7 +15,7 @@ function populateData(data, formMethod) {
     col0 = '<td>' + data.id + '</td>'
     col1 = '<td>' + data.version + '</td>'
     col2 = '<td>' + data.description + '</td>'
-    col3 = '<td><a href="' + window.location.origin + '/admin/files/androids/' + data.file_name + '">' + data.file_name + '</a></td>'
+    col3 = '<td><a href="' + data.file_path + '">' + data.file_name + '</a></td>'
     col4 = '<td>' + data.updated_at + '</td>'
 
     editBtn =

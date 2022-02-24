@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Api\FormRequest;
 use App\Rules\OneOf;
 use Illuminate\Validation\Rule;
+use ProtoneMedia\LaravelMixins\Request\ConvertsBase64ToFiles;
 use Log;
 
 class ComplaintRequest extends FormRequest
@@ -14,6 +15,7 @@ class ComplaintRequest extends FormRequest
     {
         return true;
     }
+
 
     public function rules()
     {
@@ -50,36 +52,6 @@ class ComplaintRequest extends FormRequest
                 'reason' => 'required:string|min:4|max:500',
                 'action' => 'required:string|min:4|max:500',
             ];
-        }
-    }
-
-    protected function prepareForValidation(): void
-    {
-        if ($this->isMethod('POST')) {
-
-            $complainant_list = $this->get('complainant_list');
-
-            $decoded_complainant_list = [];
-            foreach ($complainant_list as $complainant)  {
-
-                array_push($decoded_complainant_list,  (array) json_decode($complainant, false));
-            }
-
-            $defendant_list = $this->get('defendant_list');
-
-            $decoded_defendant_list = [];
-            foreach ($defendant_list as $defendant)  {
-                array_push($decoded_defendant_list, (array) json_decode($defendant));
-            }
-
-            $this->merge([
-                'complainant_list' => $decoded_complainant_list,
-                'defendant_list' => $decoded_defendant_list,
-            ]);
-
-            Log::debug($this->request->all());
-
-            Log::debug($this->get('complainant_list'));
         }
     }
 

@@ -63,7 +63,7 @@
                                 <td>{{$application->id}}</td>
                                 <td>
                                     <img style="height:50px; max-height: 50px; max-width:50px; width: 50px; border-radius: 50%"
-                                    src="{{ isset($application->user->file_path) ? asset('storage/'.$application->user->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$application->user->getFullNameAttribute()}} image">
+                                    src="{{ isset($application->user->file_path) ? $application->user->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="{{$application->user->getFullNameAttribute()}} image">
                                 </td>
 
                                 <td>({{ $application->user->id }})  {{$application->user->getFullNameAttribute()}}</td>

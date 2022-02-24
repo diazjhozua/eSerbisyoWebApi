@@ -1,7 +1,5 @@
-
 function viewReport(reportID) {
     let url = window.location.origin + '/admin/reports/' + reportID
-
 
     $.ajax({
         type: 'GET',
@@ -16,7 +14,7 @@ function viewReport(reportID) {
             toastr.success(response.message);
 
             const data = response.data;
-
+            console.log(data);
             $('#reportFormModal').modal('show') //show the modal
 
             $('#type').text(function (value) {
@@ -191,8 +189,8 @@ function addOrReplace(data, addOrReplace) {
 
 $(document).ready(function () {
 
-    $('#TypeNavCollapse').addClass('active')
-    $('#collapseType').collapse()
+    $('#TypeTaskforceNavCollapse').addClass('active')
+    $('#collapseTaskforceType').collapse()
     $('#reportType').addClass('active')
 
     // Set class row selected when any button was click in the selected

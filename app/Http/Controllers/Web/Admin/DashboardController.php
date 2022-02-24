@@ -7,6 +7,7 @@ use App\Models\Announcement;
 use App\Models\BikerRequest;
 use App\Models\Certificate;
 use App\Models\Complaint;
+use App\Models\Feedback;
 use App\Models\MissingItem;
 use App\Models\MissingPerson;
 use App\Models\Order;
@@ -90,21 +91,20 @@ class DashboardController extends Controller
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->count();
         $verificationCount = UserVerification::where('status', 'Pending')->count();
         $announcementCount = Announcement::where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->count();
 
-        $feedbacksData = DB::table('feedbacks')
-            ->selectRaw("count(*) as this_month_total_feedbacks ")
-            ->selectRaw("count(case when polarity = 'Positive' then 1 end) as this_month_positive_count")
-            ->selectRaw("count(case when polarity = 'Neutral' then 1 end) as this_month_neutral_count")
-            ->selectRaw("count(case when polarity = 'Negative' then 1 end) as this_month_negative_count")
-            ->whereRaw("created_at >= '". date('Y-m-d',strtotime('first day of this month')) ."' AND created_at <='".date('Y-m-d',strtotime('last day of this month'))."'")
-            ->first();
+        $feedbacksDataThisMonth = Feedback::where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))->get();
 
-        $feedbacksData->this_month_positive_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 : round(($feedbacksData->this_month_positive_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
-        $feedbacksData->this_month_neutral_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_month_neutral_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
-        $feedbacksData->this_month_negative_count = $feedbacksData->this_month_total_feedbacks == 0  ? 0 :  round(($feedbacksData->this_month_negative_count / $feedbacksData->this_month_total_feedbacks) * 100, 2);
+        $feedbacksDataThisYear = Feedback::where('created_at', '>=', date('Y-m-d',strtotime('first day of this year')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this year')))->get();
 
-        return view('admin.dashboards.information', compact('userChart', 'projectChart', 'usersData', 'feedbacksData', 'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
+        $feedbacksDataOverall = Feedback::get();
+
+        return view('admin.dashboards.information', compact('userChart', 'projectChart', 'usersData',
+        'feedbacksDataThisMonth', 'feedbacksDataThisYear', 'feedbacksDataOverall',
+        'verificationCount', 'announcementCount', 'thisMonthProjectCount'));
     }
 
     public function certificationAdmin()
@@ -113,6 +113,7 @@ class DashboardController extends Controller
         $thisDayEarning =  DB::table('orders')
             ->selectRaw('sum(total_price) as total_price')
             ->selectRaw('sum(delivery_fee) as delivery_fee')
+            ->where('order_status', 'Received')
             ->where('created_at', '==', date('Y-m-d'))
             ->first();
 
@@ -122,6 +123,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(delivery_fee) as delivery_fee')
             ->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
             ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))
+            ->where('order_status', 'Received')
             ->first();
 
         // this year earning
@@ -129,6 +131,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(total_price) as total_price')
             ->selectRaw('sum(delivery_fee) as delivery_fee')
             ->whereYear('created_at', '=', date("Y") )
+            ->where('order_status', 'Received')
             ->first();
 
         // pending order
@@ -331,7 +334,7 @@ class DashboardController extends Controller
         }
 
         // Top 5 bikers
-        $bikers = User::with('delivers')->withCount('delivers')->orderBy('delivers_count', 'DESC')->where('user_role_id', 8)->limit(5)->get();
+        $bikers = User::with('deliverySuccess')->withCount('deliverySuccess')->orderBy('delivery_success_count', 'DESC')->where('user_role_id', 8)->limit(5)->get();
 
         // getting the received and dnr ratio
 
@@ -341,11 +344,8 @@ class DashboardController extends Controller
         $dnr = Order::where('pick_up_type','!=', 'Walkin')->where('application_status', 'Approved')->where('order_status', 'DNR')->count();
 
         $orderRatioPercentage = [];
-
         $orderRatioPercentage[0] = $orders > 0 ? round($received * 100 / $orders) : 0 ;
         $orderRatioPercentage[1] = $orders > 0 ? round($dnr * 100 / $orders) : 0 ;
-
-
 
         // end of getting the received and dnr ratio
 
@@ -402,7 +402,7 @@ class DashboardController extends Controller
         $complaintRawData = [];
         $complaintChart = [];
 
-        $complaints = Project::select('id', 'created_at')
+        $complaints = Complaint::select('id', 'created_at')
             ->whereYear('created_at', '=', date("Y") )
             ->get()
             ->groupBy(function($date) {

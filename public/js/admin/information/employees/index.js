@@ -237,7 +237,7 @@ $(document).ready(function () {
 
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.name + '</td>'
-                    col2 = '<td><img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.picture_src + '" class="rounded" alt="' + data.name + ' image"></td>'
+                    col2 = '<td><img style="height:150px; max-height: 150px; max-width:150px; width: 150px;" src="' + data.file_path + '" class="rounded" alt="' + data.name + ' image"></td>'
                     col3 = '<td><a href="' + window.location.origin + '/admin/positions/' + data.position_id + '">' + data.position + '</a></td>'
                     col4 = '<td><a href="' + window.location.origin + '/admin/terms/' + data.term_id + '">' + data.term + '</a></td>'
                     col5 = '<td>' + data.description + '</td>'

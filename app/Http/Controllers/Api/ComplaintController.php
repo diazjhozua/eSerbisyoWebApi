@@ -14,6 +14,8 @@ use App\Models\Complainant;
 use App\Models\Complaint;
 use App\Models\Defendant;
 use App\Models\Type;
+use Carbon\Carbon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,11 +42,9 @@ class ComplaintController extends Controller
             $defendantCount = 0;
 
             foreach ($request->complainant_list as $key => $value) {
-                $fileName = uniqid().time().'.jpg';
-                $filePath = 'signatures/'.$fileName;
-                Storage::disk('public')->put($filePath, base64_decode($value['signature']));
+                $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => 'barangay']);
 
-                Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' => $fileName,'file_path' => $filePath]);
+                Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' =>  $picture->getPublicId(),'file_path' => $picture->getPath()]);
                 $complainantCount++;
             }
 
@@ -105,7 +105,9 @@ class ComplaintController extends Controller
             }
 
             $complaint->load('complainants');
-            foreach ($complaint->complainants as $complainant) { Storage::delete('public/signatures/'. $complainant->signature_picture); }
+            foreach ($complaint->complainants as $complainant) {
+                Cloudinary::destroy($complainant->signature_picture);
+            }
             Complainant::where('complaint_id', $complaint->id)->delete();
             Defendant::where('complaint_id', $complaint->id)->delete();
             $complaint->delete();
@@ -114,10 +116,53 @@ class ComplaintController extends Controller
         });
     }
 
-    // public function changeStatus(ChangeStatusRequest $request, Complaint $complaint) {
-    //     if ($request->status == $complaint->status) { return response()->json(Helper::instance()->sameStatusMessage($request->status, 'complaint')); }
-    //     $oldStatus = $complaint->status;
-    //     $complaint->fill($request->validated())->save();
-    //     return (new ComplaintResource($complaint))->additional(Helper::instance()->statusMessage($oldStatus, $complaint->status, 'complaint'));
-    // }
+    // get short analytics about the overall overview.
+    public function getAnalytics()
+    {
+        $complaintTypes = Type::withCount(['complaints' => function($query){
+            $query->where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
+            ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')));
+        }])
+        ->where('model_type', 'Complaint')->orderBy('complaints_count', 'DESC')->get();
+
+        $trendingComplaints = Type::where('model_type', 'Complaint')->withCount('complaints')->orderBy('complaints_count', 'DESC')->limit(5)->get();
+
+        $complaints = Complaint::select('id', 'created_at')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('m'); // grouping by years
+        });
+
+        $userAverageComplaint = [];
+        $userComplaint = [];
+
+        foreach ($complaints as $key => $value) {
+            $yearList = [];
+            $userComplaintCount = 0;
+
+            foreach ($value as $userComplaintData) {
+                $userComplaintCount ++;
+                $year = Carbon::parse($userComplaintData->created_at)->format('Y');
+                if (!in_array($year, $yearList)) {
+                    array_push($yearList, $year);
+                }
+            }
+
+            $userAverageComplaint[(int)$key] = round($userComplaintCount / count($yearList), 2);
+        }
+
+        for($i = 1; $i <= 12; $i++){
+            if(!empty($userAverageComplaint[$i])){
+                $userComplaint[$i] = $userAverageComplaint[$i];
+            }else{
+                $userComplaint[$i] = 0;
+            }
+        }
+        return response()->json([
+            'complaintTypes' => $complaintTypes,
+            'userComplaint' => $userComplaint,
+            'trendingComplaints' => $trendingComplaints,
+        ], 200);
+    }
+
 }

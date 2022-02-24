@@ -14,6 +14,7 @@ class MissingItemSeeder extends Seeder
      */
     public function run()
     {
+        activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
 
@@ -45,7 +46,7 @@ class MissingItemSeeder extends Seeder
                 'last_seen' => $faker->streetName(),
                 'description' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'email' => $faker->lastName.$faker->email,
-                'phone_no' => $faker->phoneNumber,
+                'phone_no' => "09560492498",
                 'status' => $status,
                 'admin_message' => $admin_message,
                 'report_type' => $report_type[array_rand($report_type)],
@@ -53,8 +54,8 @@ class MissingItemSeeder extends Seeder
                 'file_path' => $file_path,
                 'credential_name' => $credentials_name,
                 'credential_file_path' => $credentials_file_path,
-                'created_at' => $date,
-                'updated_at' => $date,
+                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null),
+                'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null)
             ]);
 
             $commentCount = $faker->numberBetween(1,20);

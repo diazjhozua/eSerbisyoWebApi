@@ -8,15 +8,17 @@ use App\Http\Controllers\Web\Certification\ {
     BikerController as BikerCtrl,
     OrderController as OrderCtrl,
     CertificateFormController as CertificateFormCtrl,
-    OrderReportController as OrderReportCtrl
+    OrderReportController as OrderReportCtrl,
+    TransactionController as TransactionCtrl,
 };
 
 // For taskforce admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificateAdmin'])->group(function () {
     Route::get('certificates/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{certificate_id}', [CertificateCtrl::class, 'report'])->name('certificates.report');
     Route::get('orders/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{pick_up_type}/{order_status}/{application_status}', [OrderCtrl::class, 'report'])->name('orders.report');
+    Route::get('bikers/report/{biker_id}/{date_start}/{date_end}/{sort_column}/{sort_option}/{order_status}/', [BikerCtrl::class, 'report']);
+    Route::get('transactions/report/{user_id}/{date_start}/{date_end}/{sort_column}/{sort_option}/{pick_up_type}/{order_status}/{application_status}', [TransactionCtrl::class, 'report']);
 });
-
 
 // For certificate admin/staff
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificateStaff'])->group(function () {
@@ -45,6 +47,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificate
     Route::get('orderReports/', [OrderReportCtrl::class, 'index'])->name('orderReports.index');
     Route::put('orderReports/respond/{orderReport}', [OrderReportCtrl::class, 'respond']);
     Route::get('orderReports/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{status}/', [OrderReportCtrl::class, 'report'])->name('orderReports.report');
+
+    Route::resource('transactions', TransactionCtrl::class)->only(['index', 'show']);
 
     Route::get('view-requirement/{fileName}', function ($fileName) {
         if(file_exists(Storage::disk('public')->path('requirements/'.$fileName))){

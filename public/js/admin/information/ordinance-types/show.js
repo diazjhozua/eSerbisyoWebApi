@@ -203,7 +203,7 @@ $(document).ready(function () {
                     col1 = '<td>' + data.ordinance_no + '</td>'
                     col2 = '<td>' + data.title + '</td>'
                     col3 = '<td>' + data.date_approved + '</td>'
-                    col4 = '<td><a href="' + data.pdf_src + '" target="_blank">' + data.pdf_name + '</a></td>'
+                    col4 = '<td><a href="' + data.file_path + '" target="_blank">' + data.pdf_name + '</a></td>'
                     col5 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =
@@ -305,7 +305,7 @@ $(document).ready(function () {
 
         submitHandler: function (form, event) {
             event.preventDefault()
-            
+
             let date_start = $('#date_start').val();
             let date_end = $('#date_end').val();
             let sort_column = $('#sort_column').val();

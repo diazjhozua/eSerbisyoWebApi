@@ -32,7 +32,7 @@ class FeedbackRequest extends FormRequest
                 return $query->where('model_type', 'Feedback');
             })],
             'custom_type' => ['required_without:type_id', new OneOf($this, ["type_id", "custom_type"]), 'string', 'min:4', 'max:60'],
-            'polarity' => ['required', Rule::in(['Positive', 'Neutral', 'Negative'])],
+            'rating' => ['required', 'integer' , 'between:1,5'],
             'message' => 'required|string|min:5|max:255',
         ];
     }

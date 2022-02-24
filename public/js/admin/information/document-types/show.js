@@ -212,7 +212,7 @@ $(document).ready(function () {
                     col0 = '<td>' + data.id + '</td>'
                     col1 = '<td>' + data.description + '</td>'
                     col2 = '<td>' + data.year + '</td>'
-                    col3 = '<td><a href="' + data.pdf_link + '" target="_blank">' + data.pdf_name + '</a></td>'
+                    col3 = '<td><a href="' + data.file_path + '" target="_blank">' + data.pdf_name + '</a></td>'
                     col4 = '<td>' + data.updated_at + '</td>'
 
                     editBtn =

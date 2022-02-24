@@ -7,6 +7,11 @@ use App\Http\Controllers\Web\User\HomeController;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
+use SMSGatewayMe\Client\ApiClient;
+use SMSGatewayMe\Client\Configuration;
+use SMSGatewayMe\Client\Api\MessageApi;
+use SMSGatewayMe\Client\Model\SendMessageRequest;
+
 use App\Http\Controllers\Web\Admin\ {
     UserController as AdminUser,
     StaffController as AdminStaff,
@@ -17,7 +22,10 @@ use App\Http\Controllers\Web\Admin\ {
 use App\Models\Announcement;
 use App\Models\Document;
 use App\Models\Feedback;
+use App\Models\Order;
+use App\Models\Report;
 use Barryvdh\Debugbar\Facade as Debugbar;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Pusher\Pusher;
 
@@ -41,39 +49,80 @@ Route::get('/downloads', [HomeController::class, 'downloads'])->name('download')
 Route::get('/terms', [HomeController::class, 'terms'])->name('term');
 Route::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 
-Route::get('/brgindigency', function () {
-    // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
-    // return $pdf->stream();
-    return view('admin.certificates.brgindigency');
-});
-Route::get('/brgclear', function () {
-    return view('admin.certificates.brgclear');
-});
-
-Route::get('/cedula', function () {
-    return view('admin.certificates.cedula');
-});
-
-Route::get('/brgid', function () {
-    return view('admin.certificates.brgid');
-});
-Route::get('/busclear', function () {
-    return view('admin.certificates.busclear');
-});
-Route::get('/brgcedula', function () {
-    return view('admin.certificates.brgcedula');
-});
+// Route::get('/brgindigency', function () {
+//     // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
+//     // return $pdf->stream();
+//     return view('admin.certificates.brgindigency');
+// });
+// Route::get('/brgclear', function () {
+//     return view('admin.certificates.brgclear');
+// });
 
 
-Route::get('/checkout', function () {
-    // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
-    // return $pdf->stream();
-    return view('admin.certification.orders.show');
+Route::get('/sendSMS', function() {
+    // Configure client
+    $config = Configuration::getDefaultConfiguration();
+    $config->setApiKey('Authorization', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY0NTUzMDA5MywiZXhwIjo0MTAyNDQ0ODAwLCJ1aWQiOjkzMTI1LCJyb2xlcyI6WyJST0xFX1VTRVIiXX0.fYMteqJ81ns-Q5VveOyzNdZTGh-lkGsxTOqnQVUVKoA');
+    $apiClient = new ApiClient($config);
+    $messageClient = new MessageApi($apiClient);
+
+    // Sending a SMS Message
+    $sendMessageRequest1 = new SendMessageRequest([
+        'phoneNumber' => '09560492498',
+        'message' => 'tanga kaba',
+        'deviceId' => 127363
+    ]);
+
+    // $sendMessageRequest2 = new SendMessageRequest([
+    //     'phoneNumber' => '07791064781',
+    //     'message' => 'test2',
+    //     'deviceId' => 2
+    // ]);
+    $sendMessages = $messageClient->sendMessages([
+        $sendMessageRequest1,
+        // $sendMessageRequest2
+    ]);
+    print_r($sendMessages);
+});
+Route::get('/testing', function () {
+    // feedbacks scheduler
+    // dd(Report::where('created_at', '<=', Carbon::now()->subDay(1)->toDateTimeString())->where('status', 'Pending')->get());
+    // dd(Report::where([['created_at', '<=', Carbon::now()->subDay(1)->toDateTimeString()], ['status', '=', 'Pending']])->get());
+    // dd(Feedback::where([['created_at', '<=', Carbon::now()->subDay(10)->toDateTimeString()], ['status', '=', 'Pending']])->get());
+        // dd(Order::find(5));
+    dd(
+        Order::where('pickup_date', '<=', Carbon::now()->subDays(3)->toDateTimeString())
+            ->where('application_status', 'Approved')
+            ->where('pick_up_type', 'Delivery')
+            ->where('order_status', 'Accepted')
+        ->get()
+    );
+    dd( Order::where([
+            ['pickup_date', '=', Carbon::today()], ['application_status', '==', 'Approved'],
+            ['pick_up_type', '==', 'Pickup'], ['order_status', '==', 'Waiting']
+        ])->get());
+    // return view('admin.certificates.cedula');
 });
 
-Route::get('/event', function () {
-    event(new ReportNotification('This is our first broadcast message'));
-});
+// Route::get('/brgid', function () {
+//     return view('admin.certificates.brgid');
+// });
+// Route::get('/busclear', function () {
+//     return view('admin.certificates.busclear');
+// });
+// Route::get('/brgcedula', function () {
+//     return view('admin.certificates.brgcedula');
+// });
+
+// Route::get('/checkout', function () {
+//     // $pdf = PDF::loadView('admin.certificates.brgindigency')->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'portrait');
+//     // return $pdf->stream();
+//     return view('admin.certification.orders.show');
+// });
+
+// Route::get('/event', function () {
+//     event(new ReportNotification('This is our first broadcast message'));
+// });
 
 // Route::post('/pusher/auth', function (Request $request) {
 //         $user = auth()->user();
@@ -137,8 +186,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->g
 
 Route::get('view/{folderName}/{fileName}', function ($folderName, $fileName) {
 
-    if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
-        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+    if(file_exists(Storage::disk('cloudinary')->path($folderName.'/'.$fileName))){
+        $url = Storage::disk('cloudinary')->path($folderName.'/'.$fileName);
         return response()->download($url);
     }else{
         return view('errors.NOFILE');
@@ -147,8 +196,8 @@ Route::get('view/{folderName}/{fileName}', function ($folderName, $fileName) {
 
 Route::get('download/{folderName}/{fileName}', function ($folderName, $fileName) {
 
-    if(file_exists(Storage::disk('public')->path($folderName.'/'.$fileName))){
-        $url = Storage::disk('public')->path($folderName.'/'.$fileName);
+    if(file_exists(Storage::disk('cloudinary')->path($folderName.'/'.$fileName))){
+        $url = Storage::disk('cloudinary')->path($folderName.'/'.$fileName);
         return response()->download($url);
     }else{
         return view('errors.NOFILE');
