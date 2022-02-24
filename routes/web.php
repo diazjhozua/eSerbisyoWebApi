@@ -173,7 +173,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:admin'])->g
     Route::put('users/verifyUser/{user_verification}', [AdminUser::class, 'verifyUser']);
 
     Route::get('dashboard', [AdminDashboard::class, 'index'])->name('dashboard.index');
-    Route::post('audit-logs/reports', [AuditLog::class, 'report'])->name('auditLogs.reports');
+
+    Route::get('audit-logs/reports/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AuditLog::class, 'report'])->name('auditLogs.reports');
+    // Route::post('audit-logs/reports', [AuditLog::class, 'report'])->name('auditLogs.reports');
     Route::get('audit-logs', [AuditLog::class, 'index'])->name('auditLogs');
     Route::get('staffs', [AdminStaff::class, 'adminStaff'])->name('staffs.adminStaff');
     Route::put('staffs/demoteStaff/{user}', [AdminStaff::class, 'demoteStaff'])->name('staffs.demoteStaff');

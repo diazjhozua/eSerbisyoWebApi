@@ -138,7 +138,7 @@
                                         <img class="img-fluid" src="assets/img/user/diaz.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque. </div>
+                                        <div class="testimonial-text" style="text-align:justify;">Jhozua M. Diaz is a high-achieving student who is dedicated to the development of the e-serbisyo app. He motivates the team to get the greatest possible outcome for the app. </div>
                                         <div class="testimonial-author">Jhozua M. Diaz- Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
@@ -150,23 +150,13 @@
                                         <img class="img-fluid" src="assets/img/user/gongob.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
+                                        <div class="testimonial-text" style="text-align:justify;">Lou Diamond Gongob is also a high achiever  who strives to give his all in the development of the application. He is prepared to learn how things will unfold along the way and to follow his intuition in completing this project.</div>
                                         <div class="testimonial-author">Lou Diamond T. Gongob - Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
 
-                                <!-- Slide -->
-                                <div class="swiper-slide">
-                                    <div class="image-wrapper">
-                                        <img class="img-fluid" src="assets/img/user/cabs.png" alt="alternative">
-                                    </div> <!-- end of image-wrapper -->
-                                    <div class="text-wrapper">
-                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
-                                        <div class="testimonial-author">Christine Caryl Cabrera - Researcher</div>
-                                    </div> <!-- end of text-wrapper -->
-                                </div> <!-- end of swiper-slide -->
-                                <!-- end of slide -->
+                                
 
 
                                 <!-- Slide -->
@@ -175,7 +165,7 @@
                                         <img class="img-fluid" src="assets/img/user/sasa.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque. </div>
+                                        <div class="testimonial-text" style="text-align:justify;">Trisha Jean Sevilleno is a high achiever who has dedicated herself to the success of this project. She is an excellent student who wants to do her best and dedicates her time to helping the team polish the work appropriately. </div>
                                         <div class="testimonial-author">Trisha Jean S. Sevilleno - Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
@@ -187,7 +177,7 @@
                                         <img class="img-fluid" src="assets/img/user/youz.png" alt="alternative">
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
-                                        <div class="testimonial-text" style="text-align:justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Habitant morbi tristique senectus et. Id donec ultrices tincidunt arcu. Mattis molestie a iaculis at erat pellentesque. Semper feugiat nibh sed pulvinar proin. Tincidunt tortor aliquam nulla facilisi. Pellentesque eu tincidunt tortor aliquam nulla facilisi cras. Scelerisque purus semper eget duis. Ultrices gravida dictum fusce ut placerat orci nulla pellentesque.</div>
+                                        <div class="testimonial-text" style="text-align:justify;">Youzrah Hudda is a high-achieving student who provides excellent support to the project's development team. She enjoys lending a hand and devotes her time to the completion of this project.</div>
                                         <div class="testimonial-author">Youzrah A. Hudda - Researcher</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->

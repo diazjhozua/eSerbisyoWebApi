@@ -67,7 +67,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoAdmin']
 
     Route::get('announcements/report/{announcement}', [AdminAnnouncement::class, 'reportProfile'])->name('announcements.reportProfile');
 
-    Route::post('users/report', [AdminUser::class, 'report'])->name('users.report');
+    Route::get('users/report/{date_start}/{date_end}/{filter}/{sort_column}/{sort_option}/', [AdminUser::class, 'report'])->name('users.report');
+    // Route::post('users/report', [AdminUser::class, 'report'])->name('users.report');
 
 });
 

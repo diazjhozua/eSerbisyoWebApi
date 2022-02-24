@@ -20,9 +20,9 @@
                         <a class="btn-solid-reg page-scroll" href="/login">SIGN UP</a>
                     </div> <!-- end of text-container -->
                 </div> <!-- end of col -->
-                <div class="col-lg-6">
+                <div class="col-sm-6">
                     <div class="image-container">
-                        <img class="img-fluid" style="margin-left:100px; width:350px; height:500px;" src="assets/img/user/register-app.jpg" alt="alternative">
+                        <img class="img-fluid" style="margin-left:1px; width:380px; height:500px;" src="assets/img/user/register-app.jpg" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
             </div> <!-- end of row -->

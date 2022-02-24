@@ -249,11 +249,6 @@ $(document).ready(function () {
 
         submitHandler: function (form, event) {
             event.preventDefault()
-            let formAction = $("#announcementPictureForm").attr('action')
-            let formMethod = $('#pictureMethod').val()
-            let formData = new FormData(form)
-
-
             $.ajax({
                 type: 'POST',
                 url: formAction,
@@ -276,7 +271,7 @@ $(document).ready(function () {
                     const data = response.data
 
                     col0 = '<td>' + data.id + '</td>'
-                    col1 = '<td><img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="' + data.file_path + '" class="rounded" alt="' + data.picture_name + ' image"></td>'
+                    col1 = '   <td><img style="height:100px; max-height: 100px; max-width:100px; width: 100px;" src="' + data.file_path + '" class="rounded" alt="' + data.picture_name + ' image"></td>'
 
                     viewBtn =
                         '<li class="list-inline-item mb-1">' +

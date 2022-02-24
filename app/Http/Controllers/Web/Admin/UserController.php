@@ -84,44 +84,61 @@ class UserController extends Controller
         return (new UserResource($user))->additional(Helper::instance()->updateSuccess($user->getFullNameAttribute().' verification request - '. strtolower($request->status)));
     }
 
-    public function report(UserReportRequest $request) {
+    public function report($date_start,  $date_end, $filter, $sort_column, $sort_option) {
+
+        $title = 'Report - No data';
+        $description = 'No data';
+        try {
+
          $users = User::with('user_role')
-            ->whereBetween('created_at', [$request->date_start, $request->date_end])
-            ->orderBy($request->sort_column, $request->sort_option)
-            ->where(function($query) use ($request) {
-                if($request->filter == 'all') {
+            ->whereBetween('created_at', [$date_start, $date_end])
+            ->orderBy($sort_column, $sort_option)
+            ->where(function($query) use ($date_start,$filter,$date_end) {
+                if($filter == 'all') {
                     return null;
-                } elseif ($request->filter == 'enable') {
+                } elseif ($filter == 'enable') {
                     return $query->where('status', '=', 'Enable');
-                } elseif ($request->filter == 'verified') {
+                } elseif ($filter == 'verified') {
                     return $query->where('is_verified', '=', 1);
-                } elseif ($request->filter == 'unverified') {
+                } elseif ($filter == 'unverified') {
                     return $query->where('is_verified', '=', 0);
                 } else {
                     return $query->where('status', '=', 'Disable');
                 }
             })->get();
-
-        if ($users->isEmpty()) {
-            return response()->json(['No data'], 404);
+        } catch(\Illuminate\Database\QueryException $ex){
+            return view('errors.404Report', compact('title', 'description'));
         }
+        // if ($users->isEmpty()) {
+        //     return response()->json(['No data'], 404);
+        // }
 
         $usersData = null;
+        $firstDayYear = date('Y-m-d', strtotime('first day of january this year'));
+        $lastDateYear = date('Y-m-d', strtotime('first day of december this year'));
+        $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
+        $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        if($request->filter == 'all') {
+        if($filter == 'all') {
             $usersData =  DB::table('users')
                 ->selectRaw('count(*) as users_count')
                 ->selectRaw("count(case when status = 'Enable' then 1 end) as enable_user_count")
                 ->selectRaw("count(case when status = 'Disable' then 1 end) as disable_user_count")
                 ->selectRaw("count(case when is_verified = 0 then 1 end) as unverified_user_count")
                 ->selectRaw("count(case when is_verified = 1 then 1 end) as verified_user_count")
-                ->where('created_at', '>=', $request->date_start)
-                ->where('created_at', '<=', $request->date_end)
+                ->where('created_at', '>=', $date_start)
+                ->where('created_at', '<=', $date_end)
                 ->first();
         }
+        $title = 'User Reports';
+        $modelName = 'User';
 
-        $pdf = PDF::loadView('admin.information.reports.user', compact('users', 'request','usersData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+
+     return view('admin.information.pdf.usersreport', compact('title', 'modelName', 'users', 'usersData',
+        'date_start', 'date_end','filter', 'sort_column', 'sort_option' 
+    ));
+        // $pdf = PDF::loadView('admin.information.reports.user', compact('users', 'request','usersData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
     }
 
 }

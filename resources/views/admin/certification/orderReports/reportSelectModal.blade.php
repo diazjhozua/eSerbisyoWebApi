@@ -13,7 +13,8 @@
                 <div class="modal-body">
                     <div class="row g-3 mb-3">
 
-                        {{-- Start Date --}}
+                       
+                    {{-- Start Date --}}
                         <div class="col">
                             <label for="date_start" class="form-label">Date Start</label>
                             <input type="text" autocomplete="off" class="form-control datepicker" class="form-control" id="date_start" name="date_start" placeholder="Select Start Date" aria-label="Select Start Date">
@@ -29,19 +30,19 @@
                     <div class="row">
                         <div class="col-sm-8">
                             {{-- Sort by column option --}}
-                            <label for="project_start" class="form-label">Sort by:</label>
+                            <label for="sort_column" class="form-label">Sort by:</label>
                             <div class="input-group mb-3">
                                 <select class="custom-select" id="sort_column" name="sort_column">
                                     <option value="id" selected>ID</option>
-                                    <option value="subject_type">Model</option>
-                                    <option value="event">Event</option>
-                                    <option value="created_at">Date</option>
+                                    <option value="created_at">Submitted at</option>
+                                    <option value="updated_at">Updated at</option>
+                                    <!-- <option value="total_price">Total Price</option> -->
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             {{-- Sort by option --}}
-                            <label for="project_start" class="form-label">Sort option</label>
+                            <label for="sort_option" class="form-label">Sort option</label>
                             <div class="input-group mb-3">
                                 <select class="custom-select" id="sort_option" name="sort_option">
                                     <option value="ASC" selected>Ascending</option>
@@ -50,8 +51,48 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
+                    <div class="row">
+                        <div class="col">
+                            {{-- Filter status option --}}
+                            <label for="application_status" class="form-label">Show Only (Admin Respond)</label>
+                            <div class="input-group mb-3">
+                                <select class="custom-select" id="status" name="status">
+                                    <option value="all" selected>All</option>
+                                    <option value="Noted">Noted</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-sm-6">
+                            {{-- Filter by order status option --}}
+                            <label for="order_status" class="form-label">Show Only (Order Status):</label>
+                            <div class="input-group mb-3">
+                                <select class="custom-select" id="order_status" name="order_status">
+                                    <option value="all" selected>All</option>
+                                    <option value="Responded">Responded</option>
+                                    <option value="NotYetResponded">NotYetResponded</option>
+                                </select>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <!-- <div class="row">
+                        <div class="col-sm-12">
+                            {{-- Filter application status option --}}
+                            <label for="application_status" class="form-label">Show Only (Admin Respond):</label>
+                            <div class="input-group mb-3">
+                                <select class="custom-select" id="application_status" name="application_status">
+                                    <option value="all" selected>All</option>
+                                    <option value="Noted">Noted</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> -->
+
+                </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary btnReportFormSubmit">
                         <i class="btnReportFormLoadingIcon fa fa-spinner fa-spin" hidden></i>

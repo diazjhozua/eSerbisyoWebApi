@@ -33,12 +33,12 @@
                         <!-- Tab -->
                         <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-sm-3">
                                     <div class="image-container">
-                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:150px;"src="assets/img/user/centralize.gif" alt="alternative">
+                                        <img class="img-fluid" style="height:350px; width: 300px; margin-left:50px;"src="assets/img/user/centralize.gif" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" style="margin-left:50px;" >
                                     <div class="text-container" >
                                         <h3>Compacted Centralized Data</h3>
                                         <p style="text-align: justify;">The system makes it simple to utilize the application by providing a single centralized application for all data that meets all of the system's needs.Find out and submit the <a class="blue page-scroll" href="/login">Sign Up Form</a> and you will receive access to the app with full experience of Barangay Cupang E-Serbisyo.</p>
@@ -66,12 +66,12 @@
                         <!-- Tab -->
                         <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab-2">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-sm-3">
                                     <div class="image-container">
-                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:150px;" src="assets/img/user/report.jpg" alt="alternative">
+                                        <img class="img-fluid" style="height:350px; width: 300px; margin-left:50px;" src="assets/img/user/report.jpg" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" style="margin-left:50px;">
                                     <div class="text-container">
                                         <h3>Real-time Report Sytem Services</h3>
                                         <p style="text-align: justify;">Providing amazing real-time data reports to consumers in order to anonymously protect any data submitted. A real-time report would be excellent for the system, allowing administrators to respond quickly to consumers.</p>
@@ -99,12 +99,12 @@
                         <!-- Tab -->
                         <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="tab-3">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-sm-3">
                                     <div class="image-container">
-                                        <img class="img-fluid" style="height:400px; width: 270px; margin-left:150px;" src="assets/img/user/request.jpg" alt="alternative">
+                                        <img class="img-fluid" style="height:350px; width: 300px; margin-left:50px;" src="assets/img/user/request.jpg" alt="alternative">
                                     </div> <!-- end of image-container -->
                                 </div> <!-- end of col -->
-                                <div class="col-lg-6" >
+                                <div class="col-lg-6" style="margin-left:50px;">
                                     <div class="text-container" >
                                         <h3>Faceless Request Experience</h3>
                                         <p style="text-align: justify; ">You may use this application to communicate and request necessary documents with the officials of Barangay Cupang without having to go to the barangay. With the added bonus of documents you requested being delivered directly to your house or if you want to go into the barangay to collect it by yourself.</p>
@@ -143,12 +143,12 @@
         <div class="container">
             <div class="row">
                 <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
-                <div class="col-lg-8">
+                <div class="col-sm-6">
                     <div class="image-container">
-                        <img class="img-fluid" style="height:800px; margin-left:100px;"src="assets/img/user/centralize.gif" alt="alternative">
+                        <img class="img-fluid" style="height:800px; width:400px; margin-left:1px;"src="assets/img/user/centralize.gif" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h3>Centralized Data</h3>
                     <hr>
                     <h5>Core service</h5>
@@ -185,12 +185,12 @@
         <div class="container">
             <div class="row">
                 <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
-                <div class="col-lg-8">
+                <div class="col-sm-6">
                     <div class="image-container">
-                        <img class="img-fluid" style="height:800px; margin-left:100px;"src="assets/img/user/report.jpg" alt="alternative">
+                        <img class="img-fluid" style="height:800px; width:400px; margin-left:1px;" src="assets/img/user/report.jpg" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h3>Real-time Report Sytem</h3>
                     <hr>
                     <h5>Core service</h5>
@@ -224,12 +224,12 @@
         <div class="container">
             <div class="row">
                 <button title="Close (Esc)" type="button" class="mfp-close x-button">×</button>
-                <div class="col-lg-8">
+                <div class="col-sm-6">
                     <div class="image-container">
-                        <img class="img-fluid" style="height:800px; margin-left:100px;"src="assets/img/user/request.jpg" alt="alternative">
+                        <img class="img-fluid" style="height:800px; width:400px; margin-left:1px;"src="assets/img/user/request.jpg" alt="alternative">
                     </div> <!-- end of image-container -->
                 </div> <!-- end of col -->
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h3>Faceless Request</h3>
                     <hr>
                     <h5>Core service</h5>

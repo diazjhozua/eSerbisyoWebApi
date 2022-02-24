@@ -8,8 +8,8 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
-            <form name="reportForm" id="reportForm" action="{{ route('admin.users.report') }}" method="POST" novalidate>
+            
+            <form name="reportForm" id="reportForm" action="" method="POST" novalidate>
                 <div class="modal-body">
                     <div class="row g-3 mb-3">
 

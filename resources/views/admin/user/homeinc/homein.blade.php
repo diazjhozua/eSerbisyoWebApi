@@ -50,7 +50,7 @@
                                         <img class="img-fluid" src="assets/img/user/jdiazz.png" style="width:100%; height: 40px; "alt="alternative">
                                 </div> -->
                                 <div class="swiper-slide">
-                                        <img class="img-fluid" src="assets/img/user/mtics.png"  style="width:100%; height: 40px;"alt="alternative">
+                                        <img class="img-fluid" src="assets/img/user/mtics.png"  style="width:100%; height: 40px; margin-left:50px;"alt="alternative">
                                 </div>
 
                             </div> <!-- end of swiper-wrapper -->

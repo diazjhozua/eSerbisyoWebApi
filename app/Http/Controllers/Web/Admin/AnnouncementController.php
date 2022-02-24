@@ -137,8 +137,22 @@ class AnnouncementController extends Controller
 
     public function reportProfile(Announcement $announcement)
     {
+        $title = 'Report - No data';
+        $description = 'No data';
+
+        try {
+
         $announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments', 'announcement_pictures');
-        $pdf = PDF::loadView('admin.information.reports.announcementProfile', compact('announcement'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+    } catch(\Illuminate\Database\QueryException $ex){
+        return view('errors.404Report', compact('title', 'description'));
+    }
+    $title = 'Announcement Profile Report';
+    $modelName = 'Announcement Profile';
+
+    return view('admin.information.pdf.announcementpicture', compact('title', 'modelName', 'announcement'
+
+));
+        // $pdf = PDF::loadView('admin.information.reports.announcementProfile', compact('announcement'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
     }
 }
