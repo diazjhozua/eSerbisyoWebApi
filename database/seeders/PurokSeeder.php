@@ -16,6 +16,8 @@ class PurokSeeder extends Seeder
     {
         activity()->disableLogging();
 
+        $faker = Faker::create();
+
         \DB::table('puroks')->insert([
             'purok' => "Purok 1",
             'created_at' => $this->faker->dateTime,
