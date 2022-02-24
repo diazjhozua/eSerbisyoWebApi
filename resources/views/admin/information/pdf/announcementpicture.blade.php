@@ -28,16 +28,16 @@
     <div class ="dits">
         <div class="row p-4">
             <div class="column" style="font-size: 18px">
-                
-               
-                <p class="font-weight-bold">Announcement Type: </p> 
+
+
+                <p class="font-weight-bold">Announcement Type: </p>
             </div>
             <div class="column" style="font-size: 18px">
-         
-                
-                <p class="text-right"> {{ $modelName }} </p>    
-                
-                
+
+
+                <p class="text-right"> {{ $modelName }} </p>
+
+
             </div>
 
 
@@ -74,7 +74,7 @@
                 <br>
             </div>
 
-           
+
     <div class="container mb-6">
     <h4 class="text-center">Details</h4>
         <hr/>
@@ -103,16 +103,16 @@
         @else
           >{{ $announcement->custom_type }}
         @endif
-                    </div> 
-                    
-                    
-                  
+                    </div>
+
+
+
                     </div>
                 </div>
             </div>
-            
+
             <div class="container mb-6">
-    
+
         <hr/>
         <div class="row">
             <div class="col-sm">
@@ -130,18 +130,18 @@
                     <div class="col-sm-6">
                         <div class="font-weight-bold">{{ $announcement->created_at }}</div>
                     </div>
-                   
+
                     <div class="col-sm-6">
                     Updated At:
                     </div>
-                    
+
                     <div class="col-sm-6">
                         <div class="font-weight-bold">{{ $announcement->updated_at }}
-      
-                    </div>  
-                    
-                    
-                  
+
+                    </div>
+
+
+
                     </div>
                 </div>
             </div>
@@ -155,7 +155,7 @@
                     <th>Picture</th>
                     <th>Created At</th>
                     <th>Updated At</th>
-            
+
             </tr>
         </thead>
         <tbody>
@@ -165,7 +165,7 @@
                 <td>
                     <br>
                     <p class="text-center">
-                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/'.$picture->file_path))) }}"
+                        <img src="{{ $picture->file_path }}"
                         width="110px" height="100px"
                         alt="logo">
                     </p>
@@ -186,7 +186,7 @@
                     <th>Name</th>
                     <th>Comment</th>
                     <th>Commented At</th>
-            
+
             </tr>
         </thead>
         <tbody>
@@ -210,7 +210,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Date</th>
-            
+
             </tr>
         </thead>
         <tbody>
@@ -225,6 +225,6 @@
                 @endforelse
             </tbody>
     </table>
-    
+
 
 @endsection
