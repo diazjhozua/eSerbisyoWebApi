@@ -11,7 +11,7 @@
 		"cloudinary-labs/cloudinary-laravel": "^1.0",
 		"fideloper/proxy": "^4.4",
 		"fruitcake/laravel-cors": "^2.0",
-		"fakerphp/faker": "^1.9.1",
+		"fzaninotto/faker": "^1.9.1",
 		"guzzlehttp/guzzle": "^7.0.1",
 		"harishpatel143/laravel-base64-validation": "dev-master",
 		"laravel/framework": "^8.40",
