@@ -19,6 +19,7 @@
                 Order #{{ $order->id }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
+        
     </div>
 
         <input id="inputOrderID" value="{{ $order->id }}" hidden/>

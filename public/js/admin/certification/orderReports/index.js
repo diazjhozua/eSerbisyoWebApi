@@ -4,6 +4,14 @@ function sendRespond(id) {
 }
 
 $(document).ready(function () {
+
+
+// Initialize Year picker in form
+$(".datepicker").datepicker({
+    format: "yyyy-mm-dd", // Notice the Extra space at the beginning
+});
+
+
     $('#orderReport').addClass('active')
 
     $("form[name='orderReportRespondForm']").validate({
@@ -60,5 +68,44 @@ $(document).ready(function () {
             });
         }
     });
+// Validation for report form
+$("form[name='reportForm']").validate({
+    // Specify validation rules
+    rules: {
+        date_start: {
+            required: true,
+        },
+        date_end: {
+            required: true,
+            greaterThan: "#date_start"
+        },
+        sort_column: {
+            required: true,
+        },
+        sort_option: {
+            required: true,
+        },
+        status: {
+            required: true,
+        },
+    },
+    messages: {
+        date_end: {
+            greaterThan: "Date end must be greater than selected date start"
+        },
+    },
 
+    submitHandler: function (form, event) {
+        event.preventDefault();
+
+        let date_start = $('#date_start').val();
+        let date_end = $('#date_end').val();
+        let sort_column = $('#sort_column').val();
+        let sort_option = $('#sort_option').val();
+        let status = $('#status').val();
+
+        var url = `${window.location.origin}/admin/orderReports/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status}/`;
+        window.open(url, '_blank');
+    }
+});
 });

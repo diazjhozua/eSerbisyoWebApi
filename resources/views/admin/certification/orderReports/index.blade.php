@@ -11,12 +11,17 @@
 @section('content')
 
     @include('admin.certification.orderReports.respond')
+    @include('admin.certification.orderReports.reportSelectModal')
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Order Reports
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
+        @if (Auth::user()->user_role_id < 5)
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#reportModal"><i
+                class="fas fa-download fa-sm text-white-50" ></i> Download Report</button>
+        @endif
     </div>
 
     <p class="text-justify">

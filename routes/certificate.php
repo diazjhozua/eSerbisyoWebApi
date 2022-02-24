@@ -44,6 +44,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificate
 
     Route::get('orderReports/', [OrderReportCtrl::class, 'index'])->name('orderReports.index');
     Route::put('orderReports/respond/{orderReport}', [OrderReportCtrl::class, 'respond']);
+    Route::get('orderReports/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{status}/', [OrderReportCtrl::class, 'report'])->name('orderReports.report');
 
     Route::get('view-requirement/{fileName}', function ($fileName) {
         if(file_exists(Storage::disk('public')->path('requirements/'.$fileName))){

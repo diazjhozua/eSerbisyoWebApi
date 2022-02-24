@@ -100,68 +100,134 @@ class AuditLogController extends Controller
         return view('admin.auditLog.index', compact('logs', 'info', 'logsData'));
     }
 
-    public function report(AuditLogReportRequest $request) {
+    public function report($date_start, $date_end, $sort_column, $sort_option) {
+       
+        $title = 'Report - No data';
+        $description = 'No data';
+
+        $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
+        $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
+        
+       
+
+            if (Auth::user()->user_role_id == 1) {
+                try{
+
+                $logs = Activity::whereBetween('created_at', [$date_start, $date_end])
+                    ->orderBy($sort_column, $sort_option)
+                    ->get();
+    
+                
+    
+                // if ($logs->isEmpty()) {
+                //     return response()->json(['No data'], 404);
+                // }
+    
+                $logsData =  DB::table('activity_log')
+                    ->selectRaw("count(case when event = 'created' then 1 end) as created_count")
+                    ->selectRaw("count(case when event = 'updated' then 1 end) as updated_count")
+                    ->selectRaw("count(case when event = 'deleted' then 1 end) as deleted_count")
+                    ->whereRaw("log_name = 'information'")
+                    ->where('created_at', '>=', $date_start)
+                    ->where('created_at', '<=', $date_end)
+                    ->first();
+    
+                } catch(\Illuminate\Database\QueryException $ex){
+                    return view('errors.404Report', compact('title', 'description'));
+                }
+            }
+      
+    
+
+       
 
         if (Auth::user()->user_role_id == 2) {
-            $logs = Activity::whereBetween('created_at', [$request->date_start, $request->date_end])
-                ->orderBy($request->sort_column, $request->sort_option)
+            
+          try{
+            $logs = Activity::whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
                 ->where('log_name', '=', 'information')
                 ->get();
 
+            
 
-            if ($logs->isEmpty()) {
-                return response()->json(['No data'], 404);
-            }
+            // if ($logs->isEmpty()) {
+            //     return response()->json(['No data'], 404);
+            // }
 
             $logsData =  DB::table('activity_log')
                 ->selectRaw("count(case when event = 'created' then 1 end) as created_count")
                 ->selectRaw("count(case when event = 'updated' then 1 end) as updated_count")
                 ->selectRaw("count(case when event = 'deleted' then 1 end) as deleted_count")
                 ->whereRaw("log_name = 'information'")
-                ->where('created_at', '>=', $request->date_start)
-                ->where('created_at', '<=', $request->date_end)
+                ->where('created_at', '>=', $date_start)
+                ->where('created_at', '<=', $date_end)
                 ->first();
+
+            } catch(\Illuminate\Database\QueryException $ex){
+                return view('errors.404Report', compact('title', 'description'));
+            }
+
+            
         }
+   
+
+    
 
         if (Auth::user()->user_role_id == 3) {
-            $logs = Activity::whereBetween('created_at', [$request->date_start, $request->date_end])
-                ->orderBy($request->sort_column, $request->sort_option)
+            try{
+
+            $logs = Activity::whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
                 ->where('log_name', '=', 'certificate')
                 ->get();
 
-            if ($logs->isEmpty()) {
-                return response()->json(['No data'], 404);
-            }
+            // if ($logs->isEmpty()) {
+            //     return response()->json(['No data'], 404);
+            // }
 
             $logsData =  DB::table('activity_log')
                 ->selectRaw("count(case when event = 'created' then 1 end) as created_count")
                 ->selectRaw("count(case when event = 'updated' then 1 end) as updated_count")
                 ->selectRaw("count(case when event = 'deleted' then 1 end) as deleted_count")
                 ->whereRaw("log_name = 'certificate'")
-                ->where('created_at', '>=', $request->date_start)
-                ->where('created_at', '<=', $request->date_end)
+                ->where('created_at', '>=', $date_start)
+                ->where('created_at', '<=', $date_end)
                 ->first();
+            } catch(\Illuminate\Database\QueryException $ex){
+                return view('errors.404Report', compact('title', 'description'));
+            }
         }
+  
+
 
         if (Auth::user()->user_role_id == 4) {
-            $logs = Activity::whereBetween('created_at', [$request->date_start, $request->date_end])
-                ->orderBy($request->sort_column, $request->sort_option)
+
+            
+     try{
+            $logs = Activity::whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
                 ->where('log_name', '=', 'taskforce')
                 ->get();
 
-            if ($logs->isEmpty()) {
-                return response()->json(['No data'], 404);
-            }
+            // if ($logs->isEmpty()) {
+            //     return response()->json(['No data'], 404);
+            // }
 
             $logsData =  DB::table('activity_log')
                 ->selectRaw("count(case when event = 'created' then 1 end) as created_count")
                 ->selectRaw("count(case when event = 'updated' then 1 end) as updated_count")
                 ->selectRaw("count(case when event = 'deleted' then 1 end) as deleted_count")
                 ->whereRaw("log_name = 'taskforce'")
-                ->where('created_at', '>=', $request->date_start)
-                ->where('created_at', '<=', $request->date_end)
+                ->where('created_at', '>=', $date_start)
+                ->where('created_at', '<=', $date_end)
                 ->first();
+
+            } catch(\Illuminate\Database\QueryException $ex){
+                return view('errors.404Report', compact('title', 'description'));
+            }
         }
+   
 
         // $logs = Activity::whereBetween('created_at', [$request->date_start, $request->date_end])
         //     ->orderBy($request->sort_column, $request->sort_option)
@@ -181,8 +247,15 @@ class AuditLogController extends Controller
         //     ->where('created_at', '<=', $request->date_end)
         //     ->first();
 
-        $pdf = PDF::loadView('admin.information.reports.activityLog', compact('logs', 'request', 'logsData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        return $pdf->stream();
+        $title = 'AuditLogs Report';
+        $modelName = 'AuditLogs';
+
+        return view('admin.information.pdf.auditlogs', compact('title', 'modelName','logs', 'logsData',
+        'date_start', 'date_end', 'sort_column', 'sort_option'
+    ));
+
+        // $pdf = PDF::loadView('admin.information.reports.activityLog', compact('logs', 'request', 'logsData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
+        // return $pdf->stream();
     }
 
 
