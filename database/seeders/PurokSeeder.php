@@ -16,31 +16,31 @@ class PurokSeeder extends Seeder
     {
         activity()->disableLogging();
 
-        // $faker = Faker::create();
+        $faker = Faker::create();
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 1",
-            'created_at' => $this->faker->dateTime,
+            'created_at' => $faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 2",
-            'created_at' => $this->faker->dateTime,
+            'created_at' => $faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 3",
-            'created_at' => $this->faker->dateTime,
+            'created_at' => $faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 4",
-            'created_at' => $this->faker->dateTime,
+            'created_at' => $faker->dateTime,
         ]);
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 5",
-            'created_at' => $this->faker->dateTime,
+            'created_at' => $faker->dateTime,
         ]);
     }
 }
