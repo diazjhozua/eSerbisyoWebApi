@@ -25,9 +25,7 @@ use App\Http\Controllers\Api\ {
 use App\Http\Requests\CertificateFormRequest;
 
 
-if (App::environment('production')) {
-    URL::forceScheme('https');
-}
+
 
 Route::post('/register', [JwtAuthCtrl::class, 'register']);
 Route::post('/login', [JwtAuthCtrl::class, 'login']);

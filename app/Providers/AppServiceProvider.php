@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Model;
 
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
+use URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,9 +32,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading();
 
-        if ($this->app->isLocal()) {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        if (App::environment('production')) {
+            URL::forceScheme('https');
         }
+
+        // if ($this->app->isLocal()) {
+        //     $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+        // }
 
     }
 }

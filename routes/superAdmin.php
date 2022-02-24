@@ -7,10 +7,6 @@ use App\Http\Controllers\Web\Admin\ {
     StaffController as AdminStaff,
 };
 
-if (App::environment('production')) {
-    URL::forceScheme('https');
-}
-
 // For Super Admin and all Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:superAdmin'])->group(function () {
     Route::get('information-dashboard', [AdminDashboard::class, 'informationAdmin'])->name('dashboard.information');

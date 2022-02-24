@@ -12,10 +12,6 @@ use App\Http\Controllers\Web\Certification\ {
     TransactionController as TransactionCtrl,
 };
 
-if (App::environment('production')) {
-    URL::forceScheme('https');
-}
-
 // For taskforce admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:certificateAdmin'])->group(function () {
     Route::get('certificates/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{certificate_id}', [CertificateCtrl::class, 'report'])->name('certificates.report');
