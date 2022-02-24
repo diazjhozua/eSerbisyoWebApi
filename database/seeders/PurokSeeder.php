@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
+// use Faker\Factory as Faker;
 
 class PurokSeeder extends Seeder
 {
