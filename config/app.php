@@ -177,8 +177,8 @@ return [
         // App\Providers\TelescopeServiceProvider::class,
 
         // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
+        // Barryvdh\DomPDF\ServiceProvider::class,
+        // Barryvdh\Debugbar\ServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
