@@ -14,7 +14,7 @@ class HomeController extends Controller
     }
 
     public function downloads(){
-        $androids = Android::orderBy('created_at', 'desc')->get()->take(5);
+        $androids = Android::orderBy('created_at', 'DESC')->get()->take(5);
         return view('admin.user.downloads', compact('androids'));
     }
 

@@ -10,6 +10,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h1>DOWNLOADS</h1>
+
                 </div> <!-- end of col -->
             </div> <!-- end of row -->
         </div> <!-- end of container -->
@@ -39,8 +40,8 @@
 
                     <div class="text-container">
                         <div class="table-container">
-                         <h3 class="tabledown">Downloads</h3>
-
+                            <h3 class="tabledown">Downloads</h3>
+                            <h6>After downloading, unzip the file and click the apk file to install the e-Serbisyo android application.</h6>
                             <table class=table>
                             <thead>
                                 <tr>
