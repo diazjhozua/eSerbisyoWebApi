@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class PurokSeeder extends Seeder
 {
@@ -14,7 +15,8 @@ class PurokSeeder extends Seeder
     public function run()
     {
         activity()->disableLogging();
-        $faker = \Faker\Factory::create();
+
+        $faker = Faker::create();
 
         \DB::table('puroks')->insert([
             'purok' => "Purok 1",
