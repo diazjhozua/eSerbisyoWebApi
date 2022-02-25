@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeUserStatusRequest;
@@ -26,12 +27,24 @@ class UserController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $usersData =  DB::table('users')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->selectRaw("count(case when status = 'Disable' then 1 end) as blocked_user_count")
-        ->first();
+        if (App::environment('production')) {
+            $usersData =  DB::table('users')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->selectRaw("count(case when status = 'Disable' then 1 end) as blocked_user_count")
+                ->first();
+        } else {
+
+            $usersData =  DB::table('users')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->selectRaw("count(case when status = 'Disable' then 1 end) as blocked_user_count")
+                ->first();
+
+        }
+
 
         $verificationCount = UserVerification::where('status', 'Pending')->count();
 
@@ -46,11 +59,6 @@ class UserController extends Controller
         $subject = $user->request == 'Enable' ? 'Enabled Account' : 'Disabled Account';
 
         dispatch(new StatusUserJob($user, $subject, $request->all()));
-
-        // Mail::send('email.statusUser', ['request' => $request], function($message) use($user, $subject){
-        //     $message->to($user->email);
-        //     $message->subject($subject);
-        // });
 
         return (new UserResource($user->load(['user_role', 'latest_user_verification' => function ($query) {
             $query->where('status', 'Pending');
@@ -135,7 +143,7 @@ class UserController extends Controller
 
 
      return view('admin.information.pdf.usersreport', compact('title', 'modelName', 'users', 'usersData',
-        'date_start', 'date_end','filter', 'sort_column', 'sort_option' 
+        'date_start', 'date_end','filter', 'sort_column', 'sort_option'
     ));
         // $pdf = PDF::loadView('admin.information.reports.user', compact('users', 'request','usersData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
         // return $pdf->stream();
