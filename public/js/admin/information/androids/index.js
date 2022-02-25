@@ -1,5 +1,5 @@
 function createAndroid() {
-    let actionURL = '/admin/androids/'
+    let actionURL = window.location.origin + '/admin/androids/'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#androidFormModal').modal('show') //show the modal
     $('#androidFormModalHeader').text('Create Android Version Type') //set the header of the
@@ -78,7 +78,7 @@ function editAndroid(id) {
             $('#description').val(data.description)
             $('.custom-file-label').html(data.file_name)
 
-            let actionURL = '/admin/androids/' + data.id
+            let actionURL = window.location.origin + '/admin/androids/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -93,7 +93,7 @@ function editAndroid(id) {
 
 function deleteAndroid(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/androids/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/androids/' + id)
     $('#confirmationMessage').text('Do you really want to delete this android version? This process cannot be undone.')
 }
 

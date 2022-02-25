@@ -90,7 +90,7 @@ function createEmployee() {
             const termSelect = response.terms;
             const positionSelect = response.positions;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
-            const ajaxStoreURL = '/admin/employees/ ';
+            const ajaxStoreURL = window.location.origin + '/admin/employees/ ';
 
             //show form modal
             showEmployeeFormModal(ajaxStoreURL, inputMethod, 'Create Employee', 'Store', null, positionSelect, termSelect);
@@ -107,7 +107,7 @@ function createEmployee() {
 
 function deleteEmployee(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/employees/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/employees/' + id)
     $('#confirmationMessage').text('Do you really want to delete this employee? This process cannot be undone.')
 }
 
@@ -132,7 +132,7 @@ function editEmployee(id) {
             const termSelect = response.terms;
             const positionSelect = response.positions;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
-            const ajaxUpdateURL = '/admin/employees/' + employeeData.id;
+            const ajaxUpdateURL = window.location.origin + '/admin/employees/' + employeeData.id;
 
             //show form modal
             showEmployeeFormModal(ajaxUpdateURL, inputMethod, 'Create Employee', 'Update', employeeData, positionSelect, termSelect);

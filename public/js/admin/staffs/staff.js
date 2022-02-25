@@ -1,6 +1,6 @@
 function demote(id) {
     $('#positionSelectContainer').hide();
-    let actionURL = '/admin/staffs/demoteStaff/' + id
+    let actionURL = window.location.origin + '/admin/staffs/demoteStaff/' + id
     console.log(id)
     $('#changeRoleForm').attr('action', actionURL) //set the method of the form
     $('#changeRoleForm').trigger("reset")

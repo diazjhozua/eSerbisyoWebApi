@@ -47,12 +47,12 @@ var isDeletingAnnouncement
 function deleteAnnouncement(announcementId) {
     isDeletingAnnouncement = true
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/announcements/' + announcementId)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/announcements/' + announcementId)
     $('#confirmationMessage').text('Do you really want to delete this announcements? This process cannot be undone.')
 }
 
 function addPicture(announcement_id) {
-    let actionURL = '/admin/announcement-pictures/'
+    let actionURL = window.location.origin + '/admin/announcement-pictures/'
     let inputMethod = '<input type="hidden" id="pictureMethod" name="_method" value="POST">'
     $('#announcementPictureModal').modal('show') //show the modal
     $('#announcementPictureModalHeader').text('Add Picture') //set the header of the
@@ -86,7 +86,7 @@ function editPicture(announcementPicture_id) {
         success: function (response) {
             const data = response.data
 
-            let actionURL = '/admin/announcement-pictures/' + data.id
+            let actionURL = window.location.origin + '/admin/announcement-pictures/' + data.id
             let inputMethod = '<input type="hidden" id="pictureMethod" name="_method" value="PUT">'
             $('#announcementPictureModal').modal('show') //show the modal
             $('#announcementPictureModalHeader').text('Edit Picture') //set the header of the
@@ -114,7 +114,7 @@ function editPicture(announcementPicture_id) {
 function deletePicture(announcementPictureId) {
     isDeletingAnnouncement = false
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/announcement-pictures/' + announcementPictureId)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/announcement-pictures/' + announcementPictureId)
     $('#confirmationMessage').text('Do you really want to delete this announcement picture? This process cannot be undone.')
 }
 

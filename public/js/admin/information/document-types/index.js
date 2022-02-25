@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = '/admin/document-types/'
+    let actionURL = `${window.location.origin}/admin/document-types/`;
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Document Type') //set the header of the
@@ -12,7 +12,7 @@ function createType() {
 }
 
 function editType(id) {
-    url = 'document-types/' + id + '/edit'
+    url = `${window.location.origin}/admin/document-types/' + id + '/edit/`;
 
     $.ajax({
         type: 'GET',
@@ -28,7 +28,7 @@ function editType(id) {
 
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-            const actionURL = '/admin/document-types/' + data.id
+            const actionURL = `${window.location.origin}/admin/document-types/${data.id}`
             $('#typeFormModal').modal('show') //show the modal
             $('#typeFormModalHeader').text('Edit Document Type') //set the header of the
             $('#nameLabel').text('Document Type Name') //set the text of type name in the form
@@ -51,7 +51,7 @@ function editType(id) {
 
 function deleteType(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/document-types/' + id)
+    $('#modalDeleteForm').attr('action', `${window.location.origin}/admin/document-types/${id}`)
     $('#confirmationMessage').text('Do you really want to delete this document-type? This process cannot be undone. All of the documents related to this type would be transfer to "Others"')
 }
 

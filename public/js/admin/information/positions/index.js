@@ -10,14 +10,14 @@ function showFormModal(ajaxURL, method, header, btnTxt) {
 }
 
 function createPosition() {
-    const ajaxCreateURL = '/admin/positions/';
+    const ajaxCreateURL = window.location.origin + '/admin/positions/';
     const method = '<input type="hidden" id="method" name="_method" value="POST">';
 
     showFormModal(ajaxCreateURL, method, 'Create Position', 'Store');
 }
 
 function editPosition(id) {
-    const ajaxEditURL = 'positions/' + id + '/edit'
+    const ajaxEditURL = window.location.origin + 'positions/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
@@ -33,7 +33,7 @@ function editPosition(id) {
 
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
-            const ajaxUpdateURL = '/admin/positions/' + data.id;
+            const ajaxUpdateURL = window.location.origin + '/admin/positions/' + data.id;
 
             showFormModal(ajaxUpdateURL, inputMethod, 'Edit Position', 'Update');
 
@@ -53,7 +53,7 @@ function editPosition(id) {
 
 function deletePosition(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/positions/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/positions/' + id)
     $('#confirmationMessage').text('Do you really want to delete this position? This process cannot be undone. All of the employees related to this position would be transfer to "Others(Employees without assigned position)"')
 }
 

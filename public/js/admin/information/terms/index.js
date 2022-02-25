@@ -58,7 +58,7 @@ function addOrReplaceDataRow(data, formMethod) {
 }
 
 function createTerm() {
-    let ajaxStoreURL = '/admin/terms/';
+    let ajaxStoreURL = window.location.origin + '/admin/terms/';
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
 
     showTermFormModal(ajaxStoreURL, inputMethod, 'Create Term', 'Store');
@@ -75,7 +75,7 @@ function showTermFormModal(ajaxUrl, inputMethod, titleHeader, btnTxt) {
 }
 
 function editTerm(id) {
-    ajaxEditURL = 'terms/' + id + '/edit'
+    ajaxEditURL = window.location.origin + 'terms/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
@@ -91,7 +91,7 @@ function editTerm(id) {
 
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
-            const ajaxUpdateURL = '/admin/terms/' + data.id;
+            const ajaxUpdateURL = window.location.origin + '/admin/terms/' + data.id;
 
             //show form modal
             showTermFormModal(ajaxUpdateURL, inputMethod, 'Edit Term', 'Update');
@@ -114,7 +114,7 @@ function editTerm(id) {
 
 function deleteTerm(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/terms/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/terms/' + id)
     $('#confirmationMessage').text('Do you really want to delete this type? This process cannot be undone. All of the employees related to this type would be transfer to "Others(Employees without assigned term)"')
 }
 

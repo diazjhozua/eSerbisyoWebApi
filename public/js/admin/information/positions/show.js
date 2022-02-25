@@ -40,7 +40,7 @@ function createEmployee() {
                 $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
             })
 
-            let actionURL = '/admin/employees/'
+            let actionURL = window.location.origin + '/admin/employees/'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -111,7 +111,7 @@ function editEmployee(id) {
             $('#imgCurrentPicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
             $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
 
-            let actionURL = '/admin/employees/' + data.id
+            let actionURL = window.location.origin + '/admin/employees/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -132,7 +132,7 @@ function editEmployee(id) {
 
 function deleteEmployee(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/employees/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/employees/' + id)
     $('#confirmationMessage').text('Do you really want to delete this employee? This process cannot be undone.')
 }
 

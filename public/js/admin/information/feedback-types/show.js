@@ -1,7 +1,7 @@
 function sendRespond(id) {
     $('#feedbackRespondModal').modal('show');
     $('#respondForm').trigger("reset"); //reset all the values
-    $('#respondForm').attr('action', '/admin/feedbacks/respond/' + id);
+    $('#respondForm').attr('action', window.location.origin + '/admin/feedbacks/respond/' + id);
 }
 
 $(document).ready(function () {

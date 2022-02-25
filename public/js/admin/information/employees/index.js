@@ -2,7 +2,7 @@
 var currentRowCreatedAt; //for deleting purposes
 
 function createEmployee() {
-    const url = 'employees/create'
+    const url = window.location.origin + 'employees/create'
 
     $.ajax({
         type: 'GET',
@@ -38,7 +38,7 @@ function createEmployee() {
                 $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
             })
 
-            let actionURL = '/admin/employees/'
+            let actionURL = window.location.origin + '/admin/employees/'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -59,7 +59,7 @@ function createEmployee() {
 
 function editEmployee(id) {
 
-    url = 'employees/' + id + '/edit'
+    url = window.location.origin + 'employees/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
@@ -130,7 +130,7 @@ function editEmployee(id) {
 
 function deleteEmployee(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/employees/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/employees/' + id)
     $('#confirmationMessage').text('Do you really want to delete this employee? This process cannot be undone.')
 }
 

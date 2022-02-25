@@ -27,7 +27,7 @@ function createDocument() {
                     $('#documentTypeDropDwn').append($("<option />").val(this.id).text(this.name))
                 }
             })
-            let actionURL = '/admin/documents/'
+            let actionURL = window.location.origin + '/admin/documents/'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -99,7 +99,7 @@ function editDocument(id) {
 
 function deleteDocument(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/documents/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/documents/' + id)
     $('#confirmationMessage').text('Do you really want to delete this document? This process cannot be undone.')
 }
 
@@ -325,47 +325,6 @@ $(document).ready(function () {
 
             var url = `${window.location.origin}/admin/document-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${type_id}`;
             window.open(url, '_blank');
-
-
-            // let formAction = $("#reportForm").attr('action')
-            // let formData = new FormData(form)
-
-            // $('.btnReportFormSubmit').attr("disabled", true); //disabled login
-            // $('.btnReportFormTxt').text('Generating') //set the text of the submit btn
-            // $('.btnReportFormLoadingIcon').prop("hidden", false) //show the fa loading icon from submit btn
-
-            // $.ajax({
-            //     type: 'POST',
-            //     url: formAction,
-            //     headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            //     },
-            //     data: formData,
-            //     xhrFields: {
-            //         responseType: 'blob'
-            //     },
-            //     cache: false,
-            //     processData: false,
-            //     contentType: false,
-
-            //     success: function (response) {
-            //         toastr.success('Report successfully downloaded')
-            //         var blob = new Blob([response]);
-            //         var link = document.createElement('a');
-            //         link.href = window.URL.createObjectURL(blob);
-            //         link.download = "DocumentTypeProfileReport-" + Date.now() + ".pdf";
-            //         link.click();
-
-            //     },
-            //     error: function (response) {
-            //         toastr.error('Something went wrong :( (It could be the selected time range produces no data)')
-            //     },
-            //     complete: function () {
-            //         $('.btnReportFormSubmit').attr("disabled", false); //enable the button
-            //         $('.btnReportFormTxt').text('Generate') //set the text of the submit btn
-            //         $('.btnReportFormLoadingIcon').prop("hidden", true) //hide the fa loading icon from submit btn
-            //     }
-            // });
         }
     });
 

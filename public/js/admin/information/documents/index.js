@@ -1,5 +1,5 @@
 function createDocument() {
-    const url = 'documents/create'
+    const url = window.location.origin + 'documents/create'
     $.ajax({
         type: 'GET',
         url: url,
@@ -21,7 +21,7 @@ function createDocument() {
                 // Populate Drop Dowm
                 $('#documentTypeDropDwn').append($("<option />").val(this.id).text(this.name))
             })
-            let actionURL = '/admin/documents/'
+            let actionURL = window.location.origin + '/admin/documents/'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -42,7 +42,7 @@ function createDocument() {
 
 function editDocument(id) {
 
-    url = 'documents/' + id + '/edit'
+    url = window.location.origin + 'documents/' + id + '/edit'
     $.ajax({
         type: 'GET',
         url: url,
@@ -78,7 +78,7 @@ function editDocument(id) {
             $('#year').val(data.year)
             $('.custom-file-label').html(data.pdf_name)
 
-            let actionURL = '/admin/documents/' + data.id
+            let actionURL = window.location.origin + '/admin/documents/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -98,7 +98,7 @@ function editDocument(id) {
 
 function deleteDocument(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/documents/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/documents/' + id)
     $('#confirmationMessage').text('Do you really want to delete this document? This process cannot be undone.')
 }
 

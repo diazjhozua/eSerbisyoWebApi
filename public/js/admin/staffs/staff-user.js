@@ -4,7 +4,7 @@ function promote(id) {
 
     $('#positionSelectContainer').hide();
 
-    let actionURL = '/admin/staffs/promote-users/' + id
+    let actionURL = window.location.origin + '/admin/staffs/promote-users/' + id
 
     $('#changeRoleForm').attr('action', actionURL) //set the method of the form
     $('#changeRoleForm').trigger("reset")
@@ -27,7 +27,7 @@ function promoteAnyUser(id) {
 
     formData.append('user_role_id', $('#inputSelPosID').val());
 
-    let actionURL = '/admin/staffs/promote/' + id
+    let actionURL = window.location.origin + '/admin/staffs/promote/' + id
 
     $('#changeRoleForm').attr('action', actionURL) //set the method of the form
     $('#changeRoleForm').trigger("reset")
