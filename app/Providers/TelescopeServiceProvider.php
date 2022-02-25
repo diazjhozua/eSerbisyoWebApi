@@ -32,17 +32,17 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         //            $entry->hasMonitoredTag();
         // });
 
-        Telescope::filter(function (IncomingEntry $entry) {
-            if (env('TELESCOPE_KEY', false)) {
-                return true;
-            }
+        // Telescope::filter(function (IncomingEntry $entry) {
+        //     if (env('TELESCOPE_KEY', false)) {
+        //         return true;
+        //     }
 
-            return $entry->isReportableException() ||
-                $entry->isFailedRequest() ||
-                $entry->isFailedJob() ||
-                $entry->isScheduledTask() ||
-                $entry->hasMonitoredTag();
-        });
+        //     return $entry->isReportableException() ||
+        //         $entry->isFailedRequest() ||
+        //         $entry->isFailedJob() ||
+        //         $entry->isScheduledTask() ||
+        //         $entry->hasMonitoredTag();
+        // });
 
     }
 
