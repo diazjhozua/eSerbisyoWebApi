@@ -35,7 +35,14 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         Telescope::filter(function (IncomingEntry $entry) {
             if (env('TELESCOPE_KEY', false)) {
                 return true;
-        }});
+            }
+
+            return $entry->isReportableException() ||
+                $entry->isFailedRequest() ||
+                $entry->isFailedJob() ||
+                $entry->isScheduledTask() ||
+                $entry->hasMonitoredTag();
+        });
 
     }
 
