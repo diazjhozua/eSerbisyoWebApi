@@ -114,7 +114,7 @@ function changeStatusComplaint(id) {
 
 function addComplainant() {
     let inputMethod = '<input type="hidden" id="complainantMethod" name="_method" value="POST">';
-    let actionURL = '/admin/complainants/';
+    let actionURL = window.location.origin + '/admin/complainants/';
     // Clears the canvas
     signaturePad.clear();
 
@@ -123,7 +123,7 @@ function addComplainant() {
 
 function addDefendant() {
     let inputMethod = '<input type="hidden" id="defendantMethod" name="_method" value="POST">';
-    let actionURL = '/admin/defendants/';
+    let actionURL = window.location.origin + '/admin/defendants/';
     // Clears the canvas
     signaturePad.clear();
 
