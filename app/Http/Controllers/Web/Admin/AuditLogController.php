@@ -202,8 +202,6 @@ class AuditLogController extends Controller
             }
         }
 
-
-
         if (Auth::user()->user_role_id == 4) {
 
 
