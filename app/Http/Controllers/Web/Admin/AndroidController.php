@@ -22,7 +22,7 @@ class AndroidController extends Controller
     public function store(AndroidRequest $request)
     {
         $result = cloudinary()->uploadFile($request->file('apk')->getRealPath(), ['folder' => 'barangay', 'format' => 'zip']);
-        $android = Android::create(array_merge($request->getData(), ['file_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
+        $android = Android::create(array_merge($request->getData(), ['file_name' => $result->getPublicId(), 'file_path' => $result->getSecurePath()]));
         return (new AndroidResource($android))->additional(Helper::instance()->storeSuccess('android version'));
     }
 
@@ -36,7 +36,7 @@ class AndroidController extends Controller
         if($request->hasFile('apk')) {
             Cloudinary::destroy($android->file_name);
             $result = cloudinary()->uploadFile($request->file('apk')->getRealPath(), ['folder' => 'barangay', 'format' => 'zip']);
-            $android->fill(array_merge($request->getData(), ['file_name' => $result->getPublicId(), 'file_path' => $result->getPath()]))->save();
+            $android->fill(array_merge($request->getData(), ['file_name' => $result->getPublicId(), 'file_path' => $result->getSecurePath()]))->save();
         } else { $android->fill($request->getData())->save(); }
         return (new AndroidResource($android))->additional(Helper::instance()->updateSuccess('android version'));
     }

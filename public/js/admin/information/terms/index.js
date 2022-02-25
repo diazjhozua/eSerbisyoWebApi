@@ -75,7 +75,7 @@ function showTermFormModal(ajaxUrl, inputMethod, titleHeader, btnTxt) {
 }
 
 function editTerm(id) {
-    ajaxEditURL = window.location.origin + 'terms/' + id + '/edit'
+    ajaxEditURL = window.location.origin + '/admin/terms/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
