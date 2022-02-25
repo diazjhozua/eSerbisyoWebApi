@@ -341,6 +341,11 @@ $(document).ready(function () {
         }
     })
 
+    // Initialize Year picker in report form
+    $(".datepicker").datepicker({
+        format: "yyyy-mm-dd",
+    });
+
     $("form[name='missingForm']").validate({
         // Specify validation rules
         rules: {
