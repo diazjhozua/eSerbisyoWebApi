@@ -1,5 +1,5 @@
 function createDocument() {
-    const url = window.location.origin + 'documents/create'
+    const url = window.location.origin + '/admin/documents/create'
     $.ajax({
         type: 'GET',
         url: url,
@@ -10,7 +10,6 @@ function createDocument() {
         processData: false,
         contentType: false,
         success: function (response) {
-
             const types = response.types;
             $('.custom-file-label').html(''); //empty the html in the file input
             $('#documentForm').trigger("reset") //reset all the input values
@@ -42,7 +41,7 @@ function createDocument() {
 
 function editDocument(id) {
 
-    url = window.location.origin + 'documents/' + id + '/edit'
+    url = window.location.origin + '/admin/documents/' + id + '/edit'
     $.ajax({
         type: 'GET',
         url: url,
