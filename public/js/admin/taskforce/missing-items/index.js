@@ -51,7 +51,7 @@ function createReport() {
         success: function (response) {
             const reportTypes = response.reportTypes;
 
-            let actionURL = '/admin/missing-items/';
+            let actionURL = window.location.origin + '/admin/missing-items';
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
 
             //modify modal form function
@@ -73,7 +73,7 @@ function createReport() {
 }
 
 function editReport(id) {
-    url = 'missing-items/' + id + '/edit';
+    url = window.location.origin + 'missing-items/' + id + '/edit';
 
     $.ajax({
         type: 'GET',
@@ -90,7 +90,7 @@ function editReport(id) {
             const data = response.data; //missing report data
             const reportTypes = response.reportTypes;
 
-            let actionURL = '/admin/missing-items/' + data.id;
+            let actionURL = window.location.origin + '/admin/missing-items/' + data.id;
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">';
 
             //modify modal form function
@@ -126,7 +126,7 @@ function editReport(id) {
 //delete function
 function deleteReport(id) {
     $('#confirmationDeleteModal').modal('show');
-    $('#modalDeleteForm').attr('action', '/admin/missing-items/' + id);
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/missing-items/' + id);
     $('#confirmationMessage').text('Do you really want to delete this missing item report data? This process cannot be undone. All of the comments related to this report will be deleted');
 }
 

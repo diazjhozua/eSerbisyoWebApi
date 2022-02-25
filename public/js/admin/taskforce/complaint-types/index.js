@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = '/admin/complaint-types/'
+    let actionURL = window.location.origin + '/admin/complaint-types'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Complaint Type') //set the header of the
@@ -13,7 +13,7 @@ function createType() {
 
 
 function editType(id) {
-    url = 'complaint-types/' + id + '/edit'
+    url = window.location.origin + '/admin/complaint-types/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
@@ -29,7 +29,7 @@ function editType(id) {
             toastr.info('The fields can now be edited');
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-            const actionURL = '/admin/complaint-types/' + data.id
+            const actionURL = window.location.origin + '/admin/complaint-types/' + data.id
             $('#typeFormModal').modal('show') //show the modal
             $('#typeFormModalHeader').text('Edit Complaint Type') //set the header of the
             $('#nameLabel').text('Complaint Type Name') //set the text of type name in the form
@@ -54,7 +54,7 @@ function editType(id) {
 
 function deleteType(id) {
     $('#confirmationDeleteModal').modal('show');
-    $('#modalDeleteForm').attr('action', '/admin/complaint-types/' + id);
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/complaint-types/' + id);
     $('#confirmationMessage').text('Do you really want to delete this complaint-type? This process cannot be undone. All of the complaints related to this type would be transfer to "Others"');
 }
 

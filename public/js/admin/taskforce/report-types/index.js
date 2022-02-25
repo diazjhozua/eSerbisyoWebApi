@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = '/admin/report-types/'
+    let actionURL = window.location.origin + '/admin/report-types'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Report Type') //set the header of the
@@ -27,7 +27,7 @@ function editType(id) {
             toastr.info('The fields can now be edited');
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-            const actionURL = '/admin/report-types/' + data.id
+            const actionURL = window.location.origin + '/admin/report-types/' + data.id
             $('#typeFormModal').modal('show') //show the modal
             $('#typeFormModalHeader').text('Edit Report Type') //set the header of the
             $('#nameLabel').text('Report Type Name') //set the text of type name in the form
@@ -52,7 +52,7 @@ function editType(id) {
 
 function deleteType(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/report-types/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/report-types/' + id)
     $('#confirmationMessage').text('Do you really want to delete this report-type? This process cannot be undone. All of the reports related to this type would be transfer to "Others"')
 }
 

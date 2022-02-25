@@ -10,7 +10,7 @@ const BTN_TXT_FORM_REQ = $('.btnTxt');
 const BTN_LOADING_ICON_REQ = $('.loadingIcon');
 
 function createRequirement() {
-    let actionURL = window.location.origin + '/admin/requirements/';
+    let actionURL = window.location.origin + '/admin/requirements';
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
 
     MODAL_REQ.modal('show');  //show the modal
