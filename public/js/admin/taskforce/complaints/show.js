@@ -114,7 +114,7 @@ function changeStatusComplaint(id) {
 
 function addComplainant() {
     let inputMethod = '<input type="hidden" id="complainantMethod" name="_method" value="POST">';
-    let actionURL = window.location.origin + '/admin/complainants/';
+    let actionURL = window.location.origin + '/admin/complainants';
     // Clears the canvas
     signaturePad.clear();
 
@@ -123,7 +123,7 @@ function addComplainant() {
 
 function addDefendant() {
     let inputMethod = '<input type="hidden" id="defendantMethod" name="_method" value="POST">';
-    let actionURL = window.location.origin + '/admin/defendants/';
+    let actionURL = window.location.origin + '/admin/defendants';
     // Clears the canvas
     signaturePad.clear();
 
@@ -148,7 +148,7 @@ function editDefendant(id) {
             const data = response.data;
             DEFENDANT_ID = data.id;
             let inputMethod = '<input type="hidden" id="defendantMethod" name="_method" value="PUT">';
-            let actionURL = '/admin/defendants/' + data.id;
+            let actionURL = window.location.origin + '/admin/defendants/' + data.id;
 
             modifyDefendantModal('Edit Defendant', 'Update', inputMethod, actionURL, data)
         },
@@ -182,7 +182,7 @@ function editComplainant(id) {
             COMPLAINANT_ID = data.id;
             console.log(data);
             let inputMethod = '<input type="hidden" id="complainantMethod" name="_method" value="PUT">';
-            let actionURL = '/admin/complainants/' + data.id;
+            let actionURL = window.location.origin + '/admin/complainants/' + data.id;
 
             modifyComplainantModal('Edit Complainant', 'Update', inputMethod, actionURL, data)
         },
