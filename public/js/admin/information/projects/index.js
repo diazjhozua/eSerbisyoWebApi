@@ -1,5 +1,5 @@
 function createProject() {
-    const url = window.location.origin + 'projects/create'
+    const url = window.location.origin + '/admin/projects/create'
     $.ajax({
         type: 'GET',
         url: url,
@@ -41,7 +41,7 @@ function createProject() {
 
 function editProject(id) {
 
-    url = window.location.origin + 'projects/' + id + '/edit';
+    url = window.location.origin + '/admin/projects/' + id + '/edit';
     $.ajax({
         type: 'GET',
         url: url,

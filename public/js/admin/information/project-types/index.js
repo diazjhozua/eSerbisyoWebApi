@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = '/admin/project-types'
+    let actionURL = window.location.origin + '/admin/project-types'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Project Type') //set the header of the
@@ -12,7 +12,7 @@ function createType() {
 }
 
 function editType(id) {
-    url = 'project-types/' + id + '/edit'
+    url = window.location.origin + '/admin/project-types/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
@@ -28,7 +28,7 @@ function editType(id) {
 
             const data = response.data;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
-            const actionURL = '/admin/project-types/' + data.id
+            const actionURL = window.location.origin + '/admin/project-types/' + data.id
             $('#typeFormModal').modal('show') //show the modal
             $('#typeFormModalHeader').text('Edit Project Type') //set the header of the
             $('#nameLabel').text('Project Type Name') //set the text of type name in the form
@@ -51,7 +51,7 @@ function editType(id) {
 
 function deleteType(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/project-types/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/project-types/' + id)
     $('#confirmationMessage').text('Do you really want to delete this project-type? This process cannot be undone. All of the projects related to this type would be transfer to "Others"')
 }
 

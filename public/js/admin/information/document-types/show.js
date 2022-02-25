@@ -79,7 +79,7 @@ function editDocument(id) {
             $('#year').val(data.year)
             $('.custom-file-label').html(data.pdf_name)
 
-            let actionURL = '/admin/documents/' + data.id
+            let actionURL = window.location.origin + '/admin/documents/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div

@@ -2,7 +2,7 @@
 var currentRowCreatedAt; //for deleting purposes
 
 function createEmployee() {
-    const url = window.location.origin + 'employees/create'
+    const url = window.location.origin + '/admin/employees/create'
 
     $.ajax({
         type: 'GET',
@@ -59,7 +59,7 @@ function createEmployee() {
 
 function editEmployee(id) {
 
-    url = window.location.origin + 'employees/' + id + '/edit'
+    url = window.location.origin + '/admin/employees/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
@@ -109,7 +109,7 @@ function editEmployee(id) {
             $('#imgCurrentPicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
             $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
 
-            let actionURL = '/admin/employees/' + data.id
+            let actionURL = window.location.origin + '/admin/employees/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div

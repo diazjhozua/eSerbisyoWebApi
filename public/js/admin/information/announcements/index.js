@@ -1,5 +1,5 @@
 function createAnnouncement() {
-    const url = window.location.origin + 'announcements/create'
+    const url = window.location.origin + '/admin/announcements/create'
 
     $.ajax({
         type: 'GET',

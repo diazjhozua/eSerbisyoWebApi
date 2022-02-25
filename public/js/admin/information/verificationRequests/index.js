@@ -121,7 +121,7 @@ $(document).ready(function () {
     var pusher = new Pusher('246912fa37725a18907b', {
         cluster: 'ap1',
         authEndpoint: '/broadcasting/auth',
-        forceTLS: true,
+        // forceTLS: true,
         auth: {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

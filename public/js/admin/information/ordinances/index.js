@@ -1,5 +1,5 @@
 function createOrdinance() {
-    const url = window.location.origin + 'ordinances/create'
+    const url = window.location.origin + '/admin/ordinances/create'
     $.ajax({
         type: 'GET',
         url: url,
@@ -41,7 +41,7 @@ function createOrdinance() {
 
 function editOrdinance(id) {
 
-    url = window.location.origin + 'ordinances/' + id + '/edit'
+    url = window.location.origin + '/admin/ordinances/' + id + '/edit'
     $.ajax({
         type: 'GET',
         url: url,

@@ -26,7 +26,7 @@ function createProject() {
                     $('#projectTypeDropDwn').append($("<option />").val(this.id).text(this.name))
                 }
             })
-            let actionURL = '/admin/projects'
+            let actionURL = window.location.origin + '/admin/projects'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -82,7 +82,7 @@ function editProject(id) {
             $('#location').val(data.location)
             $('.custom-file-label').html(data.pdf_name)
 
-            let actionURL = '/admin/projects/' + data.id
+            let actionURL = window.location.origin + '/admin/projects/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -102,7 +102,7 @@ function editProject(id) {
 
 function deleteProject(id) {
     $('#confirmationDeleteModal').modal('show')
-    $('#modalDeleteForm').attr('action', '/admin/projects/' + id)
+    $('#modalDeleteForm').attr('action', window.location.origin + '/admin/projects/' + id)
     $('#confirmationMessage').text('Do you really want to delete this project? This process cannot be undone.')
 }
 

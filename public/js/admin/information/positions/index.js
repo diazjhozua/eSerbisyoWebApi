@@ -17,7 +17,7 @@ function createPosition() {
 }
 
 function editPosition(id) {
-    const ajaxEditURL = window.location.origin + 'positions/' + id + '/edit'
+    const ajaxEditURL = window.location.origin + '/admin/positions/' + id + '/edit'
 
     $.ajax({
         type: 'GET',
