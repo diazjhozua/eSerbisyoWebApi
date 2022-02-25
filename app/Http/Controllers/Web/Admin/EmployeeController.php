@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
@@ -25,11 +26,21 @@ class EmployeeController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $employeesData =  DB::table('employees')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
+        if (App::environment('production')) {
+            $employeesData =  DB::table('employees')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $employeesData =  DB::table('employees')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
+
+
 
         $employees = Employee::with('position', 'term')->orderBy('created_at','DESC')->get();
         return view('admin.information.employees.index', compact('employeesData', 'employees'));
@@ -47,10 +58,6 @@ class EmployeeController extends Controller
         $fileName = uniqid().'-'.time();
         $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
         $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]));
-
-        // $fileName = time().'_'.$request->picture->getClientOriginalName();
-        // $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
-        // $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $fileName,'file_path' => $filePath]));
 
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->storeSuccess('employee'));
     }
@@ -72,11 +79,6 @@ class EmployeeController extends Controller
             $fileName = uniqid().'-'.time();
             $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
             $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL, 'picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
-
-            // Storage::delete('public/employees/'. $employee->picture_name);
-            // $fileName = time().'_'.$request->picture->getClientOriginalName();
-            // $filePath = $request->file('picture')->storeAs('employees', $fileName, 'public');
-            // $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL,'picture_name' => $fileName,'file_path' => $filePath]))->save();
         } else {  $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL]))->save(); }
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->updateSuccess('employee'));
     }
@@ -84,7 +86,6 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         Cloudinary::destroy($employee->picture_name);
-        // Storage::delete('public/employees/'. $employee->picture_name);
         $employee->delete();
         return response()->json(Helper::instance()->destroySuccess('employee'));
     }

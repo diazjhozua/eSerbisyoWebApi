@@ -12,7 +12,7 @@ function createType() {
 }
 
 function editType(id) {
-    url = `${window.location.origin}/admin/document-types/'${id}'/edit`;
+    url = `${window.location.origin}/admin/document-types/${id}/edit`;
 
     $.ajax({
         type: 'GET',
