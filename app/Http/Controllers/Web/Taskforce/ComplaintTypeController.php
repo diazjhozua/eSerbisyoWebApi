@@ -99,6 +99,33 @@ class ComplaintTypeController extends Controller
         return response()->json(Helper::instance()->destroySuccess('complaint_type'));
     }
 
+    public function report($date_start,  $date_end, $sort_column, $sort_option)
+    {
+        try {
+            $types = Type::withCount('complaints as count')
+                ->where('model_type', 'Complaint')->orderBy('created_at','DESC')
+                ->whereBetween('created_at', [$date_start, $date_end])
+                ->orderBy($sort_column, $sort_option)
+                ->get();
+        } catch(\Illuminate\Database\QueryException $ex){}
+
+        if ($types->isEmpty()) {
+            $title = 'Complaint - No data';
+            $description = 'No data';
+            return view('errors.404Report', compact('title', 'description'));
+        }
+
+        $types->add(new Type([ 'id' => 0, 'name' => 'Others (Complaint w/o complaint type)', 'model_type' => 'Complaint', 'created_at' => now(), 'updated_at' => now(),
+            'count' => Complaint::where('type_id', NULL)->count() ]));
+
+        $title = 'Complaint Type Publish Report';
+        $modelName = 'Complaint';
+
+        return view('admin.taskforce.pdf.type', compact('title', 'modelName', 'types',
+            'date_start', 'date_end', 'sort_column', 'sort_option'
+        ));
+    }
+
     public function reportShow($id, $date_start, $date_end, $sort_column, $sort_option, $status_option)
     {
         $complaints = null;
