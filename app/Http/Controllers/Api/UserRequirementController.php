@@ -28,7 +28,7 @@ class UserRequirementController extends Controller
             if ($userRequirements->count() > 0) {
                 if (!$userRequirements->contains('requirement_id', $requirement->id)) {
                     if(!$noRequirements->contains('requirement_id', $requirement->id)) {
-
+                        $noRequirements->push(['id' => $requirement->id, 'name' => $requirement->name]);
                     }
                 }
             } else {
