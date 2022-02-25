@@ -16,7 +16,7 @@ class CertificateFormResource extends JsonResource
         $data = [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'submitted_by' => $this->user->getFullNameAttribute(),
+            // 'submitted_by' => $this->user->getFullNameAttribute(),
             $this->mergeWhen($this->relationLoaded('certificate'), [
                 'certificate_id'  => !$certificate instanceof MissingValue && isset($this->certificate->id) ? $this->certificate->id : NULL,
                 'certificate'  => !$certificate instanceof MissingValue && isset($this->certificate->name) ? $this->certificate->name : NULL,
