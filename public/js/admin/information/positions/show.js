@@ -40,7 +40,7 @@ function createEmployee() {
                 $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
             })
 
-            let actionURL = window.location.origin + '/admin/employees/'
+            let actionURL = window.location.origin + '/admin/employees'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -108,7 +108,7 @@ function editEmployee(id) {
             $('#description').val(data.description)
             $('.custom-file-label').html(data.picture_name)
             $("#currentPictureDiv").show(); // show the current picture div
-            $('#imgCurrentPicture').prop('src', window.location.origin + '/storage/' + data.file_path); //add the src attribute
+            $('#imgCurrentPicture').prop('src', data.file_path); //add the src attribute
             $("#imgCurrentPicture").prop("alt", data.name + ' picture'); //add the alt text
 
             let actionURL = window.location.origin + '/admin/employees/' + data.id

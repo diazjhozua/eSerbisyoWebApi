@@ -52,7 +52,7 @@ function deleteAnnouncement(announcementId) {
 }
 
 function addPicture(announcement_id) {
-    let actionURL = window.location.origin + '/admin/announcement-pictures/'
+    let actionURL = window.location.origin + '/admin/announcement-pictures'
     let inputMethod = '<input type="hidden" id="pictureMethod" name="_method" value="POST">'
     $('#announcementPictureModal').modal('show') //show the modal
     $('#announcementPictureModalHeader').text('Add Picture') //set the header of the

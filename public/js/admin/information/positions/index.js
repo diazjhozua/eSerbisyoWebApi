@@ -10,7 +10,7 @@ function showFormModal(ajaxURL, method, header, btnTxt) {
 }
 
 function createPosition() {
-    const ajaxCreateURL = window.location.origin + '/admin/positions/';
+    const ajaxCreateURL = window.location.origin + '/admin/positions';
     const method = '<input type="hidden" id="method" name="_method" value="POST">';
 
     showFormModal(ajaxCreateURL, method, 'Create Position', 'Store');

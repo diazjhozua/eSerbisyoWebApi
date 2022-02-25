@@ -217,7 +217,7 @@ $(document).ready(function () {
             let sort_option = $('#sort_option').val();
             let status_option = $('#status_option').val();
 
-            var url = `${window.location.origin}/admin/feedbacks/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status_option}/`;
+            var url = `${window.location.origin}/admin/feedbacks/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status_option}`;
             window.open(url, '_blank');
         }
     });

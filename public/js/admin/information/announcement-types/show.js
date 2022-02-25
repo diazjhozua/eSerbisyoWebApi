@@ -26,7 +26,7 @@ function createAnnouncement() {
                     $('#announcementTypeDropDwn').append($("<option />").val(this.id).text(this.name))
                 }
             })
-            let actionURL = window.location.origin + '/admin/announcements/'
+            let actionURL = window.location.origin + '/admin/announcements'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div

@@ -1,5 +1,5 @@
 function createAndroid() {
-    let actionURL = window.location.origin + '/admin/androids/'
+    let actionURL = window.location.origin + '/admin/androids'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#androidFormModal').modal('show') //show the modal
     $('#androidFormModalHeader').text('Create Android Version Type') //set the header of the

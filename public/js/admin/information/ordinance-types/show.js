@@ -26,7 +26,7 @@ function createOrdinance() {
                     $('#ordinanceTypeDropDwn').append($("<option />").val(this.id).text(this.name))
                 }
             })
-            let actionURL = window.location.origin + '/admin/ordinances/'
+            let actionURL = window.location.origin + '/admin/ordinances'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div

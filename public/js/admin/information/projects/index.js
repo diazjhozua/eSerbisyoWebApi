@@ -21,7 +21,7 @@ function createProject() {
                 // Populate Drop Dowm
                 $('#projectTypeDropDwn').append($("<option />").val(this.id).text(this.name))
             })
-            let actionURL = window.location.origin + '/admin/projects/'
+            let actionURL = window.location.origin + '/admin/projects'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -328,7 +328,7 @@ $(document).ready(function () {
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
 
-            var url = `${window.location.origin}/admin/projects/report/${date_start}/${date_end}/${sort_column}/${sort_option}/`;
+            var url = `${window.location.origin}/admin/projects/report/${date_start}/${date_end}/${sort_column}/${sort_option}`;
             window.open(url, '_blank');
         }
     });

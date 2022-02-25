@@ -58,7 +58,7 @@ function addOrReplaceDataRow(data, formMethod) {
 }
 
 function createTerm() {
-    let ajaxStoreURL = window.location.origin + '/admin/terms/';
+    let ajaxStoreURL = window.location.origin + '/admin/terms';
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
 
     showTermFormModal(ajaxStoreURL, inputMethod, 'Create Term', 'Store');

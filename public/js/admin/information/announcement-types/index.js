@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = window.location.origin + '/admin/announcement-types/'
+    let actionURL = window.location.origin + '/admin/announcement-types'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Announcement Type') //set the header of the
@@ -214,7 +214,7 @@ $(document).ready(function () {
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
 
-            var url = `${window.location.origin}/admin/announcement-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}/`;
+            var url = `${window.location.origin}/admin/announcement-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}`;
             window.open(url, '_blank');
         }
     });

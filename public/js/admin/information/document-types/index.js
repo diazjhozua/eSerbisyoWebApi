@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = `${window.location.origin}/admin/document-types/`;
+    let actionURL = `${window.location.origin}/admin/document-types`;
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Document Type') //set the header of the
@@ -12,7 +12,7 @@ function createType() {
 }
 
 function editType(id) {
-    url = `${window.location.origin}/admin/document-types/' + id + '/edit/`;
+    url = `${window.location.origin}/admin/document-types/'${id}'/edit`;
 
     $.ajax({
         type: 'GET',
@@ -209,7 +209,7 @@ $(document).ready(function () {
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
 
-            var url = `${window.location.origin}/admin/document-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}/`;
+            var url = `${window.location.origin}/admin/document-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}`;
             window.open(url, '_blank');
         }
     });

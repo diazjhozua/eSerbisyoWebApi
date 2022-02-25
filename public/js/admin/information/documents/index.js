@@ -21,7 +21,7 @@ function createDocument() {
                 // Populate Drop Dowm
                 $('#documentTypeDropDwn').append($("<option />").val(this.id).text(this.name))
             })
-            let actionURL = window.location.origin + '/admin/documents/'
+            let actionURL = window.location.origin + '/admin/documents'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
@@ -301,7 +301,7 @@ $(document).ready(function () {
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
 
-            var url = `${window.location.origin}/admin/documents/report/${date_start}/${date_end}/${sort_column}/${sort_option}/`;
+            var url = `${window.location.origin}/admin/documents/report/${date_start}/${date_end}/${sort_column}/${sort_option}`;
             window.open(url, '_blank');
         }
     });

@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = '/admin/project-types/'
+    let actionURL = '/admin/project-types'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Project Type') //set the header of the
@@ -207,13 +207,13 @@ $(document).ready(function () {
         submitHandler: function (form, event) {
             event.preventDefault()
 
-           
+
             let date_start = $('#date_start').val();
             let date_end = $('#date_end').val();
             let sort_column = $('#sort_column').val();
             let sort_option = $('#sort_option').val();
 
-            var url = `${window.location.origin}/admin/project-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}/`;
+            var url = `${window.location.origin}/admin/project-types/report/${date_start}/${date_end}/${sort_column}/${sort_option}`;
             window.open(url, '_blank');
         }
     });

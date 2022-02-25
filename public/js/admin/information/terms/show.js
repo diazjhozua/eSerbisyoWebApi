@@ -27,8 +27,7 @@ function showEmployeeFormModal(ajaxUrl, inputMethod, titleHeader, btnTxt, employ
         $('#description').val(employeeData.description);
         $('.custom-file-label').html(employeeData.picture_name);
         $("#currentPictureDiv").show(); // show the current picture div
-        console.log(employeeData.picture_src);
-        $('#imgCurrentPicture').prop('src', employeeData.picture_src); //add the src attribute
+        $('#imgCurrentPicture').prop('src', employeeData.file_path); //add the src attribute
         $("#imgCurrentPicture").prop("alt", employeeData.name); //add the alt text
 
         //populate position select drop down
@@ -90,7 +89,7 @@ function createEmployee() {
             const termSelect = response.terms;
             const positionSelect = response.positions;
             const inputMethod = '<input type="hidden" id="method" name="_method" value="POST">';
-            const ajaxStoreURL = window.location.origin + '/admin/employees/ ';
+            const ajaxStoreURL = window.location.origin + '/admin/employees';
 
             //show form modal
             showEmployeeFormModal(ajaxStoreURL, inputMethod, 'Create Employee', 'Store', null, positionSelect, termSelect);

@@ -38,7 +38,7 @@ function createEmployee() {
                 $('#employeeTermDropDwn').append($("<option />").val(this.id).text(this.name + ' (' + this.year_start + '-' + this.year_end + ')'))
             })
 
-            let actionURL = window.location.origin + '/admin/employees/'
+            let actionURL = window.location.origin + '/admin/employees'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div

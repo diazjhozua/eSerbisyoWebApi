@@ -27,7 +27,7 @@ function createDocument() {
                     $('#documentTypeDropDwn').append($("<option />").val(this.id).text(this.name))
                 }
             })
-            let actionURL = window.location.origin + '/admin/documents/'
+            let actionURL = window.location.origin + '/admin/documents'
             let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
 
             $("#formMethod").append(inputMethod) // append formMethod div
