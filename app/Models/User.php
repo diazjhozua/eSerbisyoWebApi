@@ -143,6 +143,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(CertificateForm::class);
     }
 
+
     public function getJWTIdentifier() {
         return $this->getKey();
     }

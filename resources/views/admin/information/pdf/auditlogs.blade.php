@@ -103,7 +103,7 @@
                         @endswitch
                     </td>
 
-                    <td>{{ $log->causer->first_name .' '. $log->causer->last_name }}</td>
+                    <td>{{ $log->causer->first_name .' '. $log->causer->last_name }} (#{{$log->causer->id}})</td>
                     <td>
                         {{ $log->causer->user_role->role }}
                     </td>
