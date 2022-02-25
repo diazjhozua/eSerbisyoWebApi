@@ -73,7 +73,7 @@ function createReport() {
 }
 
 function editReport(id) {
-    url = window.location.origin + 'missing-items/' + id + '/edit';
+    url = window.location.origin + '/admin/missing-items/' + id + '/edit';
 
     $.ajax({
         type: 'GET',
