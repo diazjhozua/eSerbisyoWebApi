@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AnnouncementRequest;
@@ -26,11 +27,19 @@ class AnnouncementController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $announcementsData =  DB::table('announcements')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
+        if (App::environment('production')) {
+            $announcementsData =  DB::table('announcements')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $announcementsData =  DB::table('announcements')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
 
         $announcements = Announcement::with('type')->withCount('comments', 'likes', 'announcement_pictures')->orderBy('created_at', 'DESC')->get();
         return view('admin.information.announcements.index', compact('announcementsData', 'announcements'));
@@ -120,11 +129,20 @@ class AnnouncementController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $announcementsData =  DB::table('announcements')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
+        if (App::environment('production')) {
+            $announcementsData =  DB::table('announcements')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $announcementsData =  DB::table('announcements')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
+
         $title = 'Announcement Publish Report';
         $modelName = 'Announcement';
 

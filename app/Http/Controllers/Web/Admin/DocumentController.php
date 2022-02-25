@@ -93,17 +93,9 @@ class DocumentController extends Controller
             ->orderBy($sort_column, $sort_option)
             ->get();
 
-
-
             } catch(\Illuminate\Database\QueryException $ex){
                 return view('errors.404Report', compact('title', 'description'));
             }
-
-
-
-        if ($documents->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
 
         $documentsData = null;
 
@@ -129,11 +121,10 @@ class DocumentController extends Controller
         $title = 'Document Publish Report';
         $modelName = 'Document';
 
-        // $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        // return $pdf->stream();
-        return view('admin.information.pdf.documentreport', compact('title', 'modelName', 'documents' ,'documentsData',
-        'date_start', 'date_end', 'sort_column', 'sort_option'
-    ));
+        return view('admin.information.pdf.documentreport',
+            compact('title', 'modelName', 'documents' ,'documentsData',
+            'date_start', 'date_end', 'sort_column', 'sort_option')
+        );
     }
 
 }

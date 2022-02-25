@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrdinanceRequest;
@@ -24,11 +25,21 @@ class OrdinanceController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $ordinancesData =  DB::table('ordinances')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
+        if (App::environment('production')) {
+            $ordinancesData =  DB::table('ordinances')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $ordinancesData =  DB::table('ordinances')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
+
+
 
         $ordinances = Ordinance::with('type')->orderBy('created_at','DESC')->get();
         return view('admin.information.ordinances.index', compact('ordinancesData', 'ordinances'));
@@ -106,12 +117,19 @@ class OrdinanceController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $ordinancesData =  DB::table('ordinances')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
-
+        if (App::environment('production')) {
+            $ordinancesData =  DB::table('ordinances')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $ordinancesData =  DB::table('ordinances')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
 
         $title = 'Ordinance Publish Report';
         $modelName = 'Ordinance';

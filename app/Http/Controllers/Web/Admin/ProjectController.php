@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Admin;
 
+use App;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
@@ -25,11 +26,19 @@ class ProjectController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $projectsData =  DB::table('projects')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
+        if (App::environment('production')) {
+            $projectsData =  DB::table('projects')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $projectsData =  DB::table('projects')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
 
         $projects = Project::with('type')->orderBy('created_at','DESC')->get();
         return view('admin.information.projects.index', compact('projectsData', 'projects'));
@@ -89,10 +98,6 @@ class ProjectController extends Controller
             return view('errors.404Report', compact('title', 'description'));
         }
 
-        if ($projects->isEmpty()) {
-            return response()->json(['No data'], 404);
-        }
-
         $projectsData = null;
 
         $firstDayYear = date('Y-m-d', strtotime('first day of january this year'));
@@ -100,16 +105,22 @@ class ProjectController extends Controller
         $firstDayMonth = date('Y-m-d',strtotime('first day of this month'));
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
-        $projectsData =  DB::table('projects')
-        ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
-        ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
-        ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
-        ->first();
-
+        if (App::environment('production')) {
+            $projectsData =  DB::table('projects')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURRENT_DATE then 1 end) as this_day_count")
+                ->first();
+        } else {
+            $projectsData =  DB::table('projects')
+                ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
+                ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
+                ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
+                ->first();
+        }
 
         $title = 'Project Publish Report';
         $modelName = 'Project';
-
 
         return view('admin.information.pdf.projectreport', compact('title', 'modelName', 'projects' ,'projectsData',
         'date_start', 'date_end', 'sort_column', 'sort_option'

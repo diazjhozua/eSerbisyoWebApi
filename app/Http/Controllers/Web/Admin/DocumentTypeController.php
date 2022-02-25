@@ -71,7 +71,7 @@ class DocumentTypeController extends Controller
         $title = 'Report - No data';
         $description = 'No data';
         try {
-           
+
         $types = Type::withCount('documents as count')
         ->where('model_type', 'Document')->orderBy('created_at','DESC')
         ->whereBetween('created_at', [$date_start, $date_end])
@@ -89,10 +89,10 @@ class DocumentTypeController extends Controller
             return view('errors.404Report', compact('title', 'description'));
         }
 
-    
+
         $title = 'Document Type Publish Report';
         $modelName = 'Document';
-        
+
 
         return view('admin.information.pdf.documentTypes', compact('title', 'modelName', 'types',
         'date_start', 'date_end', 'sort_column', 'sort_option'
@@ -105,7 +105,7 @@ class DocumentTypeController extends Controller
         $description = 'No data';
 
         try {
-           
+
             $documents = Document::with('type')
             ->whereBetween('created_at', [$date_start, $date_end])
             ->orderBy($sort_column, $sort_option)
@@ -117,14 +117,14 @@ class DocumentTypeController extends Controller
                 }
             })
             ->get();
-    
+
             } catch(\Illuminate\Database\QueryException $ex){
                 return view('errors.404Report', compact('title', 'description'));
             }
             if ($documents->isEmpty()) {
                 return view('errors.404Report', compact('title', 'description'));
             }
-       
+
 
         $type = Type::find($type_id);
         $title = 'Document Type Reports';
@@ -133,12 +133,6 @@ class DocumentTypeController extends Controller
         return view('admin.information.pdf.documents', compact('title', 'modelName','documents',
         'date_start', 'date_end', 'sort_column', 'sort_option'
     ));
-        // if ($documents->isEmpty()) {
-        //     return response()->json(['No data'], 404);
-        // }
-
-        // $pdf = PDF::loadView('admin.information.reports.document', compact('documents', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        // return $pdf->stream();
     }
 
 }
