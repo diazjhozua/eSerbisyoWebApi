@@ -1,5 +1,5 @@
 function createType() {
-    let actionURL = window.location.origin + '/admin/feedback-types/'
+    let actionURL = window.location.origin + '/admin/feedback-types'
     let inputMethod = '<input type="hidden" id="method" name="_method" value="POST">'
     $('#typeFormModal').modal('show') //show the modal
     $('#typeFormModalHeader').text('Create Feedback Type') //set the header of the
