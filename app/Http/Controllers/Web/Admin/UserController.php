@@ -35,7 +35,6 @@ class UserController extends Controller
                 ->selectRaw("count(case when status = 'Disable' then 1 end) as blocked_user_count")
                 ->first();
         } else {
-
             $usersData =  DB::table('users')
                 ->selectRaw("count(case when created_at >='". $firstDayYear ."' AND created_at <='".$lastDateYear."' then 1 end) as this_year_count")
                 ->selectRaw("count(case when created_at >='". $firstDayMonth ."' AND created_at <='".$lastDayMonth."' then 1 end) as this_month_count")
@@ -128,25 +127,36 @@ class UserController extends Controller
         $lastDayMonth = date('Y-m-d',strtotime('last day of this month'));
 
         if($filter == 'all') {
-            $usersData =  DB::table('users')
-                ->selectRaw('count(*) as users_count')
-                ->selectRaw("count(case when status = 'Enable' then 1 end) as enable_user_count")
-                ->selectRaw("count(case when status = 'Disable' then 1 end) as disable_user_count")
-                ->selectRaw("count(case when is_verified = 0 then 1 end) as unverified_user_count")
-                ->selectRaw("count(case when is_verified = 1 then 1 end) as verified_user_count")
-                ->where('created_at', '>=', $date_start)
-                ->where('created_at', '<=', $date_end)
-                ->first();
+            if (App::environment('production')) {
+                $usersData =  DB::table('users')
+                    ->selectRaw('count(*) as users_count')
+                    ->selectRaw("count(case when status = 'Enable' then 1 end) as enable_user_count")
+                    ->selectRaw("count(case when status = 'Disable' then 1 end) as disable_user_count")
+                    ->selectRaw("count(case when is_verified = false then 1 end) as unverified_user_count")
+                    ->selectRaw("count(case when is_verified = true then 1 end) as verified_user_count")
+                    ->where('created_at', '>=', $date_start)
+                    ->where('created_at', '<=', $date_end)
+                    ->first();
+
+            } else {
+                $usersData =  DB::table('users')
+                    ->selectRaw('count(*) as users_count')
+                    ->selectRaw("count(case when status = 'Enable' then 1 end) as enable_user_count")
+                    ->selectRaw("count(case when status = 'Disable' then 1 end) as disable_user_count")
+                    ->selectRaw("count(case when is_verified = 0 then 1 end) as unverified_user_count")
+                    ->selectRaw("count(case when is_verified = 1 then 1 end) as verified_user_count")
+                    ->where('created_at', '>=', $date_start)
+                    ->where('created_at', '<=', $date_end)
+                    ->first();
+            }
         }
         $title = 'User Reports';
         $modelName = 'User';
 
 
-     return view('admin.information.pdf.usersreport', compact('title', 'modelName', 'users', 'usersData',
-        'date_start', 'date_end','filter', 'sort_column', 'sort_option'
-    ));
-        // $pdf = PDF::loadView('admin.information.reports.user', compact('users', 'request','usersData'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
-        // return $pdf->stream();
+        return view('admin.information.pdf.usersreport', compact('title', 'modelName', 'users', 'usersData',
+            'date_start', 'date_end','filter', 'sort_column', 'sort_option'
+        ));
     }
 
 }
