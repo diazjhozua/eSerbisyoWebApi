@@ -114,7 +114,7 @@ class DashboardController extends Controller
             ->selectRaw('sum(total_price) as total_price')
             ->selectRaw('sum(delivery_fee) as delivery_fee')
             ->where('order_status', 'Received')
-            ->where('created_at', '==', 'CURDATE()')
+            ->where('created_at', '=', 'CURDATE()')
             ->first();
 
         // this month earning
@@ -364,7 +364,7 @@ class DashboardController extends Controller
         $missingItemPendingCount = MissingItem::where('status', 'Pending')->count();
         $missingPersonPendingCount = MissingPerson::where('status', 'Pending')->count();
         $userTaskforceStaffCount = User::where('user_role_id', 4)->count();
-        $reportThisDayCount = Report::where('created_at', '==', 'CURDATE()')->count();
+        $reportThisDayCount = Report::where('created_at', '=', 'CURDATE()')->count();
         $complaintThisMonthCount = Complaint::where('created_at', '>=', date('Y-m-d',strtotime('first day of this month')))
         ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))
         ->count();
