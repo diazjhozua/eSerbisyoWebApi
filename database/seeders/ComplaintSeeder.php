@@ -43,7 +43,7 @@ class ComplaintSeeder extends Seeder
         $statusArr = ['Pending', 'Denied', 'Approved', 'Resolved'];
 
         foreach (range(1,200) as $complaint_id) {
-            $type = $faker->numberBetween(31, 35);
+            $type = $faker->numberBetween(36, 40);
             $custom_type = NULL;
 
             $isNull = $faker->numberBetween(0,1);
