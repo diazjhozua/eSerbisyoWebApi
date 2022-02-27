@@ -26,6 +26,7 @@ use App\Models\Order;
 use App\Models\Report;
 use Barryvdh\Debugbar\Facade as Debugbar;
 use Carbon\Carbon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Storage;
 use Pusher\Pusher;
 
@@ -103,6 +104,12 @@ Route::get('/testing', function () {
         ])->get());
     // return view('admin.certificates.cedula');
 });
+
+
+Route::get('/deleteTest', function () {
+    Cloudinary::destroy("barangaasdy/kqqasdasdawdwqadas1oafgkayeyomcks9g");
+});
+
 
 // Route::get('/brgid', function () {
 //     return view('admin.certificates.brgid');

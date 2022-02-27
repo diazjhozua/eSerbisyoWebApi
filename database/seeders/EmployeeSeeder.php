@@ -17,11 +17,37 @@ class EmployeeSeeder extends Seeder
         activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
+        $pictures = [
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_6_bpxsqj.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_myyvht.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_5_typefl.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_4_irqxfb.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_2_sh8zjk.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_3_hs6nvc.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_1_rener7.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_acdixz.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_16_yd8qsz.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_14_tmh02n.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_13_ugpgkt.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_12_jb4s1j.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_11_qoeahe.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_10_vjfbot.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_8_albffz.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_9_gduz2w.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_7_emajte.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_6_u6jsst.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_5_xsbyzu.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_4_mpchfy.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_3_a8cpvk.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_2_ks8q0i.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_1_cuif3e.jpg',
+        ];
+
         foreach(range(1,2) as $term) {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'employees/'.$picture_name;
+            $file_path = $pictures[array_rand($pictures)];
+            $picture_name = 'barangay/'.uniqid().'-'.time();
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -37,8 +63,9 @@ class EmployeeSeeder extends Seeder
 
             foreach (range(1,7) as $index) {
 
-                $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-                $file_path = 'employees/'.$picture_name;
+                $file_path = $pictures[array_rand($pictures)];
+                $picture_name = 'barangay/'.uniqid().'-'.time();
+
 
                 DB::table('employees')->insert([
                     'name' => $faker->name,
@@ -52,8 +79,9 @@ class EmployeeSeeder extends Seeder
                 ]);
             }
 
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'employees/'.$picture_name;
+            $file_path = $pictures[array_rand($pictures)];
+            $picture_name = 'barangay/'.uniqid().'-'.time();
+
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -66,8 +94,8 @@ class EmployeeSeeder extends Seeder
                 'updated_at' => $timestamp,
             ]);
 
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'employees/'.$picture_name;
+            $file_path = $pictures[array_rand($pictures)];
+            $picture_name = 'barangay/'.uniqid().'-'.time();
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -80,8 +108,9 @@ class EmployeeSeeder extends Seeder
                 'updated_at' => $timestamp,
             ]);
 
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'employees/'.$picture_name;
+            $file_path = $pictures[array_rand($pictures)];
+            $picture_name = 'barangay/'.uniqid().'-'.time();
+
 
             DB::table('employees')->insert([
                 'name' => $faker->name,
@@ -94,8 +123,9 @@ class EmployeeSeeder extends Seeder
                 'updated_at' => $timestamp,
             ]);
 
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppEmployees', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\employees', false);
-            $file_path = 'employees/'.$picture_name;
+            $file_path = $pictures[array_rand($pictures)];
+            $picture_name = 'barangay/'.uniqid().'-'.time();
+
 
             foreach (range(1,7) as $index) {
                 DB::table('employees')->insert([

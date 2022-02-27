@@ -8,7 +8,6 @@ use App\Http\Resources\AndroidResource;
 use App\Models\Android;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Helper;
-use Storage;
 
 class AndroidController extends Controller
 {
@@ -21,8 +20,7 @@ class AndroidController extends Controller
 
     public function store(AndroidRequest $request)
     {
-        $result = cloudinary()->uploadFile($request->file('apk')->getRealPath(), ['folder' => 'barangay', 'format' => 'zip']);
-        $android = Android::create(array_merge($request->getData(), ['file_name' => $result->getPublicId(), 'file_path' => $result->getSecurePath()]));
+        $android = Android::create($request->getData());
         return (new AndroidResource($android))->additional(Helper::instance()->storeSuccess('android version'));
     }
 
@@ -33,17 +31,13 @@ class AndroidController extends Controller
 
     public function update(AndroidRequest $request, Android $android)
     {
-        if($request->hasFile('apk')) {
-            Cloudinary::destroy($android->file_name);
-            $result = cloudinary()->uploadFile($request->file('apk')->getRealPath(), ['folder' => 'barangay', 'format' => 'zip']);
-            $android->fill(array_merge($request->getData(), ['file_name' => $result->getPublicId(), 'file_path' => $result->getSecurePath()]))->save();
-        } else { $android->fill($request->getData())->save(); }
+        $android->fill($request->getData())->save();
         return (new AndroidResource($android))->additional(Helper::instance()->updateSuccess('android version'));
     }
 
     public function destroy(Android $android)
     {
-        Cloudinary::destroy($android->file_name);
+        // Cloudinary::destroy($android->file_name);
         $android->delete();
         return response()->json(Helper::instance()->destroySuccess('android version'));
     }

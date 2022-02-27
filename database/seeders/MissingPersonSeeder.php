@@ -24,13 +24,66 @@ class MissingPersonSeeder extends Seeder
         $statusArr = ['Pending', 'Denied', 'Approved', 'Resolved'];
         $report_type = ['Missing', 'Found'];
 
+        $pictures = [
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_6_bpxsqj.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_myyvht.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_5_typefl.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_4_irqxfb.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_2_sh8zjk.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_3_hs6nvc.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_1_rener7.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_acdixz.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_16_yd8qsz.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_14_tmh02n.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_13_ugpgkt.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_12_jb4s1j.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_11_qoeahe.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_10_vjfbot.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_8_albffz.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_9_gduz2w.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934205/sample/humanFaces/download_7_emajte.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_6_u6jsst.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_5_xsbyzu.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_4_mpchfy.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_3_a8cpvk.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_2_ks8q0i.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_1_cuif3e.jpg',
+        ];
+
+
+        $credentials = [
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944757/sample/sampleCert/cert17_trywja.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944757/sample/sampleCert/cert16_tqrk2m.png',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944755/sample/sampleCert/cert18_paqm5v.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944755/sample/sampleCert/cert19_vcswc4.png',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944754/sample/sampleCert/cert3_ftfqav.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944754/sample/sampleCert/cert1_s9qtqg.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944753/sample/sampleCert/cert12_qkz7qy.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944749/sample/sampleCert/cert15_b0rnwo.jpg',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944749/sample/sampleCert/cert14_ocw79b.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944747/sample/sampleCert/cert10_u3qtln.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944746/sample/sampleCert/cert13_xkfshu.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944746/sample/sampleCert/cert11_mj2kyl.jpg',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944745/sample/sampleCert/cert2_cc1efl.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944744/sample/sampleCert/cert8_ij2c4g.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944744/sample/sampleCert/cert9_bv3nlc.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944744/sample/sampleCert/cert20_rqmxoj.jpg',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944741/sample/sampleCert/cert7_hfk9ju.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944741/sample/sampleCert/cert5_awp5cy.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645944738/sample/sampleCert/cert6_hwnfxd.jpg',
+        ];
+
         foreach (range(1,100) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-            $picture_name = $faker->file($sourceDir = 'C:\Project Assets\AppMissingPersons', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\missing-pictures', false);
-            $file_path = 'missing-pictures/'.$picture_name;
+            $file_path = $pictures[array_rand($pictures)];
+            $picture_name = 'barangay/'.uniqid().'-'.time();
 
-            $credentials_name = $faker->file($sourceDir = 'C:\Project Assets\AppUsers', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\credentials', false);
-            $credentials_file_path = 'credentials/'.$credentials_name;
+            $credentials_file_path = $credentials[array_rand($credentials)];
+            $credentials_name = 'barangay/'.uniqid().'-'.time();
 
             $admin_message = null;
 
@@ -72,7 +125,7 @@ class MissingPersonSeeder extends Seeder
 
             foreach (range(1, $commentCount) as $index) {
                 $missingPerson->comments()->create([
-                    'user_id' => $faker->numberBetween(1,37),
+                    'user_id' => $faker->numberBetween(1,133),
                     'body' => $faker->realText($maxNbChars = 100, $indexSize = 3)
                 ]);
             }

@@ -26,14 +26,12 @@
                         <textarea class="form-control" name="description" id="description" rows="5"></textarea>
                     </div>
 
-                    {{-- Apk File Upload --}}
+                    {{-- Url Upload --}}
                     <div class="form-group">
-                        <label>Select apk file</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="apk" name="apk">
-                            <label class="custom-file-label" for="pdf">Choose file (zip only)</label>
-                        </div>
+                        <label for="url">File Link</label>
+                        <input type="text" class="form-control" name="url" id="url">
                     </div>
+
                 </div>
 
                 <div class="modal-footer">

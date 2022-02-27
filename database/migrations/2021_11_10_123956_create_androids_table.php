@@ -17,8 +17,7 @@ class CreateAndroidsTable extends Migration
             $table->id();
             $table->string('version');
             $table->longText('description');
-            $table->string('file_name');
-            $table->string('file_path');
+            $table->string('url');
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ function populateData(data, formMethod) {
     col0 = '<td>' + data.id + '</td>'
     col1 = '<td>' + data.version + '</td>'
     col2 = '<td>' + data.description + '</td>'
-    col3 = '<td><a href="' + data.file_path + '">' + data.file_name + '</a></td>'
+    col3 = '<td><a href="' + data.url + '">' + data.url + '</a></td>'
     col4 = '<td>' + data.updated_at + '</td>'
 
     editBtn =
@@ -76,7 +76,8 @@ function editAndroid(id) {
 
             $('#version').val(data.version)
             $('#description').val(data.description)
-            $('.custom-file-label').html(data.file_name)
+            $('#url').val(data.url)
+
 
             let actionURL = window.location.origin + '/admin/androids/' + data.id
             let inputMethod = '<input type="hidden" id="method" name="_method" value="PUT">'
@@ -127,21 +128,11 @@ $(document).ready(function () {
                 minlength: 6,
                 maxlength: 500,
             },
-            // apk: {
-            //     required: function () {
-            //         return $('#method').val() == 'POST'
-            //     },
-            //     extension: "apk",
-            //     filesize: 60485760, //10mb in bytes
-            // },
-        },
-        messages: {
-            pdf: {
-                extension: "Invalid file type! Apk file must be in .apk format",
-                filesize: "Selected file must be less than 60mb"
+            url: {
+                required: url,
+                minlength: 6,
             },
         },
-
         submitHandler: function (form, event) {
             event.preventDefault()
 

@@ -17,20 +17,34 @@ class OrdinanceSeeder extends Seeder
         activity()->disableLogging();
         $faker = \Faker\Factory::create();
 
+        $files = [
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936636/sample/ordinances/no.-15-143_zwfmkn.pdf',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936619/sample/ordinances/no.-13-009-river-rehabilitation-and-protection-council_jfrflh.pdf',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936580/sample/ordinances/no.-17-087_lrcc0k.pdf',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936558/sample/ordinances/no.-19-246_hrodtt.pdf',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936519/sample/ordinances/no.-19-251_ovbyuz.pdf',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936518/sample/ordinances/no.-19-248_ykdyyw.pdf',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936491/sample/ordinances/no.-19-244_ihlwch.pdf',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936466/sample/ordinances/blg-10-109_svwqoj.pdf',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645936462/sample/ordinances/blg-09-087_nrjvsp.pdf',
+        ];
+
         foreach (range(13,20) as $typeID) {
             $ordinanceCount = $faker->numberBetween(5,10);
 
             foreach (range(1,$ordinanceCount) as $index) {
-                $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
-                $pdf_name = $faker->file($sourceDir = 'C:\Project Assets\AppOrdinances', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\ordinances', false);
-                $file_path = 'ordinances/'.$pdf_name;
 
+                $file_path = $files[array_rand($files)];
+                $file_name = 'barangay/'.uniqid().'-'.time();
+                $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
                 DB::table('ordinances')->insert([
                     'ordinance_no' => $faker->numberBetween(07, 21).'-'.$faker->numberBetween(400, 20000),
                     'type_id'=> $typeID,
                     'title' => strtoupper($faker->realText($maxNbChars = 200, $indexSize = 2)),
                     'date_approved' => $faker->date($format = 'Y-m-d', $max = 'now'),
-                    'pdf_name' => $pdf_name,
+                    'pdf_name' => $file_name,
                     'file_path'=> $file_path,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,

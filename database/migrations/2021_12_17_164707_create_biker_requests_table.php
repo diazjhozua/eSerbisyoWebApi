@@ -16,7 +16,7 @@ class CreateBikerRequestsTable extends Migration
         Schema::create('biker_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('phone_no')->unique();
+            $table->string('phone_no');
             $table->string('bike_type');
             $table->string('bike_size');
             $table->string('bike_color')->nullable();

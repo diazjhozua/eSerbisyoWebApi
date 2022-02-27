@@ -27,5 +27,40 @@ class AnnouncementTypeSeeder extends Seeder
                 'updated_at' => $date,
             ]);
         }
+
+        DB::table('types')->insert([
+            'name' => "General",
+            'model_type' => 'Announcement',
+            'created_at' => $date,
+            'updated_at' => $date,
+        ]);
+
+        DB::table('types')->insert([
+            'name' => "Health",
+            'model_type' => 'Announcement',
+            'created_at' => $date,
+            'updated_at' => $date,
+        ]);
+
+        DB::table('types')->insert([
+            'name' => "Holiday",
+            'model_type' => 'Announcement',
+            'created_at' => $date,
+            'updated_at' => $date,
+        ]);
+
+        DB::table('types')->insert([
+            'name' => "Traffic Advisory",
+            'model_type' => 'Announcement',
+            'created_at' => $date,
+            'updated_at' => $date,
+        ]);
+
+        DB::table('types')->insert([
+            'name' => "Covid-19",
+            'model_type' => 'Announcement',
+            'created_at' => $date,
+            'updated_at' => $date,
+        ]);
     }
 }

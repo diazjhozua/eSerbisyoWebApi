@@ -13,8 +13,7 @@ class AndroidResource extends JsonResource
             'id' => $this->id,
             'version' => $this->version,
             'description' => $this->description,
-            'file_name' => $this->file_name,
-            'file_path' => $this->file_path,
+            'url' => $this->url,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];

@@ -42,7 +42,7 @@
                             <th>ID</th>
                             <th>Version</th>
                             <th>Description</th>
-                            <th>File Name</th>
+                            <th>URL</th>
                             <th>Date Modified</th>
                             <th>Action</th>
                         </tr>
@@ -52,7 +52,7 @@
                             <th>ID</th>
                             <th>Version</th>
                             <th>Description</th>
-                            <th>File Name</th>
+                            <th>URL</th>
                             <th>Date Modified</th>
                             <th>Action</th>
                         </tr>
@@ -63,7 +63,7 @@
                                 <td>{{ $android->id }}</td>
                                 <td>{{ $android->version }}</td>
                                 <td>{{ $android->description }}</td>
-                                <td><a href="{{ $android->file_name }}" target="_blank">{{ $android->file_name}}</a></td>
+                                <td><a href="{{ $android->url }}" target="_blank">{{ $android->url}}</a></td>
                                 <td>{{ $android->updated_at }}</td>
                                 <td>
                                     <ul class="list-inline m-0">

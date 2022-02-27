@@ -17,21 +17,22 @@ class AndroidRequest extends FormRequest
         $rules =  [
             'version' => 'required|string|min:6|max:25',
             'description' => 'required|string|min:6|max:500',
+            'url' => 'required|url',
         ];
 
-        if ($this->isMethod('POST')) {
-            $rules['apk'] = 'required|max:60000';
-        }
+        // if ($this->isMethod('POST')) {
+        //     $rules['apk'] = 'required|max:60000';
+        // }
 
-        if ($this->isMethod('PUT')) {
-            $rules['apk'] = 'max:60000';
-        }
+        // if ($this->isMethod('PUT')) {
+        //     $rules['apk'] = 'max:60000';
+        // }
 
         return $rules;
     }
 
     public function getData() {
-        $data = $this->only(['version', 'description']);
+        $data = $this->only(['version', 'description', 'url']);
         return $data;
     }
 }
