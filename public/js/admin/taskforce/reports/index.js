@@ -1,6 +1,5 @@
 function viewReport(reportID) {
-    let url = 'reports/' + reportID
-
+    let url = window.location.origin + '/admin/reports/' + reportID;
 
     $.ajax({
         type: 'GET',
@@ -28,7 +27,7 @@ function viewReport(reportID) {
 
             $('#statusSelect').empty() //reset dropdown button
             $('#reportForm').trigger("reset") //reset all the input values
-            let actionURL = window.location.origin + 'admin/reports/' + data.id + '/respond'
+            let actionURL = window.location.origin + '/admin/reports/' + data.id + '/respond'
             $('#reportForm').attr('action', actionURL)
 
             $('#urgency_classification').text(data.urgency_classification)
