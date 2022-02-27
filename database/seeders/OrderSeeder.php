@@ -33,6 +33,33 @@ class OrderSeeder extends Seeder
             '718 purok 6 Cupang Muntinlupa city.'
         ];
 
+        $files = [
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946948/sample/orders/order1_zwjr5o.png',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946946/sample/orders/order17_pwho5a.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946943/sample/orders/order16_msrlqd.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946942/sample/orders/order3_wuyv7g.jpg',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946942/sample/orders/order19_ew4hhp.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946941/sample/orders/order18_dpawp1.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946939/sample/orders/order12_zk0xlg.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946939/sample/orders/order13_awvkpq.jpg',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946939/sample/orders/order14_ktj42a.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946938/sample/orders/order15_eflmhr.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946936/sample/orders/order11_arscqn.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946936/sample/orders/order4_qt4bln.png',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946934/sample/orders/order10_j7ia3z.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946933/sample/orders/order8_shgbjd.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946932/sample/orders/order20_toxzqp.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946927/sample/orders/order9_zydvgn.jpg',
+
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946925/sample/orders/order7_jo5fxs.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946925/sample/orders/order6_zcqyfc.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946924/sample/orders/order5_bfcdy3.jpg',
+            'https://res.cloudinary.com/dtitv38uo/image/upload/v1645946924/sample/orders/order2_pes97s.jpg',
+        ];
+
         foreach ($users as $user) {
 
             // random number of orders
@@ -48,8 +75,9 @@ class OrderSeeder extends Seeder
                 $filePath = null;
 
                 if ($pickup == "Delivery") {
-                    $fileName = $faker->file($sourceDir = 'C:\Project Assets\AppOrders', $targetDir = 'C:\xampp\htdocs\barangay-app\storage\app\public\orders', false);
-                    $filePath = 'orders/'.$fileName;
+
+                    $filePath = $files[array_rand($files)];
+                    $fileName = 'barangay/'.uniqid().'-'.time();
                 }
 
                 $admin_message = null;

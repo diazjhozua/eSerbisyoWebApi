@@ -31,6 +31,7 @@ class OrderController extends Controller
         return view('admin.certification.orders.index', compact('orders', 'pendingOrders', 'unprocessedOrders', 'returnableOrders'));
     }
 
+
     public function create()
     {
         $certificates = Certificate::all();
