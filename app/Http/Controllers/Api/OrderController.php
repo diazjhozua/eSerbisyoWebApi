@@ -271,7 +271,7 @@ class OrderController extends Controller
                             break;
                     }
 
-                    CertificateOrder::create([
+                    CertificateOrder::insert([
                         'order_id' => $order->id,
                         'certificate_form_id' => $certificateForm->id,
                     ]);
