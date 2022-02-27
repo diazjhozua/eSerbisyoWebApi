@@ -41,7 +41,7 @@
                     <div class="text-container">
                         <div class="table-container">
                             <h3 class="tabledown">Downloads</h3>
-                            <h6>After downloading, unzip the file and click the apk file to install the e-Serbisyo android application.</h6>
+                            {{-- <h6>After downloading, unzip the file and click the apk file to install the e-Serbisyo android application.</h6> --}}
                             <table class=table>
                             <thead>
                                 <tr>
@@ -55,7 +55,7 @@
                                     <tr>
 
                                         <td data-label="Version">
-                                            <a href="{{ $android->file_path }}" target="_blank">
+                                            <a href="{{ $android->url }}" target="_blank">
                                                {{ $android->version }}
                                             </a>
                                         </td>
