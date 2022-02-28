@@ -19,7 +19,7 @@
                 Order #{{ $order->id }}
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
-        
+
     </div>
 
         <input id="inputOrderID" value="{{ $order->id }}" hidden/>
@@ -558,7 +558,7 @@
             @if ($order->order_status == 'Received' && $order->pick_up_type == 'Delivery')
                 <h1>Biker proof of delivery</h1>
                 <img class="mt-2 mx-auto d-block" style="height:300px; width: 300px;" id="currentImage"
-                   src="{{ isset($order->file_path) ? asset('storage/'.$order->file_path) :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="biker proof of web">
+                   src="{{ isset($order->file_path) ? $order->file_path :  'https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg'}}" class="rounded" alt="biker proof of web">
             @endif
 
         </div>

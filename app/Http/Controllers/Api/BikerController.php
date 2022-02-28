@@ -108,6 +108,10 @@ class BikerController extends Controller
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }
 
+        if ($order->ordered_by == auth('api')->user()->id) {
+            return response()->json(['message' => 'You can not deliver your own requested certificate'], 403);
+        }
+
         if (Order::where('delivered_by', auth('api')->user()->id)->where('pick_up_type', 'Delivery')->where('order_status', '!=','Received')->count() > 2) {
             return response()->json(['message' => 'You have to much pending delivery, please complete your other deliveries'], 403);
         }
