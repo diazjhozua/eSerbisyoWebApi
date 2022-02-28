@@ -29,6 +29,14 @@ class UserSeeder extends Seeder
         'Lacbayen', 'Leano', 'Magallanes', 'Mijares', 'Mituda',
         'Sales', 'Udag', 'Velez', 'Villanueva');
 
+        $fake_address = [
+            '46 Millionaire Street Purok 3 Cupang Muntinlupa City',
+            '633 Purok 5 Cupang Muntinlupa City',
+            '568 San Simon Purok 4 Cupang Muntinlupa City',
+            '554 Purok 4 Cupang Muntinlupa City',
+            '718 purok 6 Cupang Muntinlupa city.'
+        ];
+
         $pictures = [
             'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_6_bpxsqj.jpg',
             'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934206/sample/humanFaces/images_myyvht.jpg',
@@ -83,7 +91,7 @@ class UserSeeder extends Seeder
                     'picture_name' => $picture_name,
                     'file_path' => $file_path,
                     'purok_id' => $faker->numberBetween(1,5),
-                    'address' => $faker->address,
+                    'address' => $fake_address[array_rand($fake_address)],
                     'is_verified' => true,
                     'status' => 'Enable',
                     'user_role_id' => $positionNum,
@@ -109,7 +117,7 @@ class UserSeeder extends Seeder
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'purok_id' => $faker->numberBetween(1,5),
-                'address' => $faker->address,
+                'address' => $fake_address[array_rand($fake_address)],
                 'is_verified' => true,
                 'status' => 'Enable',
                 'user_role_id' => 8,
@@ -138,7 +146,7 @@ class UserSeeder extends Seeder
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'purok_id' => $faker->numberBetween(1,5),
-                'address' => $faker->address,
+                'address' => $fake_address[array_rand($fake_address)],
                 'is_verified' => true,
                 'status' => 'Enable',
                 'user_role_id' => 9,
@@ -163,7 +171,7 @@ class UserSeeder extends Seeder
                 'picture_name' => $picture_name,
                 'file_path' => $file_path,
                 'purok_id' => $faker->numberBetween(1,5),
-                'address' => $faker->address,
+                'address' => $fake_address[array_rand($fake_address)],
                 'is_verified' => false,
                 'status' => 'Enable',
                 'user_role_id' => 9,

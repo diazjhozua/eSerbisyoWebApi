@@ -68,8 +68,6 @@ class OrderSeeder extends Seeder
                 $application = $application_status[array_rand($application_status)];
                 $pickup = $pick_up_type[array_rand($pick_up_type)];
                 $address = $fake_address[array_rand($fake_address)];
-                $long = $faker->longitude();
-                $lat = $faker->latitude();
 
                 $fileName = null;
                 $filePath = null;
@@ -109,58 +107,6 @@ class OrderSeeder extends Seeder
                     'created_at' => $date,
                     'updated_at' => $date,
                 ]);
-
-                // $order = Order::create([
-                //     'ordered_by' => $pickup === 'Walkin' ? null : $user->id,
-                //     'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
-                //     'name' => $faker->name,
-                //     'pick_up_type' => $pickup,
-                //     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
-                //     'pickup_date' => $pickup === 'Walkin' ? $pickupDate : null,
-                //     'received_at' => $pickup === 'Walkin' ? $pickupDate : null,
-                //     'application_status' => $pickup == 'Walkin' ? 'Approved' : 'Pending',
-                //     'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
-                //     'order_status' => $pickup === 'Walkin' ? 'Received' :'Pending',
-                //     'location_address' => $address,
-                //     'email' => $faker->lastName.$faker->email,
-                //     'phone_no' => $faker->phoneNumber,
-                //     // 'user_long' => $pickup === 'Delivery' ? $long : NULL,
-                //     // 'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                //     // 'rider_long' => $pickup === 'Delivery' ? $long : NULL,
-                //     // 'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                //     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
-                //     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
-                //     'admin_message' => $admin_message,
-                //     'created_at' => $date,
-                //     'updated_at' => $date,
-                // ]);
-
-                // $order = Order::create([
-                //     'ordered_by' => $user->id,
-                //     'delivered_by' => NULL,
-                //     // 'total_price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
-                //     'name' => $faker->name,
-                //     'pick_up_type' => $pickup,
-                //     'delivery_fee' => $pickup === 'Delivery' ? 60 : 0,
-                //     'pickup_date' => $pickupDate,
-                //     'received_at' => $pickup === 'Delivery' ? $faker->date($format = 'Y-m-d', $max = 'now') : $pickupDate,
-                //     'application_status' => 'Approved',
-                //     'delivery_payment_status' => $pickup === 'Delivery' ? 'Pending' : NULL,
-                //     'order_status' => 'Waiting',
-                //     'location_address' => $faker->address(),
-                //     'email' => $faker->lastName.$faker->email,
-                //     'phone_no' => $faker->phoneNumber,
-                //     'user_long' => $pickup === 'Delivery' ? $long : NULL,
-                //     'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                //     'rider_long' => $pickup === 'Delivery' ? $long : NULL,
-                //     'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
-                //     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
-                //     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
-                //     'admin_message' => $admin_message,
-                //     'created_at' => $date,
-                //     'updated_at' => $date,
-                // ]);
-
 
                 $totalPrice = 0;
 
@@ -304,64 +250,5 @@ class OrderSeeder extends Seeder
 
             }
         }
-
-
-
-
-        // foreach ($users as $user) {
-        //     $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
-        //     $userForms = CertificateForm::with('certificate')->where('user_id', $user->id)->get();
-
-        //     if (isset($userForms)) {
-        //         $totalPrice = 0;
-        //         $deliveryPrice = 0;
-        //         $delivered_by = rand(1,300);
-
-        //         foreach ($userForms as $userForm) {
-        //             $totalPrice = $totalPrice + $userForm->certificate->price;
-        //             $deliveryFee = $userForm->certificate->delivery_fee;
-        //             $deliveryPrice = $deliveryFee > $deliveryPrice && $deliveryFee;
-        //         }
-
-        //         $pickup = $pick_up_type[array_rand($pick_up_type)];
-        //         $application = $application_status[array_rand($application_status)];
-        //         $long = $faker->longitude();
-        //         $lat = $faker->latitude();
-
-        //         $order = Order::create([
-        //             'ordered_by' => $user->id,
-        //             'delivered_by' => $pickup === 'Delivery' ?  User::where('user_role_id', '=', 8)->get()->random()->id : NULL,
-        //             'total_price' => $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34),
-        //             'pick_up_type' => $pickup,
-        //             'delivery_fee' => $pickup === 'Delivery' ? $faker->randomFloat($nbMaxDecimals = 2, $min = 20, $max = 120.34) : 0,
-        //             'pickup_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-        //             'application_status' => $application,
-        //             'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',
-        //             'location_address' => $faker->address(),
-        //             'email' => $faker->lastName.$faker->email,
-        //             'phone_no' => $faker->phoneNumber,
-        //             'user_long' => $pickup === 'Delivery' ? $long : NULL,
-        //             'user_lat' => $pickup === 'Delivery' ? $lat : NULL,
-        //             'rider_long' => $pickup === 'Delivery' ? $long : NULL,
-        //             'rider_lat' => $pickup === 'Delivery' ? $lat : NULL,
-        //             'created_at' => $date,
-        //             'updated_at' => $date,
-        //         ]);
-
-        //         if ($application === 'Denied') {
-        //             CertificateForm::where('user_id', $user->id)
-        //                 ->update(['status' => 'Denied']);
-        //         }
-
-        //         foreach ($userForms as $userForm) {
-        //             CertificateFormOrder::create([
-        //                 'order_id' => $order->id,
-        //                 'certificate_form_id' => $userForm->id,
-        //                 'created_at' => $date,
-        //                 'updated_at' => $date,
-        //             ]);
-        //         }
-        //     }
-        // }
     }
 }
