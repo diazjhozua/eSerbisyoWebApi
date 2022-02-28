@@ -60,13 +60,13 @@ class OrderController extends Controller
                 }
             }
 
-            if ($certificateID != 5 || $certificateID != 4) {
+            if ($certificateID != 5 && $certificateID != 4) {
                 if (!isset($value['citizenship'])) {
                     $isCompleteFormFields = false;
                 }
             }
 
-            if ($certificateID == 2 || $certificateID == 4) {
+            if ($certificateID == 2 && $certificateID == 4) {
                 if (!isset($value['birthplace'])) {
                     $isCompleteFormFields = false;
                 }
@@ -76,16 +76,13 @@ class OrderController extends Controller
                 case 1:
                     // Barangay Indigency
                     if (!isset($value['purpose']) ) {
-
                         $isCompleteFormFields = false;
                     }
 
                     break;
                 case 2:
                     // Barangay Cedula
-                    if (!isset($value['profession']) || !isset($value['height']) || !isset($value['weight']) || !isset($value['sex']) ||
-                        !isset($value['cedula_type']) || !isset($value['basic_tax'])
-                    ) {
+                    if (!isset($value['profession']) || !isset($value['height']) || !isset($value['weight']) || !isset($value['sex'])) {
                         Log::debug($value['cedula_type']);
                         $isCompleteFormFields = false;
                     }
@@ -119,9 +116,9 @@ class OrderController extends Controller
         activity()->disableLogging();
         $isCompleteFormFields = $this->checkCertificateFormFields($request);
 
-        if (Order::where('ordered_by', auth('api')->user()->id)->where('application_status', 'Pending')->count() >= 1) {
-            return response()->json(['message' => 'You have an existing request, please wait for the transaction to be complete to request another orders'], 403);
-        }
+        // if (Order::where('ordered_by', auth('api')->user()->id)->where('application_status', 'Pending')->count() >= 1) {
+        //     return response()->json(['message' => 'You have an existing request, please wait for the transaction to be complete to request another orders'], 403);
+        // }
 
         if ($isCompleteFormFields != true) {
             return response()->json([
@@ -204,20 +201,20 @@ class OrderController extends Controller
                                 'address' =>  $value['address'],
                                 'citizenship' =>  $value['citizenship'],
                                 'birthplace' => $value['birthplace'],
-                                'tin_no' => $value['tin_no'] == null ? null : $value['tin_no'],
-                                'icr_no' => $value['icr_no'] == null ? null : $value['icr_no'],
+                                'tin_no' => !isset($value['tin_no']) ? null : $value['tin_no'],
+                                'icr_no' => !isset($value['icr_no']) ? null : $value['icr_no'],
                                 'civil_status' => $value['civil_status'],
                                 'sex' => $value['sex'],
                                 'cedula_type' => $value['cedula_type'],
                                 'height' => $value['height'],
                                 'weight' => $value['weight'],
-                                'profession' => $value['profession'],
-                                'basic_tax' => $value['basic_tax'],
-                                'additional_tax' => $value['additional_tax']== null ? 0 : $value['additional_tax'],
-                                'gross_receipt_preceding' => $value['gross_receipt_preceding'] == null ? 0 : $value['gross_receipt_preceding'],
-                                'gross_receipt_profession' => $value['gross_receipt_profession'] == null ? 0 : $value['gross_receipt_profession'],
-                                'real_property' => $value['real_property'] == null ? 0 : $value['real_property'],
-                                'interest' => $value['interest'] == null ? 0 : $value['interest'],
+                                // 'profession' => $value['profession'],
+                                // 'basic_tax' => $value['basic_tax'],
+                                // 'additional_tax' => $value['additional_tax']== null ? 0 : $value['additional_tax'],
+                                // 'gross_receipt_preceding' => $value['gross_receipt_preceding'] == null ? 0 : $value['gross_receipt_preceding'],
+                                // 'gross_receipt_profession' => $value['gross_receipt_profession'] == null ? 0 : $value['gross_receipt_profession'],
+                                // 'real_property' => $value['real_property'] == null ? 0 : $value['real_property'],
+                                // 'interest' => $value['interest'] == null ? 0 : $value['interest'],
                                 'status' => 'Pending',
                             ]);
                             break;
