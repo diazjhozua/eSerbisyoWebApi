@@ -78,7 +78,6 @@ class OrderController extends Controller
                     if (!isset($value['purpose']) ) {
                         $isCompleteFormFields = false;
                     }
-
                     break;
                 case 2:
                     // Barangay Cedula
