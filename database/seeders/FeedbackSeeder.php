@@ -21,7 +21,7 @@ class FeedbackSeeder extends Seeder
         $status = ['Pending', 'Ignored', 'Noted'];
 
 
-        foreach (range(1,200) as $index)
+        foreach (range(1,100) as $index)
         {
             $userRandomID = $faker->numberBetween(1, 133);
             $typeID = $faker->numberBetween(0, 3);

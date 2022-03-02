@@ -90,7 +90,7 @@ class AnnouncementSeeder extends Seeder
                 ];
             }
 
-            for ($i = 0; $i < rand(1, 5); $i++) {
+            for ($i = 0; $i < rand(1, 3); $i++) {
                 $likes[] = [
                     'user_id' => $users->random(),
                     'likeable_id' => $id,

@@ -35,7 +35,7 @@ class ProjectSeeder extends Seeder
 
         ];
 
-        foreach(range(1,100) as $index) {
+        foreach(range(1,20) as $index) {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $file_path = $files[array_rand($files)];
 

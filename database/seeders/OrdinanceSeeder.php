@@ -32,7 +32,7 @@ class OrdinanceSeeder extends Seeder
         ];
 
         foreach (range(13,20) as $typeID) {
-            $ordinanceCount = $faker->numberBetween(5,10);
+            $ordinanceCount = $faker->numberBetween(1,2);
 
             foreach (range(1,$ordinanceCount) as $index) {
 

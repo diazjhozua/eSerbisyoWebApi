@@ -43,7 +43,7 @@ class EmployeeSeeder extends Seeder
             'https://res.cloudinary.com/dtitv38uo/image/upload/v1645934204/sample/humanFaces/download_1_cuif3e.jpg',
         ];
 
-        foreach(range(1,2) as $term) {
+        foreach(range(1,1) as $term) {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
 
             $file_path = $pictures[array_rand($pictures)];

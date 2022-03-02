@@ -42,7 +42,7 @@ class ComplaintSeeder extends Seeder
 
         $statusArr = ['Pending', 'Denied', 'Approved', 'Resolved'];
 
-        foreach (range(1,200) as $complaint_id) {
+        foreach (range(1,100) as $complaint_id) {
             $type = $faker->numberBetween(36, 40);
             $custom_type = NULL;
 
@@ -62,7 +62,7 @@ class ComplaintSeeder extends Seeder
             }
 
             $complainantCount = $faker->numberBetween(1, 2);
-            $defendantCount = $faker->numberBetween(1, 5);
+            $defendantCount = $faker->numberBetween(1, 3);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
             $userID = $faker->numberBetween(1, 133);
             DB::table('complaints')->insert([

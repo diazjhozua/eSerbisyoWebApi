@@ -28,8 +28,8 @@ class DocumentSeeder extends Seeder
 
         foreach (range(4,12) as $id) {
 
-            $year = 2017;
-            foreach (range(1,5) as $index) {
+            $year = 2022;
+            foreach (range(1,1) as $index) {
 
                 $file_path = $files[array_rand($files)];
                 $file_name = 'barangay/'.uniqid().'-'.time();

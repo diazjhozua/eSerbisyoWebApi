@@ -50,7 +50,7 @@ class ReportSeeder extends Seeder
 
         ];
 
-        foreach (range(1,900) as $index) {
+        foreach (range(1,100) as $index) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
             $type = $faker->numberBetween(41, 45);
             $custom_type = NULL;

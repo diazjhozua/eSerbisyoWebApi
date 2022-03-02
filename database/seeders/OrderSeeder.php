@@ -63,7 +63,7 @@ class OrderSeeder extends Seeder
         foreach ($users as $user) {
 
             // random number of orders
-            for($i = 0; $i <= $faker->numberBetween(1, 5); $i++) {
+            for($i = 0; $i <= $faker->numberBetween(1, 1); $i++) {
                 $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
                 $application = $application_status[array_rand($application_status)];
                 $pickup = $pick_up_type[array_rand($pick_up_type)];
@@ -112,7 +112,7 @@ class OrderSeeder extends Seeder
 
                 $fakur = \Faker\Factory::create();
 
-                for ($i = 0; $i <= $faker->numberBetween(1, 3); $i++) {
+                for ($i = 0; $i <= $faker->numberBetween(1, 2); $i++) {
                     $civil_status = ['Single', 'Married', 'Divorced', 'Widowed'];
                     $sex = ['Male', 'Female'];
                     $cedula_type = ['Individual', 'Corporation'];
