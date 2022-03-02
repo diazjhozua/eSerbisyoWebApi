@@ -249,6 +249,8 @@ $(document).ready(function () {
 
         submitHandler: function (form, event) {
             event.preventDefault()
+            let formAction = $("#announcementPictureForm").attr('action')
+            let formData = new FormData(form)
             $.ajax({
                 type: 'POST',
                 url: formAction,
