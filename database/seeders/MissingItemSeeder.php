@@ -95,7 +95,7 @@ class MissingItemSeeder extends Seeder
                 $admin_message = $faker->realText($maxNbChars = 50, $indexSize = 1);
             }
 
-            $userID = $faker->numberBetween(1, 100);
+            $userID = $faker->numberBetween(1, 63);
 
             $lostAndFound = MissingItem::create([
                 'user_id' => $userID,
@@ -116,11 +116,11 @@ class MissingItemSeeder extends Seeder
                 'updated_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null)
             ]);
 
-            $commentCount = $faker->numberBetween(1,20);
+            $commentCount = $faker->numberBetween(1,4);
 
             foreach (range(1, $commentCount) as $index) {
                 $lostAndFound->comments()->create([
-                    'user_id' => $faker->numberBetween(1,37),
+                    'user_id' => $faker->numberBetween(1,63),
                     'body' => $faker->realText($maxNbChars = 100, $indexSize = 3)
                 ]);
             }

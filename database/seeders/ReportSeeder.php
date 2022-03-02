@@ -79,7 +79,7 @@ class ReportSeeder extends Seeder
             }
 
             DB::table('reports')->insert([
-                'user_id' => $faker->numberBetween(1, 133),
+                'user_id' => $faker->numberBetween(1, 63),
                 'type_id' => $type,
                 'custom_type' => $custom_type,
                 'location_address' => $faker->streetAddress(),

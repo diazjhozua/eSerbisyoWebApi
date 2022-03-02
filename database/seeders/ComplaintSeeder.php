@@ -64,7 +64,7 @@ class ComplaintSeeder extends Seeder
             $complainantCount = $faker->numberBetween(1, 2);
             $defendantCount = $faker->numberBetween(1, 3);
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
-            $userID = $faker->numberBetween(1, 133);
+            $userID = $faker->numberBetween(1, 63);
             DB::table('complaints')->insert([
                 'user_id' => $userID,
                 'contact_user_id' => $userID,

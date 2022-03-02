@@ -23,7 +23,7 @@ class FeedbackSeeder extends Seeder
 
         foreach (range(1,100) as $index)
         {
-            $userRandomID = $faker->numberBetween(1, 133);
+            $userRandomID = $faker->numberBetween(1, 63);
             $typeID = $faker->numberBetween(0, 3);
             $customType = null;
 
