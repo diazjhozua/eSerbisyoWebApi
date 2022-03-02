@@ -152,7 +152,6 @@ class UserController extends Controller
         $title = 'User Reports';
         $modelName = 'User';
 
-        dd($usersData);
         return view('admin.information.pdf.usersreport', compact('title', 'modelName', 'users', 'usersData',
             'date_start', 'date_end','filter', 'sort_column', 'sort_option'
         ));
