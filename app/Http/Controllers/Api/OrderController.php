@@ -119,6 +119,35 @@ class OrderController extends Controller
         //     return response()->json(['message' => 'You have an existing request, please wait for the transaction to be complete to request another orders'], 403);
         // }
 
+
+        // check first if the auth user have complete requirements in the system
+        $user_requirements = UserRequirement::where('user_id', auth('api')->user()->id)->get();
+
+        foreach ($request->certificate_forms as $key => $value) {
+            $certificateID = $value['certificate_id'];
+            $certificate = Certificate::with('requirements')->findOrFail($certificateID);
+            foreach ($certificate->requirements as $requirement) {
+
+                if(!$user_requirements->contains('requirement_id', $requirement->id)) {
+                    return response()->json([
+                        'message' => "You don't have enough requirements to request this certificate. Go to the certificates section to see the required requirements",
+                    ], 400);
+                }
+            }
+
+            // check if the certificate is available
+            if ($certificate->status == 'Unavailable') {
+                return response()->json(['message' => 'The certificate '. $certificate->name. ' that you are requesting is currently unavailable right now'], 403);
+            }
+
+            if ($request->pick_up_type == "Delivery") {
+                if ($certificate->is_open_delivery == 0) {
+                    return response()->json(['message' => 'The certificate '. $certificate->name. ' that you are requesting not available for delivery'], 403);
+                }
+            }
+        }
+        //  end of checking the requirements
+
         if ($isCompleteFormFields != true) {
             return response()->json([
                 'message' => 'Please fill all the fields in certificate forms',
@@ -145,29 +174,7 @@ class OrderController extends Controller
                     $certificateID = $value['certificate_id'];
                     $certificate = Certificate::with('requirements')->findOrFail($certificateID);
 
-                    // check if the certificate is available
-                    if ($certificate->status == 'Unavailable') {
-                        return response()->json(['message' => 'The certificate '. $certificate->name. ' that you are requesting is currently unavailable right now'], 403);
-                    }
 
-                    if ($request->pick_up_type == "Delivery") {
-                        if ($certificate->is_open_delivery == 0) {
-                            return response()->json(['message' => 'The certificate '. $certificate->name. ' that you are requesting not available for delivery'], 403);
-                        }
-                    }
-
-                    // check first if the auth user have complete requirements in the system
-                    $user_requirements = UserRequirement::where('user_id', $order->ordered_by)->get();
-
-                    foreach ($certificate->requirements as $requirement) {
-                        if(!$user_requirements->contains('requirement_id', $requirement->id)) {
-                            return response()->json([
-                                'message' => "You don't have enough requirements to request this certificate. Go to the certificates section to see the required requirements",
-                            ], 400);
-                        }
-                    }
-
-                    //  end of checking the requirements
 
                     $totalPrice = $totalPrice + $certificate->price;
                     switch ($certificateID) {
