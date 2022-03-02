@@ -49,7 +49,7 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Available function:</h6>
                     <a id="promoteUserItem" class="collapse-item" href="{{ route('admin.staffs.users') }}">Promote User</a>
-                    <a id="demoteStaffItem" class="collapse-item" href="{{ route('admin.staffs.adminStaff') }}">Demote Taskforce Staff</a>
+                    <a id="demoteStaffItem" class="collapse-item" href="{{ route('admin.staffs.adminStaff') }}">Demote Admin/Staff</a>
                 </div>
             </div>
         </li>

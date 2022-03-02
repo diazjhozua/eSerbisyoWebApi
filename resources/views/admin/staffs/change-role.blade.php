@@ -95,7 +95,7 @@
                             <select class="custom-select" id="inputSelPosID" name="inputSelPosID">
                                 <option value="2" selected>Information Admin</option>
                                 <option value="3">Certification Admin</option>
-                                <option value="4">TaskForce Admin</option>
+                                <option value="4">Taskforce Admin</option>
                                 <option value="5">Information Staff</option>
                                 <option value="6">Certification Staff</option>
                                 <option value="7">Taskforce Staff</option>

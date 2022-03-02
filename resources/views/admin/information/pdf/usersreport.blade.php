@@ -37,17 +37,14 @@
                 <p class="text-right">  {{ str_replace(array("users."),"",$sort_column ); }} ({{{ $sort_option }}}) </p>
                 <p class="text-right"> {{ strtoupper($filter)  }} </p>
 
-                
-                
             </div>
             <hr style="width:100%; background-color:gray; height: 2px;" >
-            
         </div>
-        
+
     </div>
-    
+
     <div class ="dits">
-    
+
         <div class="row p-4">
             <div class="column" style="font-size: 18px">
                 <p class="font-weight-bold">Verified User:</p>
@@ -56,20 +53,19 @@
                 <p class="font-weight-bold">Restricted User:</p>
             </div>
             <div class="column" style="font-size: 18px">
-                <p class="text-right"> {{ $usersData->verified_user_count }} </p>
-                <p class="text-right"> {{ $usersData->unverified_user_count }} </p>
-                <p class="text-right"> {{ $usersData->enable_user_count }} </p>
-                <p class="text-right">{{ $usersData->disable_user_count }}</p>
+                @if ($filter == "all")
+                    <p class="text-right"> {{ $usersData->verified_user_count }} </p>
+                    <p class="text-right"> {{ $usersData->unverified_user_count }} </p>
+                    <p class="text-right"> {{ $usersData->enable_user_count }} </p>
+                    <p class="text-right">{{ $usersData->disable_user_count }}</p>
+                @endif
 
-                
-                
             </div>
-            
-            
+
         </div>
-        
+
     </div>
-   
+
     <div class="regiz">
         <div class="regi">
             <pre> <b>{{ $modelName }} count:</b> {{ $users->count() }}</pre>
@@ -110,5 +106,5 @@
 
         </tbody>
     </table>
-    
+
 @endsection

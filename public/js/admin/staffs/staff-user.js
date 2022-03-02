@@ -25,8 +25,6 @@ function promote(id) {
 function promoteAnyUser(id) {
     $('#positionSelectContainer').show();
 
-    formData.append('user_role_id', $('#inputSelPosID').val());
-
     let actionURL = window.location.origin + '/admin/staffs/promote/' + id
 
     $('#changeRoleForm').attr('action', actionURL) //set the method of the form
@@ -70,7 +68,7 @@ $(document).ready(function () {
         $('.selected').addClass('promoting');
         let ajaxURL = $("#changeRoleForm").attr('action');
 
-
+        formData.append('user_role_id', $('#inputSelPosID').val());
         formData.append('_method', 'PUT');
 
         // Change Role Ajax Request
