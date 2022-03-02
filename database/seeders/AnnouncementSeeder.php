@@ -51,7 +51,7 @@ class AnnouncementSeeder extends Seeder
         ];
 
 
-        foreach (range(1,100) as $id) {
+        foreach (range(1,20) as $id) {
             $date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = '+1 years', $timezone = null);
             //announcements
             $announcements[] = [

@@ -155,7 +155,7 @@ class UserSeeder extends Seeder
 	        ]);
         }
 
-        foreach (range(20,100) as $index)
+        foreach (range(20,30) as $index)
         {
             $file_path = $pictures[array_rand($pictures)];
             $picture_name = 'barangay/'.uniqid().'-'.time();
@@ -253,13 +253,13 @@ class UserSeeder extends Seeder
         ];
 
         // for biker request application
-        foreach (range(1,80) as $index)
+        foreach (range(1,30) as $index)
         {
             $timestamp = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null);
             $credentials_file_path = $bikes[array_rand($bikes)];
             $credentials_name = 'barangay/'.uniqid().'-'.time();
             DB::table('biker_requests')->insert([
-                'user_id' => $faker->numberBetween(20, 100),
+                'user_id' => $faker->numberBetween(20, 30),
                 'phone_no' => "09560492498",
                 'bike_type' => $faker->realText($maxNbChars = 20, $indexSize = 2),
                 'bike_color' => $faker->realText($maxNbChars = 20, $indexSize = 2),
