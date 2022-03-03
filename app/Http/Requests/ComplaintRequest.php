@@ -27,7 +27,7 @@ class ComplaintRequest extends FormRequest
                 })],
                 'custom_type' => ['required_without:type_id', new OneOf($this, ["type_id", "custom_type"]), 'string', 'min:4', 'max:60'],
                 'contact_user_id' => 'exists:users,id',
-                'email' => 'required|max:150|email',
+                'email' => 'required|max:150|email:rfc,dns',
                 'phone_no' => 'required|numeric',
                 'reason' => 'required:string|min:4|max:500',
                 'action' => 'required:string|min:4|max:500',

@@ -18,7 +18,7 @@ class OrderRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:3|max:100',
-            'email' => 'required|max:150|email',
+            'email' => 'required|max:150|email:rfc,dns',
             'phone_no' => 'required|numeric',
             'location_address' => 'required|string|min:3|max:200',
             'pick_up_type' => ['required', Rule::in(['Pickup', 'Delivery'])],

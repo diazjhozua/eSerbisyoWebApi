@@ -19,7 +19,7 @@ class MissingItemRequest extends FormRequest
                 'item' => 'required|string|min:3|max:120',
                 'last_seen' => 'required|string|min:3|max:120',
                 'description' => 'required|string|min:3|max:250',
-                'email' => 'required|max:150|email',
+                'email' => 'required|max:150|email:rfc,dns',
                 'phone_no' => 'required|numeric',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],
                 'picture' =>  'required|base64image',

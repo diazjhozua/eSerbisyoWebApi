@@ -29,7 +29,7 @@ class MissingPersonRequest extends FormRequest
                 'unique_sign' => 'required|string|min:3|max:250',
                 'important_information' => 'required|string|min:3|max:250',
                 'last_seen' => 'required|string|min:3|max:60',
-                'email' => 'required|max:150|email',
+                'email' => 'required|max:150|email:rfc,dns',
                 'phone_no' => 'required|numeric',
                 'picture' => 'required|mimes:jpeg,png|max:3000',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],

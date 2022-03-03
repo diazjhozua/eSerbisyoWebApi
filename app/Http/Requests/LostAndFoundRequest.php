@@ -20,7 +20,7 @@ class LostAndFoundRequest extends FormRequest
                 'contact_user_id' => 'exists:users,id',
                 'last_seen' => 'required|string|min:3|max:120',
                 'description' => 'required|string|min:3|max:250',
-                'email' => 'required|max:30|email',
+                'email' => 'required|max:30|email:rfc,dns',
                 'phone_no' => 'required|numeric',
                 'report_type' => ['required', Rule::in(['Missing', 'Found'])],
                 'picture' => 'required|mimes:jpeg,png|max:3000',
