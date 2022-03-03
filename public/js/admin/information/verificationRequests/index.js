@@ -51,7 +51,23 @@ function replaceData(data, addOrReplace) {
     col2 = '<td>' + data.first_name + ' ' + data.last_name + '</td>'
     col3 = '<td>' + data.email + '</td>'
     col4 = '<td>' + data.role + '</td>'
-    col5 = '<td>' + data.status + '</td>'
+
+    if (data.status == 'Pending') {
+        col5 = '<td><p class="text-primary">'
+            + data.status
+            + '</p>'
+            + '</td>'
+    } else if (data.status == 'Approved') {
+        col5 = '<td><p class="text-success">'
+            + data.status
+            + '</p>'
+            + '</td>'
+    } else {
+        col5 = '<td><p class="text-warning">'
+            + data.status
+            + '</p>'
+            + '</td>'
+    }
 
     col6 = '<td>' + data.admin_message + '</td>'
     col7 = '<td>' + data.created_at + '</td>'
@@ -68,8 +84,8 @@ function replaceData(data, addOrReplace) {
     } else {
         verifiedBtn =
             '<li class="list-inline-item mb-1">' +
-            '<button class="btn btn-info btn-sm" onclick="viewVerificationRequest(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit" disabled>' +
-            '<span class="btnText btnVerify">Review Request</span>' +
+            '<button class="btn btn-dark btn-sm" onclick="viewVerificationRequest(' + data.id + ')" type="button" data-toggle="tooltip" data-placement="top" title="Edit" disabled>' +
+            '<span class="btnText btnVerify">Already responded</span>' +
             '<i class="btnVerifyIcon fas fa-money-check ml-1"></i>' +
             '<i class="btnVerifyLoadingIcon fa fa-spinner fa-spin" hidden></i>' +
             '</button>' +

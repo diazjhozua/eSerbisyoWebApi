@@ -17,7 +17,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Android Versions
+        <h1 class="h3 mb-0 text-gray-800">Android apk links
             <a class="btn " onclick="window.location.reload();"> <i class="fas fa-sync"></i></a>
         </h1>
     </div>
@@ -27,7 +27,7 @@
         Create
     </button>
 
-    <p class="mt-3">These are the list of android versions that resident will download to use the application</p>
+    <p class="mt-3">These are the list of android apk list that resident will download to use the application</p>
 
     <!-- DataTales Example -->
     <div class="card shadow mt-2 mb-4">
@@ -40,7 +40,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Version</th>
+                            <th>Name</th>
                             <th>Description</th>
                             <th>URL</th>
                             <th>Date Modified</th>
@@ -50,7 +50,7 @@
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Version</th>
+                            <th>Name</th>
                             <th>Description</th>
                             <th>URL</th>
                             <th>Date Modified</th>

@@ -16,7 +16,7 @@ class ChangeEmailRequest extends FormRequest
     {
         return [
             'current_email' => ['required', new ApiMatchOldEmail],
-            'new_email' => ['required', 'max:150', 'email' , 'unique:users,email'],
+            'new_email' => ['required', 'max:150', 'email:rfc,dns' , 'unique:users,email'],
             'new_confirm_email' => ['same:new_email'],
         ];
     }

@@ -67,7 +67,15 @@
                                 <td>{{$userVerification->user->getFullNameAttribute()}}</td>
                                 <td>{{$userVerification->user->email}}</td>
                                 <td>{{$userVerification->user->user_role->role}}</td>
-                                <td>{{$userVerification->status}}</td>
+                                <td>
+                                    @if ($userVerification->status == 'Pending')
+                                        <p class="text-primary"><strong>{{ $userVerification->status }}</strong></p>
+                                    @elseif ($userVerification->status == 'Approved')
+                                        <p class="text-success"><strong>{{ $userVerification->status }}</strong></p>
+                                    @else
+                                        <p class="text-warning"><strong>{{ $userVerification->status }}</strong></p>
+                                    @endif
+                                </td>
                                 <td>{{ $userVerification->admin_message != null ? $userVerification->admin_message : 'Not yet responded'}}</td>
                                 <td>{{$userVerification->user->created_at}}</td>
                                 <td>
@@ -84,8 +92,8 @@
                                     @else
                                         <ul class="list-inline m-0">
                                             <li class="list-item mb-1">
-                                                <button class="btn btn-info btn-sm" type="button" onclick="viewVerificationRequest({{ $userVerification->id }})" data-toggle="tooltip" data-placement="top" title="Review Request" disabled>
-                                                    <span class="btnText btnVerifyTxt">Review Request</span>
+                                                <button class="btn btn-dark btn-sm" type="button" onclick="viewVerificationRequest({{ $userVerification->id }})" data-toggle="tooltip" data-placement="top" title="Review Request" disabled>
+                                                    <span class="btnText btnVerifyTxt">Already responded</span>
                                                     <i class="btnVerifyIcon fas fa-money-check ml-1"></i>
                                                     <i class="btnVerifyLoadingIcon fa fa-spinner fa-spin" hidden></i>
                                                 </button>

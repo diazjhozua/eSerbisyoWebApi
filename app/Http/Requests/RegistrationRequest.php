@@ -19,7 +19,7 @@ class RegistrationRequest extends FormRequest
             'middle_name' => 'string|min:4|max:150',
             'last_name' => 'required|string|min:4|max:150',
             'purok_id' => ['required', Rule::exists('puroks', 'id')],
-            'email' => ['required', 'max:120', 'email' , 'unique:users,email'],
+            'email' => ['required', 'max:120', 'email:rfc,dns' , 'unique:users,email' ],
             'password' => ['required', 'min:8', 'max:16'],
             'password_confirmation' => ['same:password'],
         ];

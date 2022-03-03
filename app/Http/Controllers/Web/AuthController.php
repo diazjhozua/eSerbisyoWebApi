@@ -109,7 +109,7 @@ class AuthController extends Controller
     }
 
     public function submitRegisterForm(RegistrationRequest $request) {
-        User::create(array_merge($request->getData(), ['password' => Hash::make($request->password), 'user_role_id' => 8]));
+        User::create(array_merge($request->getData(), ['password' => Hash::make($request->password), 'user_role_id' => 9]));
 
         return response()->json([
             'message' => 'Registration Success! If you are a resident or biker, please use the android application to login your account. If you are an administrator, please wait for

@@ -87,7 +87,7 @@
     <li id="android" class="nav-item">
         <a class="nav-link" href="{{ route('admin.androids.index') }}">
             <img src="{{ asset('assets/img/android.png') }}" alt="Android">
-            <span>Android Version</span></a>
+            <span>Android Apk Links</span></a>
     </li>
 
     <!-- Barangay Official Nav Item - Pages Collapse Menu -->

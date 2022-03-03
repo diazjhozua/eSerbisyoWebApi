@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Laravel\Telescope\Telescope;
 
 class PurokSeeder extends Seeder
 {

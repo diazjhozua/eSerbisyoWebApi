@@ -18,7 +18,7 @@ class OrderAdminRequest extends FormRequest
         if ($this->isMethod('POST')) {
             return [
                 'name' => 'required|string|min:3|max:100',
-                'email' => 'required|max:150|email',
+                'email' => 'required|max:150|email:rfc,dns',
                 'phone_no' => 'required|numeric',
                 'location_address' => 'required|string|min:3|max:200',
                 'certificate_forms' => 'required|array|between:1,10',

@@ -41,9 +41,7 @@ class UserController extends Controller
                 ->selectRaw("count(case when DATE(created_at) = CURDATE() then 1 end) as this_day_count")
                 ->selectRaw("count(case when status = 'Disable' then 1 end) as blocked_user_count")
                 ->first();
-
         }
-
 
         $verificationCount = UserVerification::where('status', 'Pending')->count();
 

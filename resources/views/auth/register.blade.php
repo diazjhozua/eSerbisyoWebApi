@@ -15,16 +15,15 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1>Sign Up</h1>
-                   <p>Fill out the form below to sign up for Tivo. Already signed up? Then just <a class="white" href="log-in.html">Log In</a></p>
+                    <p>Fill out the form below to sign up for eSerbisyo. Already signed up? Then just <a class="white" href="log-in.html">Log In</a></p>
                     <!-- Sign Up Form -->
                     <div class="form-container">
 
                         <div id="successMessage" class="alert alert-info mb-3 text-justify" style="font-size: 15px" role="alert">
                             Note: Any user can register to this page. If you are a resident or biker, use the android application
                             to access the system after successfull registration. For administrator, please wait for the other admin to promote your priviledges.
-                            You will recieved an email if your account has been granted an administration access.
+                            You will received an email if your account has been granted an administration access.
                         </div>
-
 
                         <form name="registerForm" id="registerForm" class="user" method="post" action="{{ route('register.post') }}" novalidate>
                             @csrf

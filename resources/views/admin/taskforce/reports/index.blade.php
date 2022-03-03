@@ -32,7 +32,7 @@
 
     <p class="text-justify">
         These reports was submitted by the residents through sending a report in the e-serbisyo android application. Please respond to the following reports. If the specific
-        reports was not responded, it will automatically marked as ignored. (Urgent - 60 minutes | NonUrgent - 180 minutes).
+        reports was not responded, it will automatically marked as ignored.
     </p>
 
     <span>Reports statistic within this month (Total: <span id="thisMonthCount"> {{ $reportsData->reports_count}}</span>)</span>
@@ -73,7 +73,6 @@
                 </div>
             </div>
         </div>
-
 
         {{-- Invalid Report Card --}}
         <div class="col-sm mt-2">
