@@ -22,7 +22,7 @@ class UserInfoRequest extends FormRequest
             'last_name' => 'required|string|min:4|max:150',
             'purok_id' => ['required', Rule::exists('puroks', 'id')],
             'address' => 'required|string|min:4|max:250',
-            'picture' => 'required|base64image'
+            'picture' => 'base64image'
         ];
     }
 
