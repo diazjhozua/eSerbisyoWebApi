@@ -108,7 +108,7 @@ class MissingPersonSeeder extends Seeder
                 'unique_sign' => $faker->sentence($nbWords = 4, $variableNbWords = true),
                 'important_information' => $faker->sentence($nbWords = 10, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
-                'email' => $faker->lastName.$faker->email,
+                'email' => $faker->lastName.$faker->freeEmail,
                 'phone_no' => "09560492498",
                 'status' => $status,
                 'admin_message' => $admin_message,

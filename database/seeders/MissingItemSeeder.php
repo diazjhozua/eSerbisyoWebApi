@@ -103,7 +103,7 @@ class MissingItemSeeder extends Seeder
                 'item' => $faker->sentence($nbWords = 3, $variableNbWords = true),
                 'last_seen' => $faker->streetName(),
                 'description' => $faker->sentence($nbWords = 10, $variableNbWords = true),
-                'email' => $faker->lastName.$faker->email,
+                'email' => $faker->lastName.$faker->freeEmail,
                 'phone_no' => "09560492498",
                 'status' => $status,
                 'admin_message' => $admin_message,

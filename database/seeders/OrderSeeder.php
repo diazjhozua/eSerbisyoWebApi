@@ -99,7 +99,7 @@ class OrderSeeder extends Seeder
                     'delivery_payment_status' => $pickup === 'Delivery' ? 'Received' : NULL,
                     'order_status' => $application === 'Approved' ? 'Received' : 'Waiting',
                     'location_address' => $address,
-                    'email' => $faker->lastName.$faker->email,
+                    'email' => $faker->lastName.$faker->freeEmail,
                     'phone_no' => "09560492498",
                     'file_name' => $pickup === 'Delivery' ? $fileName : NULL,
                     'file_path' => $pickup === 'Delivery' ? $filePath : NULL,
