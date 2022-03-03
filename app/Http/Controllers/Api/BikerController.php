@@ -122,7 +122,7 @@ class BikerController extends Controller
         ])->save();
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been booked by our biker delivery Please prepare the exact payment.';
+        $message = 'Your order #'.$order->id. ' has been booked by our biker delivery Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
         dispatch(new SMSJob($order->phone_no, $message));
@@ -138,7 +138,7 @@ class BikerController extends Controller
         }
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been start delivering your requested order by the biker. Please prepare the exact payment.';
+        $message = 'Your order #'.$order->id. ' has been start delivering your requested order by the biker. Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
         dispatch(new SMSJob($order->phone_no, $message));
@@ -167,7 +167,7 @@ class BikerController extends Controller
         ])->save();
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been successfully delivered by our biker.';
+        $message = 'Your order #'.$order->id. ' has been successfully delivered by our biker.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
         dispatch(new SMSJob($order->phone_no, $message));
@@ -191,7 +191,7 @@ class BikerController extends Controller
         ])->save();
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been marked as DNR (Did not receive by specified person on the order). It means that you didn\'t receive the order.';
+        $message = 'Your order #'.$order->id. ' has been marked as DNR (Did not receive by specified person on the order). It means that you didn\'t receive the order.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
         dispatch(new OrderJob($order, $subject, $message));
         dispatch(new SMSJob($order->phone_no, $message));

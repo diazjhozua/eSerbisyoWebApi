@@ -330,13 +330,14 @@ class OrderController extends Controller
                 }
                 $order->fill(['order_status' => $request->order_status])->save();
                 $message = 'Your order #'.$order->id. ' has been pickup by our biker delivery Please prepare the exact payment.';
+                $smsMessage = 'Your order #'.$order->id. ' has been pickup by our biker delivery Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
 
 
             } else {
                 if ($request->order_status == 'Received') {
                     $order->fill(['order_status' => $request->order_status, 'received_at' => now()])->save();
                     $message = 'Your order #'.$order->id. ' has been marked by our administrator that you received your requested certificates.';
-
+                    $smsMessage = 'Your order #'.$order->id. ' has been marked by our administrator that you received your requested certificates.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
                     foreach($ids as $id) {
                         CertificateForm::where('id', $id )
                             ->update(['status' => 'Approved']);
@@ -345,6 +346,7 @@ class OrderController extends Controller
                 } elseif ($request->order_status == 'DNR') {
                     $order->fill(['order_status' => $request->order_status])->save();
                     $message = 'Your order #'.$order->id. ' has been marked by our administrator that you did not receive your requested certificates.';
+                    $smsMessage = 'Your order #'.$order->id. ' has been marked by our administrator that you did not receive your requested certificates.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
 
                     foreach($ids as $id) {
                         CertificateForm::where('id', $id )
@@ -353,30 +355,32 @@ class OrderController extends Controller
                 }
             }
             dispatch(new OrderJob($order, $subject, $message));
-            dispatch(new SMSJob($order->phone_no, $message));
+            dispatch(new SMSJob($order->phone_no, $smsMessage));
         } elseif (isset($request->delivery_payment_status)) {
             $subject = 'Certificate Biker Order Notification';
             if ($request->delivery_payment_status == 'Pending') {
                 $message = 'Your delivery order #'.$order->id. ' has been marked as Pending in delivery payment. Go to the barangay to process the payment.';
-
+                $smsMessage = 'Your delivery order #'.$order->id. ' has been marked as Pending in delivery payment. Go to the barangay to process the payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             } else {
                 $message = 'Your delivery order #'.$order->id. ' has been marked as Processed. It means that the transaction is completed. Thankyou for your service!';
-
+                $smsMessage = 'Your delivery order #'.$order->id. ' has been marked as Processed. It means that the transaction is completed. Thankyou for your service!'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             }
             $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
 
             dispatch(new SendMailJob($order->biker->email, $subject, $message));
-            dispatch(new SMSJob($order->biker->phone_no, $message));
+            dispatch(new SMSJob($order->biker->phone_no, $smsMessage));
         } elseif(isset($request->is_returned)) {
             $subject = 'Certificate Biker Order Notification';
             if ($request->is_returned == 'No') {
                 $message = 'Your delivery order #'.$order->id. ' has been marked that you still not  returned the delivery item. Go to the barangay to process the payment.';
+                $smsMessage = 'Your delivery order #'.$order->id. ' has been marked that you still not  returned the delivery item. Go to the barangay to process the payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             } else {
                 $message = 'Your delivery order #'.$order->id. ' has been marked that you have returned the item properly. It means that the transaction is completed. Thankyou for your service!';
+                $smsMessage = 'Your delivery order #'.$order->id. ' has been marked that you have returned the item properly. It means that the transaction is completed. Thankyou for your service!'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             }
             $order->fill(['is_returned' => $request->is_returned])->save();
             dispatch(new SendMailJob($order->biker->email, $subject, $message));
-             dispatch(new SMSJob($order->biker->phone_no, $message));
+            dispatch(new SMSJob($order->biker->phone_no, $smsMessage));
         }
 
         return response()->json(['message' => 'Order status has been updated' ], 200);
@@ -413,7 +417,7 @@ class OrderController extends Controller
             // for sms
             $smsLabel1 = 'Your order #'.$order->id. ' has been approved by the administrator. Please expect to received the document (If Delivery) or go to the barangay office to pickup your order (If Pickup) at '. \Carbon\Carbon::parse($order->pickup_date)->format('F d, Y'). ' working hours.';
             $smsLabel2 = 'If the order has not been selected by the biker or delivers after 3 days prior to the delivery, it will be marked as Cancelled.';
-            $smsLabel3 =  PHP_EOL.PHP_EOL.'Admin Message: '. $order->admin_message;
+            $smsLabel3 =  PHP_EOL.PHP_EOL.'Admin Message: '. $order->admin_message.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             $smsMessage = $smsLabel1.$smsLabel2.$smsLabel3;
         } else {
             // for email
@@ -423,7 +427,7 @@ class OrderController extends Controller
 
             // for sms
             $smsLabel1 = 'Your order #'.$order->id. ' has been denied by the administrator. Please see below the reason message why it is not approved. <br> <br> ';
-            $smsLabel2 = PHP_EOL.PHP_EOL.'Reason: '. $order->admin_message;
+            $smsLabel2 = PHP_EOL.PHP_EOL.'Reason: '. $order->admin_message.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             $smsMessage = $smsLabel1.$smsLabel2;
         }
 

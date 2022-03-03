@@ -59,9 +59,7 @@ class ChangeStatusReportJob implements ShouldQueue
             $mess1 = 'Your submitted '.$this->reportName.' #'.$this->id.' was changed its status by "'.$this->status.'" by the administrator. There might be that there is a wrong input or wrong credentials in submitting the report. Please edit again the specified report (It will automatically marked as pending).';
         }
 
-        $mess2 = PHP_EOL.PHP_EOL.'Admin Message: '.$this->adminMessage;
-
-        $mess2 = PHP_EOL.PHP_EOL.'Admin Message: '.$this->adminMessage;
+        $mess2 = PHP_EOL.PHP_EOL.'Admin Message: '.$this->adminMessage.PHP_EOL.PHP_EOL.'-Barangay Cupang';
 
         $message = $mess1.$mess2;
         // Sending a SMS Message

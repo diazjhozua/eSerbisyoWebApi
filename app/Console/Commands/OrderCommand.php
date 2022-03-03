@@ -62,7 +62,8 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' has been cancelled by the system since you did not received the specified order within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
-                dispatch(new SMSJob($order->phone_no, $message));
+                $smsMessage = $label1.$label2.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+                dispatch(new SMSJob($order->phone_no, $smsMessage));
                 dispatch(new SendMailJob($order->email, $subject, $message));
             });
 
@@ -74,7 +75,8 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' assigned pickup date is today. Please go to the barangay office to pickup your requested certificate (If pickup) or Expect the biker to pickup the delivery item (If delivery and booked by the biker). Take note of your order ID and prepare credentials.';
                 $label2 = 'Be aware that if you did not received (Pickup) or it did not booked by the biker, the order within 3 days after the assigned pickup date, your order will be marked as cancelled. Thankyou for using this application.';
                 $message = $label1.$label2;
-                dispatch(new SMSJob($order->phone_no, $message));
+                $smsMessage = $label1.$label2.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+                dispatch(new SMSJob($order->phone_no, $smsMessage));
                 dispatch(new SendMailJob($order->email, $subject, $message));
 
                 if ($order->delivered_by != NULL) {
@@ -107,7 +109,8 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' has been cancelled by the system since the order has not been picked by the biker to deliver within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
-                dispatch(new SMSJob($order->phone_no, $message));
+                $smsMessage = $label1.$label2.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+                dispatch(new SMSJob($order->phone_no, $smsMessage));
                 dispatch(new SendMailJob($order->email, $subject, $message));
             });
 
@@ -129,7 +132,8 @@ class OrderCommand extends Command
                 $label1 = 'Please take note that your order #'.$order->id.' has been cancelled by the system since the designated biker has not been picked your order to deliver within 3 days after the specified pickup date.';
                 $label2 = 'Thankyou for using this application.';
                 $message = $label1.$label2;
-                dispatch(new SMSJob($order->phone_no, $message));
+                $smsMessage = $label1.$label2.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+                dispatch(new SMSJob($order->phone_no, $smsMessage));
                 dispatch(new SendMailJob($order->email, $subject, $message));
 
                 $subject = 'Certificate Delivery Cancellation Notification!';
