@@ -22,6 +22,7 @@ class AnnouncementController extends Controller
     }
 
     public function getLikeList(Announcement $announcement) {
+        activity()->disableLogging();
         $announcement = $announcement->load('likes');
         $likes = $announcement->likes;
         return (LikeResource::collection($likes));

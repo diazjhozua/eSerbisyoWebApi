@@ -17,14 +17,23 @@ function viewVerificationRequest(requestID) {
 
             $('#reviewRequestModal').modal('show') //show bootstrap modal
             $('#profileHead').text(data.first_name + ' ' + data.last_name + ' Profile');
-            $('#profilePicture').prop('src', data.file_path); //add the src attribute
+
             $("#profilePicture").prop("alt", data.first_name + ' ' + data.last_name + ' picture'); //add the alt text
+
+            if (data.file_path) {
+                $('#profilePicture').prop('src', data.file_path); //add the src attribute
+            } else {
+                $('#profilePicture').prop('src', "https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg"); //add the src attribute
+            }
+
             $('#firstName').text(data.first_name)
             $('#middleName').text(data.middle_name)
             $('#lastName').text(data.last_name)
             $('#purok').text(data.purok.purok)
             $('#address').text(data.address)
             $('#credentials').html('<a href="' + data.credential_file_path + '" target="_blank">' + data.credential_name + '</a></a>')
+
+
 
             $('#verifyRequestForm').trigger("reset")
             let actionURL = `${window.location.origin}/admin/user-verifications/${data.id}`;

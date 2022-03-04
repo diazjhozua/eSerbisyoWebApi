@@ -109,6 +109,7 @@ class AuthController extends Controller
     }
 
     public function submitRegisterForm(RegistrationRequest $request) {
+        activity()->disableLogging();
         User::create(array_merge($request->getData(), ['password' => Hash::make($request->password), 'user_role_id' => 9]));
 
         return response()->json([
