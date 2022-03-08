@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use App\Jobs\SendMailJob;
 use App\Jobs\SMSJob;
 use App\Models\CertificateForm;
+use App\Models\Feedback;
 use App\Models\Order;
+use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -43,6 +45,17 @@ class OrderCommand extends Command
     public function handle()
     {
         activity()->disableLogging();
+
+        Report::where('created_at', '<=', Carbon::now()->subDay(1)->toDateTimeString())->where('status', 'Pending')->each(function ($report) {
+            $report->status = "Ignored";
+            $report->save();
+        });
+
+        Feedback::where('created_at', '<=', Carbon::now()->subDay(10)->toDateTimeString())->where('status', 'Pending')->each(function ($feedback) {
+            $feedback->status = "Ignored";
+            $feedback->save();
+        });
+
         // marked the order and its certficate forms when the order (pickup mode) is not received within 3 days.
         Order::where('pickup_date', '<=',Carbon::now()->subDays(3)->toDateTimeString())
             ->where('application_status', 'Approved')

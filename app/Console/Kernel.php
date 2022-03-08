@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('command:ignore_feedback')->weekly();
         $schedule->command('command:ignore_report')->dailyAt('13:00');
-        $schedule->command('command:order')->everyMinute()->appendOutputTo($filePath);
+        $schedule->command('command:order')->dailyAt('13:00');
 
         // $schedule->command('reports:ignore_urgent')->hourly();
         // $schedule->command('reports:ignore_nonurgent')->everySixHours();
