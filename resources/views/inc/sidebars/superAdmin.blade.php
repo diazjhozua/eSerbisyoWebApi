@@ -83,6 +83,12 @@
             <span>Verification Requests</span></a>
     </li>
 
+    <li id="inquiries" class="nav-item">
+        <a class="nav-link" href="{{ route('admin.inquiries.index') }}">
+            <img src="{{ asset('assets/img/ticket.png') }}" alt="Inquiries">
+            <span>Inquiries</span></a>
+    </li>
+
     <!-- User Nav Item - Tables -->
     <li id="android" class="nav-item">
         <a class="nav-link" href="{{ route('admin.androids.index') }}">
