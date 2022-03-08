@@ -71,7 +71,7 @@ $(document).ready(function () {
     var channel = pusher.subscribe('private-inquiry-channel');
 
     channel.bind('inquiry-channel', function (data) {
-        toastr.info('User ' + data.feedback.submitted_by + 'submitted an inquiry. Please repond to the specific inquiry.')
+        toastr.info('User ' + data.inquiry.submitted_by + 'submitted an inquiry. Please repond to the specific inquiry.')
         // add to pending card if it is new report
         $("#pendingFeedbackCount").text(parseInt($("#pendingFeedbackCount").text()) + 1);
 
