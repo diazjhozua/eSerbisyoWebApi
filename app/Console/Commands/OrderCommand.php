@@ -18,7 +18,7 @@ class OrderCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:order';
+    protected $signature = 'schedule:systemChange {--sleep=1440}';
 
     /**
      * The console command description.
