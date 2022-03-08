@@ -95,6 +95,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Feedback::class);
     }
 
+    public function inquiries(){
+        return $this->hasMany(Inquiry::class);
+    }
+
+
     public function orders(){
         return $this->hasMany(Order::class, 'ordered_by', 'id');
     }

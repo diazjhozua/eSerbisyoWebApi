@@ -1,28 +1,19 @@
 function sendRespond(id) {
     $('#feedbackRespondModal').modal('show');
-    $('#respondForm').attr('action', window.location.origin + '/admin/feedbacks/respond/' + id);
+    $('#respondForm').attr('action', window.location.origin + '/admin/inquiries/respond/' + id);
 }
 
 function addOrReplaceRow(data, isReplaceBool) {
 
     col0 = '<td>' + data.id + '</td>'
     col1 = '<td>' + data.submitted_by + '</td>'
-    console.log(data.type);
-    if (data.type_id === 0) {
-        col2 = '<td>' + data.custom_type + '</td>'
-    } else {
-        col2 = '<td><a href="' + window.location.origin + '/admin/feedback-types/' + data.type_id + '">' + data.type + '</a></td>'
-    }
-    col3 = `<td class="text-center"> <div class="Stars"
-                            style="--rating: ${data.rating}; --star-size:50px"
-                            aria-label="Rating of this product is ${data.rating} out of 5."></div>
-                            <p>${data.rating}/5</p></td>`;
-    col4 = '<td>' + data.message + '</td>'
-    col5 = '<td>' + data.admin_respond + '</td>'
-    col6 = '<td>' + data.status + '</td>'
-    col7 = '<td>' + data.created_at + '</td>'
+    col2 = '<td>' + data.about + '</td>'
+    col3 = '<td>' + data.message + '</td>'
+    col4 = '<td>' + data.admin_message + '</td>'
+    col5 = '<td>' + data.status + '</td>'
+    col6 = '<td>' + data.created_at + '</td>'
     btnStatus = data.status !== 'Pending' ? 'disabled' : ''
-    col8 = '<td>' +
+    col7 = '<td>' +
         '<ul class="list-inline m-0">' +
         '<li class="list-inline-item mb-1">' +
         '<button class="btn btn-primary btn-sm" type="button" onclick="sendRespond(' + data.id + ')" data-toggle="tooltip" data-placement="top" title="Respond"' + btnStatus + '>' +
@@ -37,7 +28,7 @@ function addOrReplaceRow(data, isReplaceBool) {
 
     if (isReplaceBool != true) {
         var currentPage = table.page();
-        table.row.add([col0, col1, col2, col3, col4, col5, col6, col7, col8]).draw()
+        table.row.add([col0, col1, col2, col3, col4, col5, col6, col7]).draw()
 
         selectedRow = 0
         var index = table.row(selectedRow).index(),
@@ -55,7 +46,7 @@ function addOrReplaceRow(data, isReplaceBool) {
         table.page(currentPage).draw(false)
 
     } else {
-        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7, col8]).draw(false);
+        table.row('.selected').data([col0, col1, col2, col3, col4, col5, col6, col7]).draw(false);
     }
 }
 
@@ -77,14 +68,14 @@ $(document).ready(function () {
         }
     });
 
-    var channel = pusher.subscribe('private-feedback-channel');
+    var channel = pusher.subscribe('private-inquiry-channel');
 
-    channel.bind('feedback-channel', function (data) {
-        toastr.info('User ' + data.feedback.submitted_by + 'submitted a feedback. Please repond to the specific feedback.')
+    channel.bind('inquiry-channel', function (data) {
+        toastr.info('User ' + data.feedback.submitted_by + 'submitted an inquiry. Please repond to the specific inquiry.')
         // add to pending card if it is new report
         $("#pendingFeedbackCount").text(parseInt($("#pendingFeedbackCount").text()) + 1);
 
-        addOrReplaceRow(data.feedback, false);
+        addOrReplaceRow(data.inquiry, false);
 
     });
 
@@ -108,7 +99,7 @@ $(document).ready(function () {
     });
 
 
-    $('#feedback').addClass('active')
+    $('#inquiries').addClass('active')
 
     $("form[name='feedbackRespondForm']").validate({
         // Specify validation rules
@@ -214,7 +205,7 @@ $(document).ready(function () {
             let sort_option = $('#sort_option').val();
             let status_option = $('#status_option').val();
 
-            var url = `${window.location.origin}/admin/feedbacks/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status_option}`;
+            var url = `${window.location.origin}/admin/inquiries/report/${date_start}/${date_end}/${sort_column}/${sort_option}/${status_option}`;
             window.open(url, '_blank');
         }
     });

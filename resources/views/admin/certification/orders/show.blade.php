@@ -352,7 +352,7 @@
             @endif
 
             {{-- For delivery --}}
-            @if ($order->pick_up_type == 'Delivery' && $order->application_status == 'Approved'  && $order->order_status != 'Received' && $order->order_status != 'DNR')
+            @if ($order->pick_up_type == 'Delivery' && $order->application_status == 'Approved'  && $order->order_status != 'Received' && $order->order_status != 'DNR' && $order->delivered_by != null)
                 {{-- Order Status --}}
                 <label class="ml-2">Order Status</label>
                 <div class="input-group mb-3 ml-2">

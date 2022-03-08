@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ {
     MissingPersonController,
     ComplaintController,
     ComplainantController,
+    InquiryController,
     DefendantController,
     AnnouncementController,
     BikerController,
@@ -48,6 +49,9 @@ Route::group([
     Route::get('feedbacks/', [FeedbackController::class, 'index']);
     Route::get('reports/getAnalytics', [ReportController::class, 'getAnalytics']);
     Route::get('reports/', [ReportController::class, 'index']);
+
+    Route::resource('inquiries', InquiryController::class)->only(['index', 'store']);
+
     Route::resource('userRequirements', UserRequirementController::class)->except(['show', 'edit', 'update','delete']);
 
     Route::get('announcements/like/{announcement}',  [AnnouncementController::class, 'getLikeList']);

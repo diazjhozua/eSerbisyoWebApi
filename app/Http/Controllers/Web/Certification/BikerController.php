@@ -20,7 +20,6 @@ class BikerController extends Controller
     // list of bikers
     public function index() {
         $bikers = User::with('user_role')->with('latest_biker_request')->where('user_role_id', 8)->orderBy('created_at', 'DESC')->get();
-
         return view('admin.certification.bikers.index', compact('bikers'));
     }
 

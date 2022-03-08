@@ -19,7 +19,8 @@ use App\Http\Controllers\Web\Admin\ {
     UserController as AdminUser,
     UserVerificationController as AdminUserVerification,
     StaffController as AdminStaff,
-    AndroidController as AdminAndroid
+    AndroidController as AdminAndroid,
+    InquiryController
 };
 
 
@@ -31,6 +32,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoAdmin']
     // Route::post('feedback-types/report/{id}', [AdminFeedbackType::class, 'reportShow'])->name('feedback-types.report.show'); //report type show
 
     Route::get('feedbacks/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{status_option}/', [AdminFeedback::class, 'report'])->name('feedbacks.report');
+     Route::get('inquiries/report/{date_start}/{date_end}/{sort_column}/{sort_option}/{status_option}/', [InquiryController::class, 'report'])->name('inquiries.report');
     // Route::post('feedbacks/report', [AdminFeedback::class, 'report'])->name('feedbacks.report');
 
     Route::get('document-types/report/{date_start}/{date_end}/{sort_column}/{sort_option}/', [AdminDocumentType::class, 'report'])->name('document-types.report');
@@ -79,6 +81,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'isAdmin:infoStaff']
     Route::resource('feedback-types', AdminFeedbackType::class)->except(['create']); //resource except create method
     Route::put('feedbacks/respond/{feedback}', [AdminFeedback::class, 'respondReport']);
     Route::get('feedbacks', [AdminFeedback::class, 'index'])->name('feedbacks.index');
+
+    Route::put('inquiries/respond/{inquiry}', [InquiryController::class, 'respondReport']);
+    Route::get('inquiries', [InquiryController::class, 'index'])->name('inquiries.index');
 
     Route::resource('document-types', AdminDocumentType::class)->except(['create']);
     Route::resource('documents', AdminDocument::class)->except(['show']);
