@@ -15,7 +15,7 @@ class OrdinanceRequest extends FormRequest
     {
         $rules = [
             'ordinance_no'=> 'required|string|min:4|max:60',
-            'title'=> 'required|string|min:4|max:250',
+            'title'=> 'required|string|min:4|max:1000',
             'date_approved' => 'required|date|date_format:Y-m-d',
             'type_id' => 'required|integer|exists:types,id',
         ];

@@ -147,7 +147,7 @@ $(document).ready(function () {
             title: {
                 required: true,
                 minlength: 4,
-                maxlength: 250,
+                maxlength: 1000,
             },
             date_approved: {
                 required: true,

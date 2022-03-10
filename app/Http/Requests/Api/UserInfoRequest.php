@@ -17,9 +17,9 @@ class UserInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|min:4|max:150',
-            'middle_name' => 'string|min:4|max:150',
-            'last_name' => 'required|string|min:4|max:150',
+            'first_name' => 'required|string|min:3|max:150',
+            'middle_name' => 'string|min:3|max:150',
+            'last_name' => 'required|string|min:3|max:150',
             'purok_id' => ['required', Rule::exists('puroks', 'id')],
             'address' => 'required|string|min:4|max:250',
             'picture' => 'base64image'
