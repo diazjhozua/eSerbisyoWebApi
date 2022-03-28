@@ -23,6 +23,12 @@ class ProjectController extends Controller
         return ProjectResource::collection($projects)->additional(['success' => true]);
     }
 
+    public function show(Project $project)
+    {
+        return (new ProjectResource($project->load('type')))->additional(Helper::instance()->itemFound('document'));
+    }
+
+
     // /**
     //  * Show the form for creating a new resource.
     //  *

@@ -9,9 +9,11 @@ use App\Http\Requests\AnnouncementRequest;
 use App\Http\Requests\Report\AnnouncementReportRequest;
 use App\Http\Resources\AnnouncementResource;
 use App\Http\Resources\TypeResource;
+use App\Jobs\SendNotificationJob;
 use App\Models\Announcement;
 use App\Models\AnnouncementPicture;
 use App\Models\Type;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
@@ -59,10 +61,17 @@ class AnnouncementController extends Controller
         if (isset($request->picture_list)) {
             foreach ($request->picture_list as $file) {
                 $fileName = uniqid().'-'.time();
-                $result = $file->storeOnCloudinaryAs('barangay', $fileName);
+                $result = $file->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
                 AnnouncementPicture::create(['announcement_id' => $announcement->id, 'picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]);
             }
         }
+
+        dispatch(
+            new SendNotificationJob(
+                User::where('is_subscribed', 'Yes')->get(), "New announcement posted",
+                "New announcement has been posted by the barangay officials about ".$announcement->type->name, $announcement->id, "App\Models\Announcement",
+        ));
+
         return (new AnnouncementResource($announcement->load('type')->loadCount('announcement_pictures')))->additional(Helper::instance()->storeSuccess('announcement'));
     }
 

@@ -9,6 +9,7 @@ use App\Http\Requests\MissingPersonRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\MissingPersonResource;
 use App\Jobs\ChangeStatusReportJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Models\MissingPerson;
 use Auth;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -49,7 +50,7 @@ class MissingPersonController extends Controller
     {
         if(request()->ajax()) {
             $fileName = uniqid().'-'.time();
-            $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+            $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
             $missing_person = MissingPerson::create(array_merge($request->getData(), ['user_id' => Auth::id(), 'status' => 'Approved', 'picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->storeSuccess('missing-person report'));
         }
@@ -77,7 +78,7 @@ class MissingPersonController extends Controller
             if($request->hasFile('picture')) {
                 Cloudinary::destroy($missing_person->picture_name);
                 $fileName = uniqid().'-'.time();
-                $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+                $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
                 $missing_person->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]))->save();
             } else {   $missing_person->fill(array_merge($request->getData()))->save(); }
             return (new MissingPersonResource($missing_person->load('comments', 'contact')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-person report'));
@@ -105,6 +106,13 @@ class MissingPersonController extends Controller
 
             $subject = 'Missing Person Report Change Status Notification';
             $reportName = 'missing person report';
+
+            dispatch(
+                new SendSingleNotificationJob(
+                    $missing_person->contact->device_id, $missing_person->contact->id, "Missing Person Report Change Status Notification",
+                    "Your submitted missing person #".$missing_person->id." status has been change by the administrator.", $missing_person->id,  "App\Models\MissingPerson"
+            ));
+
             dispatch(new ChangeStatusReportJob($missing_person->email, $missing_person->id, $reportName, $missing_person->status, $missing_person->admin_message, $subject, $missing_person->phone_no));
             return (new MissingPersonResource($missing_person))->additional(Helper::instance()->statusMessage($oldStatus, $missing_person->status, 'missing-person report'));
         }

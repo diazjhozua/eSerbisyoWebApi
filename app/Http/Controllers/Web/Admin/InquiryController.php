@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RespondFeedbackRequest;
 use App\Http\Resources\InquiryResource;
 use App\Jobs\SendMailJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Models\Inquiry;
 use DB;
 use Helper;
@@ -39,6 +40,13 @@ class InquiryController extends Controller
         $label1 = 'Your inquiry #'.$inquiry->id. ' has been noted by the administrator. Please see the message below and Thankyou for using the application <br> <br>';
         $label2 = 'Admin Message: '. $inquiry->admin_message;
         $message = $label1.$label2;
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $inquiry->user->device_id, $inquiry->user->id, "Submitted Inquiry Alert",
+                "Your inquiry #".$inquiry->id." has been responded by our administrator.", $inquiry->id,  "App\Models\Inquiry"
+        ));
+
         dispatch(new SendMailJob($inquiry->user->email, "Inquiry #".$inquiry->id." update", $message));
         return (new InquiryResource($inquiry->load('user')))->additional(Helper::instance()->noted('Inquiry'));
     }

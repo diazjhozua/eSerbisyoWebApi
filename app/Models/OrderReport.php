@@ -9,6 +9,8 @@ class OrderReport extends Model
 {
     use HasFactory;
 
+    protected $with = ['user'];
+
     protected $guarded = [];
 
     public function user(){

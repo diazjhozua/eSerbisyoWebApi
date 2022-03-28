@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Web\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AndroidRequest;
 use App\Http\Resources\AndroidResource;
+use App\Jobs\SendNotificationJob;
 use App\Models\Android;
+use App\Models\User;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Helper;
 
@@ -21,7 +23,14 @@ class AndroidController extends Controller
     public function store(AndroidRequest $request)
     {
         $android = Android::create($request->getData());
+
+        dispatch(new SendNotificationJob(User::where('is_subscribed', 'Yes')->get(), "New application release",
+            "New application ".$android->version." has been uploaded. Please re-download the application", $android->id, "App\Models\Android",
+        ));
+
         return (new AndroidResource($android))->additional(Helper::instance()->storeSuccess('android version'));
+
+
     }
 
     public function edit(Android $android)

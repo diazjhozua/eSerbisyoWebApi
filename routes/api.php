@@ -26,8 +26,6 @@ use App\Http\Controllers\Api\ {
 use App\Http\Requests\CertificateFormRequest;
 
 
-
-
 Route::post('/register', [JwtAuthCtrl::class, 'register']);
 Route::post('/login', [JwtAuthCtrl::class, 'login']);
 
@@ -45,6 +43,11 @@ Route::group([
     Route::get('/myVerificationRequest', [JwtAuthCtrl::class, 'myVerificationRequest']);
     Route::post('/submitVerificationRequest', [JwtAuthCtrl::class, 'submitVerificationRequest']);
 
+    Route::get('/myNotifications', [JwtAuthCtrl::class, 'myNotifications']);
+    Route::get('/getNotificationsCount', [JwtAuthCtrl::class, 'getNotificationsCount']);
+    Route::put('/subscribe', [JwtAuthCtrl::class, 'subscribe']);
+    Route::put('/seenNotification/{notification}', [JwtAuthCtrl::class, 'seenNotification']);
+
     Route::get('feedbacks/getAnalytics', [FeedbackController::class, 'getAnalytics']);
     Route::get('feedbacks/', [FeedbackController::class, 'index']);
     Route::get('reports/getAnalytics', [ReportController::class, 'getAnalytics']);
@@ -59,23 +62,24 @@ Route::group([
     Route::post('announcements/like/{announcement}',  [AnnouncementController::class, 'like']);
     Route::post('announcements/comment/{announcement}',  [AnnouncementController::class, 'comment']);
 
-    Route::resource('announcements', AnnouncementController::class)->only(['index']);
+    Route::resource('announcements', AnnouncementController::class)->only(['index', 'show']);
     Route::resource('comments', CommentController::class)->only(['edit', 'update', 'destroy']);
 
-    Route::resource('documents', DocumentController::class)->only(['index']);
-    Route::resource('ordinances', OrdinanceController::class)->only(['index']);
-    Route::resource('projects', ProjectController::class)->only(['index']);
+    Route::resource('documents', DocumentController::class)->only(['index','show']);
+    Route::resource('ordinances', OrdinanceController::class)->only(['index', 'show']);
+    Route::resource('projects', ProjectController::class)->only(['index', 'show']);
     Route::resource('employees', EmployeeController::class)->only(['index']);
 
     Route::get('missingPersons/comment/{missingPerson}',  [MissingPersonController::class, 'getCommentList']);
     Route::post('missingPersons/comment/{missingPerson}',  [MissingPersonController::class, 'comment']);
     Route::get('missingPersons/authReports', [MissingPersonController::class, 'authReports']);
-    Route::get('missingPersons/', [MissingPersonController::class, 'index']);
+    Route::resource('missingPersons', MissingPersonController::class)->only(['index', 'show']);
+
 
     Route::get('missingItems/comment/{missingItem}',  [MissingItemController::class, 'getCommentList']);
     Route::post('missingItems/comment/{missingItem}',  [MissingItemController::class, 'comment']);
     Route::get('missingItems/authReports', [MissingItemController::class, 'authReports']);
-    Route::get('missingItems/', [MissingItemController::class, 'index']);
+    Route::resource('missingItems', MissingItemController::class)->only(['index', 'show']);
 
     Route::get('complaints/getAnalytics', [ComplaintController::class, 'getAnalytics']);
     Route::get('complaints/', [ComplaintController::class, 'index']);

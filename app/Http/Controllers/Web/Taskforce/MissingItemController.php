@@ -7,6 +7,7 @@ use App\Http\Requests\ChangeStatusRequest;
 use App\Http\Requests\MissingItemRequest;
 use App\Http\Resources\MissingItemResource;
 use App\Jobs\ChangeStatusReportJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Models\MissingItem;
 use Auth;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -49,7 +50,7 @@ class MissingItemController extends Controller
     {
         if(request()->ajax()) {
             $fileName = uniqid().'-'.time();
-            $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+            $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
             $lost_and_found = MissingItem::create(array_merge($request->getData(), ['user_id' => Auth::id(), 'status' => 'Approved', 'picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
             return (new MissingItemResource($lost_and_found))->additional(Helper::instance()->storeSuccess('missing-item report'));
         }
@@ -75,7 +76,7 @@ class MissingItemController extends Controller
             if($request->hasFile('picture')) {
                 Cloudinary::destroy($missing_item->picture_name);
                 $fileName = uniqid().'-'.time();
-                $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+                $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
                 $missing_item->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()]))->save();
             } else { $missing_item->fill(array_merge($request->getData()))->save(); }
             return (new MissingItemResource($missing_item->load('comments', 'contact')->loadCount('comments')))->additional(Helper::instance()->updateSuccess('missing-item report'));
@@ -101,6 +102,13 @@ class MissingItemController extends Controller
 
         $subject = 'Missing Item Report Change Status Notification';
         $reportName = 'missing item report';
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $missing_item->contact->device_id, $missing_item->contact->id, "Missing Item Report Change Status Notification",
+                "Your submitted missing item #".$missing_item->id." status has been change by the administrator.", $missing_item->id,  "App\Models\MissingItem"
+        ));
+
         dispatch(new ChangeStatusReportJob($missing_item->user->email, $missing_item->id, $reportName, $missing_item->status, $missing_item->admin_message, $subject, $missing_item->phone_no));
 
         return (new MissingItemResource($missing_item))->additional(Helper::instance()->statusMessage($oldStatus, $missing_item->status, 'missing-item'));

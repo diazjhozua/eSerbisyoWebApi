@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RespondReportRequest;
 use App\Http\Resources\ReportResource;
 use App\Jobs\RespondReportJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Models\Report;
 use App\Models\Type;
 use DB;
@@ -42,6 +43,12 @@ class ReportController extends Controller
             $report->fill($request->validated())->save();
 
             $subject = $request->status == 'Noted' ? 'Your submitted report was noted by the barangay official' : 'Your submitted report was invalidated' ;
+
+            dispatch(
+                new SendSingleNotificationJob(
+                    $report->user->device_id, $report->user->id, "Submitted Report Alert",
+                    "Your report #".$report->id." has been responded by our administrator.", $report->id,  "App\Models\Report"
+            ));
 
             dispatch(new RespondReportJob($report, $subject));
             return (new ReportResource($report->load('type')))->additional(Helper::instance()->noted('report'));

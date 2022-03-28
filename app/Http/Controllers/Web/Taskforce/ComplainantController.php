@@ -16,7 +16,7 @@ class ComplainantController extends Controller
 {
     public function store(ComplainantRequest $request)
     {
-        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->signature, ['folder' => 'barangay']);
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->signature, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
         $complainant = Complainant::create(array_merge($request->getData(), ['signature_picture' => $result->getPublicId(),'file_path' =>$result->getPath()]));
         return (new ComplainantResource($complainant->load('complaint')))->additional(Helper::instance()->storeSuccess('complainant'));
     }
@@ -30,7 +30,7 @@ class ComplainantController extends Controller
     {
         if($request->signature != null) {
             Cloudinary::destroy($complainant->signature_picture);
-            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->signature, ['folder' => 'barangay']);
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->signature, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
             $complainant->fill(array_merge($request->getData(), ['signature_picture' => $result->getPublicId(),'file_path' =>$result->getPath()]))->save();
         } else { $complainant->fill($request->getData())->save(); }
 

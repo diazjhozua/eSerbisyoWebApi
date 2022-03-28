@@ -37,6 +37,7 @@ class FeedbackController extends Controller
         if ($feedback->status === 'Noted' || $feedback->status === 'Ignored') { return response()->json(Helper::instance()->alreadyNoted('feedback'), 403); }
         $feedback->fill(['admin_respond' => $request->admin_respond,'status' => 'Noted'])->save();
         dispatch(new FeedbackJob($feedback));
+
         return (new FeedbackResource($feedback->load('type')))->additional(Helper::instance()->noted('feedback'));
     }
 

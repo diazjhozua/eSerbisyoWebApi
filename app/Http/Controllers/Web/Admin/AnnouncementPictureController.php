@@ -16,7 +16,7 @@ class AnnouncementPictureController extends Controller
     public function store(AnnouncementPictureRequest $request)
     {
         $fileName = uniqid().'-'.time();
-        $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+        $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
         $announcement_picture = AnnouncementPicture::create(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]));
         return (new AnnouncementPictureResource($announcement_picture))->additional(Helper::instance()->storeSuccess('announcement_picture'));
     }
@@ -30,7 +30,7 @@ class AnnouncementPictureController extends Controller
     {
         Cloudinary::destroy($announcement_picture->picture_name);
         $fileName = uniqid().'-'.time();
-        $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+        $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
         $announcement_picture->fill(['picture_name' => $result->getPublicId(), 'file_path' => $result->getPath()])->save();
         return (new AnnouncementPictureResource($announcement_picture))->additional(Helper::instance()->updateSuccess('announcement_picture'));
     }

@@ -9,8 +9,10 @@ use App\Http\Requests\OrdinanceRequest;
 use App\Http\Requests\Report\OrdinanceReportRequest;
 use App\Http\Resources\OrdinanceResource;
 use App\Http\Resources\TypeResource;
+use App\Jobs\SendNotificationJob;
 use App\Models\Ordinance;
 use App\Models\Type;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -54,8 +56,13 @@ class OrdinanceController extends Controller
     public function store(OrdinanceRequest $request)
     {
         $fileName = uniqid().'-'.time();
-        $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+        $result = $request->file('pdf')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
         $ordinance = Ordinance::create(array_merge($request->getData(), ['title' => strtoupper($request->title), 'pdf_name' => $result->getPublicId(),'file_path' => $result->getPath()]));
+
+        dispatch(new SendNotificationJob(User::where('is_subscribed', 'Yes')->get(), "New ordinance uploaded",
+            "New ordinance ".$ordinance->name." has been uploaded in the application.", $ordinance->id, "App\Models\Ordinance",
+        ));
+
         return (new OrdinanceResource($ordinance->load('type')))->additional(Helper::instance()->storeSuccess('ordinance'));
     }
 
@@ -70,7 +77,7 @@ class OrdinanceController extends Controller
         if($request->hasFile('pdf')) {
             Cloudinary::destroy($ordinance->pdf_name);
             $fileName = uniqid().'-'.time();
-            $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+            $result = $request->file('pdf')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
 
             $ordinance->fill(array_merge($request->getData(), ['title' => strtoupper($request->title), 'pdf_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else { $ordinance->fill(array_merge($request->getData(), ['title' => strtoupper($request->title), 'custom_type' => NULL]))->save(); }

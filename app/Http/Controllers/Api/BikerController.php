@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BikerApplicationRequest;
 use App\Http\Requests\Api\PictureRequest;
 use App\Jobs\OrderJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Jobs\SMSJob;
 use App\Models\BikerRequest;
 use App\Models\Order;
@@ -23,7 +24,7 @@ class BikerController extends Controller
     public function postVerification(BikerApplicationRequest $request) {
         activity()->disableLogging();
 
-        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
         $bikerVerification = BikerRequest::create(array_merge($request->getData(),
             [
             'status' => 'Pending',
@@ -122,9 +123,17 @@ class BikerController extends Controller
         ])->save();
 
         $subject = 'Certificate Order Notification';
+        $emailMessage = 'Your order #'.$order->id. ' has been booked by our biker delivery Please prepare the exact payment';
         $message = 'Your order #'.$order->id. ' has been booked by our biker delivery Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
-        dispatch(new OrderJob($order, $subject, $message));
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $order->contact->device_id, $order->contact->id, "Certificate Order Notification",
+                $emailMessage, $order->id,  "App\Models\Order"
+        ));
+
+        dispatch(new OrderJob($order, $subject, $emailMessage));
         dispatch(new SMSJob($order->phone_no, $message));
 
         return response()->json(['message' => 'Order has been selected successfully'], 200);
@@ -132,16 +141,28 @@ class BikerController extends Controller
 
     // start riding biker
     public function startRiding(Order $order) {
+
+        if ($order->order_status != 'On-Going') {
+            return response()->json(['message' => 'You cannot start riding since you did not pickup the order yet. Go to the barangay to pickup the order'], 403);
+        }
+
         activity()->disableLogging();
         if ($order->application_status != 'Approved' || $order->pick_up_type != 'Delivery' || $order->delivered_by != auth('api')->user()->id) {
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been start delivering your requested order by the biker. Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+        $emailMessage = 'Your order #'.$order->id. ' has been start delivering your requested order by the biker. Please prepare the exact payment.';
+        $smsMessage = 'Your order #'.$order->id. ' has been start delivering your requested order by the biker. Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
-        dispatch(new OrderJob($order, $subject, $message));
-        dispatch(new SMSJob($order->phone_no, $message));
+        dispatch(
+            new SendSingleNotificationJob(
+                $order->contact->device_id, $order->contact->id, "Certificate Order Notification",
+                $emailMessage, $order->id,  "App\Models\Order"
+        ));
+
+        dispatch(new OrderJob($order, $subject, $emailMessage));
+        dispatch(new SMSJob($order->phone_no, $smsMessage));
 
         return response()->json(['message' => 'Notification has been set to the user.'], 200);
     }
@@ -149,6 +170,11 @@ class BikerController extends Controller
     // put confirm receive order
     public function confirmReceiveOrder(PictureRequest $request, Order $order) {
         activity()->disableLogging();
+
+        if ($order->order_status != 'On-Going') {
+            return response()->json(['message' => 'You cannot start riding since you did not pickup the order yet. Go to the barangay to pickup the order'], 403);
+        }
+
         if ($order->application_status != 'Approved' && $order->pick_up_type != 'Delivery' && $order->delivered_by != auth('api')->user()->id) {
             return response()->json(['message' => 'This order does not meet the requirements to view or book this order'], 403);
         }
@@ -157,7 +183,7 @@ class BikerController extends Controller
             return response()->json(['message' => 'Already marked as received'], 403);
         }
 
-        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
 
         $order->fill([
             'order_status' => 'Received',
@@ -167,10 +193,18 @@ class BikerController extends Controller
         ])->save();
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been successfully delivered by our biker.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+        $emailMessage = 'Your order #'.$order->id. ' has been successfully delivered by our biker.';
+        $smsMessage = 'Your order #'.$order->id. ' has been successfully delivered by our biker.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
         // send sms and email notification to the person who orders it
-        dispatch(new OrderJob($order, $subject, $message));
-        dispatch(new SMSJob($order->phone_no, $message));
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $order->contact->device_id, $order->contact->id, "Certificate Order Notification",
+                $emailMessage, $order->id,  "App\Models\Order"
+        ));
+
+        dispatch(new OrderJob($order, $subject, $emailMessage));
+        dispatch(new SMSJob($order->phone_no, $smsMessage));
         return response()->json(['message' => 'Order marked as received.'], 200);
     }
 
@@ -191,10 +225,18 @@ class BikerController extends Controller
         ])->save();
 
         $subject = 'Certificate Order Notification';
-        $message = 'Your order #'.$order->id. ' has been marked as DNR (Did not receive by specified person on the order). It means that you didn\'t receive the order.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
-        // send sms and email notification to the person who orders it
-        dispatch(new OrderJob($order, $subject, $message));
-        dispatch(new SMSJob($order->phone_no, $message));
+        $emailMessage = 'Your order #'.$order->id. ' has been marked as DNR (Did not receive by specified person on the order). It means that you didn\'t receive the order.';
+        $smsMessage = 'Your order #'.$order->id. ' has been marked as DNR (Did not receive by specified person on the order). It means that you didn\'t receive the order.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+        // send app, sms and email notification to the person who orders it
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $order->contact->device_id, $order->contact->id, "Certificate Order Notification",
+                $emailMessage, $order->id,  "App\Models\Order"
+        ));
+
+        dispatch(new OrderJob($order, $subject, $emailMessage));
+        dispatch(new SMSJob($order->phone_no, $smsMessage));
         return response()->json(['message' => 'Order marked as DNR.'], 200);
 
     }

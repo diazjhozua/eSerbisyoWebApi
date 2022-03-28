@@ -36,12 +36,13 @@ class UserRequirementController extends Controller
             }
         }
         return response()->json(["data" => $noRequirements], 201);
+
     }
 
     public function store(UserRequirementRequest $request)
     {
         activity()->disableLogging();
-        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
 
         $userRequirement =  UserRequirement::create([
             'user_id' => auth('api')->user()->id,

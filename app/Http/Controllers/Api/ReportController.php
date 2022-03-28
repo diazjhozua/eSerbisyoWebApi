@@ -39,7 +39,7 @@ class ReportController extends Controller
         // }
 
         if($request->picture != ''){
-            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
             $report = Report::create(array_merge($request->getData(), ['status' => 'Pending',
                 'user_id' => auth('api')->user()->id,
                 'picture_name' => $result->getPublicId(),

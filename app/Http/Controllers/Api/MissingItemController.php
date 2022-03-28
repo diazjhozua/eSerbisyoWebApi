@@ -8,6 +8,9 @@ use App\Http\Requests\CommentRequest;
 use App\Http\Requests\Api\MissingItemRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\MissingItemResource;
+use App\Jobs\SendMailJob;
+use App\Jobs\SendSingleNotificationJob;
+use App\Jobs\SMSJob;
 use App\Models\MissingItem;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Helper;
@@ -30,6 +33,11 @@ class MissingItemController extends Controller
         return MissingItemResource::collection($missingItems)->additional(['success' => true]);
     }
 
+    public function show(MissingItem $missingItem) {
+        return (new MissingItemResource($missingItem->load('comments')->loadCount('comments')));
+    }
+
+
     public function getCommentList(MissingItem $missingItem) {
         $missingItem = $missingItem->load('comments');
         $comments = $missingItem->comments;
@@ -38,6 +46,23 @@ class MissingItemController extends Controller
 
     public function comment(CommentRequest $request, MissingItem $missingItem) {
         activity()->disableLogging();
+
+        if ($missingItem->contact_user_id != auth('api')->user()->id) {
+            $subject = 'Missing Item Comment Notification';
+            $emailMessage = auth('api')->user()->first_name.' '.auth('api')->user()->last_name.' commented on your missing item report #'.$missingItem->id.'. <br> <br>  Comment: '.$request->body;
+            $smsMessage = auth('api')->user()->first_name.' '.auth('api')->user()->last_name.' commented on your missing item report #'.$missingItem->id.'.'.PHP_EOL.PHP_EOL.'Comment: '.$request->body.PHP_EOL.PHP_EOL.'-Barangay Cupang';
+
+            // send app, sms and email notification
+            dispatch(
+                new SendSingleNotificationJob(
+                    $missingItem->contact->device_id, $missingItem->contact->id, "Missing Item Comment Notification",
+                    auth('api')->user()->first_name.' '.auth('api')->user()->last_name.' commented on your missing item report #'.$missingItem->id, $missingItem->id,  "App\Models\MissingItem"
+            ));
+
+            dispatch(new SendMailJob($missingItem->email, $subject, $emailMessage));
+            dispatch(new SMSJob($missingItem->phone_no, $smsMessage));
+        }
+
         $comment = $missingItem->comments()->create(array_merge($request->validated(), ['user_id' => auth('api')->user()->id]));
         return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
@@ -45,11 +70,11 @@ class MissingItemController extends Controller
     public function store(MissingItemRequest $request)
     {
         activity()->disableLogging();
-        $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+        $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
         $missingFileName = $picture->getPublicId();
         $missingFilePath = $picture->getPath();
 
-        $credential = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->credential, ['folder' => 'barangay']);
+        $credential = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->credential, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
         $credentialFileName = $credential->getPublicId();
         $credentialFilePath = $credential->getPath();
 
@@ -94,7 +119,7 @@ class MissingItemController extends Controller
                 Cloudinary::destroy($missingItem->picture_name);
             }
 
-            $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
             $missingFileName = $picture->getPublicId();
             $missingFilePath = $picture->getPath();
         }
@@ -103,7 +128,7 @@ class MissingItemController extends Controller
             if($missingItem->credential_name != '') {
                 Cloudinary::destroy($missingItem->credential_name);
             }
-            $credential = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->credential, ['folder' => 'barangay']);
+            $credential = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->credential, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
             $credentialFileName = $credential->getPublicId();
             $credentialFilePath = $credential->getPath();
         }

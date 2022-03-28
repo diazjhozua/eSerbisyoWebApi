@@ -5,15 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Events\UserVerificationEvent;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ApiLoginRequest;
 use App\Http\Requests\Api\ChangeEmailRequest;
 use App\Http\Requests\Api\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\Api\RegistrationRequest;
 use App\Http\Requests\Api\UserInfoRequest;
 use App\Http\Requests\Api\UserVerificationRequest;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserVerificationResource;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserVerification;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -25,19 +28,31 @@ use Storage;
 
 class JwtAuthController extends Controller
 {
+    public function checkSameDeviceId($deviceID) {
+        activity()->disableLogging();
+        User::where('device_id', $deviceID)->each(function ($user) {
+            $user->device_id = NULL;
+            $user->save();
+        });
+    }
 
-    public function login(LoginRequest $request){
-
-        $credentials = $request->validated();
-
+    public function login(ApiLoginRequest $request){
+        activity()->disableLogging();
+        $credentials = $request->only('email', 'password');
         if (! $token = auth('api')->attempt($credentials)) {
             return response()->json(['message' => 'Login details are not valid' ], 401);
         }
+        $this->checkSameDeviceId($request->device_id);
+        // update device id
+        User::find(auth('api')->user()->id)->update(['device_id'=> $request->device_id]);
+
         return $this->generateToken($token);
     }
 
     public function register(RegistrationRequest $request) {
         activity()->disableLogging();
+
+        $this->checkSameDeviceId($request->device_id);
         User::create(array_merge($request->validated(), ['password' => Hash::make($request->password), 'user_role_id' => 9]));
         $credentials = $request->validated();
         $token = auth('api')->attempt($credentials);
@@ -65,7 +80,7 @@ class JwtAuthController extends Controller
             if($user->picture_name != '') {
                 Cloudinary::destroy($user->picture_name);
             }
-            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+            $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
             $user->fill(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else {
             $user->fill($request->getData())->save();
@@ -97,7 +112,7 @@ class JwtAuthController extends Controller
             return response()->json(['message' => 'You have already submitted a request. Please wait for the administrator to respond to your current request' ], 406);
         }
 
-        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => 'barangay']);
+        $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
 
         $userVerification = UserVerification::create([
             'user_id' =>  auth('api')->user()->id,
@@ -151,5 +166,49 @@ class JwtAuthController extends Controller
                 'message' => 'Your account has been disabled by the administrator. Reason: '.auth('api')->user()->admin_status_message.'.Please go to the barangay to enable your account again.',
             ], 403);
         }
+    }
+
+
+    // subscribe or unsubsribed
+    public function subscribe() {
+        $user = User::find(auth('api')->user()->id);
+        $is_subscribed = $user->is_subscribed == "Yes" ? "No" : "Yes";
+
+        $user->fill(['is_subscribed' => $is_subscribed])->save();
+
+        return response()->json([
+            'message' => $is_subscribed == "Yes" ? "Subscribed successfully!" : "Unsubscribed successfully!",
+        ], 200);
+    }
+
+    // get auth notification list
+    public function myNotifications() {
+        $notifications = Notification::where("user_id", auth('api')->user()->id)->orderBy('created_at', 'DESC')->get();
+
+        return NotificationResource::collection($notifications)->additional(['is_subscribed' => auth('api')->user()->is_subscribed]);
+    }
+
+    // get auth notification count
+    public function getNotificationsCount() {
+        $notifications = Notification::where("user_id", auth('api')->user()->id)->where('is_seen', 'No')->orderBy('created_at', 'DESC')->count();
+
+        return response()->json([
+            'notificationCount' => $notifications,
+        ], 201);
+    }
+
+    // marked the notification as seen when the user click the specific notification
+    public function seenNotification(Notification $notification) {
+        if ($notification->user_id != auth('api')->user()->id) {
+            return response()->json([
+                'message' => 'You cannot view the other user\'s notification',
+            ], 403);
+        }
+
+        $notification->fill(['is_seen' => "Yes"])->save();
+
+        return response()->json([
+            'message' => 'Ok',
+        ], 201);
     }
 }

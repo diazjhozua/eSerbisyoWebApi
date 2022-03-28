@@ -9,8 +9,10 @@ use App\Http\Requests\ProjectRequest;
 use App\Http\Requests\Report\ProjectReportRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TypeResource;
+use App\Jobs\SendNotificationJob;
 use App\Models\Project;
 use App\Models\Type;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -53,8 +55,15 @@ class ProjectController extends Controller
     public function store(ProjectRequest $request)
     {
         $fileName = uniqid().'-'.time();
-        $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+        $result = $request->file('pdf')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
         $project = Project::create(array_merge($request->getData(), ['pdf_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
+
+        dispatch(
+            new SendNotificationJob(
+                User::where('is_subscribed', 'Yes')->get(), "New project uploaded",
+                "New project ".$project->name." has been uploaded. ", $project->id, "App\Models\Project",
+        ));
+
         return (new ProjectResource($project->load('type')))->additional(Helper::instance()->storeSuccess('project'));
     }
 
@@ -69,7 +78,7 @@ class ProjectController extends Controller
         if($request->hasFile('pdf')) {
             Cloudinary::destroy($project->pdf_name);
             $fileName = uniqid().'-'.time();
-            $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+            $result = $request->file('pdf')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
             $project->fill(array_merge($request->getData(), ['pdf_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else { $project->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save(); }
         return (new ProjectResource($project->load('type')))->additional(Helper::instance()->updateSuccess('project'));

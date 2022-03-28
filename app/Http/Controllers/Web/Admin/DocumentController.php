@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DocumentRequest;
 use App\Http\Resources\DocumentResource;
 use App\Http\Resources\TypeResource;
+use App\Jobs\SendNotificationJob;
 use App\Models\Document;
 use App\Models\Type;
+use App\Models\User;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -51,8 +53,15 @@ class DocumentController extends Controller
     {
 
         $fileName = uniqid().'-'.time();
-        $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+        $result = $request->file('pdf')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
         $document = Document::create(array_merge($request->getData(), ['pdf_name' => $result->getPublicId(), 'file_path' => $result->getPath()]));
+
+        dispatch(
+            new SendNotificationJob(
+                User::where('is_subscribed', 'Yes')->get(), "New document uploaded",
+                "New document ".$document->type->name." has been uploaded in the application.", $document->id, "App\Models\Document",
+        ));
+
         return (new DocumentResource($document->load('type')))->additional(Helper::instance()->storeSuccess('document'));
     }
 
@@ -67,7 +76,7 @@ class DocumentController extends Controller
         if($request->hasFile('pdf')) {
             Cloudinary::destroy($document->pdf_name);
             $fileName = uniqid().'-'.time();
-            $result = $request->file('pdf')->storeOnCloudinaryAs('barangay', $fileName);
+            $result = $request->file('pdf')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
             $document->fill(array_merge($request->getData(), ['custom_type' => NULL, 'pdf_name' => $result->getPublicId(), 'file_path' => $result->getPath()]))->save();
         } else {
             $document->fill(array_merge($request->getData(), ['custom_type' => NULL]))->save();

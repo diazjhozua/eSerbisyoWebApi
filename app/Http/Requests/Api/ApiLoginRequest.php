@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Api;
 
 use App\Http\Requests\Api\FormRequest;
-use Illuminate\Validation\Rule;
 
-class RegistrationRequest extends FormRequest
+class ApiLoginRequest extends FormRequest
 {
     public function authorize()
     {
@@ -15,9 +14,8 @@ class RegistrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'max:150', 'email:rfc,dns' , 'unique:users,email'],
+            'email' => ['required', 'max:200', 'email'],
             'password' => ['required', 'min:8', 'max:16'],
-            'password_confirmation' => ['same:password'],
             'device_id' => ['required'],
         ];
     }

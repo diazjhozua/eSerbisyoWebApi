@@ -40,6 +40,8 @@ class User extends Authenticatable implements JWTSubject
         'bike_type',
         'bike_color',
         'bike_size',
+        'device_id',
+        'is_subscribed',
     ];
 
     protected $hidden = [
@@ -99,6 +101,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Inquiry::class);
     }
 
+    public function devices(){
+        return $this->hasMany(Device::class);
+    }
 
     public function orders(){
         return $this->hasMany(Order::class, 'ordered_by', 'id');
@@ -140,6 +145,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Comment::class);
     }
 
+    public function notifications(){
+        return $this->hasMany(Notification::class);
+    }
+
     public function likes(){
         return $this->hasMany(Comment::class);
     }
@@ -147,7 +156,6 @@ class User extends Authenticatable implements JWTSubject
     public function certificateForms(){
         return $this->hasMany(CertificateForm::class);
     }
-
 
     public function getJWTIdentifier() {
         return $this->getKey();

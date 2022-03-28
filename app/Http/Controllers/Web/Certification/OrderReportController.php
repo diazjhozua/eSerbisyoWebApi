@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Certification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RespondFeedbackRequest;
 use App\Jobs\SendMailJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Models\OrderReport;
 use Helper;
 use Illuminate\Http\Request;
@@ -25,10 +26,20 @@ class OrderReportController extends Controller
         $label1 = 'Your report submitted in the order #'.$orderReport->order_id. ' has been noted by the administrator. Thankyou for using this application. <br> <br>';
         $label2 = '<strong>Admin Message:</strong> '. $orderReport->admin_message;
         $message = $label1.$label2;
+
+        $orderReport = $orderReport->load('order');
+        $modelType = $orderReport->order->contact->id == $orderReport->user->id ? 'App\Models\UserReport' : 'App\Models\BikerReport';
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $orderReport->user->device_id, $orderReport->user->id, "Order Report",
+                'Your report submitted in the order #'.$orderReport->order_id. ' has been noted by the administrator. Thankyou for using this application.', $orderReport->order_id,  $modelType
+        ));
+
         dispatch(new SendMailJob($orderReport->user->email, $subject, $message));
         return response()->json(['message' => "Responded successfuly. Email notification has been sent to the owner of this report"]);
     }
-    
+
     public function report($date_start,  $date_end, $sort_column, $sort_option, $status) {
 
         $title = 'Report - No data';
@@ -73,7 +84,7 @@ class OrderReportController extends Controller
         $title = 'Order Reports';
         $modelName = 'Order';
 
-        return view('admin.certification.pdf.orderreports', compact('title', 'modelName', 'orderReports', 
+        return view('admin.certification.pdf.orderreports', compact('title', 'modelName', 'orderReports',
             'date_start', 'date_end', 'sort_column', 'sort_option','status'
         ));
     }

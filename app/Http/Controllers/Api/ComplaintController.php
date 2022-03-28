@@ -42,7 +42,7 @@ class ComplaintController extends Controller
             $defendantCount = 0;
 
             foreach ($request->complainant_list as $key => $value) {
-                $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => 'barangay']);
+                $picture = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
 
                 Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' =>  $picture->getPublicId(),'file_path' => $picture->getPath()]);
                 $complainantCount++;

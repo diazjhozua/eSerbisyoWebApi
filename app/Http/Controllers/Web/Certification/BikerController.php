@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserVerificationRequest;
 use App\Http\Resources\BikerRequestResource;
 use App\Jobs\ChangeRoleJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Jobs\VerifyUserJob;
 use App\Models\BikerRequest;
 use App\Models\Order;
@@ -64,6 +65,13 @@ class BikerController extends Controller
         }
 
         $subject = $request->status == 'Approved' ? 'Verified Bikers Account' : 'Failed Biker Application Verification Account';
+
+        dispatch(
+            new SendSingleNotificationJob(
+                $user->device_id, $user->id, $request->status == 'Approved' ? 'Verified Biker Application' : 'Failed Biker Application Verification Account',
+                "Your submitted biker application has been responded by the administrator.", $bikerRequest->id,  "App\Models\BikerRequest"
+        ));
+
         dispatch(new VerifyUserJob($user, $subject, $request->all()));
         return (new BikerRequestResource($bikerRequest))->additional(Helper::instance()->updateSuccess($user->getFullNameAttribute().' verification request - '. strtolower($request->status)));
     }

@@ -56,7 +56,7 @@ class EmployeeController extends Controller
     public function store(EmployeeRequest $request)
     {
         $fileName = uniqid().'-'.time();
-        $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+        $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
         $employee = Employee::create(array_merge($request->getData(), ['picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]));
 
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->storeSuccess('employee'));
@@ -77,7 +77,7 @@ class EmployeeController extends Controller
         if($request->hasFile('picture')) {
             Cloudinary::destroy($employee->picture_name);
             $fileName = uniqid().'-'.time();
-            $result = $request->file('picture')->storeOnCloudinaryAs('barangay', $fileName);
+            $result = $request->file('picture')->storeOnCloudinaryAs(env('CLOUDINARY_PATH', 'dev-barangay'), $fileName);
             $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL, 'picture_name' => $result->getPublicId(),'file_path' => $result->getPath()]))->save();
         } else {  $employee->fill(array_merge($request->getData(), ['custom_term' => NULL, 'custom_position' => NULL]))->save(); }
         return (new EmployeeResource($employee->load('term', 'position')))->additional(Helper::instance()->updateSuccess('employee'));

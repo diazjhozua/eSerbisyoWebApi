@@ -52,10 +52,10 @@ class AnnouncementController extends Controller
         return (new CommentResource($comment))->additional(Helper::instance()->storeSuccess('comment'));
     }
 
-    // public function show(Announcement $announcement)
-    // {
-    //     return (new AnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
-    // }
+    public function show(Announcement $announcement)
+    {
+        return (new ApiAnnouncementResource($announcement->load('likes', 'comments', 'type','announcement_pictures')->loadCount('likes', 'comments')))->additional(Helper::instance()->itemFound('announcement'));
+    }
 
     // public function create()
     // {

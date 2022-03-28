@@ -33,10 +33,10 @@ class DocumentController extends Controller
     //     return (new DocumentResource($document->load('type')))->additional(Helper::instance()->storeSuccess('document'));
     // }
 
-    // public function show(Document $document)
-    // {
-    //     return (new DocumentResource($document->load('type')))->additional(Helper::instance()->itemFound('document'));
-    // }
+    public function show(Document $document)
+    {
+        return (new DocumentResource($document->load('type')))->additional(Helper::instance()->itemFound('document'));
+    }
 
     // public function edit(Document $document)
     // {

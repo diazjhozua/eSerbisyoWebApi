@@ -96,6 +96,29 @@ class Helper
         ];
     }
 
+    public function sendFCMNotification($to, $data) {
 
+        $api_key= env('FCM_KEY', 'AAAAsfAZjQY:APA91bE8v8n4MSIPho8vwiaeUUKeIGS-80iZAKPvvf3TNu0-OLKt0i7L-c1S7XjnWEzA-PrV_Ffy1oeWHlxxw7bdk6nS1rMwUusAsabMdzQW83lX1g1OwCSi6e8kyRT8Mh2B746-KdC4');
+
+        $url="https://fcm.googleapis.com/fcm/send";
+        $fields=json_encode(array('registration_ids'=>$to,'notification'=>$data));
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ($fields));
+
+        $headers = array();
+        $headers[] = 'Authorization: key ='.$api_key;
+        $headers[] = 'Content-Type: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+        }
+        curl_close($ch);
+
+    }
 }
-

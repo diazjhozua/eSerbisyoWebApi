@@ -9,6 +9,7 @@ use App\Http\Resources\OrderResource;
 use App\Jobs\OrderJob;
 use App\Jobs\OrderStatusJob;
 use App\Jobs\SendMailJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Jobs\SMSJob;
 use App\Models\Certificate;
 use App\Models\CertificateForm;
@@ -331,8 +332,6 @@ class OrderController extends Controller
                 $order->fill(['order_status' => $request->order_status])->save();
                 $message = 'Your order #'.$order->id. ' has been pickup by our biker delivery Please prepare the exact payment.';
                 $smsMessage = 'Your order #'.$order->id. ' has been pickup by our biker delivery Please prepare the exact payment.'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
-
-
             } else {
                 if ($request->order_status == 'Received') {
                     $order->fill(['order_status' => $request->order_status, 'received_at' => now()])->save();
@@ -354,6 +353,13 @@ class OrderController extends Controller
                     }
                 }
             }
+
+            dispatch(
+                new SendSingleNotificationJob(
+                    $order->contact->device_id, $order->contact->id, "Certificate Order Notification",
+                    $message, $order->id,  "App\Models\Order"
+            ));
+
             dispatch(new OrderJob($order, $subject, $message));
             dispatch(new SMSJob($order->phone_no, $smsMessage));
         } elseif (isset($request->delivery_payment_status)) {
@@ -367,6 +373,12 @@ class OrderController extends Controller
             }
             $order->fill(['delivery_payment_status' => $request->delivery_payment_status])->save();
 
+            dispatch(
+                new SendSingleNotificationJob(
+                    $order->biker->device_id, $order->biker->id, "Certificate Biker Order Notification",
+                    $message, $order->id,  "App\Models\BikerDelivery"
+            ));
+
             dispatch(new SendMailJob($order->biker->email, $subject, $message));
             dispatch(new SMSJob($order->biker->phone_no, $smsMessage));
         } elseif(isset($request->is_returned)) {
@@ -379,6 +391,14 @@ class OrderController extends Controller
                 $smsMessage = 'Your delivery order #'.$order->id. ' has been marked that you have returned the item properly. It means that the transaction is completed. Thankyou for your service!'.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             }
             $order->fill(['is_returned' => $request->is_returned])->save();
+
+
+            dispatch(
+                new SendSingleNotificationJob(
+                    $order->biker->device_id, $order->biker->id, "Certificate Biker Order Notification",
+                    $message, $order->id,  "App\Models\BikerDelivery"
+            ));
+
             dispatch(new SendMailJob($order->biker->email, $subject, $message));
             dispatch(new SMSJob($order->biker->phone_no, $smsMessage));
         }
@@ -389,7 +409,8 @@ class OrderController extends Controller
     // update order application
     public function updateApplicationStatus(OrderApplicationAdminRequest $request, Order $order)
     {
-        if ($order->application_status != 'Pending') {
+
+        if ($order->application_status != "Pending") {
             return response()->json(['message' => 'You can only verify pending request'], 403);
         }
 
@@ -426,12 +447,18 @@ class OrderController extends Controller
             $message = $label1.$label2;
 
             // for sms
-            $smsLabel1 = 'Your order #'.$order->id. ' has been denied by the administrator. Please see below the reason message why it is not approved. <br> <br> ';
+            $smsLabel1 = 'Your order #'.$order->id. ' has been denied by the administrator. Please see below the reason message why it is not approved.';
             $smsLabel2 = PHP_EOL.PHP_EOL.'Reason: '. $order->admin_message.PHP_EOL.PHP_EOL.'-Barangay Cupang';
             $smsMessage = $smsLabel1.$smsLabel2;
         }
 
-        // send sms and email notification to the person who orders it
+        // send app, sms and email notification to the person who orders it
+        dispatch(
+            new SendSingleNotificationJob(
+                $order->contact->device_id, $order->contact->id, "Certificate Order Notification",
+                $smsLabel1, $order->id,  "App\Models\Order"
+        ));
+
         dispatch(new OrderJob($order, $subject, $message));
         dispatch(new SMSJob($order->phone_no, $smsMessage));
 

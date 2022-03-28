@@ -9,6 +9,7 @@ use App\Http\Requests\ComplaintRequest;
 use App\Http\Resources\ComplaintResource;
 use App\Http\Resources\TypeResource;
 use App\Jobs\ChangeStatusReportJob;
+use App\Jobs\SendSingleNotificationJob;
 use App\Models\Complainant;
 use App\Models\Complaint;
 use App\Models\Defendant;
@@ -56,7 +57,7 @@ class ComplaintController extends Controller
 
             foreach ($request->complainant_list as $key => $value) {
 
-                $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => 'barangay']);
+                $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$value['signature'], ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
                 Complainant::create(['complaint_id' => $complaint->id, 'name' => $value['name'], 'signature_picture' => $result->getPublicId(),'file_path' =>$result->getPath()]);
                 $complainantCount++;
             }
@@ -122,6 +123,13 @@ class ComplaintController extends Controller
 
             $subject = 'Complaint Change Status Notification';
             $reportName = 'complaint report';
+
+            dispatch(
+                new SendSingleNotificationJob(
+                    $complaint->contact->device_id, $complaint->contact->id, "Complaint Change Status Notification",
+                    "Your submitted complaint #".$complaint->id." status has been change by the administrator.", $complaint->id,  "App\Models\Complaint"
+            ));
+
             dispatch(new ChangeStatusReportJob($complaint->email, $complaint->id, $reportName, $complaint->status, $complaint->admin_message, $subject, $complaint->phone_no));
 
             return (new ComplaintResource($complaint->load('type')))->additional(Helper::instance()->statusMessage($oldStatus, $complaint->status, 'complaint'));
