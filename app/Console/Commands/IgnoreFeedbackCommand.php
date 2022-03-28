@@ -43,6 +43,7 @@ class IgnoreFeedbackCommand extends Command
         Feedback::where('created_at', '<=', Carbon::now()->subDay(10)->toDateTimeString())->where('status', 'Pending')->each(function ($feedback) {
             $feedback->status = "Ignored";
             $feedback->save();
+
         });
     }
 }
