@@ -3,23 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\ReportEvent;
-use App\Events\ReportNotification;
 use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReportRequest;
-use App\Http\Requests\RespondReportRequest;
 use App\Http\Resources\ReportResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Report;
 use App\Models\Type;
 use Carbon\Carbon;
-use Storage;
 
 class ReportController extends Controller
 {
     public function index()
     {
-        $reports = Report::with('type')->where('user_id', auth('api')->user()->id)->orderBy('created_at','DESC')->get();
+        $reports = Report::with('type')->where('user_id', auth('api')->user()->id)->orderBy('id','DESC')->get();
         return ReportResource::collection($reports)->additional(['success' => true]);
     }
 

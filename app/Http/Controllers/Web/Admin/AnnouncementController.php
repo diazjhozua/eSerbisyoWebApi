@@ -43,7 +43,7 @@ class AnnouncementController extends Controller
                 ->first();
         }
 
-        $announcements = Announcement::with('type')->withCount('comments', 'likes', 'announcement_pictures')->orderBy('created_at', 'DESC')->get();
+        $announcements = Announcement::with('type')->withCount('comments', 'likes', 'announcement_pictures')->orderBy('id', 'DESC')->get();
         return view('admin.information.announcements.index', compact('announcementsData', 'announcements'));
     }
 

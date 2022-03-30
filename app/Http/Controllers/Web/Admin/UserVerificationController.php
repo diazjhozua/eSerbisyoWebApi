@@ -15,7 +15,7 @@ class UserVerificationController extends Controller
 {
     public function index()
     {
-        $userVerifications = UserVerification::with('user')->orderBy('created_at','DESC')->get();
+        $userVerifications = UserVerification::with('user')->orderBy('id','DESC')->get();
 
         return view('admin.information.verificationRequests.index', compact('userVerifications'));
     }

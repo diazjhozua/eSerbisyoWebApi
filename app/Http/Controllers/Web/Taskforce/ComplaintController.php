@@ -35,7 +35,7 @@ class ComplaintController extends Controller
         ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))
         ->first();
 
-        $complaints = Complaint::with('type')->withCount('complainants', 'defendants')->orderBy('created_at','DESC')->get();
+        $complaints = Complaint::with('type')->withCount('complainants', 'defendants')->orderBy('id','DESC')->get();
 
         return view('admin.taskforce.complaints.index', compact('complaints', 'complaintsData'));
     }

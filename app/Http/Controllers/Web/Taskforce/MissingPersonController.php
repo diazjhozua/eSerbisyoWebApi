@@ -31,7 +31,7 @@ class MissingPersonController extends Controller
         ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))
         ->first();
 
-        $missing_persons = MissingPerson::withCount('comments')->orderBy('created_at','DESC')->get();
+        $missing_persons = MissingPerson::withCount('comments')->orderBy('id','DESC')->get();
 
         return view('admin.taskforce.missing-persons.index', compact('missing_persons', 'missingPersonsData'));
     }

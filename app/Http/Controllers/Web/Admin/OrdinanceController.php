@@ -43,7 +43,7 @@ class OrdinanceController extends Controller
 
 
 
-        $ordinances = Ordinance::with('type')->orderBy('created_at','DESC')->get();
+        $ordinances = Ordinance::with('type')->orderBy('id','DESC')->get();
         return view('admin.information.ordinances.index', compact('ordinancesData', 'ordinances'));
     }
 

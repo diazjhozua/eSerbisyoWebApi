@@ -17,7 +17,7 @@ class AnnouncementTypeController extends Controller
 
     public function index()
     {
-        $types = Type::withCount('announcements')->where('model_type', 'Announcement')->orderBy('created_at','DESC')->get();
+        $types = Type::withCount('announcements')->where('model_type', 'Announcement')->orderBy('id','DESC')->get();
         $types->add(new Type([ 'id' => 0, 'name' => 'Others (Announcement with deleted types)   ', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
             'announcements_count' => Announcement::where('type_id', NULL)->count() ]));
 
@@ -73,14 +73,14 @@ class AnnouncementTypeController extends Controller
         $title = 'Report - No data';
         $description = 'No data';
         try {
-           
+
             $types = Type::withCount('announcements as count')
             ->where('model_type', 'Announcement')->orderBy('created_at','DESC')
             ->whereBetween('created_at', [$date_start, $date_end])
             ->orderBy($sort_column, $sort_option)
             ->get();
-    
-    
+
+
             $types->add(new Type([ 'id' => 0, 'name' => 'Others (Announcement w/o announcement type)', 'model_type' => 'Announcement', 'created_at' => now(), 'updated_at' => now(),
             'count' => Announcement::where('type_id', NULL)->count() ]));
 
@@ -90,12 +90,12 @@ class AnnouncementTypeController extends Controller
             if ($types->isEmpty()) {
                 return view('errors.404Report', compact('title', 'description'));
             }
-        
+
         // if ($types->isEmpty()) {
         //     return response()->json(['No data'], 404);
         // }
-            
-       
+
+
         $title = 'Announcement Type Publish Report';
         $modelName = 'Announcement';
 
@@ -110,7 +110,7 @@ class AnnouncementTypeController extends Controller
         $title = 'Report - No data';
         $description = 'No data';
         try {
-           
+
             $announcements = Announcement::with('type')
             ->withCount('comments', 'likes', 'announcement_pictures')
             ->whereBetween('created_at', [$date_start, $date_end])
@@ -127,8 +127,8 @@ class AnnouncementTypeController extends Controller
             } catch(\Illuminate\Database\QueryException $ex){
                 return view('errors.404Report', compact('title', 'description'));
             }
-            
-            
+
+
             if ($announcements->isEmpty()) {
                 return view('errors.404Report', compact('title', 'description'));
             }

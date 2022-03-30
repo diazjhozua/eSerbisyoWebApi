@@ -15,7 +15,7 @@ class InquiryController extends Controller
 {
     public function index()
     {
-        $inquiries = Inquiry::with('user')->where('user_id', auth('api')->user()->id)->orderBy('created_at','desc')->get();
+        $inquiries = Inquiry::with('user')->where('user_id', auth('api')->user()->id)->orderBy('id','desc')->get();
         return InquiryResource::collection($inquiries);
     }
 

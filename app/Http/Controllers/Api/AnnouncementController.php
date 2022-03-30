@@ -17,7 +17,7 @@ class AnnouncementController extends Controller
 {
     public function index()
     {
-        $announcements = Announcement::with('type','announcement_pictures')->withCount('comments', 'likes')->with('likes')->orderBy('created_at', 'DESC')->get();
+        $announcements = Announcement::with('type','announcement_pictures')->withCount('comments', 'likes')->with('likes')->orderBy('id', 'DESC')->get();
         return ApiAnnouncementResource::collection($announcements)->additional(['success' => true]);
     }
 

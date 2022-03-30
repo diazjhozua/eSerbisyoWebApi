@@ -16,7 +16,7 @@ class ProjectTypeController extends Controller
 {
     public function index()
     {
-        $types = Type::withCount('projects')->where('model_type', 'Project')->orderBy('created_at','DESC')->get();
+        $types = Type::withCount('projects')->where('model_type', 'Project')->orderBy('id','DESC')->get();
         $types->add(new Type([ 'id' => 0, 'name' => '(Others) - Project without assigned project type', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
             'projects_count' => Project::where('type_id', NULL)->count() ]));
 
@@ -66,12 +66,12 @@ class ProjectTypeController extends Controller
     }
 
     public function report($date_start, $date_end, $sort_column, $sort_option) {
-        
+
 
         $title = 'Report - No data';
         $description = 'No data';
         try {
-           
+
             $types = Type::withCount('projects as count')
             ->where('model_type', 'Project')->orderBy('created_at','DESC')
             ->whereBetween('created_at', [$date_start, $date_end])
@@ -80,7 +80,7 @@ class ProjectTypeController extends Controller
 
             $types->add(new Type([ 'id' => 0, 'name' => 'Others (Project w/o project type)', 'model_type' => 'Project', 'created_at' => now(), 'updated_at' => now(),
             'count' => Project::where('type_id', NULL)->count() ]));
-    
+
             } catch(\Illuminate\Database\QueryException $ex){
                 return view('errors.404Report', compact('title', 'description'));
             }
@@ -101,7 +101,7 @@ class ProjectTypeController extends Controller
         $title = 'Report - No data';
         $description = 'No data';
         try {
-           
+
             $projects = Project::with('type')
             ->whereBetween('created_at', [$date_start, $date_end])
             ->orderBy($sort_column, $sort_option)
@@ -113,7 +113,7 @@ class ProjectTypeController extends Controller
                 }
             })
             ->get();
-    
+
             } catch(\Illuminate\Database\QueryException $ex){
                 return view('errors.404Report', compact('title', 'description'));
             }
@@ -121,8 +121,8 @@ class ProjectTypeController extends Controller
             if ($projects->isEmpty()) {
                 return view('errors.404Report', compact('title', 'description'));
             }
-            
-            
+
+
             $type = Type::find($type_id);
             $title = 'Project Type Reports';
             $modelName =  $type_id == 0 ? 'Others/Deleted' : $type->name;
@@ -132,7 +132,7 @@ class ProjectTypeController extends Controller
         return view('admin.information.pdf.projects', compact('title', 'modelName','projects',
         'date_start', 'date_end', 'sort_column', 'sort_option'
     ));
-       
+
         // $pdf = PDF::loadView('admin.information.reports.project', compact('projects', 'request'))->setOptions(['defaultFont' => 'sans-serif'])->setPaper('a4', 'landscape');
         // return $pdf->stream();
     }

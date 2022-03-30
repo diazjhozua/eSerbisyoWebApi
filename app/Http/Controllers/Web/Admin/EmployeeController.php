@@ -42,7 +42,7 @@ class EmployeeController extends Controller
 
 
 
-        $employees = Employee::with('position', 'term')->orderBy('created_at','DESC')->get();
+        $employees = Employee::with('position', 'term')->orderBy('id','DESC')->get();
         return view('admin.information.employees.index', compact('employeesData', 'employees'));
     }
 

@@ -32,7 +32,7 @@ class OrderController extends Controller
     public function index()
     {
         // authenticated user orders list
-        $orders = Order::where('ordered_by', auth('api')->user()->id)->where('pick_up_type', '!=', 'Walkin')->orderBy('created_at','DESC')->get();
+        $orders = Order::where('ordered_by', auth('api')->user()->id)->where('pick_up_type', '!=', 'Walkin')->orderBy('id','DESC')->get();
         return response()->json(["data" => $orders], 200);
     }
 

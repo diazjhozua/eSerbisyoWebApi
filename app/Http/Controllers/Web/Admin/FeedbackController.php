@@ -29,7 +29,7 @@ class FeedbackController extends Controller
         ->where('created_at', '<=', $last_date)
         ->first();
 
-        $feedbacks = Feedback::with('type')->orderBy('updated_at','desc')->get();
+        $feedbacks = Feedback::with('type')->orderBy('id','desc')->get();
         return view('admin.information.feedbacks.index')->with('feedbacks', $feedbacks)->with('feedbacksData', $feedbacksData);
     }
 

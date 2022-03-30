@@ -45,7 +45,7 @@ class UserController extends Controller
 
         $verificationCount = UserVerification::where('status', 'Pending')->count();
 
-        $users = User::with('user_role', 'latest_user_verification')->orderBy('created_at','DESC')->get();
+        $users = User::with('user_role', 'latest_user_verification')->orderBy('id','DESC')->get();
 
         return view('admin.information.users.index', compact('usersData', 'verificationCount','users'));
     }

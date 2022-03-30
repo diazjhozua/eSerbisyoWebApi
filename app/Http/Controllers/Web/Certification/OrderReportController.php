@@ -14,7 +14,7 @@ class OrderReportController extends Controller
 {
     // display all order reports
     public function index() {
-        $orderReports = OrderReport::with('user')->orderBy('created_at', 'DESC')->get();
+        $orderReports = OrderReport::with('user')->orderBy('id', 'DESC')->get();
         return view('admin.certification.orderReports.index', compact('orderReports'));
     }
 

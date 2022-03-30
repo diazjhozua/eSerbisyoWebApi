@@ -22,7 +22,7 @@ class MissingItemController extends Controller
     public function index()
     {
         // fetch all approved missing person
-        $missingItems = MissingItem::withCount('comments')->where('status', 'Approved')->orderBy('created_at','DESC')->get();
+        $missingItems = MissingItem::withCount('comments')->where('status', 'Approved')->orderBy('id','DESC')->get();
         return MissingItemResource::collection($missingItems)->additional(['success' => true]);
     }
 

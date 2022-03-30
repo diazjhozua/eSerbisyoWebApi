@@ -42,7 +42,7 @@ class ProjectController extends Controller
                 ->first();
         }
 
-        $projects = Project::with('type')->orderBy('created_at','DESC')->get();
+        $projects = Project::with('type')->orderBy('id','DESC')->get();
         return view('admin.information.projects.index', compact('projectsData', 'projects'));
     }
 

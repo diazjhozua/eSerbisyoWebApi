@@ -23,7 +23,7 @@ class ComplaintController extends Controller
 {
 
     public function index() {
-        $complaints = Complaint::with('type')->where('contact_user_id', auth('api')->user()->id)->orderBy('created_at','desc')->get();
+        $complaints = Complaint::with('type')->where('contact_user_id', auth('api')->user()->id)->orderBy('id','desc')->get();
         return ComplaintResource::collection($complaints);
     }
 

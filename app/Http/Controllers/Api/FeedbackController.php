@@ -18,7 +18,7 @@ class FeedbackController extends Controller
 {
     public function index()
     {
-        $feedbacks = Feedback::with('type')->where('user_id', auth('api')->user()->id)->orderBy('created_at','desc')->get();
+        $feedbacks = Feedback::with('type')->where('user_id', auth('api')->user()->id)->orderBy('id','desc')->get();
         return FeedbackResource::collection($feedbacks);
     }
 

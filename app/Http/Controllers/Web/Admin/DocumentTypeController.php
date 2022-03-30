@@ -17,7 +17,7 @@ class DocumentTypeController extends Controller
 {
     public function index()
     {
-        $types = Type::withCount('documents')->where('model_type', 'Document')->orderBy('created_at','DESC')->get();
+        $types = Type::withCount('documents')->where('model_type', 'Document')->orderBy('id','DESC')->get();
         $types->add(new Type([ 'id' => 0, 'name' => 'Others (Document w/o document type)', 'model_type' => 'Document', 'created_at' => now(), 'updated_at' => now(),
             'documents_count' => Document::where('type_id', NULL)->count() ]));
 

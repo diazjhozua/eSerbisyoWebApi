@@ -25,7 +25,7 @@ class OrderController extends Controller
 
     public function index()
     {
-        $orders = Order::withCount('certificateForms')->orderBy('created_at', 'DESC')->get();
+        $orders = Order::withCount('certificateForms')->orderBy('id', 'DESC')->get();
         $pendingOrders = Order::where('application_status', 'Pending')->get();
         $unprocessedOrders= Order::where('pick_up_type', 'Delivery')->where('order_status', 'Received')->where('delivery_payment_status', 'Pending')->get();
         $returnableOrders = Order::where('pick_up_type', 'Delivery')->where('order_status', 'DNR')->where('is_returned', 'No')->get();

@@ -15,7 +15,7 @@ class DocumentController extends Controller
 {
     public function index()
     {
-        $documents = Document::with('type')->orderBy('created_at','DESC')->get();
+        $documents = Document::with('type')->orderBy('id','DESC')->get();
         return DocumentResource::collection($documents)->additional(['success' => true]);
     }
 

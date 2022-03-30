@@ -27,7 +27,7 @@ class ReportController extends Controller
         ->where('created_at', '<=', date('Y-m-d',strtotime('last day of this month')))
         ->first();
 
-        $reports = Report::with('type')->orderBy('created_at','DESC')->get();
+        $reports = Report::with('type')->orderBy('id','DESC')->get();
         return view('admin.taskforce.reports.index', compact('reports', 'reportsData'));
     }
 

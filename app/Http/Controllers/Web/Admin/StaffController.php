@@ -34,7 +34,7 @@ class StaffController extends Controller
             $title = 'Promote User to Taskforce Staff';
         }
 
-        $users = User::with('user_role')->orWhere('user_role_id', 8)->orWhere('user_role_id', 9)->orderBy('created_at', 'DESC')->get();
+        $users = User::with('user_role')->orWhere('user_role_id', 8)->orWhere('user_role_id', 9)->orderBy('id', 'DESC')->get();
         return view('admin.staffs.promote-user', compact('users', 'title', 'staffCount'));
 
     }

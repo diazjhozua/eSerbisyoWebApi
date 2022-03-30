@@ -16,7 +16,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::with('position', 'term')->orderBy('created_at','DESC')->orderBy('term_id','ASC')->orderBy('position_id','ASC')->get();
+        $employees = Employee::with('position', 'term')->orderBy('id','DESC')->orderBy('term_id','ASC')->orderBy('position_id','ASC')->get();
         return EmployeeResource::collection($employees)->additional(['success' => true]);
     }
 

@@ -15,7 +15,7 @@ class OrdinanceController extends Controller
 {
     public function index()
     {
-        $ordinances = Ordinance::with('type')->orderBy('created_at','DESC')->get();
+        $ordinances = Ordinance::with('type')->orderBy('id','DESC')->get();
         return OrdinanceResource::collection($ordinances)->additional(['success' => true]);
     }
 

@@ -39,7 +39,7 @@ class DocumentController extends Controller
                 ->first();
         }
 
-        $documents = Document::with('type')->orderBy('created_at','DESC')->get();
+        $documents = Document::with('type')->orderBy('id','DESC')->get();
         return view('admin.information.documents.index', compact('documentsData', 'documents'));
     }
 
