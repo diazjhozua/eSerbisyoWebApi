@@ -8,7 +8,7 @@
                     <!-- Video Preview -->
                     <div class="image-container">
                         <div class="video-wrapper">
-                            <a class="popup-youtube" href="https://www.youtube.com/watch?v=gIxcgrZvIO0" data-effect="fadeIn">
+                            <a class="popup-youtube" href="https://youtu.be/8argrTJ2l8w" data-effect="fadeIn">
                                 <img class="img-fluid" src="assets/img/user/video-image.png" alt="alternative">
                                 <span class="video-play-button">
                                     <span></span>
