@@ -66,7 +66,7 @@ class ChangeStatusReportJob implements ShouldQueue
         $sendMessageRequest1 = new SendMessageRequest([
             'phoneNumber' => $this->phoneNo,
             'message' => $message,
-            'deviceId' => 127363
+            'deviceId' => 127827
         ]);
 
         $messageClient->sendMessages([
