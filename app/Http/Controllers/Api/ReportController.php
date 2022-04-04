@@ -31,9 +31,9 @@ class ReportController extends Controller
         activity()->disableLogging();
         $authReportCount = Report::whereDate('created_at', Carbon::today())->where('user_id', auth('api')->user()->id)->count();
 
-        // if ($authReportCount > 3) {
-        //     return response()->json(["message" => "You have already submitted to many report within this day, please comeback tommorow to submit another report"], 403);
-        // }
+        if ($authReportCount > 3) {
+            return response()->json(["message" => "You have already submitted to many report within this day, please comeback tommorow to submit another report"], 403);
+        }
 
         if($request->picture != ''){
             $result = cloudinary()->uploadFile('data:image/jpeg;base64,'.$request->picture, ['folder' => env('CLOUDINARY_PATH', 'dev-barangay')]);
