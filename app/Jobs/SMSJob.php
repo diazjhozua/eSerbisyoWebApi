@@ -39,7 +39,7 @@ class SMSJob implements ShouldQueue
         $sendMessageRequest1 = new SendMessageRequest([
             'phoneNumber' => $this->phoneNo,
             'message' =>  $this->message,
-            'deviceId' => 127363
+            'deviceId' => 127827
         ]);
 
         $messageClient->sendMessages([
