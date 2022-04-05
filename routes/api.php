@@ -105,6 +105,7 @@ Route::group([
 
     Route::get('orders/create/{pickupType}', [OrderController::class, 'create']);
     Route::post('orders/submitReport/{order}', [OrderController::class, 'submitReport']);
+    Route::get('orders/checkRequirements/{certificate}', [OrderController::class, 'checkRequirements']);
     Route::get('orders/certificates', [OrderController::class, 'certificates']);
     Route::resource('orders', OrderController::class)->except(['index', 'create']);
 

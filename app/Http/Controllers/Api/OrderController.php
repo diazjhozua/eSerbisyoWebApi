@@ -48,6 +48,31 @@ class OrderController extends Controller
         return response()->json(["data" => $certificates], 200);
     }
 
+    // check the authenticated user if they have the complete requirements before filling up the form for that specific certificate
+    public function checkRequirements(Certificate $certificate) {
+        $user_requirements = UserRequirement::where('user_id', auth('api')->user()->id)->get();
+
+        $isComplete = true;
+        $missingRequirement = [];
+
+        foreach ($certificate->requirements as $requirement) {
+            if(!$user_requirements->contains('requirement_id', $requirement->id)) {
+                $isComplete = false;
+                array_push($missingRequirement, $requirement->name);
+
+            }
+        }
+
+        if (!$isComplete) {
+            $string =implode(",",$missingRequirement);
+            return response()->json([
+                'message' => "You don't have enough requirements to request this certificate. Go to the certificates section to see the required requirements. Requirements Missing: ".$string,
+            ], 400);
+        }
+
+    }
+
+
     public function checkCertificateFormFields($request) {
         $isCompleteFormFields = true;
 
