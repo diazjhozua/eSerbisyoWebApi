@@ -146,7 +146,7 @@ class MissingItemController extends Controller
             ->selectRaw("count(case when status = 'Pending' then 1 end) as pending_count")
             ->selectRaw("count(case when status = 'Resolved' then 1 end) as resolved_count")
             ->selectRaw("count(case when status = 'Denied' then 1 end) as denied_count")
-            ->selectRaw("count(case when status = 'Noted' then 1 end) as noted_count")
+            ->selectRaw("count(case when status = 'Approved' then 1 end) as approved_count")
             ->where('created_at', '>=', $date_start)
             ->where('created_at', '<=', $date_end)
             ->where(function($query) use ($report_option, $status_option) {
