@@ -139,7 +139,7 @@
                                     </div> <!-- end of image-wrapper -->
                                     <div class="text-wrapper">
                                         <div class="testimonial-text" style="text-align:justify;">Jhozua M. Diaz is a high-achieving student who is dedicated to the development of the e-serbisyo app. He motivates the team to get the greatest possible outcome for the app. </div>
-                                        <div class="testimonial-author">Jhozua M. Diaz- Researcher</div>
+                                        <div class="testimonial-author">Jhozua M. Diaz - Full Stack Web Developer | Android Developer</div>
                                     </div> <!-- end of text-wrapper -->
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
@@ -156,7 +156,7 @@
                                 </div> <!-- end of swiper-slide -->
                                 <!-- end of slide -->
 
-                                
+
 
 
                                 <!-- Slide -->
